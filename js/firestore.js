@@ -64,15 +64,19 @@ export function getDocByID(docId) {
 
 getDocs(colRef)
   .then((querySnapshot) => {
+    let partnersSet = new Set();
+    let partnersObj = {};
     querySnapshot.forEach((doc) => {
-      if (doc.data().name !== "Test 2" || doc.data().name !== "Test2") {
-        partnersArray.push(doc.data());
-      }
+      partnersObj[doc.data().name] = [];
+      partnersSet.add(doc.data().name);
+    });
+    querySnapshot.forEach((doc) => {
+      partnersObj[doc.data().name].push(doc.data());
     });
 
     // populate ul with partners
-    partnersArray.forEach((partner) => {
-      console.log(partner.name);
+    partnersSet.forEach((partner) => {
+      console.log(partner);
       const containerDiv = document.createElement("div");
       const img = document.createElement("svg");
       const listItem = document.createElement("li");
@@ -80,9 +84,9 @@ getDocs(colRef)
 
       // set attributes
       anchor.href = "#";
-      anchor.textContent = partner.name;
+      anchor.textContent = partner;
       anchor.addEventListener("click", () => {
-        showModal(partner);
+        showModal(partnersObj[partner]);
       });
 
       // add class to variables
@@ -123,6 +127,8 @@ function showModal(partner) {
   const datesDiv = document.createElement("div");
 
   // Set the content of each div
+
+  // add a loop for this
   nameDiv.textContent = "Name: " + partner.name;
   latitudeDiv.textContent = "Latitude: " + partner.Latitude;
   longitudeDiv.textContent = "Longitude: " + partner.Longitude;

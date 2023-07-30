@@ -127,8 +127,7 @@ function onMapClick(e) {
 
 map.on("click", onMapClick);
 
-searchLocation("Industrial Valley Elementary School");
-map.panTo(new L.LatLng(14.652538, 121.077818));
+
 
 //search loc through name, check if present in firebase
 //get latlng through firebase, then call searchloc, and then pan through the latlng in firebase
