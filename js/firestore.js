@@ -128,17 +128,22 @@ function showModal(partner) {
 
   // Set the content of each div
 
-  // add a loop for this
-  nameDiv.textContent = "Name: " + partner.name;
-  latitudeDiv.textContent = "Latitude: " + partner.Latitude;
-  longitudeDiv.textContent = "Longitude: " + partner.Longitude;
-  contactPersonDiv.textContent =
-    "Contact Person: " + partner["`partner-contact`"];
-  activityDiv.textContent = "Activity: " + partner.activity;
-  admuContactDiv.textContent = "AdMU Contact: " + partner["`admu-contact`"];
-  admuEmailDiv.textContent = "AdMU Email: " + partner["`admu-email`"];
-  admuOfficeDiv.textContent = "AdMU Office: " + partner["`admu-office`"];
-  orgDiv.textContent = "Organization: " + partner.org;
+  console.log(partner)
+
+  nameDiv.innerHTML = "Name: " + partner[0].name;
+  latitudeDiv.innerHTML = "Latitude: " + partner[0].Latitude;
+  longitudeDiv.innerHTML = "Longitude: " + partner[0]['Longitude'];
+  contactPersonDiv.innerHTML =
+  "Contact Person: " + partner[0]["`partner-contact`"];
+  for (let part in partner) {
+    let dummy = parseInt(part) + 1;
+    activityDiv.innerHTML += "Activity " + dummy + ": " + partner[part].activity + "<br />";
+    admuContactDiv.innerHTML += "AdMU Contact " + dummy + ": " + partner[part]["admu-contact"] + "<br />";
+    admuEmailDiv.innerHTML += "AdMU Email " + dummy + ": " + partner[part]["admu-email"] + " <br />";
+    admuOfficeDiv.innerHTML += "AdMU Office " + dummy + ": " + partner[part]["admu-office"] + "<br />";
+    orgDiv.innerHTML += "Organization " + dummy + ": " + partner[part].org + "<br />";
+  }
+
 
   // Append the div elements to the modal content
   modalContent.appendChild(nameDiv);
