@@ -133,10 +133,9 @@ function showModal(partner) {
   nameDiv.innerHTML = "Name: " + partner[0].name;
   latitudeDiv.innerHTML = "Latitude: " + partner[0].Latitude;
   longitudeDiv.innerHTML = "Longitude: " + partner[0]['Longitude'];
-  contactPersonDiv.innerHTML =
-  "Contact Person: " + partner[0]["`partner-contact`"];
   for (let part in partner) {
     let dummy = parseInt(part) + 1;
+    contactPersonDiv.innerHTML += "Contact Person " + dummy + ": " + partner[part]["`partner-contact`"] + "<br />";
     activityDiv.innerHTML += "Activity " + dummy + ": " + partner[part].activity + "<br />";
     admuContactDiv.innerHTML += "AdMU Contact " + dummy + ": " + partner[part]["admu-contact"] + "<br />";
     admuEmailDiv.innerHTML += "AdMU Email " + dummy + ": " + partner[part]["admu-email"] + " <br />";
