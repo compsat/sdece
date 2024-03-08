@@ -30,11 +30,11 @@ const firebaseConfig = {
 };
 initializeApp(firebaseConfig);
 const db = getFirestore();
-const colRef = collection(db, "partners");
+const colRef = collection(db, "partners2");
 let partnersArray = [];
 
 export function getDocIdByPartnerName(partnerName) {
-  return getDocs(query(colRef, where("name", "==", partnerName)))
+  return getDocs(query(colRef, where("partnerName", "==", partnerName)))
     .then((querySnapshot) => {
       if (!querySnapshot.empty) {
         // Assuming there is only one document with the given partner name
@@ -52,7 +52,7 @@ export function getDocIdByPartnerName(partnerName) {
 }
 
 export function getDocByID(docId) {
-  const docReference = doc(db, "partners", docId);
+  const docReference = doc(db, "partners2", docId);
   let docObj = {};
   return getDoc(docReference).then((doc) => {
     docObj = doc.data();
@@ -165,28 +165,25 @@ function showModal(partner) {
 
 export function addLocation(
   name,
-  activity,
-  admuContact,
-  admuEmail,
-  admuOffice,
-  org,
   partnerContact,
-  dates,
+  partnerAddress,
+  pContactEmail,
+  pContactNumber,
+  activities,
   latitude,
   longitude
 ) {
-  addDoc(colRef, {
-    name: name,
-    activity: activity,
-    "`admu-contact`": admuContact,
-    "`admu-email`": admuEmail,
-    "`admu-office`": admuOffice,
-    org: org,
-    "`partner-contact`": partnerContact,
-    dates: dates,
-    Latitude: latitude,
-    Longitude: longitude,
-  })
+  const locationData = {
+    partnerName: name,
+    partnerContact: partnerContact,
+    partnerAddress: partnerAddress,
+    pContactEmail: pContactEmail,
+    pContactNumber: pContactNumber,
+    location: new firebase.firestore.GeoPoint(latitude, longitude),
+    activities: activities, 
+  };
+
+  addDoc(collection(colRef, 'locations'), locationData)
     .then((docRef) => {
       console.log("Document written with ID: ", docRef.id);
     })
@@ -198,24 +195,23 @@ export function addLocation(
 export function editLocation(
   docId,
   name,
-  activity,
-  admuContact,
-  admuEmail,
-  admuOffice,
-  org,
   partnerContact,
-  dates
+  partnerAddress,
+  pContactEmail,
+  pContactNumber,
+  activities,
+  latitude,
+  longitude
 ) {
   const docReference = doc(db, "partners", docId);
   const updateData = {
-    name: name,
-    activity: activity,
-    "`admu-contact`": admuContact,
-    "`admu-email`": admuEmail,
-    "`admu-office`": admuOffice,
-    org: org,
-    "`partner-contact`": partnerContact,
-    dates: dates,
+    partnerName: name,
+    partnerContact: partnerContact,
+    partnerAddress: partnerAddress,
+    pContactEmail: pContactEmail,
+    pContactNumber: pContactNumber,
+    location: new firebase.firestore.GeoPoint(latitude, longitude),
+    activities: activities, 
   };
   return updateDoc(docReference, updateData)
     .then(() => {
