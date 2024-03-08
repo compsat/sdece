@@ -2,14 +2,16 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebas
 import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAcs4DxFX0knEEloIjN_sK6iMugGM7kGmM",
-    authDomain: "angelo-authtest.firebaseapp.com",
-    projectId: "angelo-authtest",
-    storageBucket: "angelo-authtest.appspot.com",
-    messagingSenderId: "876214232341",
-    appId: "1:876214232341:web:ccd742f75679419933f51c"
+    apiKey: "AIzaSyAeo2wTJFotROMNPa4UHXo2MqPaW8k07us",
+    authDomain: "compsat-sdece.firebaseapp.com",
+    databaseURL:
+      "https://compsat-sdece-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "compsat-sdece",
+    storageBucket: "compsat-sdece.appspot.com",
+    messagingSenderId: "46954820322",
+    appId: "1:46954820322:web:c19499507632da09a2a4bb",
+    measurementId: "G-RPZYTFB5KC",
   };
-
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 
