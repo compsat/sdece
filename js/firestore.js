@@ -173,17 +173,15 @@ export function addLocation(
   latitude,
   longitude
 ) {
-  const locationData = {
+  addDoc(colRef, {
     partnerName: name,
     partnerContact: partnerContact,
     partnerAddress: partnerAddress,
     pContactEmail: pContactEmail,
     pContactNumber: pContactNumber,
     location: new firebase.firestore.GeoPoint(latitude, longitude),
-    activities: activities, 
-  };
-
-  addDoc(collection(colRef, 'locations'), locationData)
+    activities: activities,
+  })
     .then((docRef) => {
       console.log("Document written with ID: ", docRef.id);
     })
@@ -203,7 +201,7 @@ export function editLocation(
   latitude,
   longitude
 ) {
-  const docReference = doc(db, "partners", docId);
+  const docReference = doc(db, "partners2", docId);
   const updateData = {
     partnerName: name,
     partnerContact: partnerContact,
@@ -211,7 +209,7 @@ export function editLocation(
     pContactEmail: pContactEmail,
     pContactNumber: pContactNumber,
     location: new firebase.firestore.GeoPoint(latitude, longitude),
-    activities: activities, 
+    activities: activities,
   };
   return updateDoc(docReference, updateData)
     .then(() => {
