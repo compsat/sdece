@@ -1,5 +1,4 @@
 // FIRESTORE DATABASE
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
 import {
   getFirestore,
@@ -7,31 +6,32 @@ import {
   getDocs,
   addDoc,
   updateDoc,
-  doc,
+  doc, 
   query,
   where,
   getDoc,
 } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
 
+
 // Your Firestore code here
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
 const firebaseConfig = {
-  apiKey: "AIzaSyAeo2wTJFotROMNPa4UHXo2MqPaW8k07us",
-  authDomain: "compsat-sdece.firebaseapp.com",
-  databaseURL:
-    "https://compsat-sdece-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "compsat-sdece",
-  storageBucket: "compsat-sdece.appspot.com",
-  messagingSenderId: "46954820322",
-  appId: "1:46954820322:web:c19499507632da09a2a4bb",
-  measurementId: "G-RPZYTFB5KC",
+  apiKey: "AIzaSyA8QWgic_hjbDL-EYIkvSRRII_yfTRdtOQ",
+  authDomain: "discs-osci-prj.firebaseapp.com",
+  projectId: "discs-osci-prj",
+  storageBucket: "discs-osci-prj.appspot.com",
+  messagingSenderId: "601571823960",
+  appId: "1:601571823960:web:1f1278ecb86aa654e6152d",
+  measurementId: "G-9N9ELDEMX9"
 };
+
 initializeApp(firebaseConfig);
 const db = getFirestore();
-const colRef = collection(db, "partners-2");
-let partnersArray = [];
+export const colRef = collection(db, "sdece-official");
+console.log(getDocs(colRef))
 
 export function getDocIdByPartnerName(partnerName) {
   const endName = partnerName.replace(/\s/g, "\uf8ff");
@@ -48,19 +48,19 @@ export function getDocIdByPartnerName(partnerName) {
         const doc = querySnapshot.docs[0];
         return doc.id;
       } else {
-        console.log("No matching document found.");
+        // console.log("No matching document found.");
         return null;
       }
     })
     .catch((error) => {
-      console.error("Error getting documents: ", error);
+      // console.error("Error getting documents: ", error);
       return null;
     });
 }
 
 export function getDocByID(docId) {
   const docReference = doc(db, "partners-2", docId);
-  console.log(docReference);
+  // console.log(docReference);
   let docObj = {};
   return getDoc(docReference).then((doc) => {
     docObj = doc.data();
@@ -69,71 +69,74 @@ export function getDocByID(docId) {
 }
 
 // get docs from firestore
-
-getDocs(colRef)
+ 
+export function getStuff(array) {
+  return getDocs(colRef)
   .then((querySnapshot) => {
     querySnapshot.forEach((doc) => {
       if (doc.data().name !== "Test 2" || doc.data().name !== "Test2") {
-        partnersArray.push(doc.data());
+        array.push(doc.data());
       }
     });
-
+    return array
+  
+    // console.log(array)
     // populate ul with partners
-    partnersArray.forEach((partner) => {
-      console.log(partner);
+    // array.forEach((partner) => {
 
-      // Creating DOM elements
-      const containerDiv = document.createElement("div");
-      const img = document.createElement("svg");
-      const listItem = document.createElement("li");
-      const anchor = document.createElement("a");
-      const nameDiv = document.createElement("div");
-      const addressDiv = document.createElement("div");
-      const activityDiv = document.createElement("div");
+    //   // Creating DOM elements
+    //   const containerDiv = document.createElement("div");
+    //   const img = document.createElement("svg");
+    //   const listItem = document.createElement("li");
+    //   const anchor = document.createElement("a");
+    //   const nameDiv = document.createElement("div");
+    //   const addressDiv = document.createElement("div");
+    //   const activityDiv = document.createElement("div");
 
-      // Set attributes
-      anchor.href = "#";
+    //   // Set attributes
+    //   anchor.href = "#";
 
-      anchor.addEventListener("click", () => {
-        showModal(partner);
-      });
+    //   anchor.addEventListener("click", () => {
+    //     showModal(partner);
+    //   });
 
-      // Adding classes and setting text content
-      nameDiv.classList.add("name");
-      addressDiv.classList.add("address");
-      activityDiv.classList.add("activity");
+    //   // Adding classes and setting text content
+    //   nameDiv.classList.add("name");
+    //   addressDiv.classList.add("address");
+    //   activityDiv.classList.add("activity");
 
-      nameDiv.textContent = partner.partnerName;
-      addressDiv.textContent = partner.partnerAddress;
-      activityDiv.textContent = "";
+    //   nameDiv.textContent = partner.partnerName;
+    //   addressDiv.textContent = partner.partnerAddress;
+    //   activityDiv.textContent = "";
 
-      if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
-      {
-        partner.activities.forEach( (activity) => {
-          activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
-        });
-      }
+    //   if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
+    //   {
+    //     partner.activities.forEach( (activity) => {
+    //       activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
+    //     });
+    //   }
       
 
-      listItem.classList.add("accordion");
-      anchor.classList.add("accordion", "link");
+    //   listItem.classList.add("accordion");
+    //   anchor.classList.add("accordion", "link");
 
-      // Append elements to the DOM
-      anchor.appendChild(nameDiv);
-      anchor.appendChild(addressDiv);
-      anchor.appendChild(activityDiv);
+    //   // Append elements to the DOM
+    //   anchor.appendChild(nameDiv);
+    //   anchor.appendChild(addressDiv);
+    //   anchor.appendChild(activityDiv);
 
-      listItem.appendChild(anchor);
-      containerDiv.appendChild(img);
-      containerDiv.appendChild(listItem);
-      locationList.appendChild(containerDiv);
-    });
+    //   listItem.appendChild(anchor);
+    //   containerDiv.appendChild(img);
+    //   containerDiv.appendChild(listItem);
+    //   locationList.appendChild(containerDiv);
+    // });
   })
   .catch((error) => {
     console.error("Error getting documents: ", error);
   });
+} 
 
-function showModal(partner) {
+export function showModal(partner) {
   const modal = document.getElementById("partnerModal");
   const modalContent = document.getElementById("modalContent");
 
@@ -224,10 +227,10 @@ export function addLocation(
     Longitude: longitude,
   })
     .then((docRef) => {
-      console.log("Document written with ID: ", docRef.id);
+      // console.log("Document written with ID: ", docRef.id);
     })
     .catch((error) => {
-      console.error("Error adding document: ", error);
+      // console.error("Error adding document: ", error);
     });
 }
 
@@ -255,10 +258,11 @@ export function editLocation(
   };
   return updateDoc(docReference, updateData)
     .then(() => {
-      console.log("Document updated successfully");
+      // console.log("Document updated successfully");
       alert("Document updated successfully");
     })
     .catch((error) => {
-      console.error("Error updating document: ", error);
+      // console.error("Error updating document: ", error);
     });
 }
+
