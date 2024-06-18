@@ -1,86 +1,383 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <meta charset="utf-8" />
-  <title>Geocoding Control</title>
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <head>
+        <meta charset="utf-8" />
+        <title>Geocoding Control</title>
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 
-  <!-- Load Leaflet from CDN -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-    crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
-    integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
-    crossorigin=""></script>
+        <!-- Import Montserrat and Hind from Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        
+        <!-- Load Leaflet from CDN -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+            integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+            crossorigin="" />
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+            integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+            crossorigin=""></script>
+        
+        <!-- Load Esri Leaflet from CDN -->
+        <script src="https://unpkg.com/esri-leaflet@2.4.1/dist/esri-leaflet.js"
+            integrity="sha512-xY2smLIHKirD03vHKDJ2u4pqeHA7OQZZ27EjtqmuhDguxiUvdsOuXMwkg16PQrm9cgTmXtoxA6kwr8KBy3cdcw=="
+            crossorigin=""></script>
+        
+        <!-- Load Esri Leaflet Geocoder from CDN -->
+        <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.css"
+            integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+            crossorigin="">
+        <script src="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.js"
+            integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
+            crossorigin=""></script>
+        <link href="./src/output.css" rel="stylesheet">
+        <script type="module" src="js/firestore.js"></script>
+    </head>
+    
+    <body>
+
+        <!-- <div id="partnerModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+            </div>
+        </div> -->
+
+        <div class="main w-full h-screen">
+            <div class="sidenav bg-customLightGray w-[480px] overflow-scroll">
+                <div class="h-20 px-3 bg-white w-full flex flex-row items-center ">
+                    <div class="bg-customMediumGray  text-2xl flex flex-row w-full rounded-2xl overflow-hidden py-3 px-8">
+                        
+                        <input onkeyup="helpMe()" type="text" id="search-input" placeholder="Search..." class="bg-customMediumGray focus:outline-none focus:ring-0 w-full font-hind ">
+                        <div class="flex flex-row justify-end items-center ">
+                            <button>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="size-8 stroke-customDarkGray mr-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                                </svg>
+                            </button>
+                            <button>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class=" size-8 stroke-customDarkGray">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <button id="mainButton" class="text-xl flex flex-row items-center px-8 py-4 bg-customLightGray w-full text-lightbg my-6 hover:text-darkbg">
+                    <div>+</div>
+                    <p class="ml-4 font-bold font-montserrat ">Add an activity</p>
+                </button>
+                <div class="entries bg-customLightGray">
+                    <ul id="locationList" class="accordion ">
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Right container containing Login/Logout header and map -->
+            <div class="w-full h-screen overflow-y-hidden flex flex-col">   
+                             
+                <div class="h-20 px-9 bg-darkbg w-full flex flex-row justify-end items-center">
+                    <button class="shadow-md py-3 px-6 bg-lightbg font-montserrat font-bold text-xl rounded flex flex-row text-white justify-center items-center">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
+                        </svg>
 
 
-  <!-- Load Esri Leaflet from CDN -->
-  <script src="https://unpkg.com/esri-leaflet@2.4.1/dist/esri-leaflet.js"
-    integrity="sha512-xY2smLIHKirD03vHKDJ2u4pqeHA7OQZZ27EjtqmuhDguxiUvdsOuXMwkg16PQrm9cgTmXtoxA6kwr8KBy3cdcw=="
-    crossorigin=""></script>
+                        Logout
+                    </button>
+                </div>
+                
+                <div class="flex flex-1">
+                    <div id="map" class="w-full h-full">
+                    </div>
+                </div>
 
-  <!-- Load Esri Leaflet Geocoder from CDN -->
-  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.css"
-    integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
-    crossorigin="">
-  <script src="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.js"
-    integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
-    crossorigin=""></script>
+            </div>
+        </div>
 
-  <link rel="stylesheet" href="css/main.css">
-  <script type="module" src="js/firestore.js"></script>
+        <!-- Add Activity Modal -->
+        <div id="mainModal" class="h-full w-full  flex-row fixed z-[2400] items-center justify-center  inset-0 hidden">
+        
+            <!--  content -->
+            <div class=" bg-customLightGray h-auto w-[480px] shadow-md ">
+                
+                <div class="flex flex-row justify-end p-4">
+                    <svg id="closeButton" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </div>
 
-</head>
+                <div class=" p-5">
+                    <h1 class=" border-b-2 border-lightbg font-montserrat font-medium text-2xl text-customDarkGray pb-2">Partner Name</h1>
 
-<body>
-  <div id="partnerModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <p id="modalContent"></p>
-    </div>
-  </div>
-  <div class="main">
-    <div class="sidenav">
-      <div class="header">
-        <!-- <div class="logo-container">
-        <img src="img/logo-osci.png" class="logo">
-        <h3 class="heading">Office for Social Concern and Involvement</h3> -->
-        <input type="text" id="search-bar" placeholder="Search...">
+                    <div class="flex flex-row mt-6 w-full pb-3 border-b-[1px] border-customDarkGray">
+                        <button>
+                            <svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                            </svg>
 
-      </div>
-      <!-- <div class="buttons">
-    <button class="container label-font" href="#">
-      <svg xmlns="http://www.w3.org/2000/svg" class="icon">
-        <path
-          d="M16 3.51575C10.84 3.51575 6.66669 7.68908 6.66669 12.8491C6.66669 19.8491 16 30.1824 16 30.1824C16 30.1824 25.3334 19.8491 25.3334 12.8491C25.3334 7.68908 21.16 3.51575 16 3.51575ZM16 16.1824C15.116 16.1824 14.2681 15.8312 13.643 15.2061C13.0179 14.581 12.6667 13.7331 12.6667 12.8491C12.6667 11.965 13.0179 11.1172 13.643 10.4921C14.2681 9.86694 15.116 9.51575 16 9.51575C16.8841 9.51575 17.7319 9.86694 18.357 10.4921C18.9822 11.1172 19.3334 11.965 19.3334 12.8491C19.3334 13.7331 18.9822 14.581 18.357 15.2061C17.7319 15.8312 16.8841 16.1824 16 16.1824Z"
-          fill="#568D9E" />
-      </svg>Add Location
-    </button>
-    <button class="container label-font" href="#">
-      <svg xmlns="http://www.w3.org/2000/svg" class="icon">
-        <path d="M23.7844 9.8585L21.4937 7.56787L10.1594 18.8991L9.67188 21.6804L12.45 21.1897L23.7844 9.8585Z"
-          fill="#568D9E" />
-        <path
-          d="M27.5 26.9741H4.5C3.94687 26.9741 3.5 27.421 3.5 27.9741V29.0991C3.5 29.2366 3.6125 29.3491 3.75 29.3491H28.25C28.3875 29.3491 28.5 29.2366 28.5 29.0991V27.9741C28.5 27.421 28.0531 26.9741 27.5 26.9741ZM8.05313 24.3491C8.11563 24.3491 8.17813 24.3429 8.24063 24.3335L13.4969 23.4116C13.5594 23.3991 13.6188 23.371 13.6625 23.3241L26.9094 10.0772C26.9383 10.0483 26.9613 10.014 26.977 9.97619C26.9927 9.93839 27.0008 9.89786 27.0008 9.85693C27.0008 9.81601 26.9927 9.77548 26.977 9.73768C26.9613 9.69987 26.9383 9.66553 26.9094 9.63662L21.7156 4.43975C21.6562 4.38037 21.5781 4.34912 21.4937 4.34912C21.4094 4.34912 21.3313 4.38037 21.2719 4.43975L8.025 17.6866C7.97812 17.7335 7.95 17.7897 7.9375 17.8522L7.01562 23.1085C6.98522 23.2759 6.99609 23.4482 7.04727 23.6105C7.09846 23.7727 7.18842 23.9201 7.30937 24.0397C7.51562 24.2397 7.775 24.3491 8.05313 24.3491ZM10.1594 18.8991L21.4937 7.56787L23.7844 9.8585L12.45 21.1897L9.67188 21.6804L10.1594 18.8991Z"
-          fill="#568D9E" />
-      </svg>Edit Entry
-    </button> -->
+                        </button>
+                        <input class="font-hind text-lg leading-[120%] w-full ml-2" type="text" placeholder="Type the location partner">
+                        <!-- <ul class="rounded border w-[432px] absolute mt-10 bg-customLightGray">
+                            <li class="p-2 flex flex-row border">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                </svg>
+                                Sample Item 1
+                            </li>
+                            <li class="p-2 flex flex-row border">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                </svg>
+                                Sample Item 1
+                            </li>
+                            <li class="p-2 flex flex-row border">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                </svg>
+                                Sample Item 1
+                            </li>
 
-      <div class="entries">
-        <ul id="locationList" class="accordion">
-        </ul>
-      </div>
-    </div>
 
-    <div class="map-container">
-      <div id="map">
-      </div>
-    </div>
-  </div>
+                        </ul> -->
+                    </div>
 
-  <script type="module" src="js/index.js"></script>
-</body>
+                    <div class="mt-14 flex flex-row justify-between items center">
+                        <h2  class="font-montserrat font-bold text-2xl">List of Activities</h2>
+                        <button id="otherButton">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </button>
+                    </div>
 
+                    <!-- TODO: Add selector for JS to dynamically render Empty text or list -->
+                    <p class="mt-4 font-hind text-xl text-customDarkGray">No activities for this partner.</p>
+                    <button class="mt-14 w-full py-4 text-center font-montserrat text-2xl bg-lightbg text-white font-bold rounded-lg">
+                        Save
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Edit Modal -->
+        <div id="editModal" class="h-full w-full  flex-row fixed z-[2400] items-center justify-center bg-black bg-opacity-50 inset-0 hidden ">
+        
+            <!-- Modal content -->
+            <form action="" class="p-8 bg-customLightGray h-2/3 w-[862px] shadow-md  overflow-y-scroll">
+ 
+                <h1 class="font-montserrat text-3xl font-bold text-darkbg mb-8">Edit Activity</h1>
+
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="partner">Activity Name</label>
+                    <input type="text" id="partner" name="partner" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
+                </div>
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="partner">Nature of Activity</label>
+                    <input type="text" id="partner" name="partner" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
+                </div>
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="partner">Dates of Partnership</label>
+                    <input type="date" id="partner" name="partner" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
+                </div>
+
+                <h2 class="mt-9 font-montserrat text-xl text-lightbg font-bold leading-[110%] mb-6">PARTNER INFORMATION</h2>
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="partner">Name of Host Partner</label>
+                    <input type="text" id="partner" name="partner" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
+                </div>
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="partner_contact-person">Address of Host Partner</label>
+                    <input type="text" id="partner_contact-person" name="partner_contact-person" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                </div>
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="organization">Name of Contact Person</label>
+                    <input type="text" id="organization" name="organization" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                </div>
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="nature_of_act">Number of Contact Person</label>
+                    <input type="text" id="nature_of_act" name="nature_of_act" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder=""> 
+                </div>  
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="dates_of_partnership">Email of Contact Person / Partner</label>
+                    <input type="date" id="dates_of_partnership" name="dates_of_partnership" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                </div>
+
+                <h2 class="mt-9 font-montserrat text-xl text-lightbg font-bold leading-[110%] mb-6">ATENEO OFFICE OVERSIGHT</h2>
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="ateneo_office">Name of Office</label>
+                    <input type="text" id="ateneo_office" name="ateneo_office" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                </div>
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="ateneo_contact-person">Name of Ateneo Contact Person</label>
+                    <input type="text" id="ateneo_contact-person" name="ateneo_contact-person" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                </div> 
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="ateneo_contact-email">Email of Ateneo Contact Person</label>
+                    <input type="email" id="ateneo_contact-email" name="ateneo_contact-email" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                </div>
+
+                 <div class="">
+                    <button class="w-full py-4 text-center font-montserrat text-2xl bg-lightbg text-white font-bold rounded-lg" id="submit_form" name="submit_form" type="submit">Save</button>
+                    <button class="w-full py-4 text-center font-montserrat text-2xl text-red-700 font-bold border border-red-700 rounded-lg mt-4">Delete</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Add Modal -->
+        <div id="addModal" class="h-full w-full  flex-row fixed z-[2400] items-center justify-center bg-black bg-opacity-50 inset-0 hidden ">
+        
+            <!-- Modal content -->
+            <form action="" class="p-8 bg-customLightGray h-2/3 w-[862px]  shadow-md  overflow-y-scroll">
+                
+                <h1 class="font-montserrat text-3xl font-bold text-darkbg mb-8">Add Activity</h1>
+
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="partner">Activity Name</label>
+                    <input type="text" id="partner" name="partner" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
+                </div>
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="partner">Nature of Activity</label>
+                    <input type="text" id="partner" name="partner" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
+                </div>
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="partner">Dates of Partnership</label>
+                    <input type="date" id="partner" name="partner" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
+                </div>
+
+                <h2 class="mt-9 font-montserrat text-xl text-lightbg font-bold leading-[110%] mb-6">PARTNER INFORMATION</h2>
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="partner">Name of Host Partner</label>
+                    <input type="text" id="partner" name="partner" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
+                </div>
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="partner_contact-person">Address of Host Partner</label>
+                    <input type="text" id="partner_contact-person" name="partner_contact-person" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                </div>
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="organization">Name of Contact Person</label>
+                    <input type="text" id="organization" name="organization" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                </div>
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="nature_of_act">Number of Contact Person</label>
+                    <input type="text" id="nature_of_act" name="nature_of_act" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder=""> 
+                </div>  
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <label class="form font-montserrat text-xl text-customGray" for="dates_of_partnership">Email of Contact Person / Partner</label>
+                    <input type="date" id="dates_of_partnership" name="dates_of_partnership" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                </div>
+
+                <h2 class="mt-9 font-montserrat text-xl text-lightbg font-bold leading-[110%] mb-6">ATENEO OFFICE OVERSIGHT</h2>
+                    <div class="flex flex-row justify-between mb-6 items-center">
+                        <label class="form font-montserrat text-xl text-customGray" for="ateneo_office">Name of Office</label>
+                        <input type="text" id="ateneo_office" name="ateneo_office" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                    </div>
+                    <div class="flex flex-row justify-between mb-6 items-center">
+                        <label class="form font-montserrat text-xl text-customGray" for="ateneo_contact-person">Name of Ateneo Contact Person</label>
+                        <input type="text" id="ateneo_contact-person" name="ateneo_contact-person" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                    </div> 
+                    <div class="flex flex-row justify-between mb-6 items-center">
+                        <label class="form font-montserrat text-xl text-customGray" for="ateneo_contact-email">Email of Ateneo Contact Person</label>
+                        <input type="email" id="ateneo_contact-email" name="ateneo_contact-email" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                    </div>
+    
+                <!-- Buttons -->
+                <span class="button_div">
+                    <!-- Clears all contents of the form -->
+                    <button class="w-full py-4 text-center font-montserrat text-2xl bg-lightbg text-white font-bold rounded-lg" type="submit" id="submit_form" name="submit_form">Add Activity</button>   
+                    <button class="w-full py-4 text-center font-montserrat text-2xl text-red-700 font-bold border border-red-700 rounded-lg mt-4">Clear</button>
+                    <!-- Submits contents of the form -->                                               
+                </span>
+
+            </form>
+        </div>
+
+        <!-- Partner Modal -->
+        <div id="partnerModal" class="h-full w-full  flex-row fixed z-[2400] items-center justify-center bg-black bg-opacity-50 inset-0 hidden ">
+        
+            <!-- Modal content -->
+            <div class="p-8 bg-customLightGray h-2/3 w-[862px]  shadow-md  overflow-y-scroll">
+                
+                <h1 class="font-montserrat text-3xl font-bold text-darkbg mb-8">Partner Name</h1>
+
+                <div class="flex flex-row justify-between mb-6 items-center">
+                    <p class="font-montserrat text-xl text-customGray" for="partner">Geo location</label>
+                </div>
+
+                <div class="flex justify-between">
+                    <div class="flex-1 flex-row justify-between mb-6 items-center">
+                        <p class="font-montserrat text-xl text-customGray" for="partner">[Name]</label>
+                    </div>
+
+                    <div class="flex-1 flex-row justify-between mb-6 items-center">
+                        <p class="font-montserrat text-xl text-customGray" for="partner">[Number]</label>
+                    </div>
+                </div>
+
+                <div class="flex justify-between">
+                    <div class="flex-1 flex-row justify-between mb-6 items-center">
+                        <p class="font-montserrat text-xl text-customGray" for="partner">Organization / Unit</label>
+                    </div>
+
+                    <div class="flex-1 flex-row justify-between mb-6 items-center">
+                        <p class="font-montserrat text-xl text-customGray" for="partner">[Organization / Unit]</label>
+                    </div>
+                </div>
+
+                <div class="flex justify-between">
+                    <div class="flex-1 flex-row justify-between mb-6 items-center">
+                        <p class="font-montserrat text-xl text-customGray" for="partner">Nature of Activity</label>
+                    </div>
+
+                    <div class="flex-1 flex-row justify-between mb-6 items-center">
+                        <p class="font-montserrat text-xl text-customGray" for="partner">[Nature of Activity]</label>
+                    </div>
+                </div>
+
+                <div class="flex justify-between">
+                    <div class="flex-1 flex-row justify-between mb-6 items-center">
+                        <p class="font-montserrat text-xl text-customGray" for="partner">Dates of Partnership</label>
+                    </div>
+
+                    <div class="flex-1 flex-row justify-between mb-6 items-center">
+                        <p class="font-montserrat text-xl text-customGray" for="partner">Date 1</label>
+                    </div>
+                </div>
+
+                <div class="flex justify-between">
+                    <div class="flex-1 flex-row justify-between mb-6 items-center">
+                        <p class="font-montserrat text-xl text-customGray" for="partner"></label>
+                    </div>
+
+                    <div class="flex-1 flex-row justify-between mb-6 items-center">
+                        <p class="font-montserrat text-xl text-customGray" for="partner">Date 2</label>
+                    </div>
+                </div>
+
+
+
+    
+                <!-- Buttons -->
+                <span class="button_div">
+                    <!-- Clears all contents of the form -->
+                    <button class="editButton w-full py-4 text-center font-montserrat text-2xl bg-lightbg text-white font-bold rounded-lg">Edit Entry</button>                   
+                    <!-- Submits contents of the form -->                                               
+                </span>
+
+            </div>
+        </div>
+
+        <script type="module" src="js/index.js"></script>
+    
+    </body>
 </html>

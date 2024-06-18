@@ -16,8 +16,8 @@ div.input_container {
 select.attribs {
     display: block; 
     margin-bottom: 10px;
-    width: 200px;
-    padding: 10px;
+    width: 100px;
+    padding: 0px;
     box-sizing: border-box;
     font-family: 'Hind'; font-size: 20px;
     border-style: double;
@@ -29,8 +29,8 @@ select.attribs {
 input.attribs {
     display: block; 
     margin-bottom: 10px;
-    width: 400px;
-    padding: 10px;
+    width: 300px;
+    padding: 0px;
     box-sizing: border-box;
     font-family: 'Hind'; font-size: 20px;
     border-style: double;

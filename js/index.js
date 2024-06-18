@@ -1,10 +1,13 @@
-import { getDocIdByPartnerName, getDocByID, getStuff, showModal } from "./firestore.js";
+//import { getDocIdByPartnerName, getDocByID, setCollection, getCollection, DB } from "/firestore_UNIV.js";
+import { getDocIdByPartnerName, getDocByID } from "./firestore.js";
 
 var map = L.map("map").setView([14.651, 121.052], 13);
+//setCollection("partner-2");
+//var colRef = getCollection();
 
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution:
-    '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	attribution:
+		'&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
 var searchControl = L.esri.Geocoding.geosearch().addTo(map);
@@ -12,43 +15,181 @@ var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
-async function PopUp(loc) {
-        var popupContent = `
-        <div class="leaflet-popup-container">
-          <h2 class="partner-header">${loc}</h2>          
-          <div class="partner-contact">
-          </div>
-          <div class="leaflet-buttons">
-          <div class="deleteButton" data-loc="${loc}">Delete<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-  <path d="M10 10C10.5523 10 11 10.4477 11 11V17C11 17.5523 10.5523 18 10 18C9.44772 18 9 17.5523 9 17V11C9 10.4477 9.44772 10 10 10Z" fill="#D64747"/>
-  <path d="M15 17V11C15 10.4477 14.5523 10 14 10C13.4477 10 13 10.4477 13 11V17C13 17.5523 13.4477 18 14 18C14.5523 18 15 17.5523 15 17Z" fill="#D64747"/>
-  <path fill-rule="evenodd" clip-rule="evenodd" d="M7 5V4C7 3.20435 7.31607 2.44129 7.87868 1.87868C8.44129 1.31607 9.20435 1 10 1H14C14.7956 1 15.5587 1.31607 16.1213 1.87868C16.6839 2.44129 17 3.20435 17 4V5H21C21.5523 5 22 5.44772 22 6C22 6.55228 21.5523 7 21 7H20V20C20 20.7957 19.6839 21.5587 19.1213 22.1213C18.5587 22.6839 17.7957 23 17 23H7C6.20435 23 5.44129 22.6839 4.87868 22.1213C4.31607 21.5587 4 20.7957 4 20V7H3C2.44772 7 2 6.55228 2 6C2 5.44772 2.44772 5 3 5H7ZM9.29289 3.29289C9.48043 3.10536 9.73478 3 10 3H14C14.2652 3 14.5196 3.10536 14.7071 3.29289C14.8946 3.48043 15 3.73478 15 4V5H9V4C9 3.73478 9.10536 3.48043 9.29289 3.29289ZM6 7V20C6 20.2652 6.10536 20.5196 6.29289 20.7071C6.48043 20.8946 6.73478 21 7 21H17C17.2652 21 17.5196 20.8946 17.7071 20.7071C17.8946 20.5196 18 20.2652 18 20V7H6Z" fill="#D64747"/>
-</svg></div>
-          <div class="editButton" data-loc="${loc}">Edit<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M20 0.878662C19.1722 0.878662 18.3783 1.20751 17.7929 1.79288L8.29289 11.2929C8.16473 11.421 8.07382 11.5816 8.02986 11.7574L7.02986 15.7574C6.94466 16.0982 7.04451 16.4587 7.29289 16.7071C7.54127 16.9555 7.90176 17.0553 8.24254 16.9701L12.2425 15.9701C12.4184 15.9262 12.5789 15.8352 12.7071 15.7071L22.2071 6.20709C22.7925 5.62173 23.1213 4.82781 23.1213 3.99998C23.1213 3.17216 22.7925 2.37824 22.2071 1.79288C21.6217 1.20751 20.8278 0.878662 20 0.878662ZM19.2071 3.20709C19.4174 2.9968 19.7026 2.87866 20 2.87866C20.2974 2.87866 20.5826 2.9968 20.7929 3.20709C21.0032 3.41738 21.1213 3.70259 21.1213 3.99998C21.1213 4.29737 21.0032 4.58259 20.7929 4.79288L11.4888 14.097L9.37437 14.6256L9.90296 12.5112L19.2071 3.20709Z" fill="#3d97af"/>
-          <path d="M4 3C3.20435 3 2.44129 3.31607 1.87868 3.87868C1.31607 4.44129 1 5.20435 1 6V20C1 20.7957 1.31607 21.5587 1.87868 22.1213C2.44129 22.6839 3.20435 23 4 23H18C18.7957 23 19.5587 22.6839 20.1213 22.1213C20.6839 21.5587 21 20.7957 21 20V13C21 12.4477 20.5523 12 20 12C19.4477 12 19 12.4477 19 13V20C19 20.2652 18.8946 20.5196 18.7071 20.7071C18.5196 20.8946 18.2652 21 18 21H4C3.73478 21 3.48043 20.8946 3.29289 20.7071C3.10536 20.5196 3 20.2652 3 20V6C3 5.73478 3.10536 5.48043 3.29289 5.29289C3.48043 5.10536 3.73478 5 4 5H11C11.5523 5 12 4.55228 12 4C12 3.44772 11.5523 3 11 3H4Z" fill="#3d97af"/>
-          </svg></div>
-          </div>
-        </div>
-          `;
-        marker.bindPopup(popupContent);
-        results.addLayer(marker);
+async function searchLocation(loc) {
+	var parsed_loc = encodeURIComponent(
+		loc.toLowerCase().replace(/[^a-z0-9 _-]+/gi, '-')
+	);
+	var api_search = 'https://nominatim.openstreetmap.org/search?q=';
+	var link = api_search.concat(parsed_loc).concat('&format=json');
+	console.log(link);
 
-        marker.on("popupopen", function () {
-          var editButtons = document.getElementsByClassName("editButton");
-          for (var i = 0; i < editButtons.length; i++) {
-            editButtons[i].addEventListener("click", function () {
-              var partnerName = this.getAttribute("data-loc");
-              window.open(
-                `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
-                "_blank"
-              );
-            });
-          }
-        });
-        marker.on("click", function (event) {
-          // console.log(getDetails(entry["name"]));
-        });
+	var response = await fetch(link);
+	fetch(link)
+		.then((response) => response.json())
+		.then((json) => {
+			json.forEach(function (entry, index) {
+				var marker = L.marker([
+					parseFloat(entry['lat']),
+					parseFloat(entry['lon']),
+				]);
+
+				// This is the popup for when the user clicks on a partner
+				var popupContent = `
+          <button class="popup-accordion" style="display: flex; align-items: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C11.337 11.5 10.7011 11.2366 10.2322 10.7678C9.76339 10.2989 9.5 9.66304 9.5 9C9.5 8.33696 9.76339 7.70107 10.2322 7.23223C10.7011 6.76339 11.337 6.5 12 6.5C12.663 6.5 13.2989 6.76339 13.7678 7.23223C14.2366 7.70107 14.5 8.33696 14.5 9C14.5 9.66304 14.2366 10.2989 13.7678 10.7678C13.2989 11.2366 12.663 11.5 12 11.5Z" fill="#91C9DB"/>
+            </svg>
+            ${loc}
+            <svg xmlns="http://www.w3.org/2000/svg" fill="##387181" stroke="##387181" viewBox="0 0 24 24" stroke-width="1.5" class="size-8 mr-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z" />
+            </svg>
+          </button>
+
+          <div class="popup-accordion-content">
+            <div class="partner-info mb-4">
+              <p style="font-weight: bold;">[Contact Person Name]</p>
+              <p>[Contact Person Number]</p>
+            </div>
+
+            <hr class="mb-4">
+            
+            <div class="partner-info">
+              <img src="img/logo-admu.png" alt="OSCI Logo" class="img w-8 h-auto mr-8">
+              <p style="font-weight: bold;">[Ateneo Person Name]</p>
+              <p>[Ateneo Person Email]</p>
+            </div>
+
+            <button class="expandPopUp text-red-600">Click for more details.</button>
+          </div>
+          `;
+
+				marker.bindPopup(popupContent);
+				results.addLayer(marker);
+
+				marker.on('popupopen', function () {
+					var expandButtons =
+						document.getElementsByClassName('expandPopUp');
+					for (var i = 0; i < expandButtons.length; i++) {
+						expandButtons[i].addEventListener(
+							'click',
+							function () {
+								// Select the modal and partnerName elements
+								var modal =
+									document.getElementById(
+										'partnerModal'
+									);
+
+								// TODO: Integrate this functionality into the modal instead
+								// var partnerName = this.getAttribute("data-loc");
+								//       window.open(
+								//         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
+								//         "_blank"
+								//       );
+
+								// Display the modal
+								modal.classList.remove('hidden');
+								modal.classList.add('flex');
+
+								// Close the modal when the user clicks anywhere outside of it
+								window.onclick = function (event) {
+									if (event.target == modal) {
+										modal.classList.add('hidden');
+									}
+								};
+							}
+						);
+					}
+
+					var editButtons =
+						document.getElementsByClassName('editButton');
+					for (var i = 0; i < editButtons.length; i++) {
+						editButtons[i].addEventListener(
+							'click',
+							function () {
+								// Select the modal and partnerName elements
+								var modal =
+									document.getElementById(
+										'editModal'
+									);
+
+								var partnerModal =
+									document.getElementById(
+										'partnerModal'
+									);
+								// TODO: Integrate this functionality into the modal instead
+								// var partnerName = this.getAttribute("data-loc");
+								//       window.open(
+								//         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
+								//         "_blank"
+								//       );
+
+								// Display the modal
+								modal.classList.remove('hidden');
+								modal.classList.add('flex');
+								partnerModal.classList.add('hidden'); // Not sure if this should be hidden nalang, or should be kept open with the editModal on top nalang
+
+								// Close the modal when the user clicks anywhere outside of it
+								window.onclick = function (event) {
+									if (event.target == modal) {
+										modal.classList.add('hidden');
+									}
+								};
+							}
+						);
+					}
+
+					// Pop up toggle show/hide
+					var acc =
+						document.getElementsByClassName(
+							'popup-accordion'
+						);
+					var i;
+
+					for (i = 0; i < acc.length; i++) {
+						acc[i].addEventListener('click', function () {
+							/* Toggle between adding and removing the "active" class,
+            to highlight the button that controls the panel */
+							this.classList.toggle('active');
+
+							/* Toggle between hiding and showing the active panel */
+							var contents = this.nextElementSibling;
+							if (contents.style.display === 'block') {
+								contents.style.display = 'none';
+							} else {
+								contents.style.display = 'block';
+							}
+						});
+					}
+				});
+				marker.on('click', function (event) {
+					console.log(getDetails(entry['name']));
+				});
+			});
+		});
+}
+
+function searchLocation(doc) {// just add a marker at this location
+  console.log("adding markers in "+doc.partnerName+" at "+ 
+    "lat: "+ doc.location.latitude +
+    "long: "+ doc.location.longitude);
+  var marker = L.marker([
+    parseFloat(doc.location.latitude),
+    parseFloat(doc.location.longitude),
+  ]);
+
+  results.addLayer(marker);
+  // console.log("Search location of "+ doc.id);
+  // let popup = L.popup()
+  //   .setLatLng([doc.latitude + 0.00015, doc.longitude] )
+  //   .setContent(`
+  //   <div class="leaflet-popup-container">
+  //   <h2 class="partner-header">${doc.household_name}</h2>          
+  //   <div class="partner-contact">${doc.address} ${doc.phase}</div>
+  //   `)
+  //   .openOn(map);
+
+  
+  // map.panTo(new L.LatLng(doc.latitude, doc.longitude));
 }
 
 searchControl.on("results", function (data) {
@@ -61,10 +202,11 @@ searchControl.on("results", function (data) {
 });
 
 function onMapClick(e) {
-  const lat = e.latlng.lat;
-  const lng = e.latlng.lng;
+	const lat = e.latlng.lat;
+	const lng = e.latlng.lng;
 
-  var popupContent = `
+	// This is the popup for when the user clicks on a spot on the map
+	var popupContent = `
       <div class="partner-geolocation">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C11.337 11.5 10.7011 11.2366 10.2322 10.7678C9.76339 10.2989 9.5 9.66304 9.5 9C9.5 8.33696 9.76339 7.70107 10.2322 7.23223C10.7011 6.76339 11.337 6.5 12 6.5C12.663 6.5 13.2989 6.76339 13.7678 7.23223C14.2366 7.70107 14.5 8.33696 14.5 9C14.5 9.66304 14.2366 10.2989 13.7678 10.7678C13.2989 11.2366 12.663 11.5 12 11.5Z" fill="#91C9DB"/>
@@ -72,26 +214,42 @@ function onMapClick(e) {
             ${lat} + ${lng}
             <br>
         </div>
-    <button class="addButton" data-lat="${lat}" data-lng="${lng}">Add Location</button>
+    <button class="addButton p-5" data-lat="${lat}" data-lng="${lng}">Add Location</button>
   `;
 
-  popup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
+	popup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
 
-  var addButton = document.querySelector(".addButton");
-  addButton.addEventListener("click", function () {
-    const lat = this.getAttribute("data-lat");
-    const lng = this.getAttribute("data-lng");
+	var addButton = document.querySelector('.addButton');
+	addButton.addEventListener('click', function () {
+		const lat = this.getAttribute('data-lat');
+		const lng = this.getAttribute('data-lng');
 
-    window.open(
-      `addloc.html?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(
-        lng
-      )}`,
-      "_blank"
-    );
-  });
+		var modal = document.getElementById('addModal');
+
+		// TODO: Integrate this functionality into the modal instead
+		// var partnerName = this.getAttribute("data-loc");
+		// window.open(
+		//   `addloc.html?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(
+		//     lng
+		//   )}`,
+		//   "_blank"
+		// );
+
+		// Display the modal
+		modal.classList.remove('hidden');
+		modal.classList.add('flex');
+
+		// Close the modal when the user clicks anywhere outside of it
+		window.onclick = function (event) {
+			if (event.target == modal) {
+				modal.classList.add('hidden');
+			}
+		};
+	});
 }
 
-map.on("click", onMapClick);
+map.on('click', onMapClick);
+map.panTo(new L.LatLng(14.652538, 121.077818));
 
 function panLocation(name) {
   getDocIdByPartnerName(name).then((docId) => {
@@ -99,39 +257,47 @@ function panLocation(name) {
       // console.log(doc);
       // console.log(`Panning to ${doc.location.latitude}, ${doc.location.longitude}`);
       map.panTo(new L.LatLng(doc.location.latitude, doc.location.longitude));
-      // console.log(`Searching for ${doc.partnerName}`);
+      console.log(`Searching for ${doc.partnerName}`);
+      searchLocation(doc);
     });
   });
 }
 
-document.getElementById("locationList").addEventListener("click", (event) => {
-  panLocation(event.target.innerHTML);
+document.getElementById('locationList').addEventListener('click', (event) => {
+	panLocation(event.target.innerHTML);
 });
 
 function getDetails(name) {
-  getDocIdByPartnerName(name).then((docId) => {
-    if (docId) {
-      getDocByID(docId).then((doc) => {
-        // console.log("Partner details:", doc);
-        // Insert the partner details into the div with class "partner-contact"
-        const partnerContactDiv = document.querySelector(".partner-contact");
-        if (partnerContactDiv) {
-          doc.activities.forEach( (activity) => {       // current lists down all of activities, revamp if needed
-            partnerContactDiv.innerHTML += `
+	getDocIdByPartnerName(name).then((docId) => {
+		if (docId) {
+			getDocByID(docId).then((doc) => {
+				console.log('Partner details:', doc);
+				// Insert the partner details into the div with class "partner-contact"
+				const partnerContactDiv =
+					document.querySelector('.partner-contact');
+				if (partnerContactDiv) {
+					doc.activities.forEach((activity) => {
+						// current lists down all of activities, revamp if needed
+						partnerContactDiv.innerHTML += `
             <div class="partner-info">
               <p class="partner-activity"> ${activity.activityName}</p>
             </div>
+
+            <br>
 
             <div class="partner-info">
               <p class="partner-label">Contact Person</p>
               <p class="partner-value">${activity.ateneoContactPerson}</p>
             </div>
 
+            <br>            
+
             <div class="partner-info">
               <p class="partner-label">Organization / Unit</p>
               <p class="partner-value"> ${activity.ateneoOrganization}</p>
             </div>
             
+            <br>
 
             <div class="partner-info">
               <p class="partner-label">Date/s of Partnership</p>
@@ -139,25 +305,63 @@ function getDetails(name) {
             </div>
 
               <hr>
+              <br>
               <h2>Ateneo Office Oversight</h2> 
 
             <div class="partner-info">          
               <p class="partner-label">${activity.ateneoOverseeingOffice}</p>
               <p class="partner-value"> ${activity.ateneoContactEmail}</p>
-              <p class="partner-value"> ${activity.ateneoOverseeingOfficeEmail}</p>
+              <p class="partner-value"> ${
+				activity.ateneoOverseeingOfficeEmail
+			}</p>
               </div>
-            
             `;
-          });
-          
-        } else {
-          // console.log("Div with class 'partner-contact' not found.");
-        }
-      });
-    } else {
-      // console.log("No matching partner found.");
-    }
-  });
+					});
+				} else {
+					console.log(
+						"Div with class 'partner-contact' not found."
+					);
+				}
+			});
+		} else {
+			console.log('No matching partner found.');
+		}
+	});
+}
+
+// Show main Add an activity modal
+const element = document.getElementById('mainButton');
+element.addEventListener('click', showModal);
+
+function showModal() {
+	console.log("'Add an activity' button was clicked!");
+
+	var mainModal = document.getElementById('mainModal');
+	mainModal.classList.remove('hidden');
+	mainModal.classList.add('flex');
+}
+
+// Close main Add an activity modal
+const elementCloseButton = document.getElementById('closeButton');
+elementCloseButton.addEventListener('click', closeModal);
+
+function closeModal() {
+	var mainModal = document.getElementById('mainModal');
+	mainModal.classList.remove('flex');
+	mainModal.classList.add('hidden');
+}
+
+// Fuction for filtering results upon searching partners
+
+const newButton = document.getElementById('otherButton');
+newButton.addEventListener('click', testFunction);
+
+function testFunction() {
+	console.log('The button is working');
+
+	var m = document.getElementById('addModal');
+	m.classList.remove('hidden');
+	m.classList.add('flex');
 }
 
 getStuff()

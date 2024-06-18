@@ -16,7 +16,6 @@
     integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
     crossorigin=""></script>
 
-
   <!-- Load Esri Leaflet from CDN -->
   <script src="https://unpkg.com/esri-leaflet@2.4.1/dist/esri-leaflet.js"
     integrity="sha512-xY2smLIHKirD03vHKDJ2u4pqeHA7OQZZ27EjtqmuhDguxiUvdsOuXMwkg16PQrm9cgTmXtoxA6kwr8KBy3cdcw=="
@@ -32,14 +31,16 @@
 
   <!-- Load CSS sheets and Firestore Database-->
   <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/form.css">
   <script type="module" src="js/firestore.js"></script>
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
   <!--Logout Button-->
-  <div class="logout">
-    <button class="button-logout">Logout</button>
+  <div class="top-bar">
+    <button class="button-logout"><img src="./img/logout.256x256.png" alt="logout" height="15" width="15"> Logout</button>
   </div>
   <!--Modals of Entries-->
   <div id="partnerModal" class="modal">
@@ -53,24 +54,204 @@
       <p id="modalContent"></p>
     </div>
   </div>
+  <!--Modals of forms-->
+  <div class="form-modal">
+    <!--Modal Header: includes title and address-->
+    <div class="form-modal-header">
+      <span class="close">&times;</span>
+      <h1 class="form-header">Add Household</h1>
+    </div>
+    <!--Modal Content: everything else-->
+    <div class="form-modal-content">
+      <h2 class="sub-header">HOUSEHOLD INFORMATION</h2>
+      <br>
+      <!-- Form -->
+      <div class="input_container">
+          <label class="form" for="household_name">Household Name</label>
+          <input type="text" id="household_name" name="household_name" class="attribs" placeholder="">
+      </div>
+  
+      <br>
+
+      <div class="input_container">
+          <label class="form" for="address">Address</label>
+          <input type="text" id="address" name="address" class="attribs" placeholder="">    
+      </div>
+      
+      <br>
+
+      <div class="input_container">
+          <label class="form" for="contact_number">Contact Number</label>
+          <input type="text" id="contact_number" name="contact_number" class="attribs" placeholder="">    
+      </div>
+      
+      <br>
+
+      <div class="input_container">
+          <label class="form" for="residency_status">Residency Status</label>
+          <input type="text" id="residency_status" name="residency_status" class="attribs" placeholder=""> 
+      </div>
+      
+      <br>
+
+      <div class="input_container">
+          <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
+          <input type="text" id="HOA/NOA" name="HOA/NOA" class="attribs" placeholder=""> 
+      </div>
+      
+      <br>
+
+      <!-- Pressing a button adds another date -->
+
+      <div class="input_container">
+          <label class="form" for="materials_used_for_house">Materials Used for House</label>
+          <input type="text" id="materials_used_for_house" name="materials_used_for_house" class="attribs" placeholder=""> 
+      </div>
+      
+      <br>
+
+      <div class="input_container">
+          <label class="form" for="nearest_evacuation_area">Nearest Evactuation Area</label>
+          <input type="text" id="nearest_evacuation_area" name="nearest_evacuation_area" class="attribs" placeholder="">    
+      </div>
+      
+      <br>
+
+      <h2 class="sub-header">RESIDENT INFORMATION</h2>
+      <br>
+
+      <div class="input_container">
+          <label class="form" for="number_of_residents">Number of Residents</label>
+          <input type="text" id="number_of_residents" name="number_of_residents" class="attribs" placeholder="">    
+      </div>
+      
+      <br>
+
+      <div class="input_container">
+          <label class="form" for="number_of_minor_residents">Number of Minor Residents</label>
+          <input type="text" id="number_of_minor_residents" name="number_of_minor_residents" class="attribs" placeholder="">
+      </div>
+
+      <br>
+
+      <div class="input_container">
+          <label class="form" for="number_of_senior_residents">Number of Senior Citizen Residents</label>
+          <input type="text" id="number_of_senior_residents" name="number_of_senior_residents" class="attribs" placeholder="">
+      </div>
+
+      <br>
+
+      <div class="input_container">
+          <label class="form" for="number_of_pwd_residents">Number of PWD Residents</label>
+          <input type="text" id="number_of_pwd_residents" name="number_of_pwd_residents" class="attribs" placeholder="">
+      </div>
+
+      <br>
+
+      <div class="input_container">
+          <label class="form" for="number_of_sick_residents">Number of Sick Residents</label>
+          <input type="text" id="number_of_sick_residents" name="number_of_sick_residents" class="attribs" placeholder="">
+      </div>
+      
+      <br>
+
+      <div class="input_container">
+          <label class="form" for="number_of_pregnant_residents">Number of Pregnant Residents</label>
+          <input type="text" id="number_of_pregnant_residents" name="number_of_pregnant_residents" class="attribs" placeholder="">
+      </div>
+
+      <br>
+
+      <h2 class="sub-header">RISK LEVELS</h2>
+      <br>
+
+      <div class="input_container">
+          <label class="disaster-form" for="earthquake">Earthquake</label>
+          <select name="earthquake_level" id="earthquake" class="attribs">
+              <option value="" disabled selected hidden></option>
+              <option value="high">HIGH</option>
+              <option value="medium">MEDIUM</option>
+              <option value="low">LOW</option>
+          </select>
+          <input type="text" id="earthquake" name="earthquake" class="attribs" placeholder="">
+      </div>
+
+      <br>
+
+      <div class="input_container">
+          <label class="disaster-form" for="fire">Fire</label>
+          <select name="fire_level" id="fire" class="attribs">
+              <option value="" disabled selected hidden></option>
+              <option value="high">HIGH</option>
+              <option value="medium">MEDIUM</option>
+              <option value="low">LOW</option>
+          </select>
+          <input type="text" id="fire" name="fire" class="attribs" placeholder="">
+      </div>
+
+      <br>
+      
+      <div class="input_container">
+          <label class="disaster-form" for="flood">Flood</label>
+          <select name="flood_level" id="flood" class="attribs">
+              <option value="" disabled selected hidden></option>
+              <option value="high">HIGH</option>
+              <option value="medium">MEDIUM</option>
+              <option value="low">LOW</option>
+          </select>
+          <input type="email" id="flood" name="flood" class="attribs" placeholder="">
+      </div>
+
+      <br>
+      
+      <div class="input_container">
+          <label class="disaster-form" for="landslide">Landslide</label>
+          <select name="landslide_level" id="landslide" class="attribs">
+              <option value="" disabled selected hidden></option>
+              <option value="high">HIGH</option>
+              <option value="medium">MEDIUM</option>
+              <option value="low">LOW</option>
+          </select>
+          <input type="email" id="landslide" name="landslide" class="attribs" placeholder="">
+      </div>
+
+      <br>
+
+      <div class="input_container">
+          <label class="disaster-form" for="storm">Storm</label>
+          <select name="storm_level" id="storm" class="attribs">
+              <option value="" disabled selected hidden></option>
+              <option value="high">HIGH</option>
+              <option value="medium">MEDIUM</option>
+              <option value="low">LOW</option>
+          </select>
+          <input type="email" id="storm" name="storm" class="attribs" placeholder="">
+      </div>
+
+      <br>
+
+      <br><br>
+
+      <!-- Buttons -->
+      <div>
+          <!-- Submits contents of the form -->                                               
+          <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save</button>   
+      </div>
+      <br>
+      <div>
+          <!-- Clears all contents of the form -->
+          <button class="clear form">Delete</button>
+      </div>
+  </div>
+  </div>
   <!--Side menu: where the add location function, search bar, and list entries-->
   <div class="main">
     <div class="sidenav">
-      <div class="header">
-        <!-- <div OSCI logo class="logo-container">
-        <img src="img/logo-osci.png" class="logo">
-        <h3 class="heading">Office for Social Concern and Involvement</h3> -->
-      </div>
       <!--Log out buttons-->
       <div class="buttons">
-        <input class="search-bar" type="text" placeholder="Search..">
-        <button class="container label-font" href="#">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon">
-          <path
-          d="M16 3.51575C10.84 3.51575 6.66669 7.68908 6.66669 12.8491C6.66669 19.8491 16 30.1824 16 30.1824C16 30.1824 25.3334 19.8491 25.3334 12.8491C25.3334 7.68908 21.16 3.51575 16 3.51575ZM16 16.1824C15.116 16.1824 14.2681 15.8312 13.643 15.2061C13.0179 14.581 12.6667 13.7331 12.6667 12.8491C12.6667 11.965 13.0179 11.1172 13.643 10.4921C14.2681 9.86694 15.116 9.51575 16 9.51575C16.8841 9.51575 17.7319 9.86694 18.357 10.4921C18.9822 11.1172 19.3334 11.965 19.3334 12.8491C19.3334 13.7331 18.9822 14.581 18.357 15.2061C17.7319 15.8312 16.8841 16.1824 16 16.1824Z"
-          fill="#568D9E" />
-        </svg>Add Location
-        </button>
+        <input class="search-bar" type="search" placeholder="Search... ">
+      </div>
+      <button class="container label-font" id="addloc-modal" href="#">+ Add a Household</button>
         <!--<button class="container label-font" href="#">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon">
         <path d="M23.7844 9.8585L21.4937 7.56787L10.1594 18.8991L9.67188 21.6804L12.45 21.1897L23.7844 9.8585Z"
@@ -80,7 +261,6 @@
           fill="#568D9E" />
         </svg> Edit Location
         </button>-->
-      </div>
       <div class="entries">
         <ul id="locationList" class="accordion">
         </ul>
@@ -91,7 +271,6 @@
       </div>
     </div>
   </div>
-
   
   <script type="module" src="js/index.js"></script>
 </body>

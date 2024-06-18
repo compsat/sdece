@@ -60,7 +60,8 @@ export function getDocIdByPartnerName(partnerName) {
 export function getDocByID(docId) {
   const docReference = doc(db, "nstp-3", docId);
   let docObj = {};
-  return getDoc(docReference).then((doc) => {
+  return getDoc(docReference)
+    .then((doc) => {
     docObj = doc.data();
     return docObj;
   });

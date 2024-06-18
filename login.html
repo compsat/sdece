@@ -1,34 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<link href="./src/output.css" rel="stylesheet" />
+		<title>Login</title>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/login.css">
-  <title>Login</title>
-</head>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap"
+			rel="stylesheet"
+		/>
+	</head>
 
-<body>
-  <div class="header">
-    <img src="img/logo-osci.png" alt="OSCI Logo" class="img">
-    <h2>Office for Social Concern and Involvement</h2>
-  </div>
-  </div>
-  <form>
-    <input type="email" class="email" id="email" placeholder="Enter Email" required>
-    <input type="password" class="password" id="password" placeholder="Password" required>
-    <div type="button" class="login-btn" id="loginButton">Login</div>
-    <p id="error"></p>
-  </form>
-  <script type="module">
-    import { signIn } from "./js/auth.js";
-    // Add event listener to the button to call signIn function
-    document.getElementById("loginButton").addEventListener("click", function () {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      signIn(email, password);
-    });
-  </script>
-</body>
+	<body>
+		<div
+			class="header flex flex-row bg-darkbg p-10 justify-center items-center w-full h-auto"
+		>
+			<img
+				src="img/logo-osci.png"
+				alt="OSCI Logo"
+				class="img w-14 h-auto mr-8"
+			/>
+			<h2 class="text-white text-2xl font-garamond font-bold">
+				Office for Social Concern and Involvement
+			</h2>
+		</div>
 
+		<div class="w-auto h-full flex flex-row justify-center">
+			<form class="flex flex-col p-2 mt-48">
+				<input
+					type="email"
+					class="w-96 font-hind text-xl email p-4 rounded border"
+					id="email"
+					placeholder="Enter Email"
+					required
+				/>
+				<input
+					type="password"
+					class="w-96 border text-xl font-hind password mt-4 p-4 rounded"
+					id="password"
+					placeholder="Password"
+					required
+				/>
+				<button
+					type="button"
+					class="font-montserrat text-2xl font-bold w-96 hover:bg-darkbg login-btn mt-16 p-4 rounded-lg bg-lightbg text-center text-white"
+					id="loginButton"
+				>
+					Login
+				</button>
+				<p id="error"></p>
+			</form>
+		</div>
+
+		<script type="module">
+			import { signIn } from './js/auth.js';
+			// Add event listener to the button to call signIn function
+			document
+				.getElementById('loginButton')
+				.addEventListener('click', function () {
+					const email = document.getElementById('email').value;
+					const password =
+						document.getElementById('password').value;
+					signIn(email, password);
+				});
+		</script>
+	</body>
 </html>

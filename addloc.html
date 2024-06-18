@@ -2,7 +2,20 @@
 <html>
     <head>
         <title>Add Location</title>
-        <link rel="stylesheet" href="./css/form.css">
+        
+        <!-- Import Tailwind CSS output file -->
+        <link href="./src/output.css" rel="stylesheet">
+        
+        <!-- Import Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap" rel="stylesheet">
             
         <script type="module">
             import { addLocation } from "./js/firestore.js";
@@ -58,80 +71,56 @@
     </head>
     
     <body>
-        <br>
-        <div class="container"> 
-            <!-- Div for margin -->
-            <h1>Add Location</h1>
-            <br>
-            
-            <!-- Form -->
-            <div class="input_container">
-                <label class="form" for="partner">Partner</label><br>
-                <input type="text" id="partner" name="partner" class="attribs" placeholder="">
+        <div class="p-8 bg-customLightGray w-1/2"> 
+            <h1 class="font-montserrat text-3xl font-bold text-darkbg mb-8">Add Activity</h1>
+            <div class="flex flex-row justify-between mb-6 items-center">
+                <label class="form font-montserrat text-xl text-customGray" for="partner">Partner</label>
+                <input type="text" id="partner" name="partner" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
             </div>
         
-            <br>
-
-            <div class="input_container">
-                <label class="form" for="partner_contact-person">Contact Person of Partner</label><br>
-                <input type="text" id="partner_contact-person" name="partner_contact-person" class="attribs" placeholder="">    
+            <div class="flex flex-row justify-between mb-6 items-center">
+                <label class="form font-montserrat text-xl text-customGray" for="partner_contact-person">Contact Person of Partner</label>
+                <input type="text" id="partner_contact-person" name="partner_contact-person" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
             </div>
-            
-            <br>
-    
-            <div class="input_container">
-                <label class="form" for="organization">Organization / Unit</label><br>
-                <input type="text" id="organization" name="organization" class="attribs" placeholder="">    
+                
+            <div class="flex flex-row justify-between mb-6 items-center">
+                <label class="form font-montserrat text-xl text-customGray" for="organization">Organization / Unit</label>
+                <input type="text" id="organization" name="organization" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
             </div>
-            
-            <br>
-    
-            <div class="input_container">
-                <label class="form" for="nature_of_act">Nature of Activity</label><br>
-                <input type="text" id="nature_of_act" name="nature_of_act" class="attribs" placeholder=""> 
+                
+            <div class="flex flex-row justify-between mb-6 items-center">
+                <label class="form font-montserrat text-xl text-customGray" for="nature_of_act">Nature of Activity</label>
+                <input type="text" id="nature_of_act" name="nature_of_act" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder=""> 
             </div>
-            
-            <br>
-    
-            <!-- Pressing a button adds another date -->
-
-            <div class="input_container">
-                <label class="form" for="dates_of_partnership">Dates of Partnership</label><br>
-                <input type="date" id="dates_of_partnership" name="dates_of_partnership" class="attribs" placeholder="">    
+                
+            <div class="flex flex-row justify-between mb-6 items-center">
+                <label class="form font-montserrat text-xl text-customGray" for="dates_of_partnership">Dates of Partnership</label>
+                <input type="date" id="dates_of_partnership" name="dates_of_partnership" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
             </div>
-            
-            <br>
-    
-            <div class="input_container">
-                <label class="form" for="ateneo_office">Ateneo Office Oversight</label><br>
-                <input type="text" id="ateneo_office" name="ateneo_office" class="attribs" placeholder="">    
+                
+            <div class="flex flex-row justify-between mb-6 items-center">
+                <label class="form font-montserrat text-xl text-customGray" for="ateneo_office">Ateneo Office Oversight</label>
+                <input type="text" id="ateneo_office" name="ateneo_office" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
             </div>
-            
-            <br>
-    
-            <div class="input_container">
-                <label class="form" for="ateneo_contact-person">Ateneo Contact Person</label><br>
-                <input type="text" id="ateneo_contact-person" name="ateneo_contact-person" class="attribs" placeholder="">    
+                
+            <div class="flex flex-row justify-between mb-6 items-center">
+                <label class="form font-montserrat text-xl text-customGray" for="ateneo_contact-person">Ateneo Contact Person</label>
+                <input type="text" id="ateneo_contact-person" name="ateneo_contact-person" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
             </div>
-            
-            <br>
-    
-            <div class="input_container">
-                <label class="form" for="ateneo_contact-email">Email</label><br>
-                <input type="email" id="ateneo_contact-email" name="ateneo_contact-email" class="attribs" placeholder="">    
+                
+            <div class="flex flex-row justify-between mb-6 items-center">
+                <label class="form font-montserrat text-xl text-customGray" for="ateneo_contact-email">Email</label>
+                <input type="email" id="ateneo_contact-email" name="ateneo_contact-email" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
             </div>
-            
-            <br><br>
     
             <!-- Buttons -->
             <span class="button_div">
                 <!-- Clears all contents of the form -->
-                <button class="clear form">Clear Contents</button>
+                <button class="w-full py-4 text-center font-montserrat text-2xl bg-lightbg text-white font-bold rounded-lg" type="submit" id="submit_form" name="submit_form">Add Activity</button>   
+                <button class="w-full py-4 text-center font-montserrat text-2xl text-red-700 font-bold border border-red-700 rounded-lg mt-4">Clear</button>
                 <!-- Submits contents of the form -->                                               
-                <button class="confirm form" type="submit" id="submit_form" name="submit_form">Confirm</button>   
             </span>
 
-            <br><br><br>
         </div>
 
     </body>  

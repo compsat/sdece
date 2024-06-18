@@ -1,14 +1,18 @@
-import { getDocIdByPartnerName, getDocByID, getPartnersArray, addEntry } from "./firestore.js";
+import { getPartnersArray, addEntry } from "./firestore.js";
+import { getDocIdByPartnerName, getDocByID, setCollection, getCollection, DB } from "/firestore_UNIV.js";
 import {
   getFirestore,
   collection,
   getDocs,
 } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
 
-const db = getFirestore();
-const colRef = collection(db, "nstp-3");
+// const db = getFirestore();
+setCollection("nstp-3");
+var colRef = getCollection();
 
 var map = L.map("map").setView([14.673, 121.11215], 21);
+
+console.log(colRef);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution:
@@ -44,7 +48,7 @@ getDocs(colRef)
   });
 
 function searchLocation(doc) {
-  
+  console.log("Search location of "+ doc.id);
   let popup = L.popup()
     .setLatLng([doc.latitude + 0.00015, doc.longitude] )
     .setContent(`
@@ -68,6 +72,7 @@ searchControl.on("results", function (data) {
 });
 
 function onMapClick(e) {
+  console.log("MAP CLICK");
   const lat = e.latlng.lat;
   const lng = e.latlng.lng;
 
@@ -102,6 +107,7 @@ function onMapClick(e) {
 map.panTo(new L.LatLng(14.652538, 121.077818));
 
 function panLocation(name) {
+  console.log("PANNNNNN to "+name);
   getDocIdByPartnerName(name).then((docId) => {
     getDocByID(docId).then((doc) => {
       searchLocation(doc);
@@ -114,6 +120,7 @@ document.getElementById("locationList").addEventListener("click", (event) => {
 });
 
 function getDetails(name) {
+  console.log("GETDEETS");
   getDocIdByPartnerName(name).then((docId) => {
     if (docId) {
       getDocByID(docId).then((doc) => {

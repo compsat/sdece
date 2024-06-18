@@ -1,365 +1,74 @@
-body {
-  margin: 0;
-  padding: 0;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reset default margin and spacing */
+* {
+	margin: 0px;
+	padding: 0px;
+	box-sizing: border-box;
 }
 
 .main {
-  display: flex;
-  flex-direction: row;
+	display: flex;
+	flex-direction: row;
 }
 
-.map-container {
-  flex: 1;
-  display: flex;
+.leaflet-popup-container {
+	font-weight: bold;
+	background-color: white;
 }
 
-#map {
-  position: fixed;
-  width: 100%;
-  height: 100%;
+.leaflet-popup-tip {
+	display: none;
 }
 
-.sidenav {
-  flex: 0 0 30%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  overflow-y: auto;
-  overflow-x: hidden;
+.leaflet-popup-content-wrapper{
+	border-left: 8px solid #91C9DB;
+	border-radius: 2%;
+	padding: 2%;
+	width: fit-content;
 }
 
-.header {
-  display: flex;
-  width: 100%;
-  align-items: center;
+/*
+.leaflet-popup-content-wrapper:hover, .popup-accordion:not(.active) {
+	background-color: #91C9DB;
+}
+*/
+
+.popup-accordion {
+	cursor: pointer;
+	width: 100%;
+	text-align: left;
+	font-size: small;
+	border: none;
+	outline: none;
+	transition: 0.4s;
+	color:black;
+	display: flex;
+	align-items: center;
 }
 
-#search-bar {
-  height: 40px;
-  padding: 8px 32px;
-  margin: 12px;
-  width: 100%;
-  box-sizing: border-box;
-  border-radius: 12px;
-  border: transparent;
-  background-color: #f6f6f6;
+.popup-accordion.active {
+	color: #91C9DB;
 }
 
-.logo-container {
-  display: flex;
-  padding: 8px 40px;
-  align-items: center;
-  gap: 32px;
-  background: #387181;
+.popup-accordion.active + .leaflet-popup-content-wrapper{
+	background-color: white;
 }
 
-.logo {
-  width: 48px;
+.popup-accordion-content {
+	padding: 0 18px;
+	max-height: max-content;
+	display: none;
+	overflow: visible;
+	color:black;
 }
 
-li {
-  list-style-type: none;
-}
-
-.heading {
-  color: #fcfeff;
-  font-family: Garamond;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 86.682%;
-  display: flex;
-  align-self: stretch;
-  height: 44px;
-  flex-direction: column;
-}
-
-.label {
-  padding-left: 10px;
-  text-align: left;
-  font-family: "Montserrat";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 18px;
-  text-decoration: none;
-  color: #979797; /* Gray */
-  margin: 8px;
-  vertical-align: middle;
-}
-
-.label:hover {
-  color: #49a2bb; /* Viking */
-}
-
-.label:active {
-  color: #387181; /* Calypso */
-}
-
-button.container {
-  display: flex;
-  padding: 12px 16px;
-  align-items: center;
-  gap: 8px;
-  align-self: stretch;
-  border-radius: 8px;
-  border: 0;
-}
-
-button.label-font {
-  font-family: Montserrat;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-  color: #568d9e;
-}
-
-button:hover {
-  background-color: #f7f9f9;
-}
-
-div.buttons {
-  display: flex;
-  padding: 24px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 18px;
-  align-self: stretch;
-  border-bottom: 1px solid #cbd5e0;
-}
-
-.icon {
-  width: 32px;
-  height: 32px;
-}
-
-a.accordion {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-family: Montserrat;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-  letter-spacing: 0.16px;
-}
-
-img.accordion {
-  fill: #91c9db;
-}
-
-.entries {
-  background-color: #fafafa;
-  margin-top: 24px;
-}
-
-ul.accordion {
-  padding-inline-start: 0px !important;
-}
-
-li.accordion {
-  display: flex;
-  padding: 24px 32px;
-  border-bottom: 0.5px solid #bdbdbd;
-}
-
-a.accordion {
-  text-decoration: none;
-}
-
-.name {
-  text-decoration: none;
-  color: #387181;
-  font-family: Montserrat;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 110%;
-  letter-spacing: 0.36px;
-}
-
-.address {
-  color: #a0a0a0;
-  text-overflow: ellipsis;
-  font-family: Hind;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 120%; /* 16.8px */
-  letter-spacing: 0.28px;
-}
-
-.activity {
-  color: #2f2f2f;
-  text-overflow: ellipsis;
-  font-family: Hind;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 110%;
-  letter-spacing: 0.28px;
-}
-h1.entries {
-  color: #000;
-  font-family: Montserrat;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-}
-
-/* CSS for the modal */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  top: 0;
-  left: 5%;
-  width: 75%; /* Adjust the width of the modal as needed */
-  height: 100%; /* Adjust the height of the modal as needed */
-  overflow-y: auto;
-}
-
-.modal-content {
-  background-color: #fafafa;
-  margin: 10% 35%;
-  padding: 31px 24px;
-  width: 30%;
-  max-width: 600px;
-  border-radius: 8px;
-  background-color: #fcfcfc;
-}
-
-.modal-name {
-  color: #3d97af;
-  font-family: Montserrat;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 110%;
-  letter-spacing: 0.48px;
-  margin-bottom: 24px;
-}
-
-.modal-address {
-  color: #a0a0a0;
-  font-family: Hind;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 120%;
-  letter-spacing: 0.32px;
-  margin-bottom: 32px;
-}
-.close {
-  color: #aaaaaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.partner-geolocation {
-  display: flex;
-  align-items: center;
-}
-
-.leaflet-popup-container h2 {
-  overflow: hidden;
-  color: #387181;
-  text-overflow: ellipsis;
-  font-family: Montserrat;
-  font-size: 14px;
-  font-style: normal;
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  font-weight: 700;
-}
-
-.leaflet-buttons {
-  display: flex;
-  justify-content: space-between;
-}
-
-.deleteButton {
-  color: #d64747;
-}
-
-.editButton,
-.addButton {
-  color: #3d97af;
-}
-
-.deleteButton,
-.editButton,
-.addButton {
-  display: flex;
-  padding: 16px 24px;
-  width: fit-content;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  border-radius: 8px;
-  border: 0;
-  font-family: Montserrat;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-  background-color: transparent;
-  margin-top: 8px;
-  flex: 1;
-}
-
-.deleteButton:hover,
-.editButton:hover,
-.addButton:hover {
-  background-color: transparent;
-  cursor: pointer;
-}
-
-.editButton:hover {
-  background: rgba(61, 151, 175, 0.1);
-}
-
-.deleteButton:hover {
-  background: rgba(214, 71, 71, 0.1);
-}
-
-.partner-value {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-family: Hind;
-  font-size: 12px;
-  font-style: normal;
-  line-height: 110%;
-  letter-spacing: 0.32px;
-  margin: 0 !important;
+.partner-info {
+	line-height: 0.6;
 }
 
 .partner-label {
-  color: #3d97af;
-  font-family: Hind;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 110%;
-  letter-spacing: 0.36px;
-  font-size: 14px;
-  margin: 12px 0 8px 0 !important;
-}
-
-.partner-activity {
-  color: #2f2f2f;
-  font-family: Hind;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 110%;
-  letter-spacing: 0.4px;
+	font-weight: bold;
 }
