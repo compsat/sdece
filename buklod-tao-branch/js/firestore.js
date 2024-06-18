@@ -18,19 +18,17 @@ import {
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAeo2wTJFotROMNPa4UHXo2MqPaW8k07us",
-  authDomain: "compsat-sdece.firebaseapp.com",
-  databaseURL:
-    "https://compsat-sdece-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "compsat-sdece",
-  storageBucket: "compsat-sdece.appspot.com",
-  messagingSenderId: "46954820322",
-  appId: "1:46954820322:web:c19499507632da09a2a4bb",
-  measurementId: "G-RPZYTFB5KC",
+  apiKey: "AIzaSyA8QWgic_hjbDL-EYIkvSRRII_yfTRdtOQ",
+  authDomain: "discs-osci-prj.firebaseapp.com",
+  projectId: "discs-osci-prj",
+  storageBucket: "discs-osci-prj.appspot.com",
+  messagingSenderId: "601571823960",
+  appId: "1:601571823960:web:1f1278ecb86aa654e6152d",
+  measurementId: "G-9N9ELDEMX9"
 };
 initializeApp(firebaseConfig);
 const db = getFirestore();
-const colRef = collection(db, "nstp-3");
+const colRef = collection(db, "sdece-official");
 let partnersArray = [];
 
 export function getDocIdByPartnerName(partnerName) {
@@ -85,6 +83,7 @@ getDocs(colRef)
 
     // populate ul with partners
     partnersArray.forEach((partner) => {
+      console.log(partner)
 
       // Creating DOM elements
       const containerDiv = document.createElement("div");

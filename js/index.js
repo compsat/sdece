@@ -1,4 +1,4 @@
-import { getDocIdByPartnerName, getDocByID } from "./firestore.js";
+import { getDocIdByPartnerName, getDocByID, getStuff, showModal } from "./firestore.js";
 
 var map = L.map("map").setView([14.651, 121.052], 13);
 
@@ -12,23 +12,7 @@ var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
-async function searchLocation(loc) {
-  var parsed_loc = encodeURIComponent(
-    loc.toLowerCase().replace(/[^a-z0-9 _-]+/gi, "-")
-  );
-  var api_search = "https://nominatim.openstreetmap.org/search?q=";
-  var link = api_search.concat(parsed_loc).concat("&format=json");
-  console.log(link);
-
-  var response = await fetch(link);
-  fetch(link)
-    .then((response) => response.json())
-    .then((json) => {
-      json.forEach(function (entry, index) {
-        var marker = L.marker([
-          parseFloat(entry["lat"]),
-          parseFloat(entry["lon"]),
-        ]);
+async function PopUp(loc) {
         var popupContent = `
         <div class="leaflet-popup-container">
           <h2 class="partner-header">${loc}</h2>          
@@ -63,17 +47,15 @@ async function searchLocation(loc) {
           }
         });
         marker.on("click", function (event) {
-          console.log(getDetails(entry["name"]));
+          // console.log(getDetails(entry["name"]));
         });
-      });
-    });
 }
 
 searchControl.on("results", function (data) {
   results.clearLayers();
   for (var i = data.results.length - 1; i >= 0; i--) {
     var marker = L.marker(data.results[i].latlng);
-    console.log(marker);
+    // console.log(marker);
     results.addLayer(marker);
   }
 });
@@ -110,16 +92,14 @@ function onMapClick(e) {
 }
 
 map.on("click", onMapClick);
-map.panTo(new L.LatLng(14.652538, 121.077818));
 
 function panLocation(name) {
   getDocIdByPartnerName(name).then((docId) => {
     getDocByID(docId).then((doc) => {
-      console.log(doc);
-      console.log(`Panning to ${doc.location.latitude}, ${doc.location.longitude}`);
+      // console.log(doc);
+      // console.log(`Panning to ${doc.location.latitude}, ${doc.location.longitude}`);
       map.panTo(new L.LatLng(doc.location.latitude, doc.location.longitude));
-      console.log(`Searching for ${doc.partnerName}`);
-      searchLocation(doc.partnerName);
+      // console.log(`Searching for ${doc.partnerName}`);
     });
   });
 }
@@ -132,7 +112,7 @@ function getDetails(name) {
   getDocIdByPartnerName(name).then((docId) => {
     if (docId) {
       getDocByID(docId).then((doc) => {
-        console.log("Partner details:", doc);
+        // console.log("Partner details:", doc);
         // Insert the partner details into the div with class "partner-contact"
         const partnerContactDiv = document.querySelector(".partner-contact");
         if (partnerContactDiv) {
@@ -171,11 +151,13 @@ function getDetails(name) {
           });
           
         } else {
-          console.log("Div with class 'partner-contact' not found.");
+          // console.log("Div with class 'partner-contact' not found.");
         }
       });
     } else {
-      console.log("No matching partner found.");
+      // console.log("No matching partner found.");
     }
   });
 }
+
+getStuff()
