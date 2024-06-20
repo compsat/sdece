@@ -32,33 +32,9 @@ async function searchLocation(loc) {
 
 				// This is the popup for when the user clicks on a partner
 				var popupContent = `
-          <button class="popup-accordion" style="display: flex; align-items: center;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C11.337 11.5 10.7011 11.2366 10.2322 10.7678C9.76339 10.2989 9.5 9.66304 9.5 9C9.5 8.33696 9.76339 7.70107 10.2322 7.23223C10.7011 6.76339 11.337 6.5 12 6.5C12.663 6.5 13.2989 6.76339 13.7678 7.23223C14.2366 7.70107 14.5 8.33696 14.5 9C14.5 9.66304 14.2366 10.2989 13.7678 10.7678C13.2989 11.2366 12.663 11.5 12 11.5Z" fill="#91C9DB"/>
-            </svg>
-            ${loc}
-            <svg xmlns="http://www.w3.org/2000/svg" fill="##387181" stroke="##387181" viewBox="0 0 24 24" stroke-width="1.5" class="size-8 mr-5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z" />
-            </svg>
-          </button>
-
-          <div class="popup-accordion-content">
-            <div class="partner-info mb-4">
-              <p style="font-weight: bold;">[Contact Person Name]</p>
-              <p>[Contact Person Number]</p>
-            </div>
-
-            <hr class="mb-4">
-            
-            <div class="partner-info">
-              <img src="img/logo-admu.png" alt="OSCI Logo" class="img w-8 h-auto mr-8">
-              <p style="font-weight: bold;">[Ateneo Person Name]</p>
-              <p>[Ateneo Person Email]</p>
-            </div>
-
-            <button class="expandPopUp text-red-600">Click for more details.</button>
-          </div>
-          `;
+					<div class="leaflet-popup-container">
+					<h2 class="partner-popup">${document.partner_name}</h2>          				
+				`;
 
 				marker.bindPopup(popupContent);
 				results.addLayer(marker);

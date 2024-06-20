@@ -137,14 +137,19 @@ getDocs(colRef)
 
 function showModal(partner) {
   const modal = document.getElementById("partnerModal");
+  const modalHeader = document.getElementById("modalHeader");
   const modalContent = document.getElementById("modalContent");
 
   // Clear previous content
+  modalHeader.innerHTML = "";
   modalContent.innerHTML = "";
 
   // Create div elements for each piece of information
   const nameDiv = document.createElement("div");
   const addressDiv = document.createElement("div");
+  
+  const activityListDiv = document.createElement("div");
+
   const contactPersonDiv = document.createElement("div");
   const activityDiv = document.createElement("div");
   const admuContactDiv = document.createElement("div");
@@ -162,27 +167,30 @@ function showModal(partner) {
   nameDiv.textContent = partner.partnerName;
   addressDiv.textContent =
     "Latitude: " + partner.location.latitude + " Longitude: " + partner.location.longitude;
-    contactPersonDiv.textContent = "Contact Person: " + partner.partnerContact;
 
-  partner.activities.forEach((activity) => {                          // lists down all activities, format it to how it's designed on Figma
-    activityDiv.textContent = "Activity: " + activity['activityName'];
-    admuContactDiv.textContent = "AdMU Contact: " + activity['ateneoContactEmail'];
-    admuEmailDiv.textContent = "AdMU Email: " + activity['ateneoOverseeingOfficeEmail'];
-    admuOfficeDiv.textContent = "AdMU Office: " + partner["`ateneoOverseeingOfficeEmail`"];
-    orgDiv.textContent = "Organization: " + partner.org;
-  });
+  activityListDiv.innerHTML += "<br><b style='font-size: 24px'>[Name of the first activity] &gt</b> <hr>";
+
+  activityDiv.innerHTML = "<b>(test) Activity: </b>" + partner.activity_name;
+  admuContactDiv.innerHTML = "<b>AdMU Contact: </b>" + partner.admu_contact;
+  admuEmailDiv.innerHTML = "<b>AdMU Email: </b>" + partner.admu_email;
+  admuOfficeDiv.innerHTML = "<b>AdMU Office: </b>" + partner.admu_office;
+  orgDiv.innerHTML = "<b>Organization: </b>" + partner.org;
+
   
 
   // Append the div elements to the modal content
-  modalContent.appendChild(nameDiv);
-  modalContent.appendChild(addressDiv);
+  modalHeader.appendChild(nameDiv);
+  modalHeader.appendChild(addressDiv);
   modalContent.appendChild(contactPersonDiv);
+
+  modalContent.appendChild(activityListDiv);
+
   modalContent.appendChild(activityDiv);
-  modalContent.appendChild(admuContactDiv);
-  modalContent.appendChild(admuEmailDiv);
-  modalContent.appendChild(admuOfficeDiv);
-  modalContent.appendChild(orgDiv);
-  modalContent.appendChild(datesDiv);
+  // modalContent.appendChild(admuContactDiv);
+  // modalContent.appendChild(admuEmailDiv);
+  // modalContent.appendChild(admuOfficeDiv);
+  // modalContent.appendChild(orgDiv);
+  // modalContent.appendChild(datesDiv);
 
   // Show the modal
   modal.style.display = "block";
@@ -199,6 +207,14 @@ function showModal(partner) {
       modal.style.display = "none";
     }
   });
+
+
+  //Add activity
+  const addActivity = document.getElementsByClassName("addActivity")[0];
+  addActivity.addEventListener("click", () => {
+    //TO DO: Display Add Activity on pin click
+  });
+  
 }
 
 export function addLocation(
