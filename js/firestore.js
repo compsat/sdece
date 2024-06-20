@@ -103,6 +103,7 @@ getDocs(colRef)
 			// Adding classes and setting text content
 
 			containerDiv.classList.add('partnerDiv');
+
 			nameDiv.classList.add(
 				'name',
 				'font-montserrat',
@@ -146,7 +147,8 @@ getDocs(colRef)
 				'py-6',
 				'px-8',
 				'border-b',
-				'border-customGray'
+				'border-customGray',
+				'w-full'
 			);
 			anchor.classList.add('accordion', 'link');
 

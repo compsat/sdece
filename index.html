@@ -54,7 +54,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                                     </svg>
                                 </button>
-                                <button>
+                                <button id="searchClear" onclick="clearSearch()">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class=" size-8 stroke-customDarkGray">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                                     </svg>
@@ -68,8 +68,8 @@
                     </button>
 
                 </div>
-                <div class="entries bg-customLightGray">
-                    <ul id="locationList" class="accordion ">
+                <div class="entries bg-customLightGray w-full">
+                    <ul id="locationList" class="accordion w-full">
                     </ul>
                 </div>
             </div>
@@ -376,6 +376,7 @@
         </div>
 
         <script type="module" src="js/index.js"></script>
+        
         <script>
             function onSearchInput() {
                 let input = document.getElementById('search-input').value.toLowerCase();
@@ -396,6 +397,12 @@
                         partnerContainers[i].classList.remove("flex");
                     }
                  }
+            }
+
+            function clearSearch() {
+                var input = document.getElementById('search-input');
+                input.value = '';
+                onSearchInput();
             }
 
         </script>
