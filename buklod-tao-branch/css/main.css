@@ -22,7 +22,7 @@ body {
 
 .top-bar{
   background-color: #387181;
-  height: 80px;
+  height: 63px;
   width: 100%;
   display: flex;
   position: fixed;
@@ -34,9 +34,9 @@ body {
   flex: 0 0 20%;
   display: flex;
   position: fixed;
-  width: 480px;
+  width: 380px;
   height: 100%;
-  background-color: #F6F6F6;
+  background-color: #FFFFFF;
   flex-direction: column;
   align-items: flex-start;
   overflow-y: auto;
@@ -51,20 +51,27 @@ body {
 
 /* search bar itself */
 .search-bar {
-  height: 40px;
-  padding: 8px 32px;
-  width: 100%;
+  height: 45px;
+  margin: -15px -15px -15px -15px;
+  padding: 15px 32px;
+  width: 107%;
   box-sizing: border-box;
   border-radius: 12px;
-  background-color: #e4e4e4;
+  background-color: #F6F6F6;
   border: transparent;
   background-position: calc(100% - 16px) center;
   font-family: 'Montserrat';
-  font-size: 20px;
+  font-size: 18px;
+  letter-spacing: 0.5px;
   background-image: url("../img/search-icon.png");
   background-repeat: no-repeat;
-  background-size: 24px 24px;
+  background-size: 25px 25px;
   justify-content: right;
+}
+
+/* search bar when hovered */
+.search-bar:hover {
+  background-color: #e4e3e3;
 }
 
 /* search bar when typing something in */
@@ -122,25 +129,32 @@ li {
   color: #387181; /* Calypso */
 }
 
+/* logout icon */
+.logoutIcon {
+  height: 15px;
+  width: 15px;
+  margin: 2px 15px 0px 0px;
+}
+
 /* logout button */
 .button-logout {
   font-family: Montserrat;
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
   color: #FFFFFF;
-  height: 56px;
-  width: 164px;
+  height: 35px;
+  width: 150px;
+  margin-right: 25px;
   background-color: #3D97AF ;
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   display: block;
-  margin: 0;
   position: absolute;
   top: 50%;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
-  margin-right: 50px;
-  filter: drop-shadow(0 0 0.75rem #2F2F2F);
+  filter: drop-shadow(0 0 0.25rem #00000025);
   justify-content: space-between;
 }
 
