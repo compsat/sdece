@@ -36,6 +36,20 @@
             crossorigin=""></script>
         <link href="./src/output.css" rel="stylesheet">
         <!--<script type="module" src="js/firestore.js"></script>-->
+
+
+        
+        <script type="module">
+            import { setCollection, getCollection } from "/firestore_UNIV.js";
+            console.log("hi hi hi hi ");
+            var collections = document.getElementById("collections");
+            collections.addEventListener("change", function(){
+
+                var selected = collections.options[collections.selectedIndex].text;
+                    setCollection(selected);
+                    console.log(getCollection().id);
+            });                       
+        </script>
     </head>
     
     <body>
@@ -64,6 +78,16 @@
                                 </svg>
                             </button>
                         </div>
+                        
+
+                        <div class="flex flex-row justify-end items-center">
+                            <select name="collections" id="collections">
+                                <option value="buklod-official">buklod-official</option>
+                                <option value="sdece-official">sdece-official</option>
+                            </select>
+                        </div>
+
+
                     </div>
                 </div>
                 <button id="mainButton" class="text-xl flex flex-row items-center px-8 py-4 bg-customLightGray w-full text-lightbg my-6 hover:text-darkbg">
