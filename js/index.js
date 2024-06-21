@@ -33,7 +33,7 @@ async function searchLocation(loc) {
 				// This is the popup for when the user clicks on a partner
 				var popupContent = `
 					<div class="leaflet-popup-container">
-					<h2 class="partner-popup">${document.partner_name}</h2>          				
+					<h2 class="partner-popup">${loc}</h2>          				
 				`;
 
 				marker.bindPopup(popupContent);

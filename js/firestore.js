@@ -113,6 +113,9 @@ getDocs(colRef)
           activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
         });
       }
+      else {
+        console.log("No activities found");
+      }
       
 
       listItem.classList.add("accordion", "py-6", "px-8", 
@@ -139,7 +142,6 @@ function showModal(partner) {
   const modal = document.getElementById("partnerModal");
   const modalHeader = document.getElementById("modalHeader");
   const modalContent = document.getElementById("modalContent");
-
   // Clear previous content
   modalHeader.innerHTML = "";
   modalContent.innerHTML = "";
@@ -148,8 +150,7 @@ function showModal(partner) {
   const nameDiv = document.createElement("div");
   const addressDiv = document.createElement("div");
   
-  const activityListDiv = document.createElement("div");
-
+  const activityHeaderDiv = document.createElement("div");
   const contactPersonDiv = document.createElement("div");
   const activityDiv = document.createElement("div");
   const admuContactDiv = document.createElement("div");
@@ -161,16 +162,56 @@ function showModal(partner) {
   nameDiv.classList.add("modal-name");
   addressDiv.classList.add("modal-address");
 
-  activityDiv.classList.add("modal-activity");
+  activityHeaderDiv.classList.add("flex", "justify-around", "text-3xl", "font-bold");
+  activityHeaderDiv.style.color = "#3d97af";
+
+  const addActivity = document.createElement("button");
+  addActivity.addEventListener("click", () => {
+    //TO DO: Display Add Activity on pin click
+    console.log("Add activity")
+  });
+
 
   // Set the content of each div
   nameDiv.textContent = partner.partnerName;
   addressDiv.textContent =
     "Latitude: " + partner.location.latitude + " Longitude: " + partner.location.longitude;
 
-  activityListDiv.innerHTML += "<br><b style='font-size: 24px'>[Name of the first activity] &gt</b> <hr>";
+  // Activities header with add activity button
+  activityHeaderDiv.innerHTML = "List of activities:"
+  addActivity.innerHTML = "+"
+  activityHeaderDiv.appendChild(addActivity);
+  activityHeaderDiv.classList.add("flex", "justify-around");
 
-  activityDiv.innerHTML = "<b>(test) Activity: </b>" + partner.activity_name;
+
+  // Add each activity to the modal content
+  if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
+  {
+    partner.activities.forEach((activity) => {
+      // Create a button element
+      const activityButton = document.createElement("button");
+  
+      // Set the button's inner HTML
+      activityButton.innerHTML = activity.activityName + " &gt";
+  
+      activityButton.addEventListener("click", () => {
+        modalContent.innerHTML = ""; //clear
+        modalContent.appendChild(admuContactDiv);
+        modalContent.appendChild(admuEmailDiv);
+        modalContent.appendChild(admuOfficeDiv);
+        modalContent.appendChild(orgDiv);
+        modalContent.appendChild(datesDiv);
+      });
+
+      activityDiv.appendChild(activityButton);
+      activityDiv.appendChild(document.createElement("hr"));
+      activityDiv.appendChild(document.createElement("br"));
+    });
+  }
+
+  activityDiv.classList.add("modal-activities");
+
+  
   admuContactDiv.innerHTML = "<b>AdMU Contact: </b>" + partner.admu_contact;
   admuEmailDiv.innerHTML = "<b>AdMU Email: </b>" + partner.admu_email;
   admuOfficeDiv.innerHTML = "<b>AdMU Office: </b>" + partner.admu_office;
@@ -180,12 +221,12 @@ function showModal(partner) {
 
   // Append the div elements to the modal content
   modalHeader.appendChild(nameDiv);
-  modalHeader.appendChild(addressDiv);
-  modalContent.appendChild(contactPersonDiv);
 
-  modalContent.appendChild(activityListDiv);
-
+  //modalContent.appendChild(addressDiv);
+  modalContent.appendChild(activityHeaderDiv);
   modalContent.appendChild(activityDiv);
+
+  // modalContent.appendChild(contactPersonDiv);
   // modalContent.appendChild(admuContactDiv);
   // modalContent.appendChild(admuEmailDiv);
   // modalContent.appendChild(admuOfficeDiv);
@@ -207,14 +248,6 @@ function showModal(partner) {
       modal.style.display = "none";
     }
   });
-
-
-  //Add activity
-  const addActivity = document.getElementsByClassName("addActivity")[0];
-  addActivity.addEventListener("click", () => {
-    //TO DO: Display Add Activity on pin click
-  });
-  
 }
 
 export function addLocation(

@@ -1133,6 +1133,11 @@ video {
 	justify-content: space-around; */
 }
 
+.modal-activities {
+  font-size: 20px;
+  font-weight: bold;
+}
+
 .modal-button {
   margin-left: 25%;
   margin-top: -15%;
