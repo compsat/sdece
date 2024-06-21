@@ -102,7 +102,7 @@ export function addListeners(){
   console.log("added");
 }
 
-export function clearPins(){
+export function clearMarkers(){
   console.log("test");
   map.eachLayer((layer) => {
     if(layer instanceof L.Marker) {
