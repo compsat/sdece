@@ -40,14 +40,17 @@
 
         
         <script type="module">
-            import { setCollection, getCollection } from "/firestore_UNIV.js";
+            import { setCollection, getCollection, DB_RULES_AND_DATA } from "/firestore_UNIV.js";
             console.log("hi hi hi hi ");
             var collections = document.getElementById("collections");
+            console.log(DB_RULES_AND_DATA[0][0]);
+            for(let rule of DB_RULES_AND_DATA){
+                collections.innerHTML += `<option value="${rule[0]}"> ${rule[0]}</option>`;
+            }
             collections.addEventListener("change", function(){
-
                 var selected = collections.options[collections.selectedIndex].text;
-                    setCollection(selected);
-                    console.log(getCollection().id);
+                setCollection(selected);
+                console.log(getCollection().id);
             });                       
         </script>
     </head>
@@ -82,8 +85,6 @@
 
                         <div class="flex flex-row justify-end items-center">
                             <select name="collections" id="collections">
-                                <option value="buklod-official">buklod-official</option>
-                                <option value="sdece-official">sdece-official</option>
                             </select>
                         </div>
 
