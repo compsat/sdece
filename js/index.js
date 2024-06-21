@@ -40,76 +40,45 @@ async function searchLocation(loc) {
 				results.addLayer(marker);
 
 				marker.on('popupopen', function () {
-					var expandButtons =
-						document.getElementsByClassName('expandPopUp');
-					for (var i = 0; i < expandButtons.length; i++) {
-						expandButtons[i].addEventListener(
-							'click',
-							function () {
-								// Select the modal and partnerName elements
-								var modal =
-									document.getElementById(
-										'partnerModal'
-									);
+					var pin = document.getElementsByClassName('partner-popup')[0];
+					pin.addEventListener(
+						'click',
+						function () {
 
-								// TODO: Integrate this functionality into the modal instead
-								// var partnerName = this.getAttribute("data-loc");
-								//       window.open(
-								//         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
-								//         "_blank"
-								//       );
+						}
+					);
+					// var expandButtons =
+					// 	document.getElementsByClassName('expandPopUp');
+					// for (var i = 0; i < expandButtons.length; i++) {
+					// 	expandButtons[i].addEventListener(
+					// 		'click',
+					// 		function () {
+					// 			// Select the modal and partnerName elements
+					// 			var modal =
+					// 				document.getElementById(
+					// 					'partnerModal'
+					// 				);
 
-								// Display the modal
-								modal.classList.remove('hidden');
-								modal.classList.add('flex');
+					// 			// TODO: Integrate this functionality into the modal instead
+					// 			// var partnerName = this.getAttribute("data-loc");
+					// 			//       window.open(
+					// 			//         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
+					// 			//         "_blank"
+					// 			//       );
 
-								// Close the modal when the user clicks anywhere outside of it
-								window.onclick = function (event) {
-									if (event.target == modal) {
-										modal.classList.add('hidden');
-									}
-								};
-							}
-						);
-					}
+					// 			// Display the modal
+					// 			modal.classList.remove('hidden');
+					// 			modal.classList.add('flex');
 
-					var editButtons =
-						document.getElementsByClassName('editButton');
-					for (var i = 0; i < editButtons.length; i++) {
-						editButtons[i].addEventListener(
-							'click',
-							function () {
-								// Select the modal and partnerName elements
-								var modal =
-									document.getElementById(
-										'editModal'
-									);
-
-								var partnerModal =
-									document.getElementById(
-										'partnerModal'
-									);
-								// TODO: Integrate this functionality into the modal instead
-								// var partnerName = this.getAttribute("data-loc");
-								//       window.open(
-								//         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
-								//         "_blank"
-								//       );
-
-								// Display the modal
-								modal.classList.remove('hidden');
-								modal.classList.add('flex');
-								partnerModal.classList.add('hidden'); // Not sure if this should be hidden nalang, or should be kept open with the editModal on top nalang
-
-								// Close the modal when the user clicks anywhere outside of it
-								window.onclick = function (event) {
-									if (event.target == modal) {
-										modal.classList.add('hidden');
-									}
-								};
-							}
-						);
-					}
+					// 			// Close the modal when the user clicks anywhere outside of it
+					// 			window.onclick = function (event) {
+					// 				if (event.target == modal) {
+					// 					modal.classList.add('hidden');
+					// 				}
+					// 			};
+					// 		}
+					// 	);
+					// }
 
 					// Pop up toggle show/hide
 					var acc =

@@ -276,6 +276,47 @@ function showModal(partner) {
       modal.style.display = "none";
     }
   });
+
+  var editButtons =
+  document.getElementsByClassName('editButton');
+  for (var i = 0; i < editButtons.length; i++) {
+    editButtons[i].addEventListener(
+      'click',
+      function () {		
+        console.log("Clicked edit activity");	
+        					
+        // Select the modal and partnerName elements
+        var modal =
+          document.getElementById(
+            'editModal'
+          );
+
+        var partnerModal =
+          document.getElementById(
+            'partnerModal'
+          );
+        // TODO: Integrate this functionality into the modal instead
+        // var partnerName = this.getAttribute("data-loc");
+        //       window.open(
+        //         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
+        //         "_blank"
+        //       );
+
+        // Display the modal
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        partnerModal.classList.add('hidden'); // Not sure if this should be hidden nalang, or should be kept open with the editModal on top nalang
+
+        // Close the modal when the user clicks anywhere outside of it
+        window.onclick = function (event) {
+          if (event.target == modal) {
+            modal.classList.add('hidden');
+          }
+        };
+      }
+    );
+  }
+
 }
 
 export function addLocation(
