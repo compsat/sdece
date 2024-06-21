@@ -41,6 +41,8 @@
         
         <script type="module">
             import { setCollection, getCollection, DB_RULES_AND_DATA } from "/firestore_UNIV.js";
+            import { getDocs, query } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
+
             console.log("hi hi hi hi ");
             var collections = document.getElementById("collections");
             console.log(DB_RULES_AND_DATA[0][0]);
@@ -51,7 +53,20 @@
                 var selected = collections.options[collections.selectedIndex].text;
                 setCollection(selected);
                 console.log(getCollection().id);
+    //             .then((querySnapshot) => {
+    // querySnapshot.forEach((doc) => {
+    //   if (doc.data().name !== "Test 2" || doc.data().name !== "Test2") {
+    //     partnersArray.push(doc.data());
+    //   }
+    // });
+                getDocs(getCollection())
+                    .then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            console.log(doc.id, " => ", doc.data());
+                        })
+                    })
             });                       
+
         </script>
     </head>
     
