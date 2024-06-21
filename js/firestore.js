@@ -138,6 +138,7 @@ getDocs(colRef)
     console.error("Error getting documents: ", error);
   });
 
+// Partner modal
 function showModal(partner) {
   const modal = document.getElementById("partnerModal");
   const modalHeader = document.getElementById("modalHeader");
@@ -163,7 +164,7 @@ function showModal(partner) {
   nameDiv.classList.add("modal-name");
   addressDiv.classList.add("modal-address");
 
-  activityHeaderDiv.classList.add("flex", "justify-around", "text-3xl", "font-bold");
+  activityHeaderDiv.classList.add("flex", "flex-row", "justify-between", "text-3xl", "font-bold");
   activityHeaderDiv.style.color = "#3d97af";
 
   const addActivity = document.createElement("button");
@@ -182,7 +183,7 @@ function showModal(partner) {
   activityHeaderDiv.innerHTML = "List of activities:"
   addActivity.innerHTML = "+"
   activityHeaderDiv.appendChild(addActivity);
-  activityHeaderDiv.classList.add("flex", "justify-around");
+  activityHeaderDiv.classList.add("flex", "flex-row", "justify-between");
 
 
   // Add each activity to the modal content
@@ -277,6 +278,7 @@ function showModal(partner) {
     }
   });
 
+
   var editButtons =
   document.getElementsByClassName('editButton');
   for (var i = 0; i < editButtons.length; i++) {
@@ -284,6 +286,10 @@ function showModal(partner) {
       'click',
       function () {		
         console.log("Clicked edit activity");	
+
+        //Close activity details modal
+        document.getElementById("partnerModal").style.display = "none";
+        console.log("Activity modal closed");
         					
         // Select the modal and partnerName elements
         var modal =
