@@ -142,6 +142,7 @@ function showModal(partner) {
   const modal = document.getElementById("partnerModal");
   const modalHeader = document.getElementById("modalHeader");
   const modalContent = document.getElementById("modalContent");
+
   // Clear previous content
   modalHeader.innerHTML = "";
   modalContent.innerHTML = "";
@@ -188,19 +189,45 @@ function showModal(partner) {
   if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
   {
     partner.activities.forEach((activity) => {
-      // Create a button element
+      // View activity details button
       const activityButton = document.createElement("button");
-  
-      // Set the button's inner HTML
-      activityButton.innerHTML = activity.activityName + " &gt";
-  
+
+      const activityName = document.createElement("span")
+      const arrow = document.createElement("span")
+      activityName.textContent = activity.activityName;
+      arrow.textContent = ">"
+      activityButton.appendChild(activityName);
+      activityButton.appendChild(arrow);
+
+      // Set div content for activity details
+      const activityNameDiv = document.createElement("div");
+      const activityAddressDiv = document.createElement("div");
+      const activityContactDiv = document.createElement("div");
+      const activityOrganizationDiv = document.createElement("div");
+      const activityDatesDiv = document.createElement("div");
+      const activityOfficeDiv = document.createElement("div");
+
+      activityNameDiv.innerHTML = activity.activityName;
+      activityNameDiv.classList.add("font-bold", "text-3xl");
+      activityNameDiv.style.color = "#3d97af";
+
+      activityAddressDiv.innerHTML = partner.partnerAddress ;
+
+      activityContactDiv.innerHTML = "<b>Contact</b> <br> " + partner.partnerContact + "<br>" + partner.partnerEmail + "<br>";
+      activityOrganizationDiv.innerHTML = "<b>Organization/Unit</b> <br>" + partner.organization_unit;
+      activityDatesDiv.innerHTML = "<b>Date/s of Partnership</b> <br>" + partner.activity_date;
+      activityOfficeDiv.innerHTML = "<b>Ateneo Office Oversight</b> <br>" + partner.admu_office + "<br>" + partner.admu_contact + "<br>"  + partner.admu_email + "<br>";
+
+      // View activity details in modal after clicking activity
       activityButton.addEventListener("click", () => {
-        modalContent.innerHTML = ""; //clear
-        modalContent.appendChild(admuContactDiv);
-        modalContent.appendChild(admuEmailDiv);
-        modalContent.appendChild(admuOfficeDiv);
-        modalContent.appendChild(orgDiv);
-        modalContent.appendChild(datesDiv);
+        modalContent.innerHTML = "";
+        
+        modalContent.appendChild(activityNameDiv);
+        modalContent.appendChild(activityAddressDiv);
+        modalContent.appendChild(activityContactDiv);
+        modalContent.appendChild(activityOrganizationDiv);
+        modalContent.appendChild(activityDatesDiv);
+        modalContent.appendChild(activityOfficeDiv);
       });
 
       activityDiv.appendChild(activityButton);
