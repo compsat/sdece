@@ -41,7 +41,7 @@
         <!--  Module for the implementation of the Rules Engine for switching maps -->
         <script type="module">
             import { setCollection, getCollection, DB_RULES_AND_DATA } from "/firestore_UNIV.js";
-            import { readyField, clearMarkers, clearLocationList } from "/index_UNIV.js";
+            import { readyField, clearMarkers, clearLocationList, map, getDivContent } from "/index_UNIV.js";
             import { getDocs, query } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
 
             var collections = document.getElementById("collections");
@@ -51,17 +51,39 @@
             }
 
             collections.addEventListener("change", function(){
-                var selected = collections.options[collections.selectedIndex].value;
-                setCollection(selected);
+                const SELECTED = collections.options[collections.selectedIndex].value;
+                setCollection(SELECTED);
 
                 // test getDocs for grabbing the data on change
                 getDocs(getCollection())
                     .then((querySnapshot) => {
                         querySnapshot.forEach((doc) => {
                             console.log(doc.id, " => ", doc.data());
+                            var stuff = ``;
+                            for(let rule of DB_RULES_AND_DATA){
+                                for(let index in rule){
+                                    stuff += doc.get(rule[2][index]);
+                                }
+                            }
+                            document.getElementById("locationList").innerHTML += stuff;
+
+
+                            var results = L.layerGroup().addTo(map);
+                            var marker;
+                            // Some coordinated are null, protective check
+                            if (doc.data() != null) {
+                                marker = L.marker([
+                                    parseFloat(doc.data().location_coordinates.latitude),
+                                    parseFloat(doc.data().location_coordinates.longitude),
+                                ]);
+                            }
+                            // TODO HAVE THIS BE CONSISTENT ACROSS EVERYTHING
+                            getDivContent(doc.data().household_name).then((div) => {
+                                marker.bindPopup(div);
+                                results.addLayer(marker);
+                            });
                         })
                     })
-                    
                 clearMarkers();
                 clearLocationList();
             });                       
