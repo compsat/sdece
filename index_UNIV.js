@@ -101,3 +101,18 @@ export function addListeners(){
   });
   console.log("added");
 }
+
+export function clearPins(){
+  console.log("test");
+  map.eachLayer((layer) => {
+    if(layer instanceof L.Marker) {
+      layer.remove();
+    }
+  })
+}
+
+export function clearLocationList(){
+  console.log("test2");
+  var locationList = document.getElementById(`locationList`);
+  locationList.innerHTML = "";
+}
