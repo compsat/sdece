@@ -48,13 +48,14 @@
                         <div class="bg-customMediumGray  text-2xl flex flex-row w-full rounded-2xl overflow-hidden py-3 px-8">
                             
                             <input onkeyup="onSearchInput()" type="text" id="search-input" placeholder="Search..." class="bg-customMediumGray focus:outline-none focus:ring-0 w-full font-hind ">
-                            <div class="flex flex-row items-center ">
-                                <button>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="size-8 stroke-customDarkGray mr-5">
+                            <div class="flex flex-row items-center justify-end">
+                                <!-- Hiding the Search icon first since it doesn't have any functionality as of now -->
+                                <button class="hidden"> 
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="size-8 stroke-customDarkGray">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                                     </svg>
                                 </button>
-                                <button id="searchClear" onclick="clearSearch()">
+                                <button id="searchClear" onclick="clearSearch()" class="pl-5 hidden">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class=" size-8 stroke-customDarkGray">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                                     </svg>
@@ -379,25 +380,36 @@
         
         <script>
             function onSearchInput() {
-                let input = document.getElementById('search-input').value.toLowerCase();
-                console.log("The user has typed " + input);
+    let input = document.getElementById('search-input').value.toLowerCase();
 
-                let container = document.getElementById('locationList');
-                let partnerContainers = container.getElementsByClassName("partnerDiv");
+    var button = document.getElementById('searchClear');
 
-                for (let i = 0; i < partnerContainers.length; i++) {
-                    let nameElement = partnerContainers[i].getElementsByClassName("name")[0];
-                    let name = nameElement.textContent.toLowerCase();
+    // Show the button if input is not empty, hide it otherwise
+    if (input !== "") {
+        button.classList.remove("hidden");
+    } else {
+        button.classList.add("hidden");
+    }
 
-                    if (name.includes(input)) {
-                        partnerContainers[i].classList.add("flex");
-                        partnerContainers[i].classList.remove("hidden");
-                    } else {
-                        partnerContainers[i].classList.add("hidden");
-                        partnerContainers[i].classList.remove("flex");
-                    }
-                 }
-            }
+    console.log("The user has typed " + input);
+
+    let container = document.getElementById('locationList');
+    let partnerContainers = container.getElementsByClassName("partnerDiv");
+
+    for (let i = 0; i < partnerContainers.length; i++) {
+        let nameElement = partnerContainers[i].getElementsByClassName("name")[0];
+        let name = nameElement.textContent.toLowerCase();
+
+        if (name.includes(input)) {
+            partnerContainers[i].classList.add("flex");
+            partnerContainers[i].classList.remove("hidden");
+        } else {
+            partnerContainers[i].classList.add("hidden");
+            partnerContainers[i].classList.remove("flex");
+        }
+    }
+}
+
 
             function clearSearch() {
                 var input = document.getElementById('search-input');
