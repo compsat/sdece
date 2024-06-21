@@ -208,15 +208,16 @@ function showModal(partner) {
       const activityOfficeDiv = document.createElement("div");
 
       activityNameDiv.innerHTML = activity.activityName;
-      activityNameDiv.classList.add("font-bold", "text-3xl");
+      activityNameDiv.classList.add("font-bold", "text-2xl");
       activityNameDiv.style.color = "#3d97af";
 
       activityAddressDiv.innerHTML = partner.partnerAddress ;
 
       activityContactDiv.innerHTML = "<b>Contact</b> <br> " + partner.partnerContact + "<br>" + partner.partnerEmail + "<br>";
-      activityOrganizationDiv.innerHTML = "<b>Organization/Unit</b> <br>" + partner.organization_unit;
+      activityOrganizationDiv.innerHTML = "<b>Organization/Unit</b> <br>" + partner.organizationUnit;
       activityDatesDiv.innerHTML = "<b>Date/s of Partnership</b> <br>" + partner.activity_date;
-      activityOfficeDiv.innerHTML = "<b>Ateneo Office Oversight</b> <br>" + partner.admu_office + "<br>" + partner.admu_contact + "<br>"  + partner.admu_email + "<br>";
+
+      activityOfficeDiv.innerHTML = "<hr> <br> <b class='font-bold text-2xl' style='color: #3d97af'>Ateneo Office Oversight</b> <br>" + partner.admuOffice + "<br>" + partner.admuContact + "<br>"  + partner.admuEmail + "<br>";
 
       // View activity details in modal after clicking activity
       activityButton.addEventListener("click", () => {

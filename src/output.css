@@ -993,11 +993,6 @@ video {
   line-height: 1.75rem;
 }
 
-.text-4xl {
-  font-size: 2.25rem;
-  line-height: 2.5rem;
-}
-
 .font-bold {
   font-weight: 700;
 }
@@ -1123,7 +1118,7 @@ video {
 }
 
 .modal-content {
-  margin-top: -10px;
+  margin-top: -72px;
   margin-left: 25%;
   padding: 24px 32px;
   width: 100%;
@@ -1133,9 +1128,10 @@ video {
   font-style: normal;
   height: calc(80% - 140px);
   overflow-y: auto;
-  /* display: flex;
-	align-items: center;
-	justify-content: space-around; */
+}
+
+#modalContent > div {
+  margin-bottom: 15px;
 }
 
 .modal-activities {

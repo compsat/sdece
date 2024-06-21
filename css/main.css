@@ -66,7 +66,7 @@
 }
 
 .modal-content {
-	margin-top: -10px;
+	margin-top: -72px;
 	margin-left: 25%;
 	padding: 24px 32px;
 	width: 100%;
@@ -76,10 +76,13 @@
 	font-style: normal;
 	height: calc(80% - 140px);
 	overflow-y: auto;
-	/* display: flex;
-	align-items: center;
-	justify-content: space-around; */
 }
+
+#modalContent > div {
+	margin-bottom: 15px; 
+  }
+  
+
 
 .modal-activities {
 	font-size: 20px;
