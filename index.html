@@ -38,33 +38,33 @@
         <!--<script type="module" src="js/firestore.js"></script>-->
 
 
-        
+        <!--  Module for the implementation of the Rules Engine for switching maps -->
         <script type="module">
             import { setCollection, getCollection, DB_RULES_AND_DATA } from "/firestore_UNIV.js";
-            import {readyField, clearMarkers, clearLocationList } from "/index_UNIV.js";
+            import { readyField, clearMarkers, clearLocationList } from "/index_UNIV.js";
             import { getDocs, query } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
 
-            console.log("hi hi hi hi ");
             var collections = document.getElementById("collections");
-            console.log(DB_RULES_AND_DATA[0][0]);
+
             for(let rule of DB_RULES_AND_DATA){
                 collections.innerHTML += `<option value="${rule[0]}"> ${readyField(rule[0])}</option>`;
             }
+
             collections.addEventListener("change", function(){
                 var selected = collections.options[collections.selectedIndex].value;
                 setCollection(selected);
-                console.log(selected);
-                console.log(getCollection().id);
+
+                // test getDocs for grabbing the data on change
                 getDocs(getCollection())
                     .then((querySnapshot) => {
                         querySnapshot.forEach((doc) => {
                             console.log(doc.id, " => ", doc.data());
                         })
                     })
-                clearPins();
+                    
+                clearMarkers();
                 clearLocationList();
             });                       
-
         </script>
     </head>
     
