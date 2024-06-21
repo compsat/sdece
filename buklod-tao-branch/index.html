@@ -4,8 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <title>NSTP Hazard Mapping</title>
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+  <meta name="viewport" content="width=device-width,user-scalable=no" />
   <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
 
   <!-- Load Leaflet from CDN -->
@@ -40,7 +39,7 @@
 <body>
   <!--Logout Button-->
   <div class="top-bar">
-    <button class="button-logout"><img src="./img/logout.256x256.png" alt="logout" height="15" width="15"> Logout</button>
+    <button class="button-logout"><img class="logoutIcon" src="./img/logout.256x256.png" alt="logout"> Logout</button>
   </div>
   <!--Modals of Entries-->
   <div id="partnerModal" class="modal">
@@ -52,9 +51,10 @@
     <!--Modal Content: content of the entries-->
     <div class="modal-content">
       <!--Div for contact no. and address-->
+      <br>
       <div>
         <p class="modal-text" id="entry_contact_number">This is the Household's contact number</p>
-        <p class="modal-text" id="entry_address">This is the Household's address</p>
+        <p class="modal-text" id="entry_address">This is the geolocation of the household that is not truncated. This is the geolocation of the partner that is not truncated. This is the geolocation of the partner that is not truncated.</p>
       </div>
       <!--Div for residency status and part of HOA/NOA labels-->
       <div class="modal-line">
@@ -118,7 +118,7 @@
           <label class="modal-label">Total</label>
           <label class="modal-label" id="entry_number_of_residents">0</label>
         </div>
-        <br>
+        <hr style="border-top: 1px solid #CBD5E0;">
         <div class="modal-line">
           <label class="modal-label">Minors</label>
           <label class="modal-label" id="entry_number_of_minor_residents">0</label>
@@ -148,9 +148,9 @@
     </div>
     <!--Div for modal footer: contains edit and delete buttons-->
     <div class="modal-footer">
-      <div class="modal-line" style="align-items: center; justify-content: center;">
-        <button class="modal-button" type="submit" id="submit_form" name="submit_form" style="color:#3D97AF">Edit</button>   
-        <button class="modal-button" type="submit" id="submit_form" name="submit_form" style="color:#D64747">Delete</button>   
+      <div class="modal-line">
+        <button class="modal-button" type="submit" id="submit_form" name="submit_form" style="color:#D64747">Delete &nbsp;&nbsp;<img src="./img/delete.png" alt="delete" style="height: 20px; width: 20px;"></button>   
+        <button class="modal-button" type="submit" id="submit_form" name="submit_form" style="color:#3D97AF">Edit   &nbsp;&nbsp;<img src="./img/edit.png" alt="edit" style="height: 20px; width: 20px;"></button>   
       </div>
     </div>
   </div>
@@ -311,7 +311,7 @@
       <div class="buttons">
         <input class="search-bar" type="search" placeholder="Search... ">
       </div>
-      <button class="container label-font" id="addloc-modal" href="#">+ Add a Household</button>
+      <button class="container label-font" id="addloc-modal" href="#" style="position: relative; box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2);">+ Add a Household</button>
         <!--<button class="container label-font" href="#">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon">
         <path d="M23.7844 9.8585L21.4937 7.56787L10.1594 18.8991L9.67188 21.6804L12.45 21.1897L23.7844 9.8585Z"
@@ -343,8 +343,10 @@
         var colcontent = this.nextElementSibling;
         if (colcontent.style.display === "none") {
           colcontent.style.display = "block";
+          coll.style.transform = "rotate(180deg)";
         } else {
           colcontent.style.display = "none";
+          coll.style.transform = "none";
         }
       });
     }
