@@ -138,7 +138,7 @@ getDocs(colRef)
     console.error("Error getting documents: ", error);
   });
 
-// Partner modal
+// Display partner modal by clicking partner entry (WIP: and on pin pop up click)
 function showModal(partner) {
   const modal = document.getElementById("partnerModal");
   const modalHeader = document.getElementById("modalHeader");
@@ -164,9 +164,7 @@ function showModal(partner) {
   nameDiv.classList.add("modal-name");
   addressDiv.classList.add("modal-address");
 
-  activityHeaderDiv.classList.add("flex", "flex-row", "justify-between", "text-3xl", "font-bold");
-  activityHeaderDiv.style.color = "#3d97af";
-
+  // Add activity button
   const addActivity = document.createElement("button");
   addActivity.addEventListener("click", () => {
     //TO DO: Display Add Activity on pin click
@@ -180,10 +178,11 @@ function showModal(partner) {
     "Latitude: " + partner.location.latitude + " Longitude: " + partner.location.longitude;
 
   // Activities header with add activity button
-  activityHeaderDiv.innerHTML = "List of activities:"
-  addActivity.innerHTML = "+"
+  activityHeaderDiv.innerHTML = "List of activities: "
+  addActivity.innerHTML = '<svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M6 12h6V6h1v6h6v1h-6v6h-1v-6H6z"></path></svg>'
+
   activityHeaderDiv.appendChild(addActivity);
-  activityHeaderDiv.classList.add("flex", "flex-row", "justify-between");
+  activityHeaderDiv.classList.add("modal-activities-header");
 
 
   // Add each activity to the modal content
@@ -192,11 +191,14 @@ function showModal(partner) {
     partner.activities.forEach((activity) => {
       // View activity details button
       const activityButton = document.createElement("button");
+	  activityButton.classList.add("flex", "flex-row", "justify-between");
 
-      const activityName = document.createElement("span")
-      const arrow = document.createElement("span")
+      const activityName = document.createElement("div")
+      const arrow = document.createElement("div")
+
       activityName.textContent = activity.activityName;
-      arrow.textContent = ">"
+      arrow.innerHTML = '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#a0a0a0" class="w-6 h-6"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="#a0a0a0"></path></g></svg>'
+	  
       activityButton.appendChild(activityName);
       activityButton.appendChild(arrow);
 
@@ -210,7 +212,6 @@ function showModal(partner) {
 
       activityNameDiv.innerHTML = activity.activityName;
       activityNameDiv.classList.add("font-bold", "text-2xl");
-      activityNameDiv.style.color = "#3d97af";
 
       activityAddressDiv.innerHTML = partner.partnerAddress ;
 
