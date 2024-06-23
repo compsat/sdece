@@ -6,7 +6,7 @@
             
         <script type="module">
             //import { addLocation } from "./js/firestore.js";
-            import { addEntry, BUKLOD_RULES, setCollection } from "/firestore_UNIV.js";
+            import { addEntry, BUKLOD_RULES_TEST, setCollection } from "/firestore_UNIV.js";
             setCollection("buklod-official-TEST");
             document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
 
@@ -14,10 +14,11 @@
                 console.log("clicked");
                 var collatedInput = {};
 
-                for(let i = 0; i < BUKLOD_RULES[2].length; i++){
-                    //BUKLOD_RULES[2] are just the field names of each document
-                    let q = document.getElementById(BUKLOD_RULES[2][i].value);
-                    collatedInput[BUKLOD_RULES[2][i]] = q;
+                for(let i = 0; i < BUKLOD_RULES_TEST[2].length; i++){
+                    //BUKLOD_RULES_TEST[2] are just the field names of each document
+                    console.log(BUKLOD_RULES_TEST[2][i]);
+                    let q = document.getElementById(BUKLOD_RULES_TEST[2][i]).value;
+                    collatedInput[BUKLOD_RULES_TEST[2][i]] = q;
 
                     // this is where data validation will happen
                     // add the if-else statements of edge cases here
@@ -26,7 +27,7 @@
                 console.log(collatedInput);
                 // This actually works but it needs some data validation
                 // uncomment at the db's risk
-                // addEntry(collatedInput);
+                addEntry(collatedInput);
             }
         </script>
     </head>
@@ -80,6 +81,16 @@
                 <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
                 <input type="checkbox" id="HOA/NOA" name="HOA/NOA" class="attribs" value="yes"> 
             </div>
+
+            <div class="input_container">
+                <label class="form" for="location_link">Location link</label>
+                <input type="text" id="location_link" name="location_link" class="attribs" placeholder=""> 
+            </div>
+            
+            <div class="input_container">
+                <label class="form" for="location_coordinates">Location coords</label>
+                <input type="text" id="location_coordinates" name="location_coordinates" class="attribs" placeholder=""> 
+            </div>
             
             <br>
     
@@ -95,6 +106,11 @@
             <div class="input_container">
                 <label class="form" for="nearest_evac">Nearest Evactuation Area</label>
                 <input type="text" id="nearest_evac" name="nearest_evac" class="attribs" placeholder="">    
+            </div>
+
+            <div class="input_container">
+                <label class="form" for="status">status</label>
+                <input type="text" id="status" name="status" class="attribs" placeholder="">    
             </div>
             
             <br>
@@ -133,6 +149,11 @@
             <div class="input_container">
                 <label class="form" for="number_sick">Number of Sick Residents</label>
                 <input type="text" id="number_sick" name="number_sick" class="attribs" placeholder="">
+            </div>
+
+            <div class="input_container">
+                <label class="form" for="sickness_present">sickness present</label>
+                <input type="text" id="sickness_present" name="sickness_present" class="attribs" placeholder="">
             </div>
             
             <br>

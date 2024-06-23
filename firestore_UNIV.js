@@ -44,9 +44,9 @@ export const firebaseConfig = {
 initializeApp(firebaseConfig);
 export const DB = getFirestore();
 
-var col_ref = null; // collrection reference
+var collection_reference = null; 
 
-export let partnersArray = [];
+//export let partnersArray = [];
 
 // General format of the rule engine
 export const DB_RULES_AND_DATA = [
@@ -153,21 +153,23 @@ export const DB_RULES_AND_DATA = [
 ];
 
 export const BUKLOD_RULES = DB_RULES_AND_DATA[0];
-export const SDECE_RULES = DB_RULES_AND_DATA[1];
+export const BUKLOD_RULES_TEST = DB_RULES_AND_DATA[1];
+export const SDECE_RULES = DB_RULES_AND_DATA[2];
+export const SDECE_RULES_TEST = DB_RULES_AND_DATA[3];
 
 export function setCollection(collection_name){
     for(let rule of DB_RULES_AND_DATA ){
         console.log("rule[0]: " + rule[0]);
         if (rule[0] === collection_name){
             console.log("IS EQUAL");
-            col_ref = collection( DB, collection_name );
+            collection_reference = collection( DB, collection_name );
         }
     }
-	console.log(col_ref);
+	console.log(collection_reference);
 }
 
 export function getCollection() {
-	return col_ref;
+	return collection_reference;
 }
 
 export function getDocIdByPartnerName(partner_name) {
@@ -175,10 +177,10 @@ export function getDocIdByPartnerName(partner_name) {
 
 	//rule loop
 	for (let rule of DB_RULES_AND_DATA) {
-		if (col_ref.id === rule[0]) {
+		if (collection_reference.id === rule[0]) {
 			return getDocs(
 				query(
-					col_ref,
+					collection_reference,
 					where(rule[1], '>=', partner_name), // let's wait for Luigi's standardization. IF_ELSE nalang muna
 					where(rule[1], '<=', partner_name + endName)
 				)
@@ -206,10 +208,10 @@ export function getDocsByPartnerName(partner_name) {
 
 	//rule loop
 	for (let rule of DB_RULES_AND_DATA) {
-		if (col_ref.id === rule[0]) {
+		if (collection_reference.id === rule[0]) {
 			return getDocs(
 				query(
-					col_ref,
+					collection_reference,
 					where(rule[1], '>=', rule[1]), // let's wait for Luigi's standardization. IF_ELSE nalang muna
 					where(rule[1], '<=', rule[1] + endName)
 				)
@@ -235,10 +237,10 @@ export function getDocsByPartnerName(partner_name) {
 
 export function getDocByID(docId) {
     for (let rule of DB_RULES_AND_DATA){
-        if (col_ref.id === rule[0]){
-            const docReference = doc(DB, rule[0], docId);
+        if (collection_reference.id === rule[0]){
+            const DOC_REFERENCE = doc(DB, rule[0], docId);
             let docObj = {};
-            return getDoc(docReference).then(
+            return getDoc(DOC_REFERENCE).then(
                 (doc) => {
                     docObj = doc;
                     return docObj;
@@ -252,12 +254,12 @@ export function addEntry(inp_obj){
     console.log("add Entry");
 
     for (let rule of DB_RULES_AND_DATA){
-        if(rule[0] === col_ref.id){
+        if(rule[0] === collection_reference.id){
             let input = {}; // contents depend on the rule engine
             for(let i = 0; i < Object.keys(inp_obj).length; i++){
                 input[rule[2][i]] = inp_obj[rule[2][i]];
             }
-            addDoc(col_ref, input).then((docRef) => {
+            addDoc(collection_reference, input).then((docRef) => {
                 console.log("Document written with ID: ", docRef.id);
               })
               .catch((error) => {
@@ -268,21 +270,18 @@ export function addEntry(inp_obj){
     }
 }
 
-
-
-
 export function editEntry(inp_array, docId) {
 	console.log('edit entry with id ' + docId);
 
 	for (let rule of DB_RULES_AND_DATA) {
-		if (rule[0] === col_ref.id) {
-			const docReference = doc(DB, rule[0], docId);
+		if (rule[0] === collection_reference.id) {
+			const DOC_REFERENCE = doc(DB, rule[0], docId);
 
 			let input = {}; // contents depend on the rule engine
 			for (let i = 0; i < inp_array.length; i++) {
 				input[rule[2][i]] = inp_array[i];
 			}
-			updateDoc(docReference, input)
+			updateDoc(DOC_REFERENCE, input)
 				.then((docRef) => {
 					console.log('Document written with ID: ', docRef.id);
 				})

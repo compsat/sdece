@@ -19,9 +19,9 @@
             
         <script type="module">
             //import { addLocation } from "./js/firestore.js";
-            import { addEntry, SDECE_RULES, setCollection } from "/firestore_UNIV.js";
+            import { addEntry, SDECE_RULES_TEST, setCollection } from "/firestore_UNIV.js";
 
-            setCollection("sdece-offcial-TEST");
+            setCollection("sdece-official-TEST");
 
             document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
 
@@ -29,10 +29,11 @@
                 console.log("clicked");
                 var collatedInput = {};
 
-                for(let i = 0; i < SDECE_RULES[2].length; i++){
-                    //SDECE_RULES[2] are just the field names of each document
-                    let q = document.getElementById(SDECE_RULES[2][i].value);
-                    collatedInput[SDECE_RULES[2][i]] = q;
+                for(let i = 0; i < SDECE_RULES_TEST[2].length; i++){
+                    //SDECE_RULES_TEST[2] are just the field names of each document
+                    console.log(SDECE_RULES_TEST[2][i]);
+                    let q = document.getElementById(SDECE_RULES_TEST[2][i]).value;
+                    collatedInput[SDECE_RULES_TEST[2][i]] = q;
 
                     // this is where data validation will happen
                     // add the if-else statements of edge cases here
@@ -41,7 +42,7 @@
                 console.log(collatedInput);
                 // This actually works but it needs some data validation
                 // uncomment at the db's risk
-                // addEntry(collatedInput);
+                addEntry(collatedInput);
             }
         </script>
     </head>
@@ -93,6 +94,11 @@
                 <label class="form font-montserrat text-xl text-customGray" for="partner_number">Contact number of Partner</label>
                 <input type="text" id="partner_number" name="partner_number" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
             </div>
+
+            <div class="flex flex-row justify-between mb-6 items-center">
+                <label class="form font-montserrat text-xl text-customGray" for="additional_partnership">additional Partner</label>
+                <input type="text" id="additional_partnership" name="additional_partnership" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+            </div>
                 
             <div class="flex flex-row justify-between mb-6 items-center">
                 <label class="form font-montserrat text-xl text-customGray" for="organization_unit">Organization / Unit</label>
@@ -100,18 +106,18 @@
             </div>
                 
             <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="ateneo_office">Ateneo Office Oversight</label>
-                <input type="text" id="ateneo_office" name="ateneo_office" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                <label class="form font-montserrat text-xl text-customGray" for="admu_office">Ateneo Office Oversight</label>
+                <input type="text" id="admu_office" name="admu_office" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
             </div>
                 
             <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="ateneo_contact">Ateneo Contact Person</label>
-                <input type="text" id="ateneo_contact" name="ateneo_contact" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                <label class="form font-montserrat text-xl text-customGray" for="admu_contact">Ateneo Contact Person</label>
+                <input type="text" id="admu_contact" name="admu_contact" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
             </div>
                 
             <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="ateneo_email">Email</label>
-                <input type="email" id="ateneo_email" name="ateneo_email" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                <label class="form font-montserrat text-xl text-customGray" for="admu_email">Email</label>
+                <input type="email" id="admu_email" name="admu_email" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
             </div>
     
             <!-- Buttons -->
