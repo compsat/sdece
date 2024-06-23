@@ -1,18 +1,18 @@
 // FIRESTORE DATABASE
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 import {
-  getFirestore,
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  doc,
-  query,
-  where,
-  getDoc,
-} from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
-
+	getFirestore,
+	collection,
+	getDocs,
+	addDoc,
+	updateDoc,
+	doc,
+	query,
+	where,
+	getDoc,
+} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+import { getCollection, setCollection } from '/firestore_UNIV.js';
 // Your Firestore code here
 
 // Import the functions you need from the SDKs you need
@@ -36,237 +36,273 @@ const firebaseConfig = {
 // Initialize Firebase
 initializeApp(firebaseConfig);
 const db = getFirestore();
-const colRef = collection(db, "partners-2");
+setCollection('sdece-official');
+const colRef = getCollection();
 let partnersArray = [];
 
 export function getDocIdByPartnerName(partnerName) {
-  const endName = partnerName.replace(/\s/g, "\uf8ff");
-  return getDocs(
-    query(
-      colRef,
-      where("partnerName", ">=", partnerName),
-      where("partnerName", "<=", partnerName + endName)
-    )
-  )
-    .then((querySnapshot) => {
-      if (!querySnapshot.empty) {
-        // Assuming there is only one document with the given partner name
-        const doc = querySnapshot.docs[0];
-        return doc.id;
-      } else {
-        console.log("No matching document found.");
-        return null;
-      }
-    })
-    .catch((error) => {
-      console.error("Error getting documents: ", error);
-      return null;
-    });
+	const endName = partnerName.replace(/\s/g, '\uf8ff');
+	return getDocs(
+		query(
+			colRef,
+			where('partnerName', '>=', partnerName),
+			where('partnerName', '<=', partnerName + endName)
+		)
+	)
+		.then((querySnapshot) => {
+			if (!querySnapshot.empty) {
+				// Assuming there is only one document with the given partner name
+				const doc = querySnapshot.docs[0];
+				return doc.id;
+			} else {
+				console.log('No matching document found.');
+				return null;
+			}
+		})
+		.catch((error) => {
+			console.error('Error getting documents: ', error);
+			return null;
+		});
 }
 
 export function getDocByID(docId) {
-  const docReference = doc(db, "partners-2", docId);
-  console.log(docReference);
-  let docObj = {};
-  return getDoc(docReference).then((doc) => {
-    docObj = doc.data();
-    return docObj;
-  });
+	const docReference = doc(db, 'partners-2', docId);
+	console.log(docReference);
+	let docObj = {};
+	return getDoc(docReference).then((doc) => {
+		docObj = doc.data();
+		return docObj;
+	});
 }
 
 // get docs from firestore
 
 getDocs(colRef)
-  .then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-      if (doc.data().name !== "Test 2" || doc.data().name !== "Test2") {
-        partnersArray.push(doc.data());
-      }
-    });
+	.then((querySnapshot) => {
+		querySnapshot.forEach((doc) => {
+			if (
+				doc.data().name !== 'Test 2' ||
+				doc.data().name !== 'Test2'
+			) {
+				partnersArray.push(doc.data());
+			}
+		});
 
-    // populate ul with partners
-    partnersArray.forEach((partner) => {
-      console.log(partner);
+		// populate ul with partners
+		partnersArray.forEach((partner) => {
+			console.log(partner);
 
-      // Creating DOM elements
-      const containerDiv = document.createElement("div");
-      const img = document.createElement("svg");
-      const listItem = document.createElement("li");
-      const anchor = document.createElement("a");
-      const nameDiv = document.createElement("div");
-      const addressDiv = document.createElement("div");
-      const activityDiv = document.createElement("div");
+			// Creating DOM elements
+			const containerDiv = document.createElement('div');
+			const img = document.createElement('svg');
+			const listItem = document.createElement('li');
+			const anchor = document.createElement('a');
+			const nameDiv = document.createElement('div');
+			const addressDiv = document.createElement('div');
+			const activityDiv = document.createElement('div');
 
-      // Set attributes
-      anchor.href = "#";
+			// Set attributes
+			anchor.href = '#';
 
-      anchor.addEventListener("click", () => {
-        showModal(partner);
-      });
+			anchor.addEventListener('click', () => {
+				showModal(partner);
+			});
 
-      // Adding classes and setting text content
-      nameDiv.classList.add("name", "font-montserrat", "font-bold", "text-lg", "text-darkbg", "leading-[110%]");
-      addressDiv.classList.add("address", "text-sm", "text-customGray", "font-hind", "font-regular", "leading-[120%]", "mt-2");
-      activityDiv.classList.add("activity", "text-sm", "text-customBlack", "font-hind", "font-regular","leading-[110%]", "mt-2");
+			// Adding classes and setting text content
+			nameDiv.classList.add(
+				'name',
+				'font-montserrat',
+				'font-bold',
+				'text-lg',
+				'text-darkbg',
+				'leading-[110%]'
+			);
+			addressDiv.classList.add(
+				'address',
+				'text-sm',
+				'text-customGray',
+				'font-hind',
+				'font-regular',
+				'leading-[120%]',
+				'mt-2'
+			);
+			activityDiv.classList.add(
+				'activity',
+				'text-sm',
+				'text-customBlack',
+				'font-hind',
+				'font-regular',
+				'leading-[110%]',
+				'mt-2'
+			);
 
-      nameDiv.textContent = partner.partnerName;
-      addressDiv.textContent = partner.partnerAddress;
-      activityDiv.textContent = "";
+			nameDiv.textContent = partner.partner_name;
+			addressDiv.textContent = partner.partner_city;
+			activityDiv.textContent = partner.activity_nature;
 
-      if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
-      {
-        partner.activities.forEach( (activity) => {
-          activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
-        });
-      }
-      
+			// if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
+			// {
+			//   partner.activities.forEach( (activity) => {
+			//     activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
+			//   });
+			// }
 
-      listItem.classList.add("accordion", "py-6", "px-8", 
-        "border-b", "border-customGray"
-      );
-      anchor.classList.add("accordion", "link");
+			listItem.classList.add(
+				'accordion',
+				'py-6',
+				'px-8',
+				'border-b',
+				'border-customGray'
+			);
+			anchor.classList.add('accordion', 'link');
 
-      // Append elements to the DOM
-      anchor.appendChild(nameDiv);
-      anchor.appendChild(addressDiv);
-      anchor.appendChild(activityDiv);
+			// Append elements to the DOM
+			anchor.appendChild(nameDiv);
+			anchor.appendChild(addressDiv);
+			anchor.appendChild(activityDiv);
 
-      listItem.appendChild(anchor);
-      containerDiv.appendChild(img);
-      containerDiv.appendChild(listItem);
-      locationList.appendChild(containerDiv);
-    });
-  })
-  .catch((error) => {
-    console.error("Error getting documents: ", error);
-  });
+			listItem.appendChild(anchor);
+			containerDiv.appendChild(img);
+			containerDiv.appendChild(listItem);
+			locationList.appendChild(containerDiv);
+		});
+	})
+	.catch((error) => {
+		console.error('Error getting documents: ', error);
+	});
 
 function showModal(partner) {
-  const modal = document.getElementById("partnerModal");
-  const modalContent = document.getElementById("modalContent");
+	const modal = document.getElementById('partnerModal');
+	const modalContent = document.getElementById('modalContent');
 
-  // Clear previous content
-  modalContent.innerHTML = "";
+	// Clear previous content
+	modalContent.innerHTML = '';
 
-  // Create div elements for each piece of information
-  const nameDiv = document.createElement("div");
-  const addressDiv = document.createElement("div");
-  const contactPersonDiv = document.createElement("div");
-  const activityDiv = document.createElement("div");
-  const admuContactDiv = document.createElement("div");
-  const admuEmailDiv = document.createElement("div");
-  const admuOfficeDiv = document.createElement("div");
-  const orgDiv = document.createElement("div");
-  const datesDiv = document.createElement("div");
+	// Create div elements for each piece of information
+	const nameDiv = document.createElement('div');
+	const addressDiv = document.createElement('div');
+	const contactPersonDiv = document.createElement('div');
+	const activityDiv = document.createElement('div');
+	const admuContactDiv = document.createElement('div');
+	const admuEmailDiv = document.createElement('div');
+	const admuOfficeDiv = document.createElement('div');
+	const orgDiv = document.createElement('div');
+	const datesDiv = document.createElement('div');
 
-  nameDiv.classList.add("modal-name");
-  addressDiv.classList.add("modal-address");
+	nameDiv.classList.add('modal-name');
+	addressDiv.classList.add('modal-address');
 
-  activityDiv.classList.add("modal-activity");
+	activityDiv.classList.add('modal-activity');
 
-  // Set the content of each div
-  nameDiv.textContent = partner.partnerName;
-  addressDiv.textContent =
-    "Latitude: " + partner.location.latitude + " Longitude: " + partner.location.longitude;
-    contactPersonDiv.textContent = "Contact Person: " + partner.partnerContact;
+	// Set the content of each div
+	nameDiv.textContent = partner.partnerName;
+	addressDiv.textContent =
+		'Latitude: ' +
+		partner.location.latitude +
+		' Longitude: ' +
+		partner.location.longitude;
+	contactPersonDiv.textContent = 'Contact Person: ' + partner.partnerContact;
 
-  partner.activities.forEach((activity) => {                          // lists down all activities, format it to how it's designed on Figma
-    activityDiv.textContent = "Activity: " + activity['activityName'];
-    admuContactDiv.textContent = "AdMU Contact: " + activity['ateneoContactEmail'];
-    admuEmailDiv.textContent = "AdMU Email: " + activity['ateneoOverseeingOfficeEmail'];
-    admuOfficeDiv.textContent = "AdMU Office: " + partner["`ateneoOverseeingOfficeEmail`"];
-    orgDiv.textContent = "Organization: " + partner.org;
-  });
-  
+	partner.activities.forEach((activity) => {
+		// lists down all activities, format it to how it's designed on Figma
+		activityDiv.textContent = 'Activity: ' + activity['activityName'];
+		admuContactDiv.textContent =
+			'AdMU Contact: ' + activity['ateneoContactEmail'];
+		admuEmailDiv.textContent =
+			'AdMU Email: ' + activity['ateneoOverseeingOfficeEmail'];
+		admuOfficeDiv.textContent =
+			'AdMU Office: ' + partner['`ateneoOverseeingOfficeEmail`'];
+		orgDiv.textContent = 'Organization: ' + partner.org;
+	});
 
-  // Append the div elements to the modal content
-  modalContent.appendChild(nameDiv);
-  modalContent.appendChild(addressDiv);
-  modalContent.appendChild(contactPersonDiv);
-  modalContent.appendChild(activityDiv);
-  modalContent.appendChild(admuContactDiv);
-  modalContent.appendChild(admuEmailDiv);
-  modalContent.appendChild(admuOfficeDiv);
-  modalContent.appendChild(orgDiv);
-  modalContent.appendChild(datesDiv);
+	// Append the div elements to the modal content
+	modalContent.appendChild(nameDiv);
+	modalContent.appendChild(addressDiv);
+	modalContent.appendChild(contactPersonDiv);
+	modalContent.appendChild(activityDiv);
+	modalContent.appendChild(admuContactDiv);
+	modalContent.appendChild(admuEmailDiv);
+	modalContent.appendChild(admuOfficeDiv);
+	modalContent.appendChild(orgDiv);
+	modalContent.appendChild(datesDiv);
 
-  // Show the modal
-  modal.style.display = "block";
+	// Show the modal
+	modal.style.display = 'block';
 
-  // Close the modal when the close button is clicked
-  const closeButton = document.getElementsByClassName("close")[0];
-  closeButton.addEventListener("click", () => {
-    modal.style.display = "none";
-  });
+	// Close the modal when the close button is clicked
+	const closeButton = document.getElementsByClassName('close')[0];
+	closeButton.addEventListener('click', () => {
+		modal.style.display = 'none';
+	});
 
-  // Close the modal when the user clicks outside of it
-  window.addEventListener("click", (event) => {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  });
+	// Close the modal when the user clicks outside of it
+	window.addEventListener('click', (event) => {
+		if (event.target == modal) {
+			modal.style.display = 'none';
+		}
+	});
 }
 
 export function addLocation(
-  name,
-  activity,
-  admuContact,
-  admuEmail,
-  admuOffice,
-  org,
-  partnerContact,
-  dates,
-  latitude,
-  longitude
+	name,
+	activity,
+	admuContact,
+	admuEmail,
+	admuOffice,
+	org,
+	partnerContact,
+	dates,
+	latitude,
+	longitude
 ) {
-  addDoc(colRef, {
-    name: name,
-    activity: activity,
-    "`admu-contact`": admuContact,
-    "`admu-email`": admuEmail,
-    "`admu-office`": admuOffice,
-    org: org,
-    "`partner-contact`": partnerContact,
-    dates: dates,
-    Latitude: latitude,
-    Longitude: longitude,
-  })
-    .then((docRef) => {
-      console.log("Document written with ID: ", docRef.id);
-    })
-    .catch((error) => {
-      console.error("Error adding document: ", error);
-    });
+	addDoc(colRef, {
+		name: name,
+		activity: activity,
+		'`admu-contact`': admuContact,
+		'`admu-email`': admuEmail,
+		'`admu-office`': admuOffice,
+		org: org,
+		'`partner-contact`': partnerContact,
+		dates: dates,
+		Latitude: latitude,
+		Longitude: longitude,
+	})
+		.then((docRef) => {
+			console.log('Document written with ID: ', docRef.id);
+		})
+		.catch((error) => {
+			console.error('Error adding document: ', error);
+		});
 }
 
 export function editLocation(
-  docId,
-  name,
-  activity,
-  admuContact,
-  admuEmail,
-  admuOffice,
-  org,
-  partnerContact,
-  dates
+	docId,
+	name,
+	activity,
+	admuContact,
+	admuEmail,
+	admuOffice,
+	org,
+	partnerContact,
+	dates
 ) {
-  const docReference = doc(db, "partners-2", docId);
-  const updateData = {
-    name: name,
-    activity: activity,
-    "`admu-contact`": admuContact,
-    "`admu-email`": admuEmail,
-    "`admu-office`": admuOffice,
-    org: org,
-    "`partner-contact`": partnerContact,
-    dates: dates,
-  };
-  return updateDoc(docReference, updateData)
-    .then(() => {
-      console.log("Document updated successfully");
-      alert("Document updated successfully");
-    })
-    .catch((error) => {
-      console.error("Error updating document: ", error);
-    });
+	const docReference = doc(db, 'partners-2', docId);
+	const updateData = {
+		name: name,
+		activity: activity,
+		'`admu-contact`': admuContact,
+		'`admu-email`': admuEmail,
+		'`admu-office`': admuOffice,
+		org: org,
+		'`partner-contact`': partnerContact,
+		dates: dates,
+	};
+	return updateDoc(docReference, updateData)
+		.then(() => {
+			console.log('Document updated successfully');
+			alert('Document updated successfully');
+		})
+		.catch((error) => {
+			console.error('Error updating document: ', error);
+		});
 }

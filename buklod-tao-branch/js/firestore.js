@@ -12,7 +12,7 @@ import {
   where,
   getDoc,
 } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
-
+import { getCollection, setCollection } from "/firestore_UNIV.js";
 // Your Firestore code here
 
 // Your web app's Firebase configuration
@@ -28,7 +28,8 @@ const firebaseConfig = {
 };
 initializeApp(firebaseConfig);
 const db = getFirestore();
-const colRef = collection(db, "buklod-official");
+setCollection("buklod-official");
+const colRef = getCollection();
 let partnersArray = [];
 
 export function getDocIdByPartnerName(partnerName) {

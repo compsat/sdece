@@ -5,54 +5,28 @@
         <link rel="stylesheet" href="./css/form.css">
             
         <script type="module">
-            import { addLocation } from "./js/firestore.js";
+            //import { addLocation } from "./js/firestore.js";
+            import { addEntry, BUKLOD_RULES, setCollection } from "/firestore_UNIV.js";
+            setCollection("buklod-official-TEST");
+            document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
 
-            document.getElementById("submit_form").addEventListener("click", handleFormSubmit);
+            function handleFormSubmit_v2(){
+                console.log("clicked");
+                var collatedInput = {};
 
-            function handleFormSubmit() {
-                const urlParams = new URLSearchParams(window.location.search);
-                var latitude = urlParams.get('lat');
-                var longitude = urlParams.get('lng');
-                var partner = document.getElementById("partner").value;
-                var partnerContactPerson = document.getElementById("partner_contact-person").value;
-                var organization = document.getElementById("organization").value;
-                var natureOfActivity = document.getElementById("nature_of_act").value;
-                var datesOfPartnership = document.getElementById("dates_of_partnership").value;
-                var ateneoOffice = document.getElementById("ateneo_office").value;
-                var ateneoContactPerson = document.getElementById("ateneo_contact-person").value;
-                var ateneoContactEmail = document.getElementById("ateneo_contact-email").value;
-                
-                // Parse the date input as a whole string
-                var dateParts = datesOfPartnership.split("-");
-                var year = dateParts[0];
-                var month = dateParts[1];
-                var day = dateParts[2];
-                var parsedDatesOfPartnership = year + "-" + month + "-" + day;
+                for(let i = 0; i < BUKLOD_RULES[2].length; i++){
+                    //BUKLOD_RULES[2] are just the field names of each document
+                    let q = document.getElementById(BUKLOD_RULES[2][i].value);
+                    collatedInput[BUKLOD_RULES[2][i]] = q;
 
-                addLocation(
-                    partner, 
-                    natureOfActivity,
-                    ateneoContactPerson,
-                    ateneoContactEmail,
-                    ateneoOffice,
-                    organization,
-                    partnerContactPerson,
-                    parsedDatesOfPartnership,
-                    latitude,
-                    longitude
-                );
-                
-                document.getElementById("partner").value = "";
-                document.getElementById("partner_contact-person").value = "";
-                document.getElementById("organization").value = "";
-                document.getElementById("nature_of_act").value = "";
-                document.getElementById("dates_of_partnership").value = "";
-                document.getElementById("ateneo_office").value = "";
-                document.getElementById("ateneo_contact-person").value = "";
-                document.getElementById("ateneo_contact-email").value = "";
-                
-                // Display a success message
-                alert("Form submitted successfully!");
+                    // this is where data validation will happen
+                    // add the if-else statements of edge cases here
+                }
+
+                console.log(collatedInput);
+                // This actually works but it needs some data validation
+                // uncomment at the db's risk
+                // addEntry(collatedInput);
             }
         </script>
     </head>
@@ -75,8 +49,15 @@
             <br>
 
             <div class="input_container">
-                <label class="form" for="address">Address</label>
-                <input type="text" id="address" name="address" class="attribs" placeholder="">    
+                <label class="form" for="household_address">Address</label>
+                <input type="text" id="household_address" name="household_address" class="attribs" placeholder="">    
+            </div>
+            
+            <br>
+
+            <div class="input_container">
+                <label class="form" for="household_phase">Phase</label>
+                <input type="text" id="household_phase" name="household_phase" class="attribs" placeholder="">    
             </div>
             
             <br>
@@ -96,8 +77,8 @@
             <br>
 
             <div class="input_container">
-                <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
-                <input type="text" id="HOA/NOA" name="HOA/NOA" class="attribs" placeholder=""> 
+                <label class="form" for="is_hoa_noa">Part of HOA / NOA</label>
+                <input type="text" id="is_hoa_noa" name="is_hoa_noa" class="attribs" placeholder=""> 
             </div>
             
             <br>
@@ -105,15 +86,15 @@
             <!-- Pressing a button adds another date -->
 
             <div class="input_container">
-                <label class="form" for="materials_used_for_house">Materials Used for House</label>
-                <input type="text" id="materials_used_for_house" name="materials_used_for_house" class="attribs" placeholder=""> 
+                <label class="form" for="household_material">Materials Used for House</label>
+                <input type="text" id="household_material" name="household_material" class="attribs" placeholder=""> 
             </div>
             
             <br>
     
             <div class="input_container">
-                <label class="form" for="nearest_evacuation_area">Nearest Evactuation Area</label>
-                <input type="text" id="nearest_evacuation_area" name="nearest_evacuation_area" class="attribs" placeholder="">    
+                <label class="form" for="nearest_evac">Nearest Evactuation Area</label>
+                <input type="text" id="nearest_evac" name="nearest_evac" class="attribs" placeholder="">    
             </div>
             
             <br>
@@ -122,43 +103,43 @@
             <br>
     
             <div class="input_container">
-                <label class="form" for="number_of_residents">Number of Residents</label>
-                <input type="text" id="number_of_residents" name="number_of_residents" class="attribs" placeholder="">    
+                <label class="form" for="number_residents">Number of Residents</label>
+                <input type="text" id="number_residents" name="number_residents" class="attribs" placeholder="">    
             </div>
             
             <br>
     
             <div class="input_container">
-                <label class="form" for="number_of_minor_residents">Number of Minor Residents</label>
-                <input type="text" id="number_of_minor_residents" name="number_of_minor_residents" class="attribs" placeholder="">
+                <label class="form" for="number_minors">Number of Minor Residents</label>
+                <input type="text" id="number_minors" name="number_minors" class="attribs" placeholder="">
             </div>
 
             <br>
 
             <div class="input_container">
-                <label class="form" for="number_of_senior_residents">Number of Senior Citizen Residents</label>
-                <input type="text" id="number_of_senior_residents" name="number_of_senior_residents" class="attribs" placeholder="">
+                <label class="form" for="number_seniors">Number of Senior Citizen Residents</label>
+                <input type="text" id="number_seniors" name="number_seniors" class="attribs" placeholder="">
             </div>
 
             <br>
 
             <div class="input_container">
-                <label class="form" for="number_of_pwd_residents">Number of PWD Residents</label>
-                <input type="text" id="number_of_pwd_residents" name="number_of_pwd_residents" class="attribs" placeholder="">
+                <label class="form" for="number_pwd">Number of PWD Residents</label>
+                <input type="text" id="number_pwd" name="number_pwd" class="attribs" placeholder="">
             </div>
 
             <br>
 
             <div class="input_container">
-                <label class="form" for="number_of_sick_residents">Number of Sick Residents</label>
-                <input type="text" id="number_of_sick_residents" name="number_of_sick_residents" class="attribs" placeholder="">
+                <label class="form" for="number_sick">Number of Sick Residents</label>
+                <input type="text" id="number_sick" name="number_sick" class="attribs" placeholder="">
             </div>
             
             <br>
 
             <div class="input_container">
-                <label class="form" for="number_of_pregnant_residents">Number of Pregnant Residents</label>
-                <input type="text" id="number_of_pregnant_residents" name="number_of_pregnant_residents" class="attribs" placeholder="">
+                <label class="form" for="number_pregnant">Number of Pregnant Residents</label>
+                <input type="text" id="number_pregnant" name="number_pregnant" class="attribs" placeholder="">
             </div>
 
             <br>
@@ -174,7 +155,7 @@
                     <option value="medium">MEDIUM</option>
                     <option value="low">LOW</option>
                 </select>
-                <input type="text" id="earthquake" name="earthquake" class="attribs" placeholder="">
+                <input type="text" id="earthquake_risk" name="earthquake_risk" class="attribs" placeholder="">
             </div>
 
             <br>
@@ -187,7 +168,7 @@
                     <option value="medium">MEDIUM</option>
                     <option value="low">LOW</option>
                 </select>
-                <input type="text" id="fire" name="fire" class="attribs" placeholder="">
+                <input type="text" id="fire_risk" name="fire_risk" class="attribs" placeholder="">
             </div>
 
             <br>
@@ -200,7 +181,7 @@
                     <option value="medium">MEDIUM</option>
                     <option value="low">LOW</option>
                 </select>
-                <input type="email" id="flood" name="flood" class="attribs" placeholder="">
+                <input type="email" id="flood_risk" name="flood" class="attribs" placeholder="">
             </div>
 
             <br>
@@ -213,7 +194,7 @@
                     <option value="medium">MEDIUM</option>
                     <option value="low">LOW</option>
                 </select>
-                <input type="email" id="landslide" name="landslide" class="attribs" placeholder="">
+                <input type="email" id="landslide_risk" name="landslide" class="attribs" placeholder="">
             </div>
 
             <br>
@@ -226,7 +207,7 @@
                     <option value="medium">MEDIUM</option>
                     <option value="low">LOW</option>
                 </select>
-                <input type="email" id="storm" name="storm" class="attribs" placeholder="">
+                <input type="email" id="storm_risk" name="storm_risk" class="attribs" placeholder="">
             </div>
 
             <br>
