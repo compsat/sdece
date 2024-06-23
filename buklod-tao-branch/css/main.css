@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 body {
   margin: 0;
   padding: 0;
@@ -33,7 +35,7 @@ body {
 .sidenav {
   flex: 0 0 20%;
   display: flex;
-  position: fixed;
+  position: absolute;
   width: 380px;
   height: 100%;
   background-color: #FFFFFF;
@@ -69,12 +71,9 @@ body {
   justify-content: right;
 }
 
-/* search bar when hovered */
 .search-bar:hover {
   background-color: #e4e3e3;
 }
-
-/* search bar when typing something in */
 .search-bar:focus {
   background-image: none;
 }
@@ -158,6 +157,12 @@ li {
   justify-content: space-between;
 }
 
+.logoutIcon {
+  height: 15px;
+  width: 15px;
+  margin: 2px 15px 0px 0px;
+}
+
 button.container {
   display: flex;
   align-items: center;
@@ -173,10 +178,11 @@ button.label-font {
   padding-bottom: 30px;
   font-size: 20px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 750;
   line-height: normal;
   color: #3D97AF;
   letter-spacing: 0.8px;
+  background-color: #F6F6F6;
 }
 
 button:hover {
@@ -185,13 +191,14 @@ button:hover {
 }
 
 div.buttons {
+  position: relative;
   display: flex;
-  padding: 24px;
+  padding: 20px;
   flex-direction: column;
   align-items: flex-start;
   gap: 18px;
   align-self: stretch;
-  border-bottom: 0px solid #cbd5e0;
+  border-bottom: 0px solid #cbd5e0; 
 }
 
 /* magnifying glass icon */
@@ -252,7 +259,7 @@ a.accordion {
   font-family: Montserrat;
   font-size: 18px;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 750;
   line-height: 110%;
   letter-spacing: 0.36px;
 }
@@ -337,12 +344,15 @@ h1.entries {
 }
 
 /* CSS for the household entry modals */
+/* CSS for the entry modal */
+
+/* modal containers */
 .modal {
   display: none;
   position: fixed;
-  z-index: 9999;
-  top: 10%;
-  left: 25%;
+  z-index: 9900;
+  top: 3%;
+  left: 20%;
   width: 100%; /* Adjust the width of the modal as needed */
   max-width: 480px;
   height: 100%; /* Adjust the height of the modal as needed */
@@ -352,46 +362,96 @@ h1.entries {
 }
 
 .modal-header {
+  position: relative;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  display: flex;
+  justify-content: space-between;
   margin-left: 25%;
   margin-top: 5%;
-  padding: 10px 24px;
+  padding: 7px 24px;
   width: 100%;
   background-color: #fcfcfc;
+  z-index: 9901;
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2); 
 }
 
 .modal-content {
-  margin-top: -10px;
+  margin-top: 0px;
   margin-left: 25%;
-  padding: 24px 32px;
-  width: 96.3%;
+  padding: 10px 24px;
+  width: 100%;
   background-color: #fcfcfc;
   font-family: Hind;
   font-size: 16px;
   font-style: normal;
-  height: calc(80% - 140px);
+  max-height: calc(80% - 140px);
   overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.modal-footer {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  margin-left: 25%;
+  padding: 24px;
+  width: 100%;
+  background-color: #fcfcfc;
+  position: relative;
+  z-index: 9901;
+  box-shadow: 0 -5px 5px -5px rgba(0, 0, 0, 0.2); 
+}
+
+.modal-line {
+  margin-top: auto;
+  display: flex; 
+  justify-content: space-between;
+}
+
+/* modal text */
+.modal-label {
+  font-family: 'Montserrat';
+  font-size: 16px;
+  color: #000;
+  font-weight: 750;
+  font-style: normal;
+  letter-spacing: 2%;
 }
 
 .modal-name {
-  color: #3d97af;
+  color: #387181;
   font-family: Montserrat;
-  font-size: 24px;
+  font-size: 20px;
   font-style: normal;
-  font-weight: 900;
-  line-height: 110%;
+  font-weight: 750;
   letter-spacing: 0.48px;
-  margin-bottom: 24px;
 }
 
-.modal-address {
+.modal-button {
+  width: 100%;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 750;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background-color: #fcfcfc;
+  
+}
+
+.modal-text {
   color: #a0a0a0;
   font-family: Hind;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  line-height: 120%;
   letter-spacing: 0.32px;
-  margin-bottom: -16px;
+  line-height: 100%;
+  position: relative;
+  top: -10px;
 }
 
 .close-form {
@@ -409,10 +469,49 @@ h1.entries {
   cursor: pointer;
 }
 
+button.collapsible {
+  padding: 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  border: 0;
+  background-color: #fcfcfc;
+  width: 100%;
+  height: 50px;
+  color: #3D97AF;
+  font-family: 'Montserrat';
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 750;
+}
+
+.collapsible:after {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+  content: "";
+  background: url("../img/dropdown.png") no-repeat 0 0;
+  background-size: 100%;
+}
+
+.active:after {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+  content: "";
+  background: url("../img/dropdown.png") no-repeat 0 0;
+  background-size: 100%;
+  transform: rotate(180deg);
+}
+
+/* closing modal */
 .close {
+  text-align: center;
   color: #aaaaaa;
-  float: right;
-  font-size: 28px;
+  font-size: 40px;
   font-weight: bold;
 }
 

@@ -5,8 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NSTP Hazard Mapping</title>
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+  <meta name="viewport" content="width=device-width,user-scalable=no" />
   <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
 
   <!--Load Leaflet from CDN-->
@@ -46,14 +45,115 @@
 
   <!--Modals of Entries-->
   <div id="partnerModal" class="modal">
-    <!--Modal Header: includes title and address-->
+    <!--Modal Header: includes household owner-->
     <div class="modal-header">
-      <span class="close">&times;</span>
       <p id="modalHeader"></p>
+      <span class="close">&times;</span>
     </div>
-    <!--Modal Content: everything else-->
+    <!--Modal Content: content of the entries-->
     <div class="modal-content">
-      <p id="modalContent"></p>
+      <!--Div for contact no. and address-->
+      <br>
+      <div>
+        <p class="modal-text" id="entry_contact_number">This is the Household's contact number</p>
+        <p class="modal-text" id="entry_address">This is the geolocation of the household that is not truncated. This is the geolocation of the partner that is not truncated. This is the geolocation of the partner that is not truncated.</p>
+      </div>
+      <!--Div for residency status and part of HOA/NOA labels-->
+      <div class="modal-line">
+        <label class="modal-label" style="width: 220px;">Residency Status</label>
+        <label class="modal-label" style="width: 220px;">Part of HOA / NOA</label>
+      </div>
+      <!--Div for residency status and part of HOA/NOA content-->
+      <div class="modal-line">
+        <p class="modal-text" id="entry_residency_status" style="width: 220px;">Residency Status</p>
+        <p class="modal-text" id="entry_HOA/NOA" style="width: 220px;">Part of HOA / NOA</label>
+      </div>
+      <!--Div for evacuation area-->
+      <div>
+        <label class="modal-label">Nearest Evacuation Area</label>
+        <p class="modal-text" id="entry_nearest_evacuation_area">Nearest Evacuation Area</p>
+      </div>
+      <!--Risk Levels-->
+      <button type="button" class="collapsible">Risk Levels</button>
+      <div class="colcontent" style="display: none;">
+        <div class="modal-line">
+          <label class="modal-label">Earthquake</label>
+          <label class="modal-label" id="entry_earthquake_risk_level">RISK LEVEL</label>
+        </div>
+        <div>
+          <p class="modal-text" id="entry_earthquake_desc">This is the description of the risk level that is not truncated. This is the description of the risk level that is not truncated. This is the description of the risk level that is not truncated.</p>
+        </div>
+        <div class="modal-line">
+          <label class="modal-label">Fire</label>
+          <label class="modal-label" id="entry_fire_risk_level">RISK LEVEL</label>
+        </div>
+        <div>
+          <p class="modal-text" id="entry_earthquake_desc">Sample text</p>
+        </div>
+        <div class="modal-line">
+          <label class="modal-label">Flood</label>
+          <label class="modal-label" id="entry_flood_risk_level">RISK LEVEL</label>
+        </div>
+        <div>
+          <p class="modal-text" id="entry_earthquake_desc">Sample text</p>
+        </div>
+        <div class="modal-line">
+          <label class="modal-label">Landslide</label>
+          <label class="modal-label" id="entry_landslide_risk_level">RISK LEVEL</label>
+        </div>
+        <div>
+          <p class="modal-text" id="entry_earthquake_desc">Sample text</p>
+        </div>
+        <div class="modal-line">
+          <label class="modal-label">Storm</label>
+          <label class="modal-label" id="entry_storm_risk_level">RISK LEVEL</label>
+        </div>
+        <div>
+          <p class="modal-text" id="entry_earthquake_desc">Sample text</p>
+        </div>
+      </div>
+      <!--Residents-->
+      <button type="button" class="collapsible">Residents</button>
+      <div class="colcontent" style="display: none;">
+        <br>
+        <div class="modal-line">
+          <label class="modal-label">Total</label>
+          <label class="modal-label" id="entry_number_of_residents">0</label>
+        </div>
+        <hr style="border-top: 1px solid #CBD5E0;">
+        <div class="modal-line">
+          <label class="modal-label">Minors</label>
+          <label class="modal-label" id="entry_number_of_minor_residents">0</label>
+        </div>
+        <br>
+        <div class="modal-line">
+          <label class="modal-label">Seniors</label>
+          <label class="modal-label" id="entry_number_of_senior_residents">0</label>
+        </div>
+        <br>
+        <div class="modal-line">
+          <label class="modal-label">PWD</label>
+          <label class="modal-label" id="entry_number_of_pwd_residents">0</label>
+        </div>
+        <br>
+        <div class="modal-line">
+          <label class="modal-label">Sick</label>
+          <label class="modal-label" id="entry_number_of_sick_residents">0</label>
+        </div>
+        <br>
+        <div class="modal-line">
+          <label class="modal-label" >Pregnant</label>
+          <label class="modal-label" id="entry_number_of_pregnant_residents">0</label>
+        </div>
+        <br>
+      </div>
+    </div>
+    <!--Div for modal footer: contains edit and delete buttons-->
+    <div class="modal-footer">
+      <div class="modal-line">
+        <button class="modal-button" type="submit" id="submit_form" name="submit_form" style="color:#D64747">Delete &nbsp;&nbsp;<img src="./img/delete.png" alt="delete" style="height: 20px; width: 20px;"></button>   
+        <button class="modal-button" type="submit" id="submit_form" name="submit_form" style="color:#3D97AF">Edit   &nbsp;&nbsp;<img src="./img/edit.png" alt="edit" style="height: 20px; width: 20px;"></button>   
+      </div>
     </div>
   </div>
 
@@ -193,11 +293,11 @@
           </select>
           <input type="email" id="storm" name="storm" class="attribs" placeholder="">
       </div>
-
       <br>
-      <!-- Save and Delete buttons -->
-      <div class="button-container">
-        <div>
+      <br>
+      <br>
+      <!-- Buttons -->
+      <div>
           <!-- Submits contents of the form -->                                               
           <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save</button>   
         </div>
@@ -219,7 +319,7 @@
       <div class="buttons">
         <input class="search-bar" type="search" placeholder="Search... " oninput="searchEntries()">
       </div>
-      <button class="container label-font" id="addHousehold" name="addHousehold">+ Add a Household</button>
+      <button class="container label-font" id="addloc-modal" href="#" style="position: relative; box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2);">+ Add a Household</button>
         <!--<button class="container label-font" href="#">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon">
         <path d="M23.7844 9.8585L21.4937 7.56787L10.1594 18.8991L9.67188 21.6804L12.45 21.1897L23.7844 9.8585Z"
@@ -241,43 +341,22 @@
   </div>
   <!--script for map-->
   <script type="module" src="js/index.js"></script>
-
-  <!--script for add household modal-->
-
   <script>
-  // modal
-  var formModal = document.getElementById("form-modal");
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
 
-  // open modal
-  var openForm = document.getElementById("addHousehold");
-
-  // Get the <span> element that closes the modal
-  var closeForm = document.getElementsByClassName("close-form")[0];
-
-  // When the user clicks the button, open the modal 
-  openForm.onclick = function() {
-    formModal.style.display = "block";
-  }
-
-  // When the user clicks on <span> (x), close the modal
-  closeForm.onclick = function() {
-    formModal.style.display = "none";
-  }
-
-  // Allows the user to search for entries by filtering the data entries for every key typed in
-    function searchEntries() {
-      var input = document.querySelector('.search-bar').value.toUpperCase();
-      var ul = document.getElementById("locationList");
-      var li = ul.getElementsByTagName('li');
-      for (var i = 0; i < li.length; i++) {
-        var a = li[i].getElementsByTagName("a")[0];
-        var txtValue = a.textContent || a.innerText;
-        if (txtValue.toUpperCase().indexOf(input) > -1) {
-          li[i].style.display = "";
+    for (i = 0; i < coll.length; i++) {
+      coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var colcontent = this.nextElementSibling;
+        if (colcontent.style.display === "none") {
+          colcontent.style.display = "block";
+          coll.style.transform = "rotate(180deg)";
         } else {
-          li[i].style.display = "none";
+          colcontent.style.display = "none";
+          coll.style.transform = "none";
         }
-      }
+      });
     }
   </script>
 </body>
