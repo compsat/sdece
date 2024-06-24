@@ -1,9 +1,36 @@
-//import { getDocIdByPartnerName, getDocByID, setCollection, getCollection, DB } from "/firestore_UNIV.js";
-import { getDocIdByPartnerName, getDocByID } from "./firestore.js";
+import {} from './firestore.js';
+import {
+	getDocIdByPartnerName,
+	getDocByID,
+	setCollection,
+	getCollection,
+	DB,
+} from '/firestore_UNIV.js';
+import { getDivContent, addListeners, map } from '/index_UNIV.js';
+import {
+	getFirestore,
+	collection,
+	getDocs,
+	addDoc,
+	updateDoc,
+	doc,
+	query,
+	where,
+	getDoc,
+} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+//import { getDocIdByPartnerName, getDocByID } from "firestore_UNIV.js";
 
-var map = L.map("map").setView([14.651, 121.052], 13);
-//setCollection("partner-2");
-//var colRef = getCollection();
+var colRef = getCollection();
+
+map.panTo(new L.LatLng(14.651, 121.052));
+
+// //list down all documents under the collection in console.log
+// const querySnapshot = await getDocs(colRef);
+// console.log(querySnapshot);
+// querySnapshot.forEach((doc) => {
+//   // doc.data() is never undefined for query doc snapshots
+//   console.log(doc.id, " => ", doc.data());
+// });
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution:
@@ -17,128 +44,73 @@ var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
-async function searchLocation(loc) {
-	var parsed_loc = encodeURIComponent(
-		loc.toLowerCase().replace(/[^a-z0-9 _-]+/gi, '-')
-	);
-	var api_search = 'https://nominatim.openstreetmap.org/search?q=';
-	var link = api_search.concat(parsed_loc).concat('&format=json');
-	console.log(link);
-
-	var response = await fetch(link);
-	fetch(link)
-		.then((response) => response.json())
-		.then((json) => {
-			json.forEach(function (entry, index) {
-				var marker = L.marker([
-					parseFloat(entry['lat']),
-					parseFloat(entry['lon']),
+// Loads art the start
+getDocs(colRef)
+	.then((querySnapshot) => {
+		querySnapshot.forEach((entry) => {
+			var doc = entry.data();
+			var marker;
+			// Some coordinated are null, protective check
+			if (doc.partner_coordinates != null) {
+				marker = L.marker([
+					parseFloat(doc.partner_coordinates.latitude),
+					parseFloat(doc.partner_coordinates.longitude),
 				]);
+			}
+			// TODO HAVE THIS BE CONSISTENT ACROSS EVERYTHING
+			getDivContent(doc.partner_name).then((div) => {
+				marker.bindPopup(div);
+				results.addLayer(marker);
 
 				// This is the popup for when the user clicks on a partner
 				var popupContent = `
-          <button class="popup-accordion" style="display: flex; align-items: center;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C11.337 11.5 10.7011 11.2366 10.2322 10.7678C9.76339 10.2989 9.5 9.66304 9.5 9C9.5 8.33696 9.76339 7.70107 10.2322 7.23223C10.7011 6.76339 11.337 6.5 12 6.5C12.663 6.5 13.2989 6.76339 13.7678 7.23223C14.2366 7.70107 14.5 8.33696 14.5 9C14.5 9.66304 14.2366 10.2989 13.7678 10.7678C13.2989 11.2366 12.663 11.5 12 11.5Z" fill="#91C9DB"/>
-            </svg>
-            ${loc}
-            <svg xmlns="http://www.w3.org/2000/svg" fill="##387181" stroke="##387181" viewBox="0 0 24 24" stroke-width="1.5" class="size-8 mr-5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15l-4.243-4.243 1.415-1.414L12 12.172l2.828-2.829 1.415 1.414z" />
-            </svg>
-          </button>
-
-          <div class="popup-accordion-content">
-            <div class="partner-info mb-4">
-              <p style="font-weight: bold;">[Contact Person Name]</p>
-              <p>[Contact Person Number]</p>
-            </div>
-
-            <hr class="mb-4">
-            
-            <div class="partner-info">
-              <img src="img/logo-admu.png" alt="OSCI Logo" class="img w-8 h-auto mr-8">
-              <p style="font-weight: bold;">[Ateneo Person Name]</p>
-              <p>[Ateneo Person Email]</p>
-            </div>
-
-            <button class="expandPopUp text-red-600">Click for more details.</button>
-          </div>
-          `;
+					<div class="leaflet-popup-container">
+					<h2 class="partner-popup">${loc}</h2>          				
+				`;
 
 				marker.bindPopup(popupContent);
 				results.addLayer(marker);
 
 				marker.on('popupopen', function () {
-					var expandButtons =
-						document.getElementsByClassName('expandPopUp');
-					for (var i = 0; i < expandButtons.length; i++) {
-						expandButtons[i].addEventListener(
-							'click',
-							function () {
-								// Select the modal and partnerName elements
-								var modal =
-									document.getElementById(
-										'partnerModal'
-									);
+					var pin = document.getElementsByClassName('partner-popup')[0];
+					pin.addEventListener(
+						'click',
+						function () {
 
-								// TODO: Integrate this functionality into the modal instead
-								// var partnerName = this.getAttribute("data-loc");
-								//       window.open(
-								//         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
-								//         "_blank"
-								//       );
+						}
+					);
+					// var expandButtons =
+					// 	document.getElementsByClassName('expandPopUp');
+					// for (var i = 0; i < expandButtons.length; i++) {
+					// 	expandButtons[i].addEventListener(
+					// 		'click',
+					// 		function () {
+					// 			// Select the modal and partnerName elements
+					// 			var modal =
+					// 				document.getElementById(
+					// 					'partnerModal'
+					// 				);
 
-								// Display the modal
-								modal.classList.remove('hidden');
-								modal.classList.add('flex');
+					// 			// TODO: Integrate this functionality into the modal instead
+					// 			// var partnerName = this.getAttribute("data-loc");
+					// 			//       window.open(
+					// 			//         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
+					// 			//         "_blank"
+					// 			//       );
 
-								// Close the modal when the user clicks anywhere outside of it
-								window.onclick = function (event) {
-									if (event.target == modal) {
-										modal.classList.add('hidden');
-									}
-								};
-							}
-						);
-					}
+					// 			// Display the modal
+					// 			modal.classList.remove('hidden');
+					// 			modal.classList.add('flex');
 
-					var editButtons =
-						document.getElementsByClassName('editButton');
-					for (var i = 0; i < editButtons.length; i++) {
-						editButtons[i].addEventListener(
-							'click',
-							function () {
-								// Select the modal and partnerName elements
-								var modal =
-									document.getElementById(
-										'editModal'
-									);
-
-								var partnerModal =
-									document.getElementById(
-										'partnerModal'
-									);
-								// TODO: Integrate this functionality into the modal instead
-								// var partnerName = this.getAttribute("data-loc");
-								//       window.open(
-								//         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
-								//         "_blank"
-								//       );
-
-								// Display the modal
-								modal.classList.remove('hidden');
-								modal.classList.add('flex');
-								partnerModal.classList.add('hidden'); // Not sure if this should be hidden nalang, or should be kept open with the editModal on top nalang
-
-								// Close the modal when the user clicks anywhere outside of it
-								window.onclick = function (event) {
-									if (event.target == modal) {
-										modal.classList.add('hidden');
-									}
-								};
-							}
-						);
-					}
+					// 			// Close the modal when the user clicks anywhere outside of it
+					// 			window.onclick = function (event) {
+					// 				if (event.target == modal) {
+					// 					modal.classList.add('hidden');
+					// 				}
+					// 			};
+					// 		}
+					// 	);
+					// }
 
 					// Pop up toggle show/hide
 					var acc =
@@ -168,41 +140,23 @@ async function searchLocation(loc) {
 				});
 			});
 		});
-}
+	})
+	.catch((error) => {
+		console.error('Error getting documents: ', error);
+	});
 
-function searchLocation(doc) {// just add a marker at this location
-  console.log("adding markers in "+doc.partnerName+" at "+ 
-    "lat: "+ doc.location.latitude +
-    "long: "+ doc.location.longitude);
-  var marker = L.marker([
-    parseFloat(doc.location.latitude),
-    parseFloat(doc.location.longitude),
-  ]);
+addListeners();
 
-  results.addLayer(marker);
-  // console.log("Search location of "+ doc.id);
-  // let popup = L.popup()
-  //   .setLatLng([doc.latitude + 0.00015, doc.longitude] )
-  //   .setContent(`
-  //   <div class="leaflet-popup-container">
-  //   <h2 class="partner-header">${doc.household_name}</h2>          
-  //   <div class="partner-contact">${doc.address} ${doc.phase}</div>
-  //   `)
-  //   .openOn(map);
-
-  
-  // map.panTo(new L.LatLng(doc.latitude, doc.longitude));
-}
-
-searchControl.on("results", function (data) {
-  results.clearLayers();
-  for (var i = data.results.length - 1; i >= 0; i--) {
-    var marker = L.marker(data.results[i].latlng);
-    // console.log(marker);
-    results.addLayer(marker);
-  }
+searchControl.on('results', function (data) {
+	results.clearLayers();
+	for (var i = data.results.length - 1; i >= 0; i--) {
+		var marker = L.marker(data.results[i].latlng);
+		console.log(marker);
+		results.addLayer(marker);
+	}
 });
 
+// This function defines the event for when the user clicks anywhere on the map
 function onMapClick(e) {
 	const lat = e.latlng.lat;
 	const lng = e.latlng.lng;
@@ -253,84 +207,6 @@ function onMapClick(e) {
 map.on('click', onMapClick);
 map.panTo(new L.LatLng(14.652538, 121.077818));
 
-function panLocation(name) {
-  getDocIdByPartnerName(name).then((docId) => {
-    getDocByID(docId).then((doc) => {
-      // console.log(doc);
-      // console.log(`Panning to ${doc.location.latitude}, ${doc.location.longitude}`);
-      map.panTo(new L.LatLng(doc.location.latitude, doc.location.longitude));
-      console.log(`Searching for ${doc.partnerName}`);
-      searchLocation(doc);
-    });
-  });
-}
-
-document.getElementById('locationList').addEventListener('click', (event) => {
-	panLocation(event.target.innerHTML);
-});
-
-function getDetails(name) {
-	getDocIdByPartnerName(name).then((docId) => {
-		if (docId) {
-			getDocByID(docId).then((doc) => {
-				console.log('Partner details:', doc);
-				// Insert the partner details into the div with class "partner-contact"
-				const partnerContactDiv =
-					document.querySelector('.partner-contact');
-				if (partnerContactDiv) {
-					doc.activities.forEach((activity) => {
-						// current lists down all of activities, revamp if needed
-						partnerContactDiv.innerHTML += `
-            <div class="partner-info">
-              <p class="partner-activity"> ${activity.activityName}</p>
-            </div>
-
-            <br>
-
-            <div class="partner-info">
-              <p class="partner-label">Contact Person</p>
-              <p class="partner-value">${activity.ateneoContactPerson}</p>
-            </div>
-
-            <br>            
-
-            <div class="partner-info">
-              <p class="partner-label">Organization / Unit</p>
-              <p class="partner-value"> ${activity.ateneoOrganization}</p>
-            </div>
-            
-            <br>
-
-            <div class="partner-info">
-              <p class="partner-label">Date/s of Partnership</p>
-              <p class="partner-value"> ${activity.activityDate.toDate()}</p>   <!-- find a way to format this into just Date -->
-            </div>
-
-              <hr>
-              <br>
-              <h2>Ateneo Office Oversight</h2> 
-
-            <div class="partner-info">          
-              <p class="partner-label">${activity.ateneoOverseeingOffice}</p>
-              <p class="partner-value"> ${activity.ateneoContactEmail}</p>
-              <p class="partner-value"> ${
-				activity.ateneoOverseeingOfficeEmail
-			}</p>
-              </div>
-            `;
-					});
-				} else {
-					console.log(
-						"Div with class 'partner-contact' not found."
-					);
-				}
-			});
-		} else {
-			console.log('No matching partner found.');
-		}
-	});
-}
-
 // Show main Add an activity modal
 const element = document.getElementById('mainButton');
 element.addEventListener('click', showModal);
@@ -366,6 +242,3 @@ function testFunction() {
 	m.classList.add('flex');
 }
 
-getStuff()
-
- 

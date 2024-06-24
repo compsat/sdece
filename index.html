@@ -35,43 +35,102 @@
             integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
             crossorigin=""></script>
         <link href="./src/output.css" rel="stylesheet">
-        <script type="module" src="js/firestore.js"></script>
+        <!--<script type="module" src="js/firestore.js"></script>-->
+
+
+        <!--  Module for the implementation of the Rules Engine for switching maps -->
+        <script type="module">
+            import { setCollection, getCollection, DB_RULES_AND_DATA } from "/firestore_UNIV.js";
+            import { readyField, clearMarkers, clearLocationList, map, getDivContent } from "/index_UNIV.js";
+            import { getDocs, query } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
+
+            var collections = document.getElementById("collections");
+
+            for(let rule of DB_RULES_AND_DATA){
+                collections.innerHTML += `<option value="${rule[0]}"> ${readyField(rule[0])}</option>`;
+            }
+
+            collections.addEventListener("change", function(){
+                const SELECTED = collections.options[collections.selectedIndex].value;
+                setCollection(SELECTED);
+
+                // test getDocs for grabbing the data on change
+                getDocs(getCollection())
+                    .then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            console.log(doc.id, " => ", doc.data());
+                            var stuff = ``;
+                            for(let rule of DB_RULES_AND_DATA){
+                                for(let index in rule){
+                                    stuff += doc.get(rule[2][index]);
+                                }
+                            }
+                            document.getElementById("locationList").innerHTML += stuff;
+
+
+                            var results = L.layerGroup().addTo(map);
+                            var marker;
+                            // Some coordinated are null, protective check
+                            if (doc.data() != null) {
+                                marker = L.marker([
+                                    parseFloat(doc.data().location_coordinates.latitude),
+                                    parseFloat(doc.data().location_coordinates.longitude),
+                                ]);
+                            }
+                            // TODO HAVE THIS BE CONSISTENT ACROSS EVERYTHING
+                            getDivContent(doc.data().household_name).then((div) => {
+                                marker.bindPopup(div);
+                                results.addLayer(marker);
+                            });
+                        })
+                    })
+                clearMarkers();
+                clearLocationList();
+            });                       
+        </script>
     </head>
     
     <body>
 
-        <!-- <div id="partnerModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-            </div>
-        </div> -->
-
-        <div class="main w-full h-screen">
-            <div class="sidenav bg-customLightGray w-[480px] overflow-scroll">
-                <div class="h-20 px-3 bg-white w-full flex flex-row items-center ">
-                    <div class="bg-customMediumGray  text-2xl flex flex-row w-full rounded-2xl overflow-hidden py-3 px-8">
-                        
-                        <input onkeyup="helpMe()" type="text" id="search-input" placeholder="Search..." class="bg-customMediumGray focus:outline-none focus:ring-0 w-full font-hind ">
-                        <div class="flex flex-row justify-end items-center ">
-                            <button>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="size-8 stroke-customDarkGray mr-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                                </svg>
-                            </button>
-                            <button>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class=" size-8 stroke-customDarkGray">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                                </svg>
-                            </button>
+        <div class="main w-full h-screen relative">
+            <div class="sidenav bg-customLightGray w-[480px] overflow-y-scroll overflow-x-visible relative">
+                
+                <div class="sticky top-0 w-full bg-customMediumGray shadow-md pb-6">
+                    <div class="lord h-20 px-3 bg-white w-full flex flex-row items-center  ">
+                        <div class="bg-customMediumGray  text-2xl flex flex-row w-full rounded-2xl overflow-hidden py-3 px-8">
+                            
+                            <input onkeyup="onSearchInput()" type="text" id="search-input" placeholder="Search..." class="bg-customMediumGray focus:outline-none focus:ring-0 w-full font-hind ">
+                            <div class="flex flex-row items-center justify-end">
+                                <!-- Hiding the Search icon first since it doesn't have any functionality as of now -->
+                                <button class="hidden"> 
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="size-8 stroke-customDarkGray">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                                    </svg>
+                                </button>
+                                <button id="searchClear" onclick="clearSearch()" class="pl-5 hidden">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class=" size-8 stroke-customDarkGray">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
+                        
+
+                        <div class="flex flex-row justify-end items-center">
+                            <select name="collections" id="collections">
+                            </select>
+                        </div>
+
+
                     </div>
+                    <button id="mainButton" class="text-xl flex flex-row items-center px-8 py-4 bg-customMediumGray w-full text-lightbg mt-6 hover:text-darkbg ">
+                        <div>+</div>
+                        <p class="ml-4 font-bold font-montserrat ">Add an activity</p>
+                    </button>
+
                 </div>
-                <button id="mainButton" class="text-xl flex flex-row items-center px-8 py-4 bg-customLightGray w-full text-lightbg my-6 hover:text-darkbg">
-                    <div>+</div>
-                    <p class="ml-4 font-bold font-montserrat ">Add an activity</p>
-                </button>
-                <div class="entries bg-customLightGray">
-                    <ul id="locationList" class="accordion ">
+                <div class="entries bg-customLightGray w-full">
+                    <ul id="locationList" class="accordion w-full">
                     </ul>
                 </div>
             </div>
@@ -303,81 +362,84 @@
         </div>
 
         <!-- Partner Modal -->
-        <div id="partnerModal" class="h-full w-full  flex-row fixed z-[2400] items-center justify-center bg-black bg-opacity-50 inset-0 hidden ">
-        
-            <!-- Modal content -->
-            <div class="p-8 bg-customLightGray h-2/3 w-[862px]  shadow-md  overflow-y-scroll">
-                
-                <h1 class="font-montserrat text-3xl font-bold text-darkbg mb-8">Partner Name</h1>
+        <div id="partnerModal" class="modal">
+            
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <p id="modalHeader"></p>
+            </div>
 
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <p class="font-montserrat text-xl text-customGray" for="partner">Geo location</label>
-                </div>
+            <!-- Modal Content -->
+            <div class="modal-content">                
+                <!-- <div class='flex justify-around' style='color: #3d97af; font-size: 32px'>
+                    <b>List of activities: </b>
+                    <b><span class="addActivity">&plus;</span></b>
+                </div> -->
 
-                <div class="flex justify-between">
-                    <div class="flex-1 flex-row justify-between mb-6 items-center">
-                        <p class="font-montserrat text-xl text-customGray" for="partner">[Name]</label>
-                    </div>
-
-                    <div class="flex-1 flex-row justify-between mb-6 items-center">
-                        <p class="font-montserrat text-xl text-customGray" for="partner">[Number]</label>
-                    </div>
-                </div>
-
-                <div class="flex justify-between">
-                    <div class="flex-1 flex-row justify-between mb-6 items-center">
-                        <p class="font-montserrat text-xl text-customGray" for="partner">Organization / Unit</label>
-                    </div>
-
-                    <div class="flex-1 flex-row justify-between mb-6 items-center">
-                        <p class="font-montserrat text-xl text-customGray" for="partner">[Organization / Unit]</label>
-                    </div>
-                </div>
-
-                <div class="flex justify-between">
-                    <div class="flex-1 flex-row justify-between mb-6 items-center">
-                        <p class="font-montserrat text-xl text-customGray" for="partner">Nature of Activity</label>
-                    </div>
-
-                    <div class="flex-1 flex-row justify-between mb-6 items-center">
-                        <p class="font-montserrat text-xl text-customGray" for="partner">[Nature of Activity]</label>
-                    </div>
-                </div>
-
-                <div class="flex justify-between">
-                    <div class="flex-1 flex-row justify-between mb-6 items-center">
-                        <p class="font-montserrat text-xl text-customGray" for="partner">Dates of Partnership</label>
-                    </div>
-
-                    <div class="flex-1 flex-row justify-between mb-6 items-center">
-                        <p class="font-montserrat text-xl text-customGray" for="partner">Date 1</label>
-                    </div>
-                </div>
-
-                <div class="flex justify-between">
-                    <div class="flex-1 flex-row justify-between mb-6 items-center">
-                        <p class="font-montserrat text-xl text-customGray" for="partner"></label>
-                    </div>
-
-                    <div class="flex-1 flex-row justify-between mb-6 items-center">
-                        <p class="font-montserrat text-xl text-customGray" for="partner">Date 2</label>
-                    </div>
-                </div>
-
-
+                <p id="modalContent"></p>
+                    
+            </div>
 
     
-                <!-- Buttons -->
-                <span class="button_div">
-                    <!-- Clears all contents of the form -->
-                    <button class="editButton w-full py-4 text-center font-montserrat text-2xl bg-lightbg text-white font-bold rounded-lg">Edit Entry</button>                   
-                    <!-- Submits contents of the form -->                                               
-                </span>
-
-            </div>
+            <!-- Buttons -->
+            <span class="modal-button flex justify-around py-4 text-center font-montserrat text-2xl font-bold ">
+                <!-- Delete -->
+                <button class="deleteButton text-red-700 ">Delete</button>                   
+                <svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 border-red-700">
+                    <path d="M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6M18 6V16.2C18 17.8802 18 18.7202 17.673 19.362C17.3854 19.9265 16.9265 20.3854 16.362 20.673C15.7202 21 14.8802 21 13.2 21H10.8C9.11984 21 8.27976 21 7.63803 20.673C7.07354 20.3854 6.6146 19.9265 6.32698 19.362C6 18.7202 6 17.8802 6 16.2V6M14 10V17M10 10V17" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                <!-- Edit -->                                               
+                <button class="editButton text-lightbg">Edit</button>                   
+                <svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 border-red-700">
+                    <path d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    <polygon fill="none" points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polygon>
+                </svg>
+            </span>
         </div>
 
         <script type="module" src="js/index.js"></script>
+        
+        <script>
+            function onSearchInput() {
+    let input = document.getElementById('search-input').value.toLowerCase();
+
+    var button = document.getElementById('searchClear');
+
+    // Show the button if input is not empty, hide it otherwise
+    if (input !== "") {
+        button.classList.remove("hidden");
+    } else {
+        button.classList.add("hidden");
+    }
+
+    console.log("The user has typed " + input);
+
+    let container = document.getElementById('locationList');
+    let partnerContainers = container.getElementsByClassName("partnerDiv");
+
+    for (let i = 0; i < partnerContainers.length; i++) {
+        let nameElement = partnerContainers[i].getElementsByClassName("name")[0];
+        let name = nameElement.textContent.toLowerCase();
+
+        if (name.includes(input)) {
+            partnerContainers[i].classList.add("flex");
+            partnerContainers[i].classList.remove("hidden");
+        } else {
+            partnerContainers[i].classList.add("hidden");
+            partnerContainers[i].classList.remove("flex");
+        }
+    }
+}
+
+
+            function clearSearch() {
+                var input = document.getElementById('search-input');
+                input.value = '';
+                onSearchInput();
+            }
+
+        </script>
     
     </body>
 </html>

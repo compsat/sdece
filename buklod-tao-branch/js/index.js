@@ -1,5 +1,6 @@
 // import { getPartnersArray, addEntry } from "./firestore.js";
 import { getDocIdByPartnerName, getDocByID, setCollection, getCollection, DB } from "/firestore_UNIV.js";
+import { getDivContent, addListeners, map } from "/index_UNIV.js";
 import {
   collectionGroup,
   getFirestore,
@@ -47,7 +48,7 @@ var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
-// fix this part so that it will load the pins at start
+// Loads art the start
 getDocs(colRef)
   .then((querySnapshot) => {
     querySnapshot.forEach((entry) => {
@@ -70,35 +71,14 @@ getDocs(colRef)
     console.error("Error getting documents: ", error);
   });
 
-function searchLocation(doc) {
-  console.log("Search location of "+ doc.id);
-  let popup = L.popup()
-    .setLatLng([doc.latitude + 0.00015, doc.longitude] )
-    .setContent(`
-    <div class="leaflet-popup-container">
-    <h2 class="partner-header">${doc.household_name}</h2>          
-    <div class="partner-contact">${doc.address} ${doc.phase}</div>
-    `)
-    .openOn(map);
+addListeners();
 
-  
-  map.panTo(new L.LatLng(doc.latitude, doc.longitude));
-}
-
-searchControl.on("results", function (data) {
-  results.clearLayers();
-  for (var i = data.results.length - 1; i >= 0; i--) {
-    var marker = L.marker(data.results[i].latlng);
-    //console.log(marker);
-    results.addLayer(marker);
-  }
-});
 
 function onMapClick(e) {
-  console.log("MAP CLICK");
   const lat = e.latlng.lat;
   const lng = e.latlng.lng;
-
+  
+  // This is the popup for when the user clicks on a spot on the map
   var popupContent = `
       <div class="partner-geolocation">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -106,92 +86,42 @@ function onMapClick(e) {
             </svg>
             ${lat} + ${lng}
             <br>
-        </div>
-    <button class="addButton" data-lat="${lat}" data-lng="${lng}">Add Location</button>
-  `;
-
-  popup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
-
-  var addButton = document.querySelector(".addButton");
-  addButton.addEventListener("click", function () {
-    const lat = this.getAttribute("data-lat");
-    const lng = this.getAttribute("data-lng");
-
-    window.open(
-      `addloc.html?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(
-        lng
-      )}`,
-      "_blank"
-    );
-  });
-}
-
-// map.on("click", onMapClick);
-map.panTo(new L.LatLng(14.652538, 121.077818));
-
-function panLocation(name) {
-  console.log("PANNNNNN to "+name);
-  getDocIdByPartnerName(name).then((docId) => {
-    getDocByID(docId).then((doc) => {
-      searchLocation(doc);
-    });
-  });
-}
-
-document.getElementById("locationList").addEventListener("click", (event) => {
-  panLocation(event.target.innerHTML);
-});
-
-function getDetails(name) {
-  console.log("GETDEETS");
-  getDocIdByPartnerName(name).then((docId) => {
-    if (docId) {
-      getDocByID(docId).then((doc) => {
-        // Insert the partner details into the div with class "partner-contact"
-        const partnerContactDiv = document.querySelector(".partner-contact");
-        if (partnerContactDiv) {  
-            partnerContactDiv.innerHTML += `
-            <div class="partner-info">
-            <p class="partner-label">Nearest Evacuation Area</p>
-              <p class="partner-activity"> ${doc.nearest_evac_area}</p>
-            </div>
-
-            <div class="partner-info">
-              <p class="partner-label">Contact Person</p>
-              <p class="partner-value">${activity.ateneoContactPerson}</p>
-            </div>
-
-            <div class="partner-info">
-              <p class="partner-label">Organization / Unit</p>
-              <p class="partner-value"> ${activity.ateneoOrganization}</p>
-            </div>
-            
-
-            <div class="partner-info">
-              <p class="partner-label">Date/s of Partnership</p>
-              <p class="partner-value"> ${activity.activityDate.toDate()}</p>   <!-- find a way to format this into just Date -->
-            </div>
-
-              <hr>
-              <h2>Ateneo Office Oversight</h2> 
-
-            <div class="partner-info">          
-              <p class="partner-label">${activity.ateneoOverseeingOffice}</p>
-              <p class="partner-value"> ${activity.ateneoContactEmail}</p>
-              <p class="partner-value"> ${activity.ateneoOverseeingOfficeEmail}</p>
-              </div>
-            
-            `;
-          
-        } else {
-          console.log("Div with class 'partner-contact' not found.");
+      </div>
+    <button class="addButton p-5" data-lat="${lat}" data-lng="${lng}">Add Location</button>
+    `;
+  
+    popup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
+  
+    var addButton = document.querySelector('.addButton');
+    addButton.addEventListener('click', function () {
+      const lat = this.getAttribute('data-lat');
+      const lng = this.getAttribute('data-lng');
+  
+      var modal = document.getElementById('addModal');
+  
+      // TODO: Integrate this functionality into the modal instead
+      // var partnerName = this.getAttribute("data-loc");
+      // window.open(
+      //   `addloc.html?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(
+      //     lng
+      //   )}`,
+      //   "_blank"
+      // );
+  
+      // Display the modal
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+  
+      // Close the modal when the user clicks anywhere outside of it
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.classList.add('hidden');
         }
-      });
-    } else {
-      console.log("No matching partner found.");
-    }
-  });
-}
+        else {
+          console.log("No matching partner found.");
+        }
+    }});
+  }
 
 //function to add data to the DB when creating new layer elements
 function AddLayerData(layer_name, data) {
