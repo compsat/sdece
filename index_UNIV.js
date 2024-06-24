@@ -24,8 +24,7 @@ export const JS_CS_ENGINE =
           'sdece/css/form.css',
           'sdece/css/login.css',
           'sdece/css/main.css',
-        ]
-        
+        ]    
       ],
     ]
 
@@ -138,4 +137,44 @@ export function clearLocationList(){
   console.log("test2");
   var locationList = document.getElementById(`locationList`);
   locationList.innerHTML = "";
+}
+
+export function removeJsCssFiles(){
+  for(let i = 0; i < 5; i++){
+    const ELEMENT = document.getElementById('jscss' + i);
+    if(ELEMENT != null){
+      ELEMENT.remove();
+    }
+  }
+}
+
+export function createJsCssFiles(file_path){
+      // Essentially makes a script object with a src of the file provided by the Rules Engine
+    console.log(file_path);
+    if(file_path.includes(".js")){
+      var fileref = document.createElement('script');
+      fileref.setAttribute("type","module");
+      fileref.setAttribute("src", file_path + "?" + new Date().getTime());
+    }
+    if(file_path.includes(".css")){
+      var fileref = document.createElement("link");
+      fileref.setAttribute("rel", "stylesheet");
+      fileref.setAttribute("type", "text/css");
+      fileref.setAttribute("href", file_path + "?" + new Date().getTime());
+    }
+  return fileref;
+}
+
+export function loadJsCssFiles(file_path){
+  // script if javascript, css if link or none;
+  for(let rule of JS_CS_ENGINE){
+    if(rule[0] == getCollection().id){
+      for(let i = 0; i < rule[1].length; i++){
+        var new_element = createJsCssFiles(rule[1][i]);
+        new_element.setAttribute('id', 'jscss' + i);
+        document.getElementsByTagName('head')[0].appendChild(new_element);
+        console.log("type " + i);
+      }
+    }
+  }
 }

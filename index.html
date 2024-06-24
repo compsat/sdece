@@ -1,445 +1,397 @@
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <meta charset="utf-8" />
-        <title>Geocoding Control</title>
-        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <!-- Import Montserrat and Hind from Google Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-        
-        <!-- Load Leaflet from CDN -->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-            integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-            crossorigin="" />
-        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
-            integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
-            crossorigin=""></script>
-        
-        <!-- Load Esri Leaflet from CDN -->
-        <script src="https://unpkg.com/esri-leaflet@2.4.1/dist/esri-leaflet.js"
-            integrity="sha512-xY2smLIHKirD03vHKDJ2u4pqeHA7OQZZ27EjtqmuhDguxiUvdsOuXMwkg16PQrm9cgTmXtoxA6kwr8KBy3cdcw=="
-            crossorigin=""></script>
-        
-        <!-- Load Esri Leaflet Geocoder from CDN -->
-        <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.css"
-            integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
-            crossorigin="">
-        <script src="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.js"
-            integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
-            crossorigin=""></script>
-        <link href="./src/output.css" rel="stylesheet">
-        <!--<script type="module" src="js/firestore.js"></script>-->
+  <title>NSTP Hazard Mapping</title>
+  <meta name="viewport" content="width=device-width,user-scalable=no" />
+  <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
+
+  <!--Load Leaflet from CDN-->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+    integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+    crossorigin=""></script>
+
+  <!--Load Esri Leaflet from CDN-->
+  <script src="https://unpkg.com/esri-leaflet@2.4.1/dist/esri-leaflet.js"
+    integrity="sha512-xY2smLIHKirD03vHKDJ2u4pqeHA7OQZZ27EjtqmuhDguxiUvdsOuXMwkg16PQrm9cgTmXtoxA6kwr8KBy3cdcw=="
+    crossorigin=""></script>
+
+  <!--Load Esri Leaflet Geocoder from CDN-->
+  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.css"
+    integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+    crossorigin="">
+  <script src="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.js"
+    integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
+    crossorigin=""></script>
+
+  <!--Load CSS sheets and Firestore Database-->
+  <link rel="stylesheet" href="buklod-tao-branch/css/main.css">
+  <!--<script type="module" src="js/firestore.js"></script>-->
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
+        <script type="module" src="index_UNIV.js"></script>
+  
         <!--  Module for the implementation of the Rules Engine for switching maps -->
         <script type="module">
-            import { setCollection, getCollection, DB_RULES_AND_DATA } from "/firestore_UNIV.js";
-            import { readyField, clearMarkers, clearLocationList, map, getDivContent } from "/index_UNIV.js";
-            import { getDocs, query } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
+          import { setCollection, getCollection, DB_RULES_AND_DATA } from "/firestore_UNIV.js";
+          import { readyField, clearMarkers, clearLocationList, map, getDivContent, loadJsCssFiles, removeJsCssFiles } from "/index_UNIV.js";
+          import { getDocs, query } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
 
-            var collections = document.getElementById("collections");
+          var collections = document.getElementById("collections");
 
-            for(let rule of DB_RULES_AND_DATA){
-                collections.innerHTML += `<option value="${rule[0]}"> ${readyField(rule[0])}</option>`;
-            }
+          for(let rule of DB_RULES_AND_DATA){
+              collections.innerHTML += `<option value="${rule[0]}"> ${readyField(rule[0])}</option>`;
+          }
 
-            collections.addEventListener("change", function(){
-                const SELECTED = collections.options[collections.selectedIndex].value;
-                setCollection(SELECTED);
+          collections.addEventListener("change", function(){
+              const SELECTED = collections.options[collections.selectedIndex].value;
+              setCollection(SELECTED);
 
-                // test getDocs for grabbing the data on change
-                getDocs(getCollection())
-                    .then((querySnapshot) => {
-                        querySnapshot.forEach((doc) => {
-                            console.log(doc.id, " => ", doc.data());
-                            var stuff = ``;
-                            for(let rule of DB_RULES_AND_DATA){
-                                for(let index in rule){
-                                    stuff += doc.get(rule[2][index]);
-                                }
-                            }
-                            document.getElementById("locationList").innerHTML += stuff;
+   
+              clearMarkers();
+              clearLocationList();
+              
+              removeJsCssFiles();
+              loadJsCssFiles(SELECTED);
 
+          });                       
+      </script>
+</head>
 
-                            var results = L.layerGroup().addTo(map);
-                            var marker;
-                            // Some coordinated are null, protective check
-                            if (doc.data() != null) {
-                                marker = L.marker([
-                                    parseFloat(doc.data().location_coordinates.latitude),
-                                    parseFloat(doc.data().location_coordinates.longitude),
-                                ]);
-                            }
-                            // TODO HAVE THIS BE CONSISTENT ACROSS EVERYTHING
-                            getDivContent(doc.data().household_name).then((div) => {
-                                marker.bindPopup(div);
-                                results.addLayer(marker);
-                            });
-                        })
-                    })
-                clearMarkers();
-                clearLocationList();
-            });                       
-        </script>
-    </head>
+<body>
+  <!--Logout Button-->
+  <div class="top-bar">
+    <button class="button-logout"><img class="logoutIcon" src="buklod-tao-branch/img/logout.256x256.png" alt="logout"> Logout</button>
     
-    <body>
-
-        <div class="main w-full h-screen relative">
-            <div class="sidenav bg-customLightGray w-[480px] overflow-y-scroll overflow-x-visible relative">
-                
-                <div class="sticky top-0 w-full bg-customMediumGray shadow-md pb-6">
-                    <div class="lord h-20 px-3 bg-white w-full flex flex-row items-center  ">
-                        <div class="bg-customMediumGray  text-2xl flex flex-row w-full rounded-2xl overflow-hidden py-3 px-8">
-                            
-                            <input onkeyup="onSearchInput()" type="text" id="search-input" placeholder="Search..." class="bg-customMediumGray focus:outline-none focus:ring-0 w-full font-hind ">
-                            <div class="flex flex-row items-center justify-end">
-                                <!-- Hiding the Search icon first since it doesn't have any functionality as of now -->
-                                <button class="hidden"> 
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="size-8 stroke-customDarkGray">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                                    </svg>
-                                </button>
-                                <button id="searchClear" onclick="clearSearch()" class="pl-5 hidden">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class=" size-8 stroke-customDarkGray">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        
-
                         <div class="flex flex-row justify-end items-center">
                             <select name="collections" id="collections">
                             </select>
                         </div>
+  </div>
 
-
-                    </div>
-                    <button id="mainButton" class="text-xl flex flex-row items-center px-8 py-4 bg-customMediumGray w-full text-lightbg mt-6 hover:text-darkbg ">
-                        <div>+</div>
-                        <p class="ml-4 font-bold font-montserrat ">Add an activity</p>
-                    </button>
-
-                </div>
-                <div class="entries bg-customLightGray w-full">
-                    <ul id="locationList" class="accordion w-full">
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Right container containing Login/Logout header and map -->
-            <div class="w-full h-screen overflow-y-hidden flex flex-col">   
-                             
-                <div class="h-20 px-9 bg-darkbg w-full flex flex-row justify-end items-center">
-                    <button class="shadow-md py-3 px-6 bg-lightbg font-montserrat font-bold text-xl rounded flex flex-row text-white justify-center items-center">
-
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
-                        </svg>
-
-
-                        Logout
-                    </button>
-                </div>
-                
-                <div class="flex flex-1">
-                    <div id="map" class="w-full h-full">
-                    </div>
-                </div>
-
-            </div>
+  <!--Modals of Entries-->
+  <div id="partnerModal" class="modal">
+    <!--Modal Header: includes household owner-->
+    <div class="modal-header">
+      <p id="modalHeader"></p>
+      <span class="close">&times;</span>
+    </div>
+    <!--Modal Content: content of the entries-->
+    <div class="modal-content">
+      <!--Div for contact no. and address-->
+      <br>
+      <div>
+        <p class="modal-text" id="entry_contact_number">This is the Household's contact number</p>
+        <p class="modal-text" id="entry_address">This is the geolocation of the household that is not truncated. This is the geolocation of the partner that is not truncated. This is the geolocation of the partner that is not truncated.</p>
+      </div>
+      <!--Div for residency status and part of HOA/NOA labels-->
+      <div class="modal-line">
+        <label class="modal-label" style="width: 220px;">Residency Status</label>
+        <label class="modal-label" style="width: 220px;">Part of HOA / NOA</label>
+      </div>
+      <!--Div for residency status and part of HOA/NOA content-->
+      <div class="modal-line">
+        <p class="modal-text" id="entry_residency_status" style="width: 220px;">Residency Status</p>
+        <p class="modal-text" id="entry_HOA/NOA" style="width: 220px;">Part of HOA / NOA</label>
+      </div>
+      <!--Div for evacuation area-->
+      <div>
+        <label class="modal-label">Nearest Evacuation Area</label>
+        <p class="modal-text" id="entry_nearest_evacuation_area">Nearest Evacuation Area</p>
+      </div>
+      <!--Risk Levels-->
+      <button type="button" class="collapsible">Risk Levels</button>
+      <div class="colcontent" style="display: none;">
+        <div class="modal-line">
+          <label class="modal-label">Earthquake</label>
+          <label class="modal-label" id="entry_earthquake_risk_level">RISK LEVEL</label>
         </div>
-
-        <!-- Add Activity Modal -->
-        <div id="mainModal" class="h-full w-full  flex-row fixed z-[2400] items-center justify-center  inset-0 hidden">
-        
-            <!--  content -->
-            <div class=" bg-customLightGray h-auto w-[480px] shadow-md ">
-                
-                <div class="flex flex-row justify-end p-4">
-                    <svg id="closeButton" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                    </svg>
-                </div>
-
-                <div class=" p-5">
-                    <h1 class=" border-b-2 border-lightbg font-montserrat font-medium text-2xl text-customDarkGray pb-2">Partner Name</h1>
-
-                    <div class="flex flex-row mt-6 w-full pb-3 border-b-[1px] border-customDarkGray">
-                        <button>
-                            <svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
-                            </svg>
-
-                        </button>
-                        <input class="font-hind text-lg leading-[120%] w-full ml-2" type="text" placeholder="Type the location partner">
-                        <!-- <ul class="rounded border w-[432px] absolute mt-10 bg-customLightGray">
-                            <li class="p-2 flex flex-row border">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
-                                </svg>
-                                Sample Item 1
-                            </li>
-                            <li class="p-2 flex flex-row border">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
-                                </svg>
-                                Sample Item 1
-                            </li>
-                            <li class="p-2 flex flex-row border">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
-                                </svg>
-                                Sample Item 1
-                            </li>
-
-
-                        </ul> -->
-                    </div>
-
-                    <div class="mt-14 flex flex-row justify-between items center">
-                        <h2  class="font-montserrat font-bold text-2xl">List of Activities</h2>
-                        <button id="otherButton">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <!-- TODO: Add selector for JS to dynamically render Empty text or list -->
-                    <p class="mt-4 font-hind text-xl text-customDarkGray">No activities for this partner.</p>
-                    <button class="mt-14 w-full py-4 text-center font-montserrat text-2xl bg-lightbg text-white font-bold rounded-lg">
-                        Save
-                    </button>
-                </div>
-
-            </div>
-
+        <div>
+          <p class="modal-text" id="entry_earthquake_desc">This is the description of the risk level that is not truncated. This is the description of the risk level that is not truncated. This is the description of the risk level that is not truncated.</p>
         </div>
-
-        <!-- Edit Modal -->
-        <div id="editModal" class="h-full w-full  flex-row fixed z-[2400] items-center justify-center bg-black bg-opacity-50 inset-0 hidden ">
-        
-            <!-- Modal content -->
-            <form action="" class="p-8 bg-customLightGray h-2/3 w-[862px] shadow-md  overflow-y-scroll">
- 
-                <h1 class="font-montserrat text-3xl font-bold text-darkbg mb-8">Edit Activity</h1>
-
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="partner">Activity Name</label>
-                    <input type="text" id="partner" name="partner" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
-                </div>
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="partner">Nature of Activity</label>
-                    <input type="text" id="partner" name="partner" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
-                </div>
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="partner">Dates of Partnership</label>
-                    <input type="date" id="partner" name="partner" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
-                </div>
-
-                <h2 class="mt-9 font-montserrat text-xl text-lightbg font-bold leading-[110%] mb-6">PARTNER INFORMATION</h2>
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="partner">Name of Host Partner</label>
-                    <input type="text" id="partner" name="partner" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
-                </div>
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="partner_contact-person">Address of Host Partner</label>
-                    <input type="text" id="partner_contact-person" name="partner_contact-person" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-                </div>
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="organization">Name of Contact Person</label>
-                    <input type="text" id="organization" name="organization" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-                </div>
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="nature_of_act">Number of Contact Person</label>
-                    <input type="text" id="nature_of_act" name="nature_of_act" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder=""> 
-                </div>  
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="dates_of_partnership">Email of Contact Person / Partner</label>
-                    <input type="date" id="dates_of_partnership" name="dates_of_partnership" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-                </div>
-
-                <h2 class="mt-9 font-montserrat text-xl text-lightbg font-bold leading-[110%] mb-6">ATENEO OFFICE OVERSIGHT</h2>
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="ateneo_office">Name of Office</label>
-                    <input type="text" id="ateneo_office" name="ateneo_office" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-                </div>
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="ateneo_contact-person">Name of Ateneo Contact Person</label>
-                    <input type="text" id="ateneo_contact-person" name="ateneo_contact-person" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-                </div> 
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="ateneo_contact-email">Email of Ateneo Contact Person</label>
-                    <input type="email" id="ateneo_contact-email" name="ateneo_contact-email" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-                </div>
-
-                 <div class="">
-                    <button class="w-full py-4 text-center font-montserrat text-2xl bg-lightbg text-white font-bold rounded-lg" id="submit_form" name="submit_form" type="submit">Save</button>
-                    <button class="w-full py-4 text-center font-montserrat text-2xl text-red-700 font-bold border border-red-700 rounded-lg mt-4">Delete</button>
-                </div>
-            </form>
+        <div class="modal-line">
+          <label class="modal-label">Fire</label>
+          <label class="modal-label" id="entry_fire_risk_level">RISK LEVEL</label>
         </div>
-
-        <!-- Add Modal -->
-        <div id="addModal" class="h-full w-full  flex-row fixed z-[2400] items-center justify-center bg-black bg-opacity-50 inset-0 hidden ">
-        
-            <!-- Modal content -->
-            <form action="" class="p-8 bg-customLightGray h-2/3 w-[862px]  shadow-md  overflow-y-scroll">
-                
-                <h1 class="font-montserrat text-3xl font-bold text-darkbg mb-8">Add Activity</h1>
-
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="partner">Activity Name</label>
-                    <input type="text" id="partner" name="partner" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
-                </div>
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="partner">Nature of Activity</label>
-                    <input type="text" id="partner" name="partner" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
-                </div>
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="partner">Dates of Partnership</label>
-                    <input type="date" id="partner" name="partner" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
-                </div>
-
-                <h2 class="mt-9 font-montserrat text-xl text-lightbg font-bold leading-[110%] mb-6">PARTNER INFORMATION</h2>
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="partner">Name of Host Partner</label>
-                    <input type="text" id="partner" name="partner" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
-                </div>
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="partner_contact-person">Address of Host Partner</label>
-                    <input type="text" id="partner_contact-person" name="partner_contact-person" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-                </div>
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="organization">Name of Contact Person</label>
-                    <input type="text" id="organization" name="organization" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-                </div>
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="nature_of_act">Number of Contact Person</label>
-                    <input type="text" id="nature_of_act" name="nature_of_act" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder=""> 
-                </div>  
-                <div class="flex flex-row justify-between mb-6 items-center">
-                    <label class="form font-montserrat text-xl text-customGray" for="dates_of_partnership">Email of Contact Person / Partner</label>
-                    <input type="date" id="dates_of_partnership" name="dates_of_partnership" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-                </div>
-
-                <h2 class="mt-9 font-montserrat text-xl text-lightbg font-bold leading-[110%] mb-6">ATENEO OFFICE OVERSIGHT</h2>
-                    <div class="flex flex-row justify-between mb-6 items-center">
-                        <label class="form font-montserrat text-xl text-customGray" for="ateneo_office">Name of Office</label>
-                        <input type="text" id="ateneo_office" name="ateneo_office" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-                    </div>
-                    <div class="flex flex-row justify-between mb-6 items-center">
-                        <label class="form font-montserrat text-xl text-customGray" for="ateneo_contact-person">Name of Ateneo Contact Person</label>
-                        <input type="text" id="ateneo_contact-person" name="ateneo_contact-person" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-                    </div> 
-                    <div class="flex flex-row justify-between mb-6 items-center">
-                        <label class="form font-montserrat text-xl text-customGray" for="ateneo_contact-email">Email of Ateneo Contact Person</label>
-                        <input type="email" id="ateneo_contact-email" name="ateneo_contact-email" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-                    </div>
-    
-                <!-- Buttons -->
-                <span class="button_div">
-                    <!-- Clears all contents of the form -->
-                    <button class="w-full py-4 text-center font-montserrat text-2xl bg-lightbg text-white font-bold rounded-lg" type="submit" id="submit_form" name="submit_form">Add Activity</button>   
-                    <button class="w-full py-4 text-center font-montserrat text-2xl text-red-700 font-bold border border-red-700 rounded-lg mt-4">Clear</button>
-                    <!-- Submits contents of the form -->                                               
-                </span>
-
-            </form>
+        <div>
+          <p class="modal-text" id="entry_earthquake_desc">Sample text</p>
         </div>
-
-        <!-- Partner Modal -->
-        <div id="partnerModal" class="modal">
-            
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <span class="close">&times;</span>
-                <p id="modalHeader"></p>
-            </div>
-
-            <!-- Modal Content -->
-            <div class="modal-content">                
-                <!-- <div class='flex justify-around' style='color: #3d97af; font-size: 32px'>
-                    <b>List of activities: </b>
-                    <b><span class="addActivity">&plus;</span></b>
-                </div> -->
-
-                <p id="modalContent"></p>
-                    
-            </div>
-
-    
-            <!-- Buttons -->
-            <span class="modal-button flex justify-around py-4 text-center font-montserrat text-2xl font-bold ">
-                <!-- Delete -->
-                <button class="deleteButton text-red-700 ">Delete</button>                   
-                <svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 border-red-700">
-                    <path d="M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6M18 6V16.2C18 17.8802 18 18.7202 17.673 19.362C17.3854 19.9265 16.9265 20.3854 16.362 20.673C15.7202 21 14.8802 21 13.2 21H10.8C9.11984 21 8.27976 21 7.63803 20.673C7.07354 20.3854 6.6146 19.9265 6.32698 19.362C6 18.7202 6 17.8802 6 16.2V6M14 10V17M10 10V17" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                </svg>
-                <!-- Edit -->                                               
-                <button class="editButton text-lightbg">Edit</button>                   
-                <svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 border-red-700">
-                    <path d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                    <polygon fill="none" points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polygon>
-                </svg>
-            </span>
+        <div class="modal-line">
+          <label class="modal-label">Flood</label>
+          <label class="modal-label" id="entry_flood_risk_level">RISK LEVEL</label>
         </div>
+        <div>
+          <p class="modal-text" id="entry_earthquake_desc">Sample text</p>
+        </div>
+        <div class="modal-line">
+          <label class="modal-label">Landslide</label>
+          <label class="modal-label" id="entry_landslide_risk_level">RISK LEVEL</label>
+        </div>
+        <div>
+          <p class="modal-text" id="entry_earthquake_desc">Sample text</p>
+        </div>
+        <div class="modal-line">
+          <label class="modal-label">Storm</label>
+          <label class="modal-label" id="entry_storm_risk_level">RISK LEVEL</label>
+        </div>
+        <div>
+          <p class="modal-text" id="entry_earthquake_desc">Sample text</p>
+        </div>
+      </div>
+      <!--Residents-->
+      <button type="button" class="collapsible">Residents</button>
+      <div class="colcontent" style="display: none;">
+        <br>
+        <div class="modal-line">
+          <label class="modal-label">Total</label>
+          <label class="modal-label" id="entry_number_of_residents">0</label>
+        </div>
+        <hr style="border-top: 1px solid #CBD5E0;">
+        <div class="modal-line">
+          <label class="modal-label">Minors</label>
+          <label class="modal-label" id="entry_number_of_minor_residents">0</label>
+        </div>
+        <br>
+        <div class="modal-line">
+          <label class="modal-label">Seniors</label>
+          <label class="modal-label" id="entry_number_of_senior_residents">0</label>
+        </div>
+        <br>
+        <div class="modal-line">
+          <label class="modal-label">PWD</label>
+          <label class="modal-label" id="entry_number_of_pwd_residents">0</label>
+        </div>
+        <br>
+        <div class="modal-line">
+          <label class="modal-label">Sick</label>
+          <label class="modal-label" id="entry_number_of_sick_residents">0</label>
+        </div>
+        <br>
+        <div class="modal-line">
+          <label class="modal-label" >Pregnant</label>
+          <label class="modal-label" id="entry_number_of_pregnant_residents">0</label>
+        </div>
+        <br>
+      </div>
+    </div>
+    <!--Div for modal footer: contains edit and delete buttons-->
+    <div class="modal-footer">
+      <div class="modal-line">
+        <button class="modal-button" type="submit" id="submit_form" name="submit_form" style="color:#D64747">Delete &nbsp;&nbsp;<img src="buklod-tao-branch/img/delete.png" alt="delete" style="height: 20px; width: 20px;"></button>   
+        <button class="modal-button" type="submit" id="submit_form" name="submit_form" style="color:#3D97AF">Edit   &nbsp;&nbsp;<img src="buklod-tao-branch/img/edit.png" alt="edit" style="height: 20px; width: 20px;"></button>   
+      </div>
+    </div>
+  </div>
 
-        <script type="module" src="js/index.js"></script>
-        
-        <script>
-            function onSearchInput() {
-    let input = document.getElementById('search-input').value.toLowerCase();
+  <!--Modals of forms-->
+  <div id="form-modal" class="form-modal" style="display: none;">
+    <!--Modal Header: includes title and address-->
+    <div class="form-modal-header">
+      <span class="close-form">&times;</span>
+      <h1 class="form-header">Add Household</h1>
+    </div>
 
-    var button = document.getElementById('searchClear');
+    <!--Modal Content: everything else-->
+    <div class="form-modal-content">
+      <h2 class="sub-header">HOUSEHOLD INFORMATION</h2>
+      <br>
+      <!-- Add Household Form modal-->
+      <div class="input_container">
+          <label class="form" for="household_name">Household Name</label>
+          <input type="text" id="household_name" name="household_name" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="address">Address</label>
+          <input type="text" id="address" name="address" class="attribs" placeholder="">    
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="contact_number">Contact Number</label>
+          <input type="text" id="contact_number" name="contact_number" class="attribs" placeholder="">    
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="residency_status">Residency Status</label>
+          <input type="text" id="residency_status" name="residency_status" class="attribs" placeholder=""> 
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
+          <input type="text" id="HOA/NOA" name="HOA/NOA" class="attribs" placeholder=""> 
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="materials_used_for_house">Materials Used for House</label>
+          <input type="text" id="materials_used_for_house" name="materials_used_for_house" class="attribs" placeholder=""> 
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="nearest_evacuation_area">Nearest Evacuation Area</label>
+          <input type="text" id="nearest_evacuation_area" name="nearest_evacuation_area" class="attribs" placeholder="">    
+      </div>
+      <br>
+      <h2 class="sub-header">RESIDENT INFORMATION</h2>
+      <br>
+      <div class="input_container">
+          <label class="form" for="number_of_residents">Number of Residents</label>
+          <input type="text" id="number_of_residents" name="number_of_residents" class="attribs" placeholder="">    
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="number_of_minor_residents">Number of Minor Residents</label>
+          <input type="text" id="number_of_minor_residents" name="number_of_minor_residents" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="number_of_senior_residents">Number of Senior Citizen Residents</label>
+          <input type="text" id="number_of_senior_residents" name="number_of_senior_residents" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="number_of_pwd_residents">Number of PWD Residents</label>
+          <input type="text" id="number_of_pwd_residents" name="number_of_pwd_residents" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="number_of_sick_residents">Number of Sick Residents</label>
+          <input type="text" id="number_of_sick_residents" name="number_of_sick_residents" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="number_of_pregnant_residents">Number of Pregnant Residents</label>
+          <input type="text" id="number_of_pregnant_residents" name="number_of_pregnant_residents" class="attribs" placeholder="">
+      </div>
+      <br>
+      <h2 class="sub-header">RISK LEVELS</h2>
+      <br>
+      <div class="input_container">
+          <label class="disaster-form" for="earthquake">Earthquake</label>
+          <select name="earthquake_level" id="earthquake" class="attribs">
+              <option value="" disabled selected hidden></option>
+              <option value="high">HIGH</option>
+              <option value="medium">MEDIUM</option>
+              <option value="low">LOW</option>
+          </select>
+          <input type="text" id="earthquake" name="earthquake" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="disaster-form" for="fire">Fire</label>
+          <select name="fire_level" id="fire" class="attribs">
+              <option value="" disabled selected hidden></option>
+              <option value="high">HIGH</option>
+              <option value="medium">MEDIUM</option>
+              <option value="low">LOW</option>
+          </select>
+          <input type="text" id="fire" name="fire" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="disaster-form" for="flood">Flood</label>
+          <select name="flood_level" id="flood" class="attribs">
+              <option value="" disabled selected hidden></option>
+              <option value="high">HIGH</option>
+              <option value="medium">MEDIUM</option>
+              <option value="low">LOW</option>
+          </select>
+          <input type="email" id="flood" name="flood" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="disaster-form" for="landslide">Landslide</label>
+          <select name="landslide_level" id="landslide" class="attribs">
+              <option value="" disabled selected hidden></option>
+              <option value="high">HIGH</option>
+              <option value="medium">MEDIUM</option>
+              <option value="low">LOW</option>
+          </select>
+          <input type="email" id="landslide" name="landslide" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="disaster-form" for="storm">Storm</label>
+          <select name="storm_level" id="storm" class="attribs">
+              <option value="" disabled selected hidden></option>
+              <option value="high">HIGH</option>
+              <option value="medium">MEDIUM</option>
+              <option value="low">LOW</option>
+          </select>
+          <input type="email" id="storm" name="storm" class="attribs" placeholder="">
+      </div>
+      <br>
+      <br>
+      <br>
+      <!-- Buttons -->
+      <div>
+          <!-- Submits contents of the form -->                                               
+          <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save</button>   
+        </div>
+        <div>
+          <!-- Clears all contents of the form -->
+          <button class="clear form">Delete</button>
+        </div>
+      </div>
+    </div>
 
-    // Show the button if input is not empty, hide it otherwise
-    if (input !== "") {
-        button.classList.remove("hidden");
-    } else {
-        button.classList.add("hidden");
-    }
+    <!-- Modal Footer: empty space -->
+     <div class="formModalFooter"></div>
+  </div>
+  
+  <!--Side menu: where the add location function, search bar, and list entries are-->
+  <div class="main">
+    <div class="sidenav">
+      <!--Search Bar-->
+      <div class="buttons">
+        <input class="search-bar" type="search" placeholder="Search... " oninput="searchEntries()">
+      </div>
+      <button class="container label-font" id="addloc-modal" href="#" style="position: relative; box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2);">+ Add a Household</button>
+        <!--<button class="container label-font" href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon">
+        <path d="M23.7844 9.8585L21.4937 7.56787L10.1594 18.8991L9.67188 21.6804L12.45 21.1897L23.7844 9.8585Z"
+          fill="#568D9E" />
+        <path
+          d="M27.5 26.9741H4.5C3.94687 26.9741 3.5 27.421 3.5 27.9741V29.0991C3.5 29.2366 3.6125 29.3491 3.75 29.3491H28.25C28.3875 29.3491 28.5 29.2366 28.5 29.0991V27.9741C28.5 27.421 28.0531 26.9741 27.5 26.9741ZM8.05313 24.3491C8.11563 24.3491 8.17813 24.3429 8.24063 24.3335L13.4969 23.4116C13.5594 23.3991 13.6188 23.371 13.6625 23.3241L26.9094 10.0772C26.9383 10.0483 26.9613 10.014 26.977 9.97619C26.9927 9.93839 27.0008 9.89786 27.0008 9.85693C27.0008 9.81601 26.9927 9.77548 26.977 9.73768C26.9613 9.69987 26.9383 9.66553 26.9094 9.63662L21.7156 4.43975C21.6562 4.38037 21.5781 4.34912 21.4937 4.34912C21.4094 4.34912 21.3313 4.38037 21.2719 4.43975L8.025 17.6866C7.97812 17.7335 7.95 17.7897 7.9375 17.8522L7.01562 23.1085C6.98522 23.2759 6.99609 23.4482 7.04727 23.6105C7.09846 23.7727 7.18842 23.9201 7.30937 24.0397C7.51562 24.2397 7.775 24.3491 8.05313 24.3491ZM10.1594 18.8991L21.4937 7.56787L23.7844 9.8585L12.45 21.1897L9.67188 21.6804L10.1594 18.8991Z"
+          fill="#568D9E" />
+        </svg> Edit Location
+        </button>-->
+      <div class="entries">
+        <ul id="locationList" class="accordion">
+        </ul>
+      </div>
+    </div>
+    <div class="map-container">
+      <div id="map">
+      </div>
+    </div>
+  </div>
+  <!--script for map-->
+  <script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
 
-    console.log("The user has typed " + input);
-
-    let container = document.getElementById('locationList');
-    let partnerContainers = container.getElementsByClassName("partnerDiv");
-
-    for (let i = 0; i < partnerContainers.length; i++) {
-        let nameElement = partnerContainers[i].getElementsByClassName("name")[0];
-        let name = nameElement.textContent.toLowerCase();
-
-        if (name.includes(input)) {
-            partnerContainers[i].classList.add("flex");
-            partnerContainers[i].classList.remove("hidden");
+    for (i = 0; i < coll.length; i++) {
+      coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var colcontent = this.nextElementSibling;
+        if (colcontent.style.display === "none") {
+          colcontent.style.display = "block";
+          coll.style.transform = "rotate(180deg)";
         } else {
-            partnerContainers[i].classList.add("hidden");
-            partnerContainers[i].classList.remove("flex");
+          colcontent.style.display = "none";
+          coll.style.transform = "none";
         }
+      });
     }
-}
+  </script>
+</body>
 
-
-            function clearSearch() {
-                var input = document.getElementById('search-input');
-                input.value = '';
-                onSearchInput();
-            }
-
-        </script>
-    
-    </body>
 </html>

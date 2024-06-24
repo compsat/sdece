@@ -22,6 +22,8 @@ var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
+
+
 // Loads art the start
 getDocs(colRef)
   .then((querySnapshot) => {
@@ -29,8 +31,8 @@ getDocs(colRef)
       var doc = entry.data();
       //console.log(doc);
       var marker = L.marker([
-        parseFloat(doc.latitude),
-        parseFloat(doc.longitude),
+        parseFloat(doc.location_coordinates.latitude),
+        parseFloat(doc.location_coordinates.longitude),
       ]);
       var popupContent = `
       <div class="leaflet-popup-container">
@@ -38,6 +40,7 @@ getDocs(colRef)
         `;
       marker.bindPopup(popupContent);
       results.addLayer(marker);
+      console.log("loaded");
     });
   })
   .catch((error) => {
@@ -45,7 +48,6 @@ getDocs(colRef)
   });
 
 addListeners();
-
 
 function onMapClick(e) {
   const lat = e.latlng.lat;
