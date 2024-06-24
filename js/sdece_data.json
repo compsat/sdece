@@ -1,6 +1,6 @@
 [
   {
-    "partner_location": "14.6963366, 121.1094827",
+    "partner_coordinates": "14.6963366, 121.1094827",
     "partner_city": "Quezon City",
     "partner_name": "Bagong Silangan Elementary School",
     "additional_partnership": "Couples for Christ North B Sector",
@@ -11,12 +11,12 @@
     "activity_nature": "Reading Tutorials",
     "activity_name": "",
     "organization_unit": "",
-    "admu_office": "ACED",
-    "admu_contact": "Dr. Mel Oracion",
-    "admu_email": "aced@ateneo.edu"
+    "ADMU_office": "ACED",
+    "ADMU_contact": "Dr. Mel Oracion",
+    "ADMU_email": "aced@ateneo.edu"
   },
   {
-    "partner_location": "14.6524418, 121.0788550",
+    "partner_coordinates": "14.6524418, 121.0788550",
     "partner_city": "Quezon City",
     "partner_name": "Balara Elementary School",
     "additional_partnership": "Couples for Christ North B Sector",
@@ -27,12 +27,12 @@
     "activity_nature": "Reading Tutorials",
     "activity_name": "",
     "organization_unit": "",
-    "admu_office": "ACED",
-    "admu_contact": "Dr. Mel Oracion",
-    "admu_email": "aced@ateneo.edu"
+    "ADMU_office": "ACED",
+    "ADMU_contact": "Dr. Mel Oracion",
+    "ADMU_email": "aced@ateneo.edu"
   },
   {
-    "partner_location": "14.6977673, 121.0877704",
+    "partner_coordinates": "14.6977673, 121.0877704",
     "partner_city": "Quezon City",
     "partner_name": "Commonwealth Elementary School",
     "additional_partnership": "",
@@ -43,12 +43,12 @@
     "activity_nature": "Reading Tutorials and Review Classes",
     "activity_name": "",
     "organization_unit": "AJHS Dama",
-    "admu_office": "CSIP",
-    "admu_contact": "Jomell Caramancion",
-    "admu_email": "jcaramancion@ateneo.edu"
+    "ADMU_office": "CSIP",
+    "ADMU_contact": "Jomell Caramancion",
+    "ADMU_email": "jcaramancion@ateneo.edu"
   },
   {
-    "partner_location": "14.6977673, 121.0877704",
+    "partner_coordinates": "14.6977673, 121.0877704",
     "partner_city": "Quezon City",
     "partner_name": "Commonwealth Elementary School",
     "additional_partnership": "",
@@ -59,12 +59,12 @@
     "activity_nature": "Feeding Program",
     "activity_name": "",
     "organization_unit": "",
-    "admu_office": "ACED",
-    "admu_contact": "Dr. Mel Oracion",
-    "admu_email": "aced@ateneo.edu"
+    "ADMU_office": "ACED",
+    "ADMU_contact": "Dr. Mel Oracion",
+    "ADMU_email": "aced@ateneo.edu"
   },
   {
-    "partner_location": "14.6468204, 121.0721071",
+    "partner_coordinates": "14.6468204, 121.0721071",
     "partner_city": "Quezon City",
     "partner_name": "Daang Tubo Day Care Center",
     "additional_partnership": "",
@@ -75,12 +75,12 @@
     "activity_nature": "Reading Tutorials",
     "activity_name": "",
     "organization_unit": "Musmos",
-    "admu_office": "OSA",
-    "admu_contact": "Tats Quiblat",
-    "admu_email": "osa.ls@ateneo.edu"
+    "ADMU_office": "OSA",
+    "ADMU_contact": "Tats Quiblat",
+    "ADMU_email": "osa.ls@ateneo.edu"
   },
   {
-    "partner_location": "14.6895495, 121.0818295",
+    "partner_coordinates": "14.6895495, 121.0818295",
     "partner_city": "Novaliches City",
     "partner_name": "Doña Juana Elementary School",
     "additional_partnership": "Couples for Christ North B Sector",
@@ -91,12 +91,12 @@
     "activity_nature": "Reading Tutorials",
     "activity_name": "",
     "organization_unit": "",
-    "admu_office": "ACED",
-    "admu_contact": "Dr. Mel Oracion",
-    "admu_email": "aced@ateneo.edu"
+    "ADMU_office": "ACED",
+    "ADMU_contact": "Dr. Mel Oracion",
+    "ADMU_email": "aced@ateneo.edu"
   },
   {
-    "partner_location": "14.6263449, 121.0524317",
+    "partner_coordinates": "14.6263449, 121.0524317",
     "partner_city": "Quezon City",
     "partner_name": "Ermin Garcia Health Center",
     "additional_partnership": "",
@@ -107,12 +107,12 @@
     "activity_nature": "Reading Tutorials",
     "activity_name": "",
     "organization_unit": "Musmos",
-    "admu_office": "OSA",
-    "admu_contact": "Tats Quiblat",
-    "admu_email": "osa.ls@ateneo.edu"
+    "ADMU_office": "OSA",
+    "ADMU_contact": "Tats Quiblat",
+    "ADMU_email": "osa.ls@ateneo.edu"
   },
   {
-    "partner_location": "14.6219887, 121.0802272",
+    "partner_coordinates": "14.6219887, 121.0802272",
     "partner_city": "Marikina City",
     "partner_name": "Industrial Valley Elementary School",
     "additional_partnership": "",
@@ -123,12 +123,12 @@
     "activity_nature": "Reading Tutorials",
     "activity_name": "",
     "organization_unit": "Gabay",
-    "admu_office": "OSA",
-    "admu_contact": "Tats Quiblat",
-    "admu_email": "osa.ls@ateneo.edu"
+    "ADMU_office": "OSA",
+    "ADMU_contact": "Tats Quiblat",
+    "ADMU_email": "osa.ls@ateneo.edu"
   },
   {
-    "partner_location": "14.6492267, 121.1187289",
+    "partner_coordinates": "14.6492267, 121.1187289",
     "partner_city": "Marikina City",
     "partner_name": "Kapitan Moy Elementary School",
     "additional_partnership": "",
@@ -139,12 +139,12 @@
     "activity_nature": "Reading Tutorials and Review Classes",
     "activity_name": "",
     "organization_unit": "AJHS Dama",
-    "admu_office": "CSIP",
-    "admu_contact": "Jomell Caramancion",
-    "admu_email": "jcaramancion@ateneo.edu"
+    "ADMU_office": "CSIP",
+    "ADMU_contact": "Jomell Caramancion",
+    "ADMU_email": "jcaramancion@ateneo.edu"
   },
   {
-    "partner_location": "14.7786648, 121.0812269",
+    "partner_coordinates": "14.7786648, 121.0812269",
     "partner_city": "Caloocan City",
     "partner_name": "Manuel L. Quezon Elementary School",
     "additional_partnership": "Couples for Christ North B Sector",
@@ -155,12 +155,12 @@
     "activity_nature": "Reading Tutorials",
     "activity_name": "",
     "organization_unit": "",
-    "admu_office": "ACED",
-    "admu_contact": "Dr. Mel Oracion",
-    "admu_email": "aced@ateneo.edu"
+    "ADMU_office": "ACED",
+    "ADMU_contact": "Dr. Mel Oracion",
+    "ADMU_email": "aced@ateneo.edu"
   },
   {
-    "partner_location": "14.6726311, 121.0766785",
+    "partner_coordinates": "14.6726311, 121.0766785",
     "partner_city": "Quezon City",
     "partner_name": "Old Balara Elementary School",
     "additional_partnership": "Couples for Christ North B Sector",
@@ -171,12 +171,12 @@
     "activity_nature": "Reading Tutorials",
     "activity_name": "",
     "organization_unit": "",
-    "admu_office": "ACED",
-    "admu_contact": "Dr. Mel Oracion",
-    "admu_email": "aced@ateneo.edu"
+    "ADMU_office": "ACED",
+    "ADMU_contact": "Dr. Mel Oracion",
+    "ADMU_email": "aced@ateneo.edu"
   },
   {
-    "partner_location": "14.7137945, 121.0941653",
+    "partner_coordinates": "14.7137945, 121.0941653",
     "partner_city": "Quezon City",
     "partner_name": "Payatas B Elementary School",
     "additional_partnership": "",
@@ -187,12 +187,12 @@
     "activity_nature": "Catechism and Reading Tutorials",
     "activity_name": "",
     "organization_unit": "ACLC",
-    "admu_office": "OSA",
-    "admu_contact": "Tats Quiblat",
-    "admu_email": "osa.ls@ateneo.edu"
+    "ADMU_office": "OSA",
+    "ADMU_contact": "Tats Quiblat",
+    "ADMU_email": "osa.ls@ateneo.edu"
   },
   {
-    "partner_location": "14.5651722, 121.0614359",
+    "partner_coordinates": "14.5651722, 121.0614359",
     "partner_city": "Pasig City",
     "partner_name": "Pineda Elementary School,",
     "additional_partnership": "",
@@ -203,12 +203,12 @@
     "activity_nature": "Reading Tutorials",
     "activity_name": "",
     "organization_unit": "Bigkis",
-    "admu_office": "OSCI",
-    "admu_contact": "Anitta Nuevo",
-    "admu_email": "osci.ls@ateneo.edu"
+    "ADMU_office": "OSCI",
+    "ADMU_contact": "Anitta Nuevo",
+    "ADMU_email": "osci.ls@ateneo.edu"
   },
   {
-    "partner_location": "14.6385270, 121.0505119",
+    "partner_coordinates": "14.6385270, 121.0505119",
     "partner_city": "Quezon City",
     "partner_name": "Pinyahan Elementary School",
     "additional_partnership": "Couples for Christ North B Sector",
@@ -219,12 +219,12 @@
     "activity_nature": "Reading Tutorials",
     "activity_name": "",
     "organization_unit": "",
-    "admu_office": "ACED",
-    "admu_contact": "Dr. Mel Oracion",
-    "admu_email": "aced@ateneo.edu"
+    "ADMU_office": "ACED",
+    "ADMU_contact": "Dr. Mel Oracion",
+    "ADMU_email": "aced@ateneo.edu"
   },
   {
-    "partner_location": "14.6893911, 121.0932727",
+    "partner_coordinates": "14.6893911, 121.0932727",
     "partner_city": "Quezon City",
     "partner_name": "President Corazon Aquino Elementary School",
     "additional_partnership": "",
@@ -235,12 +235,12 @@
     "activity_nature": "Reading Tutorials and Review Classes",
     "activity_name": "",
     "organization_unit": "AJHS Dama",
-    "admu_office": "CSIP",
-    "admu_contact": "Jomell Caramancion",
-    "admu_email": "jcaramancion@ateneo.edu"
+    "ADMU_office": "CSIP",
+    "ADMU_contact": "Jomell Caramancion",
+    "ADMU_email": "jcaramancion@ateneo.edu"
   },
   {
-    "partner_location": "14.6893911, 121.0932727",
+    "partner_coordinates": "14.6893911, 121.0932727",
     "partner_city": "Quezon City",
     "partner_name": "President Corazon Aquino Elementary School",
     "additional_partnership": "",
@@ -251,12 +251,12 @@
     "activity_nature": "Feeding Program",
     "activity_name": "",
     "organization_unit": "",
-    "admu_office": "ACED",
-    "admu_contact": "Dr. Mel Oracion",
-    "admu_email": "aced@ateneo.edu"
+    "ADMU_office": "ACED",
+    "ADMU_contact": "Dr. Mel Oracion",
+    "ADMU_email": "aced@ateneo.edu"
   },
   {
-    "partner_location": "14.6216570, 121.0679474",
+    "partner_coordinates": "14.6216570, 121.0679474",
     "partner_city": "Quezon City",
     "partner_name": "Pura V. Kalaw Elementary School",
     "additional_partnership": "",
@@ -267,12 +267,12 @@
     "activity_nature": "Reading Tutorials and Review Classes",
     "activity_name": "",
     "organization_unit": "AJHS Dama",
-    "admu_office": "CSIP",
-    "admu_contact": "Jomell Caramancion",
-    "admu_email": "jcaramancion@ateneo.edu"
+    "ADMU_office": "CSIP",
+    "ADMU_contact": "Jomell Caramancion",
+    "ADMU_email": "jcaramancion@ateneo.edu"
   },
   {
-    "partner_location": "14.6865176, 121.0945469",
+    "partner_coordinates": "14.6865176, 121.0945469",
     "partner_city": "Quezon City",
     "partner_name": "San Diego Elementary School",
     "additional_partnership": "Couples for Christ North B Sector",
@@ -283,12 +283,12 @@
     "activity_nature": "Reading Tutorials",
     "activity_name": "",
     "organization_unit": "",
-    "admu_office": "ACED",
-    "admu_contact": "Dr. Mel Oracion",
-    "admu_email": "aced@ateneo.edu"
+    "ADMU_office": "ACED",
+    "ADMU_contact": "Dr. Mel Oracion",
+    "ADMU_email": "aced@ateneo.edu"
   },
   {
-    "partner_location": "14.6535056, 121.0569700",
+    "partner_coordinates": "14.6535056, 121.0569700",
     "partner_city": "Quezon City",
     "partner_name": "San Vicente Elementary School",
     "additional_partnership": "Couples for Christ North B Sector",
@@ -299,12 +299,12 @@
     "activity_nature": "Reading Tutorials",
     "activity_name": "",
     "organization_unit": "",
-    "admu_office": "ACED",
-    "admu_contact": "Dr. Mel Oracion",
-    "admu_email": "aced@ateneo.edu"
+    "ADMU_office": "ACED",
+    "ADMU_contact": "Dr. Mel Oracion",
+    "ADMU_email": "aced@ateneo.edu"
   },
   {
-    "partner_location": "14.6660631, 121.1180042",
+    "partner_coordinates": "14.6660631, 121.1180042",
     "partner_city": "Marikina City",
     "partner_name": "Valeriano Fugoso Elementary School",
     "additional_partnership": "",
@@ -315,12 +315,12 @@
     "activity_nature": "Reading Tutorials and Review Classes",
     "activity_name": "",
     "organization_unit": "AJHS Dama",
-    "admu_office": "CSIP",
-    "admu_contact": "Jomell Caramancion",
-    "admu_email": "jcaramancion@ateneo.edu"
+    "ADMU_office": "CSIP",
+    "ADMU_contact": "Jomell Caramancion",
+    "ADMU_email": "jcaramancion@ateneo.edu"
   },
   {
-    "partner_location": "14.6130325, 121.0625375",
+    "partner_coordinates": "14.6130325, 121.0625375",
     "partner_city": "Quezon City",
     "partner_name": "Yakap Day Care Center",
     "additional_partnership": "",
@@ -331,8 +331,8 @@
     "activity_nature": "Catechism and Reading Tutorials",
     "activity_name": "",
     "organization_unit": "ACIL",
-    "admu_office": "OSA",
-    "admu_contact": "Tats Quiblat",
-    "admu_email": "osa.ls@ateneo.edu"
+    "ADMU_office": "OSA",
+    "ADMU_contact": "Tats Quiblat",
+    "ADMU_email": "osa.ls@ateneo.edu"
   }
 ]

@@ -24,7 +24,7 @@ export function getDivContent(name) {
               for(let i = 0; i < rule[2].length; i++){
                 if(rule[2][i].includes("coordinates")){
                   div_content += `<div class="partner-activity"> ${readyField(rule[2][i])}: ${doc.get(rule[2][i]).latitude 
-                    + " + " + doc.get(rule[2][i]).longitude}`;
+                    + "°N, " + doc.get(rule[2][i]).longitude}°E`;
                   continue 
                 }
                 div_content += `<div class="partner-activity"> ${readyField(rule[2][i])}: ${doc.get(rule[2][i])}`;

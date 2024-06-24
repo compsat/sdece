@@ -142,16 +142,6 @@ getDocs(colRef)
 			nameDiv.textContent = partner.partner_name;
 			addressDiv.textContent = partner.partner_city;
 			activityDiv.textContent = partner.activity_nature;
-
-      if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
-      {
-        partner.activities.forEach( (activity) => {
-          activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
-        });
-      }
-      else {
-        console.log("No activities found");
-      }
       
 
 			listItem.classList.add(
@@ -254,13 +244,13 @@ function showModal(partner) {
       activityNameDiv.style.color = "#3d97af";
 
       activityAddressDiv.innerHTML = partner.partnerAddress ;
-
+	/*
       activityContactDiv.innerHTML = "<b>Contact</b> <br> " + partner.partnerContact + "<br>" + partner.partnerEmail + "<br>";
       activityOrganizationDiv.innerHTML = "<b>Organization/Unit</b> <br>" + partner.organizationUnit;
       activityDatesDiv.innerHTML = "<b>Date/s of Partnership</b> <br>" + partner.activity_date;
 
       activityOfficeDiv.innerHTML = "<hr> <br> <b class='font-bold text-2xl' style='color: #3d97af'>Ateneo Office Oversight</b> <br>" + partner.admuOffice + "<br>" + partner.admuContact + "<br>"  + partner.admuEmail + "<br>";
-
+*/
       // View activity details in modal after clicking activity
       activityButton.addEventListener("click", () => {
         modalContent.innerHTML = "";
@@ -282,20 +272,20 @@ function showModal(partner) {
   activityDiv.classList.add("modal-activities");
 
   
-  admuContactDiv.innerHTML = "<b>AdMU Contact: </b>" + partner.admu_contact;
-  admuEmailDiv.innerHTML = "<b>AdMU Email: </b>" + partner.admu_email;
-  admuOfficeDiv.innerHTML = "<b>AdMU Office: </b>" + partner.admu_office;
+  /*admuContactDiv.innerHTML = "<b>ADMU Contact: </b>" + partner.admu_contact;
+  admuEmailDiv.innerHTML = "<b>ADMU Email: </b>" + partner.admu_email;
+  admuOfficeDiv.innerHTML = "<b>ADMU Office: </b>" + partner.admu_office;
   orgDiv.innerHTML = "<b>Organization: </b>" + partner.org;
-
+*/
   
-
+/*
   // Append the div elements to the modal content
   modalHeader.appendChild(nameDiv);
 
   //modalContent.appendChild(addressDiv);
   modalContent.appendChild(activityHeaderDiv);
   modalContent.appendChild(activityDiv);
-
+*/
   // modalContent.appendChild(contactPersonDiv);
   // modalContent.appendChild(admuContactDiv);
   // modalContent.appendChild(admuEmailDiv);
@@ -303,7 +293,7 @@ function showModal(partner) {
   // modalContent.appendChild(orgDiv);
   // modalContent.appendChild(datesDiv);
 
-	// Show the modal
+/*	// Show the modal
 	modal.style.display = 'block';
 
 	// Close the modal when the close button is clicked
@@ -319,7 +309,7 @@ function showModal(partner) {
     }
   });
 
-
+*/
   var editButtons =
   document.getElementsByClassName('editButton');
   for (var i = 0; i < editButtons.length; i++) {
