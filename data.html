@@ -1,29 +1,92 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html>
 <head>
   <title>Form Validation</title>
   <script>
     function validateForm() {
-      let x = document.forms["myForm"]["fname"].value;
-      if (x == "") {
-        alert("Name must be filled out");
-        return false;
+      const form = document.forms["myForm"];
+      const requiredFields = [
+        "partner_name",
+        "partner_city",
+        "partner_coordinates",
+        "partner_contact",
+        "partner_number",
+        "partner_email",
+        "activity_name",
+        "activity_nature",
+        "activity_date",
+        "additional_partnership",
+        "organization_unit",
+        "ADMU_office",
+        "ADMU_contact",
+        "ADMU_email"
+      ];
+
+      for (let field of requiredFields) {
+        if (form[field].value == "") {
+          alert(field.replace(/_/g, ' ') + " must be filled out");
+          return false;
+        }
       }
-      if (/\d/.test(x)) {
-        alert("Name must not contain numbers");
-        return false;
+
+      const nameFields = ["partner_name", "partner_city"];
+      for (let field of nameFields) {
+        if (/\d/.test(form[field].value)) {
+          alert(field.replace(/_/g, ' ') + " must not contain numbers");
+          return false;
+        }
       }
+
       return true;
     }
   </script>
 </head>
 <body>
 
-<h2>Sample Form</h2>
+<h2>Partner Information Form</h2>
 <form name="myForm" onsubmit="return validateForm()">
-  <label for="fname">First Name:</label><br><br>
-  <input type="text" id="fname" name="fname"><br><br>
+  <label for="partner_name">Partner Name:</label><br>
+  <input type="text" id="partner_name" name="partner_name"><br><br>
+
+  <label for="partner_city">Partner City:</label><br>
+  <input type="text" id="partner_city" name="partner_city"><br><br>
+
+  <label for="partner_coordinates">Partner Coordinates:</label><br>
+  <input type="text" id="partner_coordinates" name="partner_coordinates"><br><br>
+
+  <label for="partner_contact">Partner Contact:</label><br>
+  <input type="text" id="partner_contact" name="partner_contact"><br><br>
+
+  <label for="partner_number">Partner Number:</label><br>
+  <input type="text" id="partner_number" name="partner_number"><br><br>
+
+  <label for="partner_email">Partner Email:</label><br>
+  <input type="email" id="partner_email" name="partner_email"><br><br>
+
+  <label for="activity_name">Activity Name:</label><br>
+  <input type="text" id="activity_name" name="activity_name"><br><br>
+
+  <label for="activity_nature">Activity Nature:</label><br>
+  <input type="text" id="activity_nature" name="activity_nature"><br><br>
+
+  <label for="activity_date">Activity Date:</label><br>
+  <input type="date" id="activity_date" name="activity_date"><br><br>
+
+  <label for="additional_partnership">Additional Partnership:</label><br>
+  <input type="text" id="additional_partnership" name="additional_partnership"><br><br>
+
+  <label for="organization_unit">Organization Unit:</label><br>
+  <input type="text" id="organization_unit" name="organization_unit"><br><br>
+
+  <label for="ADMU_office">ADMU Office:</label><br>
+  <input type="text" id="ADMU_office" name="ADMU_office"><br><br>
+
+  <label for="ADMU_contact">ADMU Contact:</label><br>
+  <input type="text" id="ADMU_contact" name="ADMU_contact"><br><br>
+
+  <label for="ADMU_email">ADMU Email:</label><br>
+  <input type="email" id="ADMU_email" name="ADMU_email"><br><br>
+
   <input type="submit" value="Submit">
 </form>
 
