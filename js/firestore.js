@@ -64,12 +64,87 @@ getDocs(col_ref)
 
 		console.log(partners);
 
+		// populate ul with activities
+		// querySnapshot.forEach((partner) => {
+		// 	console.log(partner.data());
 
-		// populate ul with partners
-		querySnapshot.forEach((partner) => {
-			console.log(partner.data());
+		// 	// Creating DOM elements
+		// 	const containerDiv = document.createElement('div');
+		// 	const img = document.createElement('svg');
+		// 	const listItem = document.createElement('li');
+		// 	const anchor = document.createElement('a');
+		// 	const nameDiv = document.createElement('div');
+		// 	const addressDiv = document.createElement('div');
+		// 	const activityDiv = document.createElement('div');
 
-			// Creating DOM elements
+		// 	// Set attributes
+		// 	anchor.href = '#';
+
+		// 	anchor.addEventListener('click', () => {
+		// 		showModal(partner.data());
+		// 	});
+
+		// 	// Adding classes and setting text content
+		// 	nameDiv.classList.add(
+		// 		'name',
+		// 		'font-montserrat',
+		// 		'font-bold',
+		// 		'text-lg',
+		// 		'text-darkbg',
+		// 		'leading-[110%]'
+		// 	);
+		// 	addressDiv.classList.add(
+		// 		'address',
+		// 		'text-sm',
+		// 		'text-customGray',
+		// 		'font-hind',
+		// 		'font-regular',
+		// 		'leading-[120%]',
+		// 		'mt-2'
+		// 	);
+		// 	activityDiv.classList.add(
+		// 		'activity',
+		// 		'text-sm',
+		// 		'text-customBlack',
+		// 		'font-hind',
+		// 		'font-regular',
+		// 		'leading-[110%]',
+		// 		'mt-2'
+		// 	);
+
+		// 	nameDiv.textContent = partner.data().partner_name;
+		// 	addressDiv.textContent = partner.data().partner_city;
+		// 	activityDiv.textContent = partner.data().activity_nature;
+
+		// 	// if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
+		// 	// {
+		// 	//   partner.activities.forEach( (activity) => {
+		// 	//     activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
+		// 	//   });
+		// 	// }
+
+		// 	listItem.classList.add(
+		// 		'accordion',
+		// 		'py-6',
+		// 		'px-8',
+		// 		'border-b',
+		// 		'border-customGray'
+		// 	);
+		// 	anchor.classList.add('accordion', 'link');
+
+		// 	// Append elements to the DOM
+		// 	anchor.appendChild(nameDiv);
+		// 	anchor.appendChild(addressDiv);
+		// 	anchor.appendChild(activityDiv);
+
+		// 	listItem.appendChild(anchor);
+		// 	containerDiv.appendChild(img);
+		// 	containerDiv.appendChild(listItem);
+		// 	locationList.appendChild(containerDiv);
+		// });
+
+		//populate ul with partners
+		Object.keys(partners).forEach((partner) => {
 			const containerDiv = document.createElement('div');
 			const img = document.createElement('svg');
 			const listItem = document.createElement('li');
@@ -113,9 +188,15 @@ getDocs(col_ref)
 				'mt-2'
 			);
 
-			nameDiv.textContent = partner.data().partner_name;
-			addressDiv.textContent = partner.data().partner_city;
-			activityDiv.textContent = partner.data().activity_nature;
+			nameDiv.textContent = partner;
+			addressDiv.textContent = partners[partner][0]["partner_city"];
+			
+			let qq = "";
+
+			for( let activityy of partners[partner]){
+				qq += (activityy["activity_nature"] + "\n");
+			}
+			activityDiv.textContent = qq;
 
 			// if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
 			// {
@@ -142,6 +223,7 @@ getDocs(col_ref)
 			containerDiv.appendChild(img);
 			containerDiv.appendChild(listItem);
 			locationList.appendChild(containerDiv);
+
 		});
 	})
 	.catch((error) => {
