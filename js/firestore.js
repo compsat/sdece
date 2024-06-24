@@ -24,13 +24,13 @@ import { getCollection, setCollection } from '/firestore_UNIV.js';
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyA8QWgic_hjbDL-EYIkvSRRII_yfTRdtOQ",
-  authDomain: "discs-osci-prj.firebaseapp.com",
-  projectId: "discs-osci-prj",
-  storageBucket: "discs-osci-prj.appspot.com",
-  messagingSenderId: "601571823960",
-  appId: "1:601571823960:web:1f1278ecb86aa654e6152d",
-  measurementId: "G-9N9ELDEMX9"
+	apiKey: 'AIzaSyA8QWgic_hjbDL-EYIkvSRRII_yfTRdtOQ',
+	authDomain: 'discs-osci-prj.firebaseapp.com',
+	projectId: 'discs-osci-prj',
+	storageBucket: 'discs-osci-prj.appspot.com',
+	messagingSenderId: '601571823960',
+	appId: '1:601571823960:web:1f1278ecb86aa654e6152d',
+	measurementId: 'G-9N9ELDEMX9',
 };
 
 // Initialize Firebase
@@ -143,16 +143,15 @@ getDocs(colRef)
 			addressDiv.textContent = partner.partner_city;
 			activityDiv.textContent = partner.activity_nature;
 
-      if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
-      {
-        partner.activities.forEach( (activity) => {
-          activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
-        });
-      }
-      else {
-        console.log("No activities found");
-      }
-      
+			//   if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
+			//   {
+			//     partner.activities.forEach( (activity) => {
+			//       activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
+			//     });
+			//   }
+			//   else {
+			//     console.log("No activities found");
+			//   }
 
 			listItem.classList.add(
 				'accordion',
@@ -181,127 +180,145 @@ getDocs(colRef)
 
 // Partner modal
 function showModal(partner) {
-  const modal = document.getElementById("partnerModal");
-  const modalHeader = document.getElementById("modalHeader");
-  const modalContent = document.getElementById("modalContent");
+	const modal = document.getElementById('partnerModal');
+	const modalHeader = document.getElementById('modalHeader');
+	const modalContent = document.getElementById('modalContent');
 
-  // Clear previous content
-  modalHeader.innerHTML = "";
-  modalContent.innerHTML = "";
+	// Clear previous content
+	modalHeader.innerHTML = '';
+	modalContent.innerHTML = '';
 
-  // Create div elements for each piece of information
-  const nameDiv = document.createElement("div");
-  const addressDiv = document.createElement("div");
-  
-  const activityHeaderDiv = document.createElement("div");
-  const contactPersonDiv = document.createElement("div");
-  const activityDiv = document.createElement("div");
-  const admuContactDiv = document.createElement("div");
-  const admuEmailDiv = document.createElement("div");
-  const admuOfficeDiv = document.createElement("div");
-  const orgDiv = document.createElement("div");
-  const datesDiv = document.createElement("div");
+	// Create div elements for each piece of information
+	const nameDiv = document.createElement('div');
+	const addressDiv = document.createElement('div');
+
+	const activityHeaderDiv = document.createElement('div');
+	const contactPersonDiv = document.createElement('div');
+	const activityDiv = document.createElement('div');
+	const admuContactDiv = document.createElement('div');
+	const admuEmailDiv = document.createElement('div');
+	const admuOfficeDiv = document.createElement('div');
+	const orgDiv = document.createElement('div');
+	const datesDiv = document.createElement('div');
 
 	nameDiv.classList.add('modal-name');
 	addressDiv.classList.add('modal-address');
 
-  activityHeaderDiv.classList.add("flex", "flex-row", "justify-between", "text-3xl", "font-bold");
-  activityHeaderDiv.style.color = "#3d97af";
+	activityHeaderDiv.classList.add(
+		'flex',
+		'flex-row',
+		'justify-between',
+		'text-3xl',
+		'font-bold'
+	);
+	activityHeaderDiv.style.color = '#3d97af';
 
-  const addActivity = document.createElement("button");
-  addActivity.addEventListener("click", () => {
-    //TO DO: Display Add Activity on pin click
-    console.log("Add activity")
-  });
+	const addActivity = document.createElement('button');
+	addActivity.addEventListener('click', () => {
+		//TO DO: Display Add Activity on pin click
+		console.log('Add activity');
+	});
 
+	// Set the content of each div
+	nameDiv.textContent = partner.partnerName;
+	addressDiv.textContent =
+		'Latitude: ' +
+		partner.location.latitude +
+		' Longitude: ' +
+		partner.location.longitude;
 
-  // Set the content of each div
-  nameDiv.textContent = partner.partnerName;
-  addressDiv.textContent =
-    "Latitude: " + partner.location.latitude + " Longitude: " + partner.location.longitude;
+	// Activities header with add activity button
+	activityHeaderDiv.innerHTML = 'List of activities:';
+	addActivity.innerHTML = '+';
+	activityHeaderDiv.appendChild(addActivity);
+	activityHeaderDiv.classList.add('flex', 'flex-row', 'justify-between');
 
-  // Activities header with add activity button
-  activityHeaderDiv.innerHTML = "List of activities:"
-  addActivity.innerHTML = "+"
-  activityHeaderDiv.appendChild(addActivity);
-  activityHeaderDiv.classList.add("flex", "flex-row", "justify-between");
+	// Add each activity to the modal content
+	if (partner.activities.length > 0) {
+		// check if list of activities is present, otherwise is skipped to avoid errors
+		partner.activities.forEach((activity) => {
+			// View activity details button
+			const activityButton = document.createElement('button');
 
+			const activityName = document.createElement('span');
+			const arrow = document.createElement('span');
+			activityName.textContent = activity.activityName;
+			arrow.textContent = '>';
+			activityButton.appendChild(activityName);
+			activityButton.appendChild(arrow);
 
-  // Add each activity to the modal content
-  if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
-  {
-    partner.activities.forEach((activity) => {
-      // View activity details button
-      const activityButton = document.createElement("button");
+			// Set div content for activity details
+			const activityNameDiv = document.createElement('div');
+			const activityAddressDiv = document.createElement('div');
+			const activityContactDiv = document.createElement('div');
+			const activityOrganizationDiv = document.createElement('div');
+			const activityDatesDiv = document.createElement('div');
+			const activityOfficeDiv = document.createElement('div');
 
-      const activityName = document.createElement("span")
-      const arrow = document.createElement("span")
-      activityName.textContent = activity.activityName;
-      arrow.textContent = ">"
-      activityButton.appendChild(activityName);
-      activityButton.appendChild(arrow);
+			activityNameDiv.innerHTML = activity.activityName;
+			activityNameDiv.classList.add('font-bold', 'text-2xl');
+			activityNameDiv.style.color = '#3d97af';
 
-      // Set div content for activity details
-      const activityNameDiv = document.createElement("div");
-      const activityAddressDiv = document.createElement("div");
-      const activityContactDiv = document.createElement("div");
-      const activityOrganizationDiv = document.createElement("div");
-      const activityDatesDiv = document.createElement("div");
-      const activityOfficeDiv = document.createElement("div");
+			activityAddressDiv.innerHTML = partner.partnerAddress;
 
-      activityNameDiv.innerHTML = activity.activityName;
-      activityNameDiv.classList.add("font-bold", "text-2xl");
-      activityNameDiv.style.color = "#3d97af";
+			activityContactDiv.innerHTML =
+				'<b>Contact</b> <br> ' +
+				partner.partnerContact +
+				'<br>' +
+				partner.partnerEmail +
+				'<br>';
+			activityOrganizationDiv.innerHTML =
+				'<b>Organization/Unit</b> <br>' + partner.organizationUnit;
+			activityDatesDiv.innerHTML =
+				'<b>Date/s of Partnership</b> <br>' + partner.activity_date;
 
-      activityAddressDiv.innerHTML = partner.partnerAddress ;
+			activityOfficeDiv.innerHTML =
+				"<hr> <br> <b class='font-bold text-2xl' style='color: #3d97af'>Ateneo Office Oversight</b> <br>" +
+				partner.admuOffice +
+				'<br>' +
+				partner.admuContact +
+				'<br>' +
+				partner.admuEmail +
+				'<br>';
 
-      activityContactDiv.innerHTML = "<b>Contact</b> <br> " + partner.partnerContact + "<br>" + partner.partnerEmail + "<br>";
-      activityOrganizationDiv.innerHTML = "<b>Organization/Unit</b> <br>" + partner.organizationUnit;
-      activityDatesDiv.innerHTML = "<b>Date/s of Partnership</b> <br>" + partner.activity_date;
+			// View activity details in modal after clicking activity
+			activityButton.addEventListener('click', () => {
+				modalContent.innerHTML = '';
 
-      activityOfficeDiv.innerHTML = "<hr> <br> <b class='font-bold text-2xl' style='color: #3d97af'>Ateneo Office Oversight</b> <br>" + partner.admuOffice + "<br>" + partner.admuContact + "<br>"  + partner.admuEmail + "<br>";
+				modalContent.appendChild(activityNameDiv);
+				modalContent.appendChild(activityAddressDiv);
+				modalContent.appendChild(activityContactDiv);
+				modalContent.appendChild(activityOrganizationDiv);
+				modalContent.appendChild(activityDatesDiv);
+				modalContent.appendChild(activityOfficeDiv);
+			});
 
-      // View activity details in modal after clicking activity
-      activityButton.addEventListener("click", () => {
-        modalContent.innerHTML = "";
-        
-        modalContent.appendChild(activityNameDiv);
-        modalContent.appendChild(activityAddressDiv);
-        modalContent.appendChild(activityContactDiv);
-        modalContent.appendChild(activityOrganizationDiv);
-        modalContent.appendChild(activityDatesDiv);
-        modalContent.appendChild(activityOfficeDiv);
-      });
+			activityDiv.appendChild(activityButton);
+			activityDiv.appendChild(document.createElement('hr'));
+			activityDiv.appendChild(document.createElement('br'));
+		});
+	}
 
-      activityDiv.appendChild(activityButton);
-      activityDiv.appendChild(document.createElement("hr"));
-      activityDiv.appendChild(document.createElement("br"));
-    });
-  }
+	activityDiv.classList.add('modal-activities');
 
-  activityDiv.classList.add("modal-activities");
+	admuContactDiv.innerHTML = '<b>AdMU Contact: </b>' + partner.admu_contact;
+	admuEmailDiv.innerHTML = '<b>AdMU Email: </b>' + partner.admu_email;
+	admuOfficeDiv.innerHTML = '<b>AdMU Office: </b>' + partner.admu_office;
+	orgDiv.innerHTML = '<b>Organization: </b>' + partner.org;
 
-  
-  admuContactDiv.innerHTML = "<b>AdMU Contact: </b>" + partner.admu_contact;
-  admuEmailDiv.innerHTML = "<b>AdMU Email: </b>" + partner.admu_email;
-  admuOfficeDiv.innerHTML = "<b>AdMU Office: </b>" + partner.admu_office;
-  orgDiv.innerHTML = "<b>Organization: </b>" + partner.org;
+	// Append the div elements to the modal content
+	modalHeader.appendChild(nameDiv);
 
-  
+	//modalContent.appendChild(addressDiv);
+	modalContent.appendChild(activityHeaderDiv);
+	modalContent.appendChild(activityDiv);
 
-  // Append the div elements to the modal content
-  modalHeader.appendChild(nameDiv);
-
-  //modalContent.appendChild(addressDiv);
-  modalContent.appendChild(activityHeaderDiv);
-  modalContent.appendChild(activityDiv);
-
-  // modalContent.appendChild(contactPersonDiv);
-  // modalContent.appendChild(admuContactDiv);
-  // modalContent.appendChild(admuEmailDiv);
-  // modalContent.appendChild(admuOfficeDiv);
-  // modalContent.appendChild(orgDiv);
-  // modalContent.appendChild(datesDiv);
+	// modalContent.appendChild(contactPersonDiv);
+	// modalContent.appendChild(admuContactDiv);
+	// modalContent.appendChild(admuEmailDiv);
+	// modalContent.appendChild(admuOfficeDiv);
+	// modalContent.appendChild(orgDiv);
+	// modalContent.appendChild(datesDiv);
 
 	// Show the modal
 	modal.style.display = 'block';
@@ -312,58 +329,46 @@ function showModal(partner) {
 		modal.style.display = 'none';
 	});
 
-  // Close the modal when the user clicks outside of it
-  window.addEventListener("click", (event) => {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  });
+	// Close the modal when the user clicks outside of it
+	window.addEventListener('click', (event) => {
+		if (event.target == modal) {
+			modal.style.display = 'none';
+		}
+	});
 
+	var editButtons = document.getElementsByClassName('editButton');
+	for (var i = 0; i < editButtons.length; i++) {
+		editButtons[i].addEventListener('click', function () {
+			console.log('Clicked edit activity');
 
-  var editButtons =
-  document.getElementsByClassName('editButton');
-  for (var i = 0; i < editButtons.length; i++) {
-    editButtons[i].addEventListener(
-      'click',
-      function () {		
-        console.log("Clicked edit activity");	
+			//Close activity details modal
+			document.getElementById('partnerModal').style.display = 'none';
+			console.log('Activity modal closed');
 
-        //Close activity details modal
-        document.getElementById("partnerModal").style.display = "none";
-        console.log("Activity modal closed");
-        					
-        // Select the modal and partnerName elements
-        var modal =
-          document.getElementById(
-            'editModal'
-          );
+			// Select the modal and partnerName elements
+			var modal = document.getElementById('editModal');
 
-        var partnerModal =
-          document.getElementById(
-            'partnerModal'
-          );
-        // TODO: Integrate this functionality into the modal instead
-        // var partnerName = this.getAttribute("data-loc");
-        //       window.open(
-        //         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
-        //         "_blank"
-        //       );
+			var partnerModal = document.getElementById('partnerModal');
+			// TODO: Integrate this functionality into the modal instead
+			// var partnerName = this.getAttribute("data-loc");
+			//       window.open(
+			//         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
+			//         "_blank"
+			//       );
 
-        // Display the modal
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        partnerModal.classList.add('hidden'); // Not sure if this should be hidden nalang, or should be kept open with the editModal on top nalang
+			// Display the modal
+			modal.classList.remove('hidden');
+			modal.classList.add('flex');
+			partnerModal.classList.add('hidden'); // Not sure if this should be hidden nalang, or should be kept open with the editModal on top nalang
 
-        // Close the modal when the user clicks anywhere outside of it
-        window.onclick = function (event) {
-          if (event.target == modal) {
-            modal.classList.add('hidden');
-          }
-        };
-      }
-    );
-  }
-
+			// Close the modal when the user clicks anywhere outside of it
+			window.onclick = function (event) {
+				if (event.target == modal) {
+					modal.classList.add('hidden');
+				}
+			};
+		});
+	}
 }
 
 export function addLocation(
