@@ -399,7 +399,7 @@ h1.entries {
   background-color: #fcfcfc;
   position: relative;
   z-index: 9901;
-  box-shadow: 0 -5px 5px -5px rgba(0, 0, 0, 0.2); 
+  box-shadow: 0 -7px 5px -5px rgba(0, 0, 0, 0.2); 
 }
 
 .modal-line {

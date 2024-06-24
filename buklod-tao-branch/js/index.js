@@ -29,8 +29,8 @@ getDocs(colRef)
       var doc = entry.data();
       //console.log(doc);
       var marker = L.marker([
-        parseFloat(doc.latitude),
-        parseFloat(doc.longitude),
+        parseFloat(doc.location_coordinates._lat),
+        parseFloat(doc.location_coordinates._long),
       ]);
       var popupContent = `
       <div class="leaflet-popup-container">
