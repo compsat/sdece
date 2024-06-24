@@ -6,6 +6,29 @@ import {
 } from '/firestore_UNIV.js';
 
 
+export const JS_CS_ENGINE = 
+    [
+      ["buklod-official",
+        [
+          'buklod-tao-branch/js/index.js',
+          'buklod-tao-branch/js/firestore.js',
+          'buklod-tao-branch/css/form.css',
+          'buklod-tao-branch/css/login.css',
+          'buklod-tao-branch/css/main.css',
+        ],
+      ],
+      ["sdece-official",
+        [
+          'sdece/js/index.js',
+          'sdece/js/firestore.js',
+          'sdece/css/form.css',
+          'sdece/css/login.css',
+          'sdece/css/main.css',
+        ]
+        
+      ],
+    ]
+
 /// Will need to change how we do this if we ever restructure again
 export var map = L.map("map").setView([0, 0], 21);
 
