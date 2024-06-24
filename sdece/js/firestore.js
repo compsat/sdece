@@ -143,17 +143,6 @@ getDocs(colRef)
 			addressDiv.textContent = partner.partner_city;
 			activityDiv.textContent = partner.activity_nature;
 
-      if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
-      {
-        partner.activities.forEach( (activity) => {
-          activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
-        });
-      }
-      else {
-        console.log("No activities found");
-      }
-      
-
 			listItem.classList.add(
 				'accordion',
 				'py-6',
