@@ -5,7 +5,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NSTP Hazard Mapping</title>
-  <meta name="viewport" content="width=device-width,user-scalable=no" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
   <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
 
   <!--Load Leaflet from CDN-->
@@ -32,7 +33,7 @@
   <!--Load CSS sheets and Firestore Database-->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/form.css">
-  <!--<script type="module" src="js/firestore.js"></script>-->
+  <script type="module" src="js/firestore.js"></script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -293,11 +294,9 @@
           </select>
           <input type="email" id="storm" name="storm" class="attribs" placeholder="">
       </div>
-      <br>
-      <br>
-      <br>
-      <!-- Buttons -->
-      <div>
+      <!-- Save and Delete buttons -->
+      <div class="button-container">
+        <div>
           <!-- Submits contents of the form -->                                               
           <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save</button>   
         </div>
@@ -319,7 +318,7 @@
       <div class="buttons">
         <input class="search-bar" type="search" placeholder="Search... " oninput="searchEntries()">
       </div>
-      <button class="container label-font" id="addloc-modal" href="#" style="position: relative; box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2);">+ Add a Household</button>
+      <button class="container label-font" id="addHousehold" name="addHousehold">+ Add a Household</button>
         <!--<button class="container label-font" href="#">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon">
         <path d="M23.7844 9.8585L21.4937 7.56787L10.1594 18.8991L9.67188 21.6804L12.45 21.1897L23.7844 9.8585Z"
@@ -360,6 +359,7 @@
       });
     }
     
+
     // Allows the user to search for entries by filtering the data entries for every key typed in
     function searchEntries() {
       var input = document.querySelector('.search-bar').value.toUpperCase();
@@ -377,6 +377,31 @@
     }
   </script>
 
+  <!--script for add household modal-->
+
+  <script>
+
+  // modal
+  var formModal = document.getElementById("form-modal");
+
+  // open modal
+  var openForm = document.getElementById("addHousehold");
+
+  // Get the <span> element that closes the modal
+  var closeForm = document.getElementsByClassName("close-form")[0];
+
+  // When the user clicks the button, open the modal 
+  openForm.onclick = function() {
+    formModal.style.display = "block";
+  }
+
+  // When the user clicks on <span> (x), close the modal
+  closeForm.onclick = function() {
+    formModal.style.display = "none";
+  }
+  
+
+  </script>
   
 </body>
 

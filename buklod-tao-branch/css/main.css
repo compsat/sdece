@@ -14,6 +14,11 @@ body {
 .map-container {
   flex: 0 0 20%;
   display: flex;
+  position: absolute;
+  top: 63px; /* containerizing based on the height of the topbar */
+  left: 380px; /* containerizing based on the height of the sidenav */
+  right: 0;
+  bottom: 0;
 }
 
 #map {
