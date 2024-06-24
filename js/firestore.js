@@ -1,6 +1,5 @@
 // FIRESTORE DATABASE
 
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 import {
 	getFirestore,
 	collection,
@@ -12,77 +11,63 @@ import {
 	where,
 	getDoc,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-import { getCollection, setCollection } from '/firestore_UNIV.js';
+import { getCollection, setCollection, SDECE_RULES } from '/firestore_UNIV.js';
 // Your Firestore code here
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-	apiKey: 'AIzaSyA8QWgic_hjbDL-EYIkvSRRII_yfTRdtOQ',
-	authDomain: 'discs-osci-prj.firebaseapp.com',
-	projectId: 'discs-osci-prj',
-	storageBucket: 'discs-osci-prj.appspot.com',
-	messagingSenderId: '601571823960',
-	appId: '1:601571823960:web:1f1278ecb86aa654e6152d',
-	measurementId: 'G-9N9ELDEMX9',
-};
-initializeApp(firebaseConfig);
-const db = getFirestore();
-setCollection('sdece-official');
-const colRef = getCollection();
-let partnersArray = [];
+setCollection("sdece-official");
 
-export function getDocIdByPartnerName(partnerName) {
-	const endName = partnerName.replace(/\s/g, '\uf8ff');
-	return getDocs(
-		query(
-			colRef,
-			where('partnerName', '>=', partnerName),
-			where('partnerName', '<=', partnerName + endName)
-		)
-	)
-		.then((querySnapshot) => {
-			if (!querySnapshot.empty) {
-				// Assuming there is only one document with the given partner name
-				const doc = querySnapshot.docs[0];
-				return doc.id;
-			} else {
-				console.log('No matching document found.');
-				return null;
-			}
-		})
-		.catch((error) => {
-			console.error('Error getting documents: ', error);
-			return null;
-		});
-}
+var col_ref = null;
 
-export function getDocByID(docId) {
-	const docReference = doc(db, 'partners-2', docId);
-	console.log(docReference);
-	let docObj = {};
-	return getDoc(docReference).then((doc) => {
-		docObj = doc.data();
-		return docObj;
-	});
-}
+col_ref = getCollection();
 
-// get docs from firestore
 
-getDocs(colRef)
+console.log(col_ref);
+
+var partners = {}; // queried
+var activities = [];
+
+// get docs from firestore and place them in partner and activities
+
+getDocs(col_ref)
 	.then((querySnapshot) => {
+
+		//populate activities
 		querySnapshot.forEach((doc) => {
 			if (
 				doc.data().name !== 'Test 2' ||
 				doc.data().name !== 'Test2'
 			) {
-				partnersArray.push(doc.data());
+				activities.push(doc.data());
 			}
 		});
 
+		console.log(activities);
+
+		//populate with partners
+		activities.forEach((activity) => {
+			let partner = activity[SDECE_RULES[1]];
+
+			//console.log(partner);
+
+			if (partners[partner] == null){
+				partners[partner] = [];
+				partners[partner].push(activity);
+			} 
+			else {
+				partners[partner].push(activity);
+			}
+
+			
+		});
+
+		console.log(partners);
+
+
 		// populate ul with partners
-		partnersArray.forEach((partner) => {
-			console.log(partner);
+		querySnapshot.forEach((partner) => {
+			console.log(partner.data());
 
 			// Creating DOM elements
 			const containerDiv = document.createElement('div');
@@ -97,7 +82,7 @@ getDocs(colRef)
 			anchor.href = '#';
 
 			anchor.addEventListener('click', () => {
-				showModal(partner);
+				showModal(partner.data());
 			});
 
 			// Adding classes and setting text content
@@ -142,9 +127,9 @@ getDocs(colRef)
 				'mt-2'
 			);
 
-			nameDiv.textContent = partner.partner_name;
-			addressDiv.textContent = partner.partner_city;
-			activityDiv.textContent = partner.activity_nature;
+			nameDiv.textContent = partner.data().partner_name;
+			addressDiv.textContent = partner.data().partner_city;
+			activityDiv.textContent = partner.data().activity_nature;
 
 			// if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
 			// {
@@ -396,66 +381,3 @@ function showModal(partner) {
 
 }
 
-export function addLocation(
-	name,
-	activity,
-	admuContact,
-	admuEmail,
-	admuOffice,
-	org,
-	partnerContact,
-	dates,
-	latitude,
-	longitude
-) {
-	addDoc(colRef, {
-		name: name,
-		activity: activity,
-		'`admu-contact`': admuContact,
-		'`admu-email`': admuEmail,
-		'`admu-office`': admuOffice,
-		org: org,
-		'`partner-contact`': partnerContact,
-		dates: dates,
-		Latitude: latitude,
-		Longitude: longitude,
-	})
-		.then((docRef) => {
-			console.log('Document written with ID: ', docRef.id);
-		})
-		.catch((error) => {
-			console.error('Error adding document: ', error);
-		});
-}
-
-export function editLocation(
-	docId,
-	name,
-	activity,
-	admuContact,
-	admuEmail,
-	admuOffice,
-	org,
-	partnerContact,
-	dates
-) {
-	const docReference = doc(db, 'partners-2', docId);
-	const updateData = {
-		name: name,
-		activity: activity,
-		'`admu-contact`': admuContact,
-		'`admu-email`': admuEmail,
-		'`admu-office`': admuOffice,
-		org: org,
-		'`partner-contact`': partnerContact,
-		dates: dates,
-	};
-	return updateDoc(docReference, updateData)
-		.then(() => {
-			console.log('Document updated successfully');
-			alert('Document updated successfully');
-		})
-		.catch((error) => {
-			console.error('Error updating document: ', error);
-		});
-}
