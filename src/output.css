@@ -596,8 +596,20 @@ video {
   position: absolute;
 }
 
+.relative {
+  position: relative;
+}
+
+.sticky {
+  position: sticky;
+}
+
 .inset-0 {
   inset: 0px;
+}
+
+.top-0 {
+  top: 0px;
 }
 
 .z-\[2400\] {
@@ -635,10 +647,6 @@ video {
 
 .mr-2 {
   margin-right: 0.5rem;
-}
-
-.mr-5 {
-  margin-right: 1.25rem;
 }
 
 .mr-8 {
@@ -811,12 +819,12 @@ video {
   overflow: hidden;
 }
 
-.overflow-scroll {
-  overflow: scroll;
-}
-
 .overflow-y-hidden {
   overflow-y: hidden;
+}
+
+.overflow-x-visible {
+  overflow-x: visible;
 }
 
 .overflow-y-scroll {
@@ -970,6 +978,14 @@ video {
 
 .pb-3 {
   padding-bottom: 0.75rem;
+}
+
+.pb-6 {
+  padding-bottom: 1.5rem;
+}
+
+.pl-5 {
+  padding-left: 1.25rem;
 }
 
 .text-center {

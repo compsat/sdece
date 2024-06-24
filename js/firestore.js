@@ -101,6 +101,20 @@ getDocs(colRef)
 			});
 
 			// Adding classes and setting text content
+
+			containerDiv.classList.add('partnerDiv');
+
+	  var activities = getDocIdByPartnerName(partner.partner_name);
+      if (activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
+      {
+        activities.forEach( (activity) => {
+          activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
+        });
+      }
+      else {
+        console.log("No activities found");
+      }
+      
 			nameDiv.classList.add(
 				'name',
 				'font-montserrat',
@@ -144,7 +158,8 @@ getDocs(colRef)
 				'py-6',
 				'px-8',
 				'border-b',
-				'border-customGray'
+				'border-customGray',
+				'w-full'
 			);
 			anchor.classList.add('accordion', 'link');
 
@@ -165,11 +180,14 @@ getDocs(colRef)
 
 // Display partner modal by clicking partner entry (WIP: and on pin pop up click)
 function showModal(partner) {
-	const modal = document.getElementById('partnerModal');
-	const modalContent = document.getElementById('modalContent');
+  console.log("Showing partner modal");
+  const modal = document.getElementById("partnerModal");
+  const modalHeader = document.getElementById("modalHeader");
+  const modalContent = document.getElementById("modalContent");
 
-	// Clear previous content
-	modalContent.innerHTML = '';
+  // Clear previous content
+  modalHeader.innerHTML = "";
+  modalContent.innerHTML = "";
 
   // Create div elements for each piece of information
   const backarrowDiv = document.createElement("button");
@@ -216,9 +234,9 @@ function showModal(partner) {
   closeDiv.innerHTML = '<svg viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#a0a0a0" class="w-6 h-6"><path d="M20.7457 3.32851C20.3552 2.93798 19.722 2.93798 19.3315 3.32851L12.0371 10.6229L4.74275 3.32851C4.35223 2.93798 3.71906 2.93798 3.32854 3.32851C2.93801 3.71903 2.93801 4.3522 3.32854 4.74272L10.6229 12.0371L3.32856 19.3314C2.93803 19.722 2.93803 20.3551 3.32856 20.7457C3.71908 21.1362 4.35225 21.1362 4.74277 20.7457L12.0371 13.4513L19.3315 20.7457C19.722 21.1362 20.3552 21.1362 20.7457 20.7457C21.1362 20.3551 21.1362 19.722 20.7457 19.3315L13.4513 12.0371L20.7457 4.74272C21.1362 4.3522 21.1362 3.71903 20.7457 3.32851Z" fill="#aaaaaa"></path></svg>'
   closeDiv.classList.add("close", "float-right");
 
-  nameDiv.textContent = partner.partnerName.substring(0, 45) + "...";
-  addressDiv.textContent =
-    "Latitude: " + partner.location.latitude + " Longitude: " + partner.location.longitude;
+  nameDiv.textContent = partner.partner_name.substring(0, 45) + "...";
+  addressDiv.textContent = partner.partner_coordinates;
+    //"Latitude: " + partner.location.latitude + " Longitude: " + partner.location.longitude;
 
   // Activities header with add activity button
   activityHeaderDiv.innerHTML = "List of activities: "
@@ -229,9 +247,10 @@ function showModal(partner) {
 
 
   // Add each activity to the modal content
-  if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
+  var activities = getDocIdByPartnerName(partner.partner_name);
+  if (activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
   {
-    partner.activities.forEach((activity) => {
+    activities.forEach((activity) => {
       // View activity details button
       const activityButton = document.createElement("button");
 	  activityButton.classList.add("modal-activities", "flex", "flex-row", "justify-between");
@@ -239,7 +258,7 @@ function showModal(partner) {
       const activityName = document.createElement("div")
       const arrow = document.createElement("div")
 
-      activityName.textContent = activity.activityName;
+      activityName.textContent = activity.activity_name;
       arrow.innerHTML = '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#a0a0a0" class="w-6 h-6"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="#a0a0a0"></path></g></svg>'
 	  
       activityButton.appendChild(activityName);
@@ -254,17 +273,17 @@ function showModal(partner) {
       const activityDatesDiv = document.createElement("div");
       const activityOfficeDiv = document.createElement("div");
 
-      activityNameDiv.innerHTML = activity.activityName;
+      activityNameDiv.innerHTML = activity.activity_name;
       activityNameDiv.classList.add("font-bold", "text-2xl", "text-lightbg");
 
-      activityAddressDiv.innerHTML = partner.partnerAddress;
+      activityAddressDiv.innerHTML = activity.partner_city;
 	  activityAddressDiv.classList.add("modal-address");
 
-      activityContactDiv.innerHTML = "<b>Contact</b> <br> " + partner.partnerContact + "<br>" + partner.partnerEmail + "<br>";
-      activityOrganizationDiv.innerHTML = "<b>Organization/Unit</b> <br>" + partner.organizationUnit;
+      activityContactDiv.innerHTML = "<b>Contact</b> <br> " + partner.partner_contact + "<br>" + partner.partner_email + "<br>";
+      activityOrganizationDiv.innerHTML = "<b>Organization/Unit</b> <br>" + partner.organization_unit;
       activityDatesDiv.innerHTML = "<b>Date/s of Partnership</b> <br>" + partner.activity_date;
 
-      activityOfficeDiv.innerHTML = "<hr> <br> <b class='font-bold text-2xl' style='color: #3d97af'>Ateneo Office Oversight</b> <br>" + partner.admuOffice + "<br>" + partner.admuContact + "<br>"  + partner.admuEmail + "<br>";
+      activityOfficeDiv.innerHTML = "<hr> <br> <b class='font-bold text-2xl' style='color: #3d97af'>Ateneo Office Oversight</b> <br>" + partner.admu_office + "<br>" + partner.admu_contact + "<br>"  + partner.admu_email + "<br>";
 
       // View activity details in modal after clicking activity
       activityButton.addEventListener("click", () => {
@@ -295,7 +314,7 @@ function showModal(partner) {
   admuContactDiv.innerHTML = "<b>AdMU Contact: </b>" + partner.admu_contact;
   admuEmailDiv.innerHTML = "<b>AdMU Email: </b>" + partner.admu_email;
   admuOfficeDiv.innerHTML = "<b>AdMU Office: </b>" + partner.admu_office;
-  orgDiv.innerHTML = "<b>Organization: </b>" + partner.org;
+  orgDiv.innerHTML = "<b>Organization: </b>" + partner.organization_unit;
 
   
 
