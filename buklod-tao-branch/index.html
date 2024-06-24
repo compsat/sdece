@@ -339,6 +339,7 @@
       </div>
     </div>
   </div>
+  
   <!--script for map-->
   <script type="module" src="js/index.js"></script>
   <script>
@@ -358,7 +359,25 @@
         }
       });
     }
+    
+    // Allows the user to search for entries by filtering the data entries for every key typed in
+    function searchEntries() {
+      var input = document.querySelector('.search-bar').value.toUpperCase();
+      var ul = document.getElementById("locationList");
+      var li = ul.getElementsByTagName('li');
+      for (var i = 0; i < li.length; i++) {
+        var a = li[i].getElementsByTagName("a")[0];
+        var txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(input) > -1) {
+          li[i].style.display = "";
+        } else {
+          li[i].style.display = "none";
+        }
+      }
+    }
   </script>
+
+  
 </body>
 
 </html>
