@@ -29,12 +29,42 @@
         }
       }
 
-      const nameFields = ["partner_name", "partner_city"];
-      for (let field of nameFields) {
+      const noNumberFields = [
+        "partner_name",
+        "partner_city",
+        "partner_contact",
+        "activity_nature",
+        "additional_partnership",
+        "organization unit",
+        "ADMU_office",
+        "ADMU_contact",
+        "ADMU_email"
+      
+      ];
+      for (let field of noNumberFields) {
         if (/\d/.test(form[field].value)) {
           alert(field.replace(/_/g, ' ') + " must not contain numbers");
           return false;
         }
+      }
+
+      const emailFields = [
+        "partner_email",
+        "ADMU_email"
+      ];
+
+      for (let field of emailFields) {
+        const emailValue = form[field].value;
+        if(!emailValue.includes("@") || !emailValue.includes(".")) {
+          alert(field.replace(/_/g, ' ') + "must contain a valid email address." );
+        }
+      }
+
+      const coordinateField = form[partner_coordinates].value;
+      const coordinatePattern = /^\d+\.\d+,\d+\.\d+$/;
+      if (!coordinatePattern.test(coordinateField)) {
+        alert("Parnter coordinates must be a decimal number" );
+        return false;
       }
 
       return true;
