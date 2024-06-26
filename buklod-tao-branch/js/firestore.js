@@ -42,7 +42,6 @@ export function getDocIdByPartnerName(partnerName) {
     )
   )
     .then((querySnapshot) => {
-      console.log(querySnapshot);
       if (!querySnapshot.empty) {
         // Assuming there is only one document with the given partner name
         const doc = querySnapshot.docs[0];

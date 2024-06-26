@@ -158,6 +158,7 @@ export const SDECE_RULES = DB_RULES_AND_DATA[2];
 export const SDECE_RULES_TEST = DB_RULES_AND_DATA[3];
 
 export function setCollection(collection_name){
+	console.log(collection_name);
     for(let rule of DB_RULES_AND_DATA ){
         console.log("rule[0]: " + rule[0]);
         if (rule[0] === collection_name){

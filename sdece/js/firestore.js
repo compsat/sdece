@@ -90,7 +90,6 @@ getDocs(colRef)
 
 		// populate ul with partners
 		partnersArray.forEach((partner) => {
-			console.log(partner);
 
 			// Creating DOM elements
 			const containerDiv = document.createElement('div');

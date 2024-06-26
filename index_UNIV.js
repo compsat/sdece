@@ -150,19 +150,19 @@ export function removeJsCssFiles(){
 
 export function createJsCssFiles(file_path){
       // Essentially makes a script object with a src of the file provided by the Rules Engine
-    console.log(file_path);
     if(file_path.includes(".js")){
       var fileref = document.createElement('script');
       fileref.setAttribute("type","module");
-      fileref.setAttribute("src", file_path + "?" + new Date().getTime());
+      fileref.setAttribute("src", file_path + "?");
     }
     if(file_path.includes(".css")){
       var fileref = document.createElement("link");
       fileref.setAttribute("rel", "stylesheet");
       fileref.setAttribute("type", "text/css");
-      fileref.setAttribute("href", file_path + "?" + new Date().getTime());
+      fileref.setAttribute("href", file_path + "?");
     }
-  return fileref;
+
+    return fileref;
 }
 
 export function loadJsCssFiles(file_path){
@@ -173,7 +173,6 @@ export function loadJsCssFiles(file_path){
         var new_element = createJsCssFiles(rule[1][i]);
         new_element.setAttribute('id', 'jscss' + i);
         document.getElementsByTagName('head')[0].appendChild(new_element);
-        console.log("type " + i);
       }
     }
   }
