@@ -129,62 +129,65 @@ getDocs(colRef)
 function showModal(partner) {
   const modal = document.getElementById("partnerModal");
   const modalHeader = document.getElementById("modalHeader");
-  const modalContent = document.getElementById("modalContent");
+  const modalContactNumber = document.getElementById("entry_contact_number");
+  const modalAddress = document.getElementById("entry_address");
+  const modalResidencyStatus = document.getElementById("entry_residency_status");
+
 
   // Clear previous content
-  modalContent.innerHTML = "";
+  //modalContent.innerHTML = "";
   modalHeader.innerHTML = "";
 
   // Create div elements for each piece of information
   const nameDiv = document.createElement("div");
   const addressDiv = document.createElement("div");
-  const contactNumberDiv = document.createElement("div");
-  const evacAreaDiv = document.createElement("div");
+  //const contactNumberDiv = document.createElement("div");
+  //const evacAreaDiv = document.createElement("div");
   const riskDiv = document.createElement("div");
-  const houseMaterialDiv = document.createElement("div");
-  const isHOANOADiv = document.createElement("div");
-  const residentsDiv = document.createElement("div");
+  //const houseMaterialDiv = document.createElement("div");
+  //const isHOANOADiv = document.createElement("div");
+  //const residentsDiv = document.createElement("div");
 
   nameDiv.classList.add("modal-name");
   addressDiv.classList.add("modal-address");
   
 
-  riskDiv.classList.add("modal-activity");
+  //riskDiv.classList.add("modal-activity");
 
   // Set the content of each div
   nameDiv.textContent = partner.household_name;
-  addressDiv.textContent = partner.address + " " + partner.phase;
-  contactNumberDiv.innerHTML = "<b>Contact number: </b>" + partner.contact_number;
-  evacAreaDiv.innerHTML = "<b>Nearest evacuation area: </b>" + partner.nearest_evac_area;
-  riskDiv.innerHTML = "<h3>Risks:</h3>";
-  riskDiv.innerHTML += "<p><b>Earthquake: </b>" + partner.risk_level_earthquake;
-  riskDiv.innerHTML += "<p><b>Fire: </b>" + partner.risk_level_fire;
-  riskDiv.innerHTML += "<p><b>Flood: </b>" + partner.risk_level_flood;
-  riskDiv.innerHTML += "<p><b>Landslide: </b>" + partner.risk_level_landslide;
-  riskDiv.innerHTML += "<p><b>Storm: </b>" + partner.risk_level_storm;
+  //addressDiv.textContent = partner.address + " " + partner.phase;
+  //contactNumberDiv.innerHTML = partner.contact_number;
+  //evacAreaDiv.innerHTML = partner.nearest_evac_area;
+  //riskDiv.innerHTML = "<h3>Risks:</h3>";
+  //riskDiv.innerHTML += partner.risk_level_earthquake;
+  //riskDiv.innerHTML += "<p>" + partner.risk_level_fire;
+  //riskDiv.innerHTML += "<p>" + partner.risk_level_flood;
+  //riskDiv.innerHTML += "<p>" + partner.risk_level_landslide;
+  //riskDiv.innerHTML += "<p>" + partner.risk_level_storm;
 
-  residentsDiv.innerHTML = "<h3>Residents:</h3>";
-  residentsDiv.innerHTML += "<div><b>Residency status: </b>" + partner.residency_status + "</div>";
-  houseMaterialDiv.innerHTML = "<div><b>House material: </b> " + partner.house_material + "</div>";
-  isHOANOADiv.innerHTML = "<div><b>Parte ng HOA/NOA: </b>" + partner.is_hoa_noa + "</div>";
-  residentsDiv.innerHTML += "<div><b>Number of residents: </b>" + partner.num_residents + 
-    "<ul>" 
-    + "<li><b>Minors: </b>" + partner.num_residents_minor + "</li>"
-    + "<li><b>Seniors: </b>" + partner.num_residents_senior + "</li>"
-    + "<li><b>PWD: </b>" + partner.num_residents_pwd + "</li>"
-    + "<li><b>Sick: </b>" + partner.num_residents_sick
-    + "</li><li><b>Pregnant: </b>" + partner.num_residents_preg + "</li>"
-    + "</ul></div>";
+  //residentsDiv.innerHTML = "<h3>Residents:</h3>";
+  //residentsDiv.innerHTML += "<div>" + partner.residency_status + "</div>";
+  //houseMaterialDiv.innerHTML = "<div>" + partner.house_material + "</div>";
+  //isHOANOADiv.innerHTML = "<div>" + partner.is_hoa_noa + "</div>";
+  //residentsDiv.innerHTML += "<div>" + partner.num_residents + 
+    //"<ul>" 
+    //+ "<li>" + partner.num_residents_minor + "</li>"
+    //+ "<li>" + partner.num_residents_senior + "</li>"
+    //+ "<li>" + partner.num_residents_pwd + "</li>"
+    //+ "<li>" + partner.num_residents_sick + "</li>"
+    //+ "<li>" + partner.num_residents_preg + "</li>"
+    //+ "</ul></div>";
   
   // Append the div elements to the modal content
   modalHeader.appendChild(nameDiv);
-  modalHeader.appendChild(addressDiv);
-  modalContent.appendChild(contactNumberDiv);
-  modalContent.appendChild(evacAreaDiv);
-  modalContent.appendChild(riskDiv);
-  modalContent.appendChild(residentsDiv);
-  modalContent.appendChild(houseMaterialDiv);
-  modalContent.appendChild(isHOANOADiv);
+  //modalHeader.appendChild(addressDiv);
+  //modalContent.appendChild(contactNumberDiv);
+  //modalContent.appendChild(evacAreaDiv);
+  //modalContent.appendChild(riskDiv);
+  //modalContent.appendChild(residentsDiv);
+  //modalContent.appendChild(houseMaterialDiv);
+  //modalContent.appendChild(isHOANOADiv);
 
   // Show the modal
   modal.style.display = "block";

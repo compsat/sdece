@@ -3,12 +3,12 @@
 
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NSTP Hazard Mapping</title>
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+  <meta name="viewport" content="width=device-width,user-scalable=no" />
   <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
 
-  <!-- Load Leaflet from CDN -->
+  <!--Load Leaflet from CDN-->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
     integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
     crossorigin="" />
@@ -16,12 +16,12 @@
     integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
     crossorigin=""></script>
 
-  <!-- Load Esri Leaflet from CDN -->
+  <!--Load Esri Leaflet from CDN-->
   <script src="https://unpkg.com/esri-leaflet@2.4.1/dist/esri-leaflet.js"
     integrity="sha512-xY2smLIHKirD03vHKDJ2u4pqeHA7OQZZ27EjtqmuhDguxiUvdsOuXMwkg16PQrm9cgTmXtoxA6kwr8KBy3cdcw=="
     crossorigin=""></script>
 
-  <!-- Load Esri Leaflet Geocoder from CDN -->
+  <!--Load Esri Leaflet Geocoder from CDN-->
   <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.css"
     integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
     crossorigin="">
@@ -29,7 +29,7 @@
     integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
     crossorigin=""></script>
 
-  <!-- Load CSS sheets and Firestore Database-->
+  <!--Load CSS sheets and Firestore Database-->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/form.css">
   <!--<script type="module" src="js/firestore.js"></script>-->
@@ -40,131 +40,205 @@
 <body>
   <!--Logout Button-->
   <div class="top-bar">
-    <button class="button-logout"><img src="./img/logout.256x256.png" alt="logout" height="15" width="15"> Logout</button>
+    <button class="button-logout"><img class="logoutIcon" src="./img/logout.256x256.png" alt="logout"> Logout</button>
   </div>
+
   <!--Modals of Entries-->
   <div id="partnerModal" class="modal">
-    <!--Modal Header: includes title and address-->
+    <!--Modal Header: includes household owner-->
     <div class="modal-header">
-      <span class="close">&times;</span>
       <p id="modalHeader"></p>
+      <span class="close">&times;</span>
     </div>
-    <!--Modal Content: everything else-->
+    <!--Modal Content: content of the entries-->
     <div class="modal-content">
-      <p id="modalContent"></p>
+      <!--Div for contact no. and address-->
+      <br>
+      <div>
+        <p class="modal-text" id="entry_contact_number">This is the Household's contact number</p>
+        <p class="modal-text" id="entry_address">This is the geolocation of the household that is not truncated. This is the geolocation of the partner that is not truncated. This is the geolocation of the partner that is not truncated.</p>
+      </div>
+      <!--Div for residency status and part of HOA/NOA labels-->
+      <div class="modal-line">
+        <label class="modal-label" style="width: 220px;">Residency Status</label>
+        <label class="modal-label" style="width: 220px;">Part of HOA / NOA</label>
+      </div>
+      <!--Div for residency status and part of HOA/NOA content-->
+      <div class="modal-line">
+        <p class="modal-text" id="entry_residency_status" style="width: 220px;">Residency Status</p>
+        <p class="modal-text" id="entry_HOA/NOA" style="width: 220px;">Part of HOA / NOA</label>
+      </div>
+      <!--Div for evacuation area-->
+      <div>
+        <label class="modal-label">Nearest Evacuation Area</label>
+        <p class="modal-text" id="entry_nearest_evacuation_area">Nearest Evacuation Area</p>
+      </div>
+      <!--Risk Levels-->
+      <button type="button" class="collapsible">Risk Levels</button>
+      <div class="colcontent" style="display: none;">
+        <div class="modal-line">
+          <label class="modal-label">Earthquake</label>
+          <label class="modal-label" id="entry_earthquake_risk_level">RISK LEVEL</label>
+        </div>
+        <div>
+          <p class="modal-text" id="entry_earthquake_desc">This is the description of the risk level that is not truncated. This is the description of the risk level that is not truncated. This is the description of the risk level that is not truncated.</p>
+        </div>
+        <div class="modal-line">
+          <label class="modal-label">Fire</label>
+          <label class="modal-label" id="entry_fire_risk_level">RISK LEVEL</label>
+        </div>
+        <div>
+          <p class="modal-text" id="entry_earthquake_desc">Sample text</p>
+        </div>
+        <div class="modal-line">
+          <label class="modal-label">Flood</label>
+          <label class="modal-label" id="entry_flood_risk_level">RISK LEVEL</label>
+        </div>
+        <div>
+          <p class="modal-text" id="entry_earthquake_desc">Sample text</p>
+        </div>
+        <div class="modal-line">
+          <label class="modal-label">Landslide</label>
+          <label class="modal-label" id="entry_landslide_risk_level">RISK LEVEL</label>
+        </div>
+        <div>
+          <p class="modal-text" id="entry_earthquake_desc">Sample text</p>
+        </div>
+        <div class="modal-line">
+          <label class="modal-label">Storm</label>
+          <label class="modal-label" id="entry_storm_risk_level">RISK LEVEL</label>
+        </div>
+        <div>
+          <p class="modal-text" id="entry_earthquake_desc">Sample text</p>
+        </div>
+      </div>
+      <!--Residents-->
+      <button type="button" class="collapsible">Residents</button>
+      <div class="colcontent" style="display: none;">
+        <br>
+        <div class="modal-line">
+          <label class="modal-label">Total</label>
+          <label class="modal-label" id="entry_number_of_residents">0</label>
+        </div>
+        <hr style="border-top: 1px solid #CBD5E0;">
+        <div class="modal-line">
+          <label class="modal-label">Minors</label>
+          <label class="modal-label" id="entry_number_of_minor_residents">0</label>
+        </div>
+        <br>
+        <div class="modal-line">
+          <label class="modal-label">Seniors</label>
+          <label class="modal-label" id="entry_number_of_senior_residents">0</label>
+        </div>
+        <br>
+        <div class="modal-line">
+          <label class="modal-label">PWD</label>
+          <label class="modal-label" id="entry_number_of_pwd_residents">0</label>
+        </div>
+        <br>
+        <div class="modal-line">
+          <label class="modal-label">Sick</label>
+          <label class="modal-label" id="entry_number_of_sick_residents">0</label>
+        </div>
+        <br>
+        <div class="modal-line">
+          <label class="modal-label" >Pregnant</label>
+          <label class="modal-label" id="entry_number_of_pregnant_residents">0</label>
+        </div>
+        <br>
+      </div>
+    </div>
+    <!--Div for modal footer: contains edit and delete buttons-->
+    <div class="modal-footer">
+      <div class="modal-line">
+        <button class="modal-button" type="submit" id="submit_form" name="submit_form" style="color:#D64747">Delete &nbsp;&nbsp;<img src="./img/delete.png" alt="delete" style="height: 20px; width: 20px;"></button>   
+        <button class="modal-button" type="submit" id="submit_form" name="submit_form" style="color:#3D97AF">Edit   &nbsp;&nbsp;<img src="./img/edit.png" alt="edit" style="height: 20px; width: 20px;"></button>   
+      </div>
     </div>
   </div>
+
   <!--Modals of forms-->
-  <div class="form-modal">
+  <div id="form-modal" class="form-modal" style="display: none;">
     <!--Modal Header: includes title and address-->
     <div class="form-modal-header">
-      <span class="close">&times;</span>
+      <span class="close-form">&times;</span>
       <h1 class="form-header">Add Household</h1>
     </div>
+
     <!--Modal Content: everything else-->
     <div class="form-modal-content">
       <h2 class="sub-header">HOUSEHOLD INFORMATION</h2>
       <br>
-      <!-- Form -->
+      <!-- Add Household Form modal-->
       <div class="input_container">
           <label class="form" for="household_name">Household Name</label>
           <input type="text" id="household_name" name="household_name" class="attribs" placeholder="">
       </div>
-  
       <br>
-
       <div class="input_container">
           <label class="form" for="address">Address</label>
           <input type="text" id="address" name="address" class="attribs" placeholder="">    
       </div>
-      
       <br>
-
       <div class="input_container">
           <label class="form" for="contact_number">Contact Number</label>
           <input type="text" id="contact_number" name="contact_number" class="attribs" placeholder="">    
       </div>
-      
       <br>
-
       <div class="input_container">
           <label class="form" for="residency_status">Residency Status</label>
           <input type="text" id="residency_status" name="residency_status" class="attribs" placeholder=""> 
       </div>
-      
       <br>
-
       <div class="input_container">
           <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
           <input type="text" id="HOA/NOA" name="HOA/NOA" class="attribs" placeholder=""> 
       </div>
-      
       <br>
-
-      <!-- Pressing a button adds another date -->
-
       <div class="input_container">
           <label class="form" for="materials_used_for_house">Materials Used for House</label>
           <input type="text" id="materials_used_for_house" name="materials_used_for_house" class="attribs" placeholder=""> 
       </div>
-      
       <br>
-
       <div class="input_container">
-          <label class="form" for="nearest_evacuation_area">Nearest Evactuation Area</label>
+          <label class="form" for="nearest_evacuation_area">Nearest Evacuation Area</label>
           <input type="text" id="nearest_evacuation_area" name="nearest_evacuation_area" class="attribs" placeholder="">    
       </div>
-      
       <br>
-
       <h2 class="sub-header">RESIDENT INFORMATION</h2>
       <br>
-
       <div class="input_container">
           <label class="form" for="number_of_residents">Number of Residents</label>
           <input type="text" id="number_of_residents" name="number_of_residents" class="attribs" placeholder="">    
       </div>
-      
       <br>
-
       <div class="input_container">
           <label class="form" for="number_of_minor_residents">Number of Minor Residents</label>
           <input type="text" id="number_of_minor_residents" name="number_of_minor_residents" class="attribs" placeholder="">
       </div>
-
       <br>
-
       <div class="input_container">
           <label class="form" for="number_of_senior_residents">Number of Senior Citizen Residents</label>
           <input type="text" id="number_of_senior_residents" name="number_of_senior_residents" class="attribs" placeholder="">
       </div>
-
       <br>
-
       <div class="input_container">
           <label class="form" for="number_of_pwd_residents">Number of PWD Residents</label>
           <input type="text" id="number_of_pwd_residents" name="number_of_pwd_residents" class="attribs" placeholder="">
       </div>
-
       <br>
-
       <div class="input_container">
           <label class="form" for="number_of_sick_residents">Number of Sick Residents</label>
           <input type="text" id="number_of_sick_residents" name="number_of_sick_residents" class="attribs" placeholder="">
       </div>
-      
       <br>
-
       <div class="input_container">
           <label class="form" for="number_of_pregnant_residents">Number of Pregnant Residents</label>
           <input type="text" id="number_of_pregnant_residents" name="number_of_pregnant_residents" class="attribs" placeholder="">
       </div>
-
       <br>
-
       <h2 class="sub-header">RISK LEVELS</h2>
       <br>
-
       <div class="input_container">
           <label class="disaster-form" for="earthquake">Earthquake</label>
           <select name="earthquake_level" id="earthquake" class="attribs">
@@ -175,9 +249,7 @@
           </select>
           <input type="text" id="earthquake" name="earthquake" class="attribs" placeholder="">
       </div>
-
       <br>
-
       <div class="input_container">
           <label class="disaster-form" for="fire">Fire</label>
           <select name="fire_level" id="fire" class="attribs">
@@ -188,9 +260,7 @@
           </select>
           <input type="text" id="fire" name="fire" class="attribs" placeholder="">
       </div>
-
       <br>
-      
       <div class="input_container">
           <label class="disaster-form" for="flood">Flood</label>
           <select name="flood_level" id="flood" class="attribs">
@@ -201,9 +271,7 @@
           </select>
           <input type="email" id="flood" name="flood" class="attribs" placeholder="">
       </div>
-
       <br>
-      
       <div class="input_container">
           <label class="disaster-form" for="landslide">Landslide</label>
           <select name="landslide_level" id="landslide" class="attribs">
@@ -214,9 +282,7 @@
           </select>
           <input type="email" id="landslide" name="landslide" class="attribs" placeholder="">
       </div>
-
       <br>
-
       <div class="input_container">
           <label class="disaster-form" for="storm">Storm</label>
           <select name="storm_level" id="storm" class="attribs">
@@ -227,31 +293,33 @@
           </select>
           <input type="email" id="storm" name="storm" class="attribs" placeholder="">
       </div>
-
       <br>
-
-      <br><br>
-
+      <br>
+      <br>
       <!-- Buttons -->
       <div>
           <!-- Submits contents of the form -->                                               
           <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save</button>   
-      </div>
-      <br>
-      <div>
+        </div>
+        <div>
           <!-- Clears all contents of the form -->
           <button class="clear form">Delete</button>
+        </div>
       </div>
+    </div>
+
+    <!-- Modal Footer: empty space -->
+     <div class="formModalFooter"></div>
   </div>
-  </div>
-  <!--Side menu: where the add location function, search bar, and list entries-->
+  
+  <!--Side menu: where the add location function, search bar, and list entries are-->
   <div class="main">
     <div class="sidenav">
-      <!--Log out buttons-->
+      <!--Search Bar-->
       <div class="buttons">
-        <input class="search-bar" type="search" placeholder="Search... ">
+        <input class="search-bar" type="search" placeholder="Search... " oninput="searchEntries()">
       </div>
-      <button class="container label-font" id="addloc-modal" href="#">+ Add a Household</button>
+      <button class="container label-font" id="addloc-modal" href="#" style="position: relative; box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2);">+ Add a Household</button>
         <!--<button class="container label-font" href="#">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon">
         <path d="M23.7844 9.8585L21.4937 7.56787L10.1594 18.8991L9.67188 21.6804L12.45 21.1897L23.7844 9.8585Z"
@@ -271,8 +339,26 @@
       </div>
     </div>
   </div>
-  
+  <!--script for map-->
   <script type="module" src="js/index.js"></script>
+  <script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+      coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var colcontent = this.nextElementSibling;
+        if (colcontent.style.display === "none") {
+          colcontent.style.display = "block";
+          coll.style.transform = "rotate(180deg)";
+        } else {
+          colcontent.style.display = "none";
+          coll.style.transform = "none";
+        }
+      });
+    }
+  </script>
 </body>
 
 </html>
