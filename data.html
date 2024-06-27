@@ -7,10 +7,10 @@
       const form = document.forms["myForm"];
       const requiredFields = [
         "partner_name",
-        "partner_city",
+        "partner_address",
         "partner_coordinates",
-        "partner_contact",
-        "partner_number",
+        "partner_contact_name",
+        "partner_contact_number",
         "partner_email",
         "activity_name",
         "activity_nature",
@@ -18,7 +18,7 @@
         "additional_partnership",
         "organization_unit",
         "ADMU_office",
-        "ADMU_contact",
+        "ADMU_contact_name",
         "ADMU_email"
       ];
 
@@ -69,6 +69,25 @@
 
       return true;
     }
+
+    //sdece param_aray
+    var sdece_param_array = [
+      ["sdece", 5000, "partner_name", ["string", 0, -1, null, null, null]],
+      ["sdece", 5000, "partner_address", ["string", 0, -1, null, null, null]],
+      ["sdece", 5000, "partner_coordinates", ["geopoint", null, null, null, 0, -1]],
+      ["sdece", 5000, "partner_contact_name", ["string", 0, -1, null, null, null]],
+      ["sdece", 5000, "partner_contact_number", ["string", 0, 11, null, null, null]],
+      ["sdece", 5000, "partner_email", ["string", null, null, null, 0, -1]],
+      ["sdece", 5000, "partner_activity name", ["string", null, null, null, 0, -1]],
+      ["sdece", 5000, "activity_nature", ["string", 0, -1, null, null]],
+      ["sdece", 5000, "activity_date", ["Date", null, null, null, null]],
+      ["sdece", 0, "additional_partnership", ["string", 0, -1, null, null]],
+      ["sdece", 0, "organization_unit", ["string", 0, -1, null, null]],
+      ["sdece", 5000, "ADMU_office", ["string", 0, -1, null, null]],
+      ["sdece", 5000, "ADMU_contact_name", ["string", 0, -1, null, null]],
+      ["sdece", 5000, "ADMU_email", ["string", null, null, null, null]],
+    ];
+  
   </script>
 </head>
 <body>
