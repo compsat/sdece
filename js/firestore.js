@@ -140,7 +140,7 @@ getDocs(colRef)
 			);
 
 			nameDiv.textContent = partner.partner_name;
-			addressDiv.textContent = partner.partner_city;
+			addressDiv.textContent = partner.partner_address;
 			activityDiv.textContent = partner.activity_nature;
 
 			//   if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
