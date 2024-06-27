@@ -126,6 +126,8 @@ getDocs(colRef)
     console.error("Error getting documents: ", error);
   });
 
+document.getElementById("editHousehold").addEventListener("click", editModal)
+
 function showModal(partner) {
   const modal = document.getElementById("partnerModal");
   const modalHeader = document.getElementById("modalHeader");
@@ -287,6 +289,49 @@ function showModal(partner) {
       modal.style.display = "none";
     }
   });
+
+  //script for edit household modal
+
+  // modal
+  var editFormModal = document.getElementById("editForm-modal");
+  
+  // open modal
+  var openEditForm = document.getElementById("editHousehold");
+  
+  // Get the <span> element that closes the modal
+  var closeEditForm = document.getElementsByClassName("close-editForm")[0];
+  
+  // When the user clicks the button, open the modal 
+  openEditForm.onclick = function() {
+    editFormModal.style.display = "block";
+    modal.style.display = "none";
+    document.getElementById("edit_household_name").value = partner.household_name;
+    document.getElementById("edit_address").value = partner.household_address;
+    document.getElementById("edit_contact_number").value = partner.contact_number;
+    document.getElementById("edit_HOA/NOA").value = partner.is_hoa_noa;
+    document.getElementById("edit_nearest_evacuation_area").value = partner.nearest_evac;
+    document.getElementById("edit_number_of_residents").value = partner.number_residents;
+    document.getElementById("edit_number_of_minor_residents").value = partner.number_minors;
+    document.getElementById("edit_number_of_senior_residents").value = partner.number_seniors;
+    document.getElementById("edit_number_of_pwd_residents").value = partner.number_pwd;
+    document.getElementById("edit_number_of_sick_residents").value = partner.number_sick;
+    document.getElementById("edit_number_of_pregnant_residents").value = partner.number_pregnant;
+    document.getElementById("edit_earthquake_risk_level").value = earthquake1;
+    document.getElementById("edit_earthquake_desc").value = earthquake2;
+    document.getElementById("edit_fire_risk_level").value = fire1;
+    document.getElementById("edit_fire_desc").value = fire2;
+    document.getElementById("edit_flood_risk_level").value = flood1;
+    document.getElementById("edit_flood_desc").value = flood2;
+    document.getElementById("edit_landslide_risk_level").value = landslide1;
+    document.getElementById("edit_landslide_desc").value = landslide2;
+    document.getElementById("edit_storm_risk_level").value = storm1;
+    document.getElementById("edit_storm_desc").value = storm2;
+  }
+  
+  // When the user clicks on <span> (x), close the modal
+  closeEditForm.onclick = function() {
+    editFormModal.style.display = "none";
+  }
 }
 
 export function addEntry(data){
