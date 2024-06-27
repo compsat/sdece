@@ -212,8 +212,8 @@ export function getDocsByPartnerName(partner_name) {
 			return getDocs(
 				query(
 					collection_reference,
-					where(rule[1], '>=', rule[1]), // let's wait for Luigi's standardization. IF_ELSE nalang muna
-					where(rule[1], '<=', rule[1] + endName)
+					where(rule[1], '>=', partner_name), // let's wait for Luigi's standardization. IF_ELSE nalang muna
+					where(rule[1], '<=', partner_name + endName)
 				)
 			)
 				.then((querySnapshot) => {

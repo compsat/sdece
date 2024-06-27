@@ -11,7 +11,7 @@ import {
 	where,
 	getDoc,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-import { getCollection, setCollection, SDECE_RULES } from '/firestore_UNIV.js';
+import { getCollection, setCollection, SDECE_RULES, getDocIdByPartnerName } from '/firestore_UNIV.js';
 // Your Firestore code here
 
 // Your web app's Firebase configuration
@@ -43,6 +43,7 @@ getDocs(col_ref)
 			}
 		});
 
+		console.log("Activities:")
 		console.log(activities);
 
 		//populate with partners
@@ -62,6 +63,7 @@ getDocs(col_ref)
 			
 		});
 
+		console.log("Partners: ")
 		console.log(partners);
 
 		// populate ul with activities
@@ -157,14 +159,14 @@ getDocs(col_ref)
 			anchor.href = '#';
 
 			anchor.addEventListener('click', () => {
-				showModal(partner.data());
+				showModal(partner);
 			});
 
 			// Adding classes and setting text content
 
 			containerDiv.classList.add('partnerDiv');
 
-	  var activities = getDocIdByPartnerName(partner.partner_name);
+	//   var activities = getDocIdByPartnerName(partner.partner_name);
       if (activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
       {
         activities.forEach( (activity) => {
@@ -314,7 +316,7 @@ function showModal(partner) {
 
 
   // Add each activity to the modal content
-  var activities = getDocIdByPartnerName(partner.partner_name);
+//   var activities = getDocIdByPartnerName(partner.partner_name);
   if (activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
   {
     activities.forEach((activity) => {
@@ -325,7 +327,7 @@ function showModal(partner) {
       const activityName = document.createElement("div")
       const arrow = document.createElement("div")
 
-      activityName.textContent = activity.activity_name;
+      activityName.textContent = activity.activity_nature;
       arrow.innerHTML = '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#a0a0a0" class="w-6 h-6"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="#a0a0a0"></path></g></svg>'
 	  
       activityButton.appendChild(activityName);
@@ -340,7 +342,7 @@ function showModal(partner) {
       const activityDatesDiv = document.createElement("div");
       const activityOfficeDiv = document.createElement("div");
 
-      activityNameDiv.innerHTML = activity.activity_name;
+      activityNameDiv.innerHTML = activity.activity_nature;
       activityNameDiv.classList.add("font-bold", "text-2xl", "text-lightbg");
 
       activityAddressDiv.innerHTML = activity.partner_city;
