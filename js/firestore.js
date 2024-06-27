@@ -277,14 +277,6 @@ function showModal(partner) {
   nameDiv.classList.add("modal-name", "float-left");
   addressDiv.classList.add("modal-address");
 
-  // Add activity button
-  const addActivity = document.createElement("button");
-  addActivity.addEventListener("click", () => {
-    //TO DO: Display Add Activity on pin click
-    console.log("Add activity")
-  });
-
-
   // Set the content of each div
   backarrowDiv.innerHTML = '<svg viewBox="0 0 1024 1024" class="w-6 h-6" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#a0a0a0" stroke="#a0a0a0" stroke-width="50" transform="matrix(-1, 0, 0, -1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="#a0a0a0"></path></g></svg>'
   backarrowDiv.classList.add("float-left");
@@ -312,7 +304,13 @@ function showModal(partner) {
 
   // Activities header with add activity button
   activityHeaderDiv.innerHTML = "List of activities: "
+  const addActivity = document.createElement("button");
   addActivity.innerHTML = '<svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M6 12h6V6h1v6h6v1h-6v6h-1v-6H6z"></path></svg>'
+
+  // Add button for adding activities
+  addActivity.addEventListener("click", () => {
+	console.log("Clicked add activity in the partner modal")
+  });
 
   activityHeaderDiv.appendChild(addActivity);
   activityHeaderDiv.classList.add("modal-activities-header");
