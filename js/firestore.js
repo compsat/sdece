@@ -158,8 +158,9 @@ getDocs(col_ref)
 			// Set attributes
 			anchor.href = '#';
 
-			anchor.addEventListener('click', () => {
-				showModal(partners[partner]);
+			anchor.addEventListener('click', 
+				function () {
+					showModal(partners[partner]);
 			});
 
 			// Adding classes and setting text content
@@ -415,13 +416,6 @@ function showModal(partner) {
 		modal.style.display = 'none';
 	});
 
-  // Close the modal when the user clicks outside of it
-  window.addEventListener("click", (event) => {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  });
-
 
   var editButtons =
   document.getElementsByClassName('editButton');
@@ -466,6 +460,5 @@ function showModal(partner) {
       }
     );
   }
-
 }
 
