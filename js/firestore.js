@@ -171,7 +171,7 @@ getDocs(col_ref)
       if (activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
       {
         activities.forEach( (activity) => {
-          activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
+          activityDiv.innerHTML += activity.activity_name + "<br/>";       // there might be a better way to display multiple activities
         });
       }
       else {
@@ -332,7 +332,7 @@ function showModal(partner) {
       const activityName = document.createElement("div")
       const arrow = document.createElement("div")
 
-      activityName.textContent = activity.activity_name + "";
+      activityName.textContent = activity.activity_nature + "";
       arrow.innerHTML = '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#a0a0a0" class="w-6 h-6"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="#a0a0a0"></path></g></svg>'
 	  
       activityButton.appendChild(activityName);
@@ -347,7 +347,7 @@ function showModal(partner) {
       const activityDatesDiv = document.createElement("div");
       const activityOfficeDiv = document.createElement("div");
 
-      activityNameDiv.innerHTML = activity.activity_name + "";
+      activityNameDiv.innerHTML = partner[0].activity_nature + "";
       activityNameDiv.classList.add("font-bold", "text-2xl", "text-lightbg");
 
       activityAddressDiv.innerHTML = partner[0].partner_address;
