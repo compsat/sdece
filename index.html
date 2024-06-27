@@ -807,8 +807,15 @@
 			}
 
 			// Function to hide the div containing the iframe
-			function hideIframeContainer() {
+			function hideAddModalContainer() {
 				var iframeContainer = document.getElementById('addModal');
+				if (iframeContainer) {
+					iframeContainer.style.display = 'none';
+				}
+			}
+
+			function hideEditModalContainer() {
+				var iframeContainer = document.getElementById('editModal');
 				if (iframeContainer) {
 					iframeContainer.style.display = 'none';
 				}
@@ -816,8 +823,11 @@
 
 			// Add an event listener to handle messages from the iframe
 			window.addEventListener('message', function (event) {
-				if (event.data === 'closeIframe') {
-					hideIframeContainer();
+				if (event.data === 'closeAddModal') {
+					hideAddModalContainer();
+				}
+				if (event.data === 'closeEditModal') {
+					hideEditModalContainer();
 				}
 			});
 		</script>

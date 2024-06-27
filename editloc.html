@@ -78,6 +78,8 @@
 						Edit Activity
 					</h1>
 
+					<button id="close-btn">
+
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -92,6 +94,7 @@
 						/>
 					</svg>
 				</div>
+					</button>
 
 				<!-- General Information -->
 				<div class="">
@@ -357,6 +360,16 @@
 					newDateInput.className =
 						'py-4 px-8 w-96 rounded border font-montserrat mt-2';
 					dateContainer.insertBefore(newDateInput, this);
+				});
+
+			document
+				.getElementById('close-btn')
+				.addEventListener('click', function (event) {
+					event.preventDefault();
+					console.log(
+						'The user has closed the Edit Activity modal.'
+					);
+					window.parent.postMessage('closeEditModal', '*');
 				});
 		</script>
 	</body>
