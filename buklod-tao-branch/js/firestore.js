@@ -126,8 +126,6 @@ getDocs(colRef)
     console.error("Error getting documents: ", error);
   });
 
-document.getElementById("editHousehold").addEventListener("click", editModal)
-
 function showModal(partner) {
   const modal = document.getElementById("partnerModal");
   const modalHeader = document.getElementById("modalHeader");
