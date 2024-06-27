@@ -19,7 +19,7 @@
 	background-color: white;
 }
 
-.leaflet-popup-content-wrapper{
+.leaflet-popup-content-wrapper {
 	border-radius: 8%;
 	padding: 2%;
 	width: fit-content;
@@ -79,10 +79,8 @@
 }
 
 #modalContent > div {
-	margin-bottom: 15px; 
+	margin-bottom: 15px;
 }
-  
-
 
 .modal-activities {
 	font-size: 20px;
@@ -132,8 +130,8 @@
 }
 
 .partner-geolocation {
-display: flex;
-align-items: center;
+	display: flex;
+	align-items: center;
 }
 
 .partner-info {
