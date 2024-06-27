@@ -27,337 +27,253 @@
 		/>
 
 		<script type="module">
-			//import { addLocation } from "./js/firestore.js";
 			import {
-				addEntry,
-				SDECE_RULES_TEST,
-				setCollection,
-			} from '/firestore_UNIV.js';
-
-			setCollection('sdece-official-TEST');
+				editLocation,
+				getDocIdByPartnerName,
+				getDocByID,
+			} from './js/firestore.js';
+			function populateFormFields(partnerData) {
+				document.getElementById('partner').value = partnerData.name;
+				document.getElementById('partner_contact-person').value =
+					partnerData['`partner-contact`'];
+				document.getElementById('organization').value =
+					partnerData.org;
+				document.getElementById('nature_of_act').value =
+					partnerData.activity;
+				document.getElementById('dates_of_partnership').value =
+					partnerData.dates;
+				document.getElementById('ateneo_office').value =
+					partnerData['`admu-office`'];
+				document.getElementById('ateneo_contact-person').value =
+					partnerData['`admu-contact`'];
+				document.getElementById('ateneo_contact-email').value =
+					partnerData['`admu-email`'];
+			}
+			function fetchPartnerData() {
+				const params = new URLSearchParams(window.location.search);
+				const partnerName = params.get('partnerName');
+				if (partnerName) {
+					getDocIdByPartnerName(partnerName).then((docId) => {
+						if (docId) {
+							getDocByID(docId).then((doc) => {
+								populateFormFields(doc);
+							});
+						} else {
+							alert(
+								'No matching document found for the partner name: ' +
+									partnerName
+							);
+						}
+					});
+				} else {
+					alert('No partnerName parameter found in the URL.');
+				}
+			}
+			fetchPartnerData();
 
 			document
 				.getElementById('submit_form')
-				.addEventListener('click', handleFormSubmit_v2);
+				.addEventListener('click', handleFormSubmit);
 
-			function handleFormSubmit_v2() {
-				console.log('clicked');
-				var collatedInput = {};
+			function handleFormSubmit() {
+				const partnerName =
+					document.getElementById('partner').value;
+				getDocIdByPartnerName(partnerName).then((docId) => {
+					if (docId) {
+						// If a matching docId is found, proceed with updating the document
+						const name = partnerName;
+						const activity =
+							document.getElementById(
+								'nature_of_act'
+							).value;
+						const admuContact = document.getElementById(
+							'ateneo_contact-person'
+						).value;
+						const admuEmail = document.getElementById(
+							'ateneo_contact-email'
+						).value;
+						const admuOffice =
+							document.getElementById(
+								'ateneo_office'
+							).value;
+						const org =
+							document.getElementById(
+								'organization'
+							).value;
+						const partnerContact = document.getElementById(
+							'partner_contact-person'
+						).value;
+						const dates = document.getElementById(
+							'dates_of_partnership'
+						).value;
 
-				for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
-					//SDECE_RULES_TEST[2] are just the field names of each document
-					console.log(SDECE_RULES_TEST[2][i]);
-					let q = document.getElementById(
-						SDECE_RULES_TEST[2][i]
-					).value;
-					collatedInput[SDECE_RULES_TEST[2][i]] = q;
-
-					// this is where data validation will happen
-					// add the if-else statements of edge cases here
-				}
-
-				console.log(collatedInput);
-				// This actually works but it needs some data validation
-				// uncomment at the db's risk
-				addEntry(collatedInput);
+						editLocation(
+							docId,
+							name,
+							activity,
+							admuContact,
+							admuEmail,
+							admuOffice,
+							org,
+							partnerContact,
+							dates
+						);
+					} else {
+						// Handle case when no matching document is found
+						alert(
+							'No matching document found for the partner name: ' +
+								partnerName
+						);
+					}
+				});
 			}
 		</script>
 	</head>
+
 	<body>
-		<form
-			action=""
-			id="addLocForm"
-			class="flex flex-row justify-center items-center z-[4000] bg-customLightGray"
-		>
-			<div class="p-8 overflow-y-scroll rounded-lg w-full">
-				<!-- Header -->
-				<div class="flex flex-row justify-between">
-					<h1
-						class="font-montserrat text-3xl font-bold text-darkbg mb-8"
-					>
-						Edit Activity
-					</h1>
+		<form action="" class="p-8 bg-customLightGray w-1/2">
+			<!-- Div for margin -->
+			<h1 class="font-montserrat text-3xl font-bold text-darkbg mb-8">
+				Edit Activity
+			</h1>
 
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.5"
-						class="size-8 stroke-customDarkGray"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M6 18 18 6M6 6l12 12"
-						/>
-					</svg>
-				</div>
+			<div class="flex flex-row justify-between mb-6 items-center">
+				<label
+					class="form font-montserrat text-xl text-customGray"
+					for="partner"
+					>Partner</label
+				><br />
+				<input
+					type="text"
+					id="partner"
+					name="partner"
+					class="py-4 px-8 w-96 rounded border font-montserrat"
+					placeholder=""
+				/>
+			</div>
 
-				<!-- General Information -->
-				<div class="">
-					<div
-						class="flex flex-row justify-between mb-6 items-center"
-					>
-						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="activity_name"
-							>Activity Name</label
-						>
-						<input
-							type="text"
-							id="activity_name"
-							name="activity_name"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
-						/>
-					</div>
+			<div class="flex flex-row justify-between mb-6 items-center">
+				<label
+					class="form font-montserrat text-xl text-customGray"
+					for="partner_contact-person"
+					>Contact Person of Partner</label
+				>
+				<input
+					type="text"
+					id="partner_contact-person"
+					name="partner_contact-person"
+					class="py-4 px-8 w-96 rounded border font-montserrat"
+					placeholder=""
+				/>
+			</div>
 
-					<div
-						class="flex flex-row justify-between mb-6 items-center"
-					>
-						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="activity_nature"
-							>Nature of Activity</label
-						>
-						<input
-							type="text"
-							id="activity_nature"
-							name="activity_nature"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
-						/>
-					</div>
+			<div class="flex flex-row justify-between mb-6 items-center">
+				<label
+					class="form font-montserrat text-xl text-customGray"
+					for="organization"
+					>Organization / Unit</label
+				><br />
+				<input
+					type="text"
+					id="organization"
+					name="organization"
+					class="py-4 px-8 w-96 rounded border font-montserrat"
+					placeholder=""
+				/>
+			</div>
 
-					<div class="flex flex-row justify-between w-full mb-6">
-						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="activity_date"
-							>Dates of Partnership</label
-						>
+			<div class="flex flex-row justify-between mb-6 items-center">
+				<label
+					class="form font-montserrat text-xl text-customGray"
+					for="nature_of_act"
+					>Nature of Activity</label
+				><br />
+				<input
+					type="text"
+					id="nature_of_act"
+					name="nature_of_act"
+					class="py-4 px-8 w-96 rounded border font-montserrat"
+					placeholder=""
+				/>
+			</div>
 
-						<div
-							class="flex flex-col items-start"
-							id="date-container"
-						>
-							<input
-								type="date"
-								id="activity_date"
-								name="activity_date"
-								class="py-4 px-8 w-96 rounded border font-montserrat"
-								placeholder=""
-							/>
-							<a
-								href=""
-								class="text-base font-montserrat text-lightbg underline mt-4"
-								id="add-date"
-								>Add another date</a
-							>
-						</div>
-					</div>
-				</div>
+			<!-- TODO: Add a button for adding another date -->
+			<div class="flex flex-row justify-between mb-6 items-center">
+				<label
+					class="form font-montserrat text-xl text-customGray"
+					for="dates_of_partnership"
+					>Dates of Partnership</label
+				><br />
+				<input
+					type="date"
+					id="dates_of_partnership"
+					name="dates_of_partnership"
+					class="py-4 px-8 w-96 rounded border font-montserrat"
+					placeholder=""
+				/>
+			</div>
 
-				<!-- PARTNER INFORMATION -->
-				<div class="">
-					<h2
-						class="w-full text-lightbg font-montserrat text-xl mt-10 font-bold mb-6"
-					>
-						PARTNER INFORMATION
-					</h2>
+			<div class="flex flex-row justify-between mb-6 items-center">
+				<label
+					class="form font-montserrat text-xl text-customGray"
+					for="ateneo_office"
+					>Ateneo Office Oversight</label
+				><br />
+				<input
+					type="text"
+					id="ateneo_office"
+					name="ateneo_office"
+					class="py-4 px-8 w-96 rounded border font-montserrat"
+					placeholder=""
+				/>
+			</div>
 
-					<div
-						class="flex flex-row justify-between mb-6 items-center"
-					>
-						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="partner_name"
-							>Name of Host Partner</label
-						>
-						<input
-							type="text"
-							id="partner_name"
-							name="partner_name"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
-						/>
-					</div>
+			<div class="flex flex-row justify-between mb-6 items-center">
+				<label
+					class="form font-montserrat text-xl text-customGray"
+					for="ateneo_contact-person"
+					>Ateneo Contact Person</label
+				><br />
+				<input
+					type="text"
+					id="ateneo_contact-person"
+					name="ateneo_contact-person"
+					class="py-4 px-8 w-96 rounded border font-montserrat"
+					placeholder=""
+				/>
+			</div>
 
-					<div
-						class="flex flex-row justify-between mb-6 items-center"
-					>
-						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="partner_contact"
-							>Address of Host Partner</label
-						>
-						<input
-							type="text"
-							id="partner_contact"
-							name="partner_contact"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
-						/>
-					</div>
-					<div
-						class="flex flex-row justify-between mb-6 items-center"
-					>
-						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="partner_contact"
-							>Name of Contact Person</label
-						>
-						<input
-							type="text"
-							id="partner_contact"
-							name="partner_contact"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
-						/>
-					</div>
+			<div class="flex flex-row justify-between mb-6 items-center">
+				<label
+					class="form font-montserrat text-xl text-customGray"
+					for="ateneo_contact-email"
+					>Email</label
+				><br />
+				<input
+					type="email"
+					id="ateneo_contact-email"
+					name="ateneo_contact-email"
+					class="py-4 px-8 w-96 rounded border font-montserrat"
+					placeholder=""
+				/>
+			</div>
 
-					<div
-						class="flex flex-row justify-between mb-6 items-center"
-					>
-						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="partner_number"
-							>Number of Contact Person
-						</label>
-						<input
-							type="text"
-							id="partner_number"
-							name="partner_number"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
-						/>
-					</div>
-					<div
-						class="flex flex-row justify-between mb-6 items-center"
-					>
-						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="partner_email"
-							>Email of Contact Person / Partner</label
-						>
-						<input
-							type="email"
-							id="partner_email"
-							name="partner_email"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
-						/>
-					</div>
-				</div>
-
-				<div class="">
-					<h2
-						class="w-full text-lightbg font-montserrat text-xl mt-10 font-bold mb-6"
-					>
-						ATENEO OFFICE OVERSIGHT
-					</h2>
-
-					<div
-						class="flex flex-row justify-between mb-6 items-center"
-					>
-						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="admu_office"
-							>Name of Office</label
-						>
-						<input
-							type="text"
-							id="admu_office"
-							name="admu_office"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
-						/>
-					</div>
-					<div
-						class="flex flex-row justify-between mb-6 items-center"
-					>
-						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="admu_contact"
-							>Name of Ateneo Contact Person</label
-						>
-						<input
-							type="text"
-							id="admu_contact"
-							name="admu_contact"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
-						/>
-					</div>
-
-					<div
-						class="flex flex-row justify-between items-center"
-					>
-						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="admu_email"
-							>Email of Ateneo Contact Person</label
-						>
-						<input
-							type="email"
-							id="admu_email"
-							name="admu_email"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
-						/>
-					</div>
-				</div>
-
-				<!-- Buttons -->
-				<div class="button_div py-8 mt-8">
-					<!-- Clears all contents of the form -->
-					<button
-						class="w-full py-4 text-center font-montserrat text-2xl bg-lightbg text-white font-bold rounded-lg"
-						type="submit"
-						id="submit_form"
-						name="submit_form"
-					>
-						Save
-					</button>
-					<button
-						class="w-full py-4 text-center font-montserrat text-2xl text-red-700 font-bold border border-red-700 rounded-lg mt-4"
-					>
-						Delete
-					</button>
-					<!-- Submits contents of the form -->
-				</div>
+			<!-- Buttons -->
+			<div class="">
+				<button
+					class="w-full py-4 text-center font-montserrat text-2xl bg-lightbg text-white font-bold rounded-lg"
+					id="submit_form"
+					name="submit_form"
+					type="submit"
+				>
+					Save
+				</button>
+				<button
+					class="w-full py-4 text-center font-montserrat text-2xl text-red-700 font-bold border border-red-700 rounded-lg mt-4"
+				>
+					Delete
+				</button>
 			</div>
 		</form>
-
-		<script>
-			document
-				.getElementById('addLocForm')
-				.addEventListener('submit', function (event) {
-					event.preventDefault(); // Prevent the default form submission
-
-					// Simulate successful submission (replace with actual form submission code)
-					// Example: Submit form data via AJAX or fetch API
-
-					// Assuming form submission is successful
-					// Notify parent window (where the iframe is embedded)
-					window.parent.postMessage(
-						{ type: 'addlocFormSuccess' },
-						'*'
-					);
-				});
-
-			document
-				.getElementById('add-date')
-				.addEventListener('click', function (event) {
-					event.preventDefault();
-					var dateContainer =
-						document.getElementById('date-container');
-					var newDateInput = document.createElement('input');
-					newDateInput.type = 'date';
-					newDateInput.name = 'activity_date';
-					newDateInput.className =
-						'py-4 px-8 w-96 rounded border font-montserrat mt-2';
-					dateContainer.insertBefore(newDateInput, this);
-				});
-		</script>
 	</body>
 </html>

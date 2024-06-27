@@ -27,17 +27,19 @@ getDocs(colRef)
   .then((querySnapshot) => {
     querySnapshot.forEach((entry) => {
       var doc = entry.data();
-      //console.log(doc);
-      var marker = L.marker([
-        parseFloat(doc.latitude),
-        parseFloat(doc.longitude),
-      ]);
-      var popupContent = `
-      <div class="leaflet-popup-container">
-      <h2 class="partner-header">${doc.household_name}</h2>          
-        `;
-      marker.bindPopup(popupContent);
-      results.addLayer(marker);
+      var marker;
+      // Some coordinated are null, protective check
+      if(doc.location_coordinates != null){
+        marker = L.marker([
+          parseFloat(doc.location_coordinates.latitude),
+          parseFloat(doc.location_coordinates.longitude),
+        ])
+      }
+      // TODO HAVE THIS BE CONSISTENT ACROSS EVERYTHING
+      getDivContent(doc.household_name).then((div) =>{
+        marker.bindPopup(div);
+        results.addLayer(marker);
+      });
     });
   })
   .catch((error) => {
