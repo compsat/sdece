@@ -11,12 +11,12 @@ import {
 	where,
 	getDoc,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-import { getCollection, setCollection, SDECE_RULES, getDocIdByPartnerName } from '/firestore_UNIV.js';
+import { getCollection, setCollection, SDECE_RULES, getDocIdByPartnerName, editEntry } from '/firestore_UNIV.js';
 // Your Firestore code here
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-setCollection("sdece-official");
+setCollection("sdece-official-TEST");
 
 var col_ref = null;
 
@@ -26,7 +26,7 @@ col_ref = getCollection();
 console.log(col_ref);
 
 var partners = {}; // queried
-var activities = [];
+var activities = {};
 
 // get docs from firestore and place them in partner and activities
 
@@ -41,7 +41,8 @@ getDocs(col_ref)
 			) {
 				let a = doc.data();
 				a["identifier"] = doc.id;
-				activities.push(a);
+
+				activities[doc.id] = a;
 			}
 		});
 
@@ -49,17 +50,17 @@ getDocs(col_ref)
 		console.log(activities);
 
 		//populate with partners
-		activities.forEach((activity) => {
-			let partner = activity[SDECE_RULES[1]];
+		Object.keys(activities).forEach((activity) => {
+			let partner = activities[activity][SDECE_RULES[1]];
 
 			//console.log(partner);
 
 			if (partners[partner] == null){
 				partners[partner] = [];
-				partners[partner].push(activity);
+				partners[partner].push(activities[activity]);
 			} 
 			else {
-				partners[partner].push(activity);
+				partners[partner].push(activities[activity]);
 			}
 
 			
@@ -68,86 +69,6 @@ getDocs(col_ref)
 		console.log("Partners: ")
 		console.log(partners);
 
-		// populate ul with activities
-		// querySnapshot.forEach((partner) => {
-		// 	console.log(partner.data());
-
-		// 	// Creating DOM elements
-		// 	const containerDiv = document.createElement('div');
-		// 	const img = document.createElement('svg');
-		// 	const listItem = document.createElement('li');
-		// 	const anchor = document.createElement('a');
-		// 	const nameDiv = document.createElement('div');
-		// 	const addressDiv = document.createElement('div');
-		// 	const activityDiv = document.createElement('div');
-
-		// 	// Set attributes
-		// 	anchor.href = '#';
-
-		// 	anchor.addEventListener('click', () => {
-		// 		showModal(partner.data());
-		// 	});
-
-		// 	// Adding classes and setting text content
-		// 	nameDiv.classList.add(
-		// 		'name',
-		// 		'font-montserrat',
-		// 		'font-bold',
-		// 		'text-lg',
-		// 		'text-darkbg',
-		// 		'leading-[110%]'
-		// 	);
-		// 	addressDiv.classList.add(
-		// 		'address',
-		// 		'text-sm',
-		// 		'text-customGray',
-		// 		'font-hind',
-		// 		'font-regular',
-		// 		'leading-[120%]',
-		// 		'mt-2'
-		// 	);
-		// 	activityDiv.classList.add(
-		// 		'activity',
-		// 		'text-sm',
-		// 		'text-customBlack',
-		// 		'font-hind',
-		// 		'font-regular',
-		// 		'leading-[110%]',
-		// 		'mt-2'
-		// 	);
-
-		// 	nameDiv.textContent = partner.data().partner_name;
-		// 	addressDiv.textContent = partner.data().partner_city;
-		// 	activityDiv.textContent = partner.data().activity_nature;
-
-		// 	// if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
-		// 	// {
-		// 	//   partner.activities.forEach( (activity) => {
-		// 	//     activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
-		// 	//   });
-		// 	// }
-
-		// 	listItem.classList.add(
-		// 		'accordion',
-		// 		'py-6',
-		// 		'px-8',
-		// 		'border-b',
-		// 		'border-customGray'
-		// 	);
-		// 	anchor.classList.add('accordion', 'link');
-
-		// 	// Append elements to the DOM
-		// 	anchor.appendChild(nameDiv);
-		// 	anchor.appendChild(addressDiv);
-		// 	anchor.appendChild(activityDiv);
-
-		// 	listItem.appendChild(anchor);
-		// 	containerDiv.appendChild(img);
-		// 	containerDiv.appendChild(listItem);
-		// 	locationList.appendChild(containerDiv);
-		// });
-
-		//populate ul with partners
 		Object.keys(partners).forEach((partner) => {
 			const containerDiv = document.createElement('div');
 			const img = document.createElement('svg');
@@ -250,8 +171,11 @@ getDocs(col_ref)
 		console.error('Error getting documents: ', error);
 	});
 
+var currently_viewed_activity = null;
+
 // Display partner modal by clicking partner entry (WIP: and on pin pop up click)
 function showModal(partner) {
+	currently_viewed_activity = null;
 	console.log("SHOW THE MODAL");
 	const modal = document.getElementById('partnerModal');
 	const modalContent = document.getElementById('modalContent');
@@ -283,6 +207,7 @@ function showModal(partner) {
   backarrowDiv.innerHTML = '<svg viewBox="0 0 1024 1024" class="w-6 h-6" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#a0a0a0" stroke="#a0a0a0" stroke-width="50" transform="matrix(-1, 0, 0, -1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="#a0a0a0"></path></g></svg>'
   backarrowDiv.classList.add("float-left");
   backarrowDiv.addEventListener("click", () => {
+		currently_viewed_activity = null;
 	  modalHeader.innerHTML = "";
 	  modalContent.innerHTML = "";
 
@@ -324,7 +249,6 @@ function showModal(partner) {
   if (partner.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
   {
     partner.forEach((activity) => {
-		console.log(activity);
       // View activity details button
       const activityButton = document.createElement("button");
 	  activityButton.classList.add("modal-activities", "flex", "flex-row", "justify-between");
@@ -361,6 +285,10 @@ function showModal(partner) {
 
       // View activity details in modal after clicking activity
       activityButton.addEventListener("click", () => {
+		let iden = activity.identifier;
+		console.log("clicked on activity with ID: " + iden);
+		currently_viewed_activity = iden;
+		
 		modalHeader.innerHTML= "";
         modalContent.innerHTML = "";
         
@@ -414,6 +342,7 @@ function showModal(partner) {
 	const closeButton = document.getElementsByClassName('close')[0];
 	closeButton.addEventListener('click', () => {
 		modal.style.display = 'none';
+		currently_viewed_activity = null;
 	});
 
 
@@ -423,42 +352,90 @@ function showModal(partner) {
     editButtons[i].addEventListener(
       'click',
       function () {		
-        console.log("Clicked edit activity");	
+        console.log("Clicked edit activity");
+		console.log("currently editing doc id: " + currently_viewed_activity);	
 
-        //Close activity details modal
-        document.getElementById("partnerModal").style.display = "none";
-        console.log("Activity modal closed");
-        					
-        // Select the modal and partnerName elements
-        var modal =
-          document.getElementById(
-            'editModal'
-          );
+		//don't do anything if the currently viewed activity is null
 
-        var partnerModal =
-          document.getElementById(
-            'partnerModal'
-          );
-        // TODO: Integrate this functionality into the modal instead
-        // var partnerName = this.getAttribute("data-loc");
-        //       window.open(
-        //         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
-        //         "_blank"
-        //       );
+		if( currently_viewed_activity != null){
+			//Close activity details modal
+			document.getElementById("partnerModal").style.display = "none";
+			console.log("Activity modal closed");
+								
+			// Select the modal and partnerName elements
+			var modal =
+			  document.getElementById(
+				'editModal'
+			  );
+	
+			var partnerModal =
+			  document.getElementById(
+				'partnerModal'
+			  );
+			// TODO: Integrate this functionality into the modal instead
+			// var partnerName = this.getAttribute("data-loc");
+			//       window.open(
+			//         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
+			//         "_blank"
+			//       );
+			  
+			// Display the modal
+			modal.classList.remove('hidden');
+			modal.classList.add('flex');
+			partnerModal.classList.add('hidden'); // Not sure if this should be hidden nalang, or should be kept open with the editModal on top nalang
+			  
+			// Close the modal when the user clicks anywhere outside of it
+			window.onclick = function (event) {
+				console.log(event.target);
+				if (event.target == modal) {
+				modal.classList.add('hidden');
+				}
+		  	};
 
-        // Display the modal
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        partnerModal.classList.add('hidden'); // Not sure if this should be hidden nalang, or should be kept open with the editModal on top nalang
+			//populate the fields of the modal
+			console.log(activities[currently_viewed_activity]);
+			Object.keys(activities[currently_viewed_activity]).forEach((activity_field) => {
+				console.log(activity_field);
+				document.getElementById(activity_field).value = activities[currently_viewed_activity][activity_field];
+			});
 
-        // Close the modal when the user clicks anywhere outside of it
-        window.onclick = function (event) {
-          if (event.target == modal) {
-            modal.classList.add('hidden');
-          }
-        };
+			
+		}
+		else {
+			console.log("Cannot edit a null document");
+		}
+
+		
+
+        
       }
     );
   }
+}
+
+document.getElementById("submit_form").addEventListener('click', submitEdit);
+
+function submitEdit(){
+	console.log("submitted edit for doc with id: " + currently_viewed_activity);
+	let collated_input = {};
+
+	for(let i = 0; i < SDECE_RULES[2].length; i++){
+		//SDECE_RULES_TEST[2] are just the field names of each document
+		console.log(SDECE_RULES[2][i]);
+		let q = document.getElementById(SDECE_RULES[2][i]).value;
+		collated_input[SDECE_RULES[2][i]] = q;
+
+		// this is where data validation will happen
+		// add the if-else statements of edge cases here
+	}
+
+	collated_input["identifier"] = currently_viewed_activity;
+
+	console.log("collated input");
+	console.log(collated_input);
+	// This actually works but it needs some data validation
+	// uncomment at the db's risk
+	editEntry(collated_input, currently_viewed_activity);
+
 }
 

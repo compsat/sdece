@@ -118,16 +118,16 @@ export const DB_RULES_AND_DATA = [
 			'activity_name',
 			'activity_nature',
 			'additional_partnership',
-			'admu_contact',
-			'admu_email',
-			'admu_office',
+			'ADMU_contact_name',
+			'ADMU_email',
+			'ADMU_office',
 			'organization_unit',
-			'partner_city',
-			'partner_contact',
+			'partner_address',
+			'partner_contact_name',
+			'partner_contact_number',
 			'partner_coordinates',
 			'partner_email',
 			'partner_name',
-			'partner_number',
 		],
 	],
 	[
@@ -138,16 +138,16 @@ export const DB_RULES_AND_DATA = [
 			'activity_name',
 			'activity_nature',
 			'additional_partnership',
-			'admu_contact',
-			'admu_email',
-			'admu_office',
+			'ADMU_contact_name',
+			'ADMU_email',
+			'ADMU_office',
 			'organization_unit',
-			'partner_city',
-			'partner_contact',
+			'partner_address',
+			'partner_contact_name',
+			'partner_contact_number',
 			'partner_coordinates',
 			'partner_email',
 			'partner_name',
-			'partner_number',
 		],
 	],
 ];
@@ -274,20 +274,30 @@ export function addEntry(inp_obj){
     }
 }
 
-export function editEntry(inp_array, docId) {
+export async function editEntry(inp_obj, docId) {
+	//console.log(inp_array);
 	console.log('edit entry with id ' + docId);
 
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_reference.id) {
 			const DOC_REFERENCE = doc(DB, rule[0], docId);
 
+			console.log(DOC_REFERENCE.data);
+
 			let input = {}; // contents depend on the rule engine
-			for (let i = 0; i < inp_array.length; i++) {
-				input[rule[2][i]] = inp_array[i];
-			}
-			updateDoc(DOC_REFERENCE, input)
+			//for (let i = 0; i < inp_array.length; i++) {
+			Object.keys(inp_obj).forEach((field) => {
+				input[field] = inp_obj[field];
+			});
+				
+			
+			//updateDoc(DOC_REFERENCE, input)
+
+			console.log(input);
+			await updateDoc(DOC_REFERENCE, input)
 				.then((docRef) => {
-					console.log('Document written with ID: ', docRef.id);
+					console.log("it worked");
+					//console.log('Document written with ID: ', docRef.id);
 				})
 				.catch((error) => {
 					console.error('Error adding document: ', error);
