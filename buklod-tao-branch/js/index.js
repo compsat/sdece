@@ -1,6 +1,6 @@
 
 import {  } from "./firestore.js";
-import { getDocIdByPartnerName, getDocByID, setCollection, getCollection, DB } from "/firestore_UNIV.js";
+import { getDocIdByPartnerName, getDocByID, setCollection, getCollection, DB, addEntry, BUKLOD_RULES_TEST } from "/firestore_UNIV.js";
 import { getDivContent, addListeners, map } from "/index_UNIV.js";
 import {
   getFirestore,
@@ -27,11 +27,15 @@ getDocs(colRef)
   .then((querySnapshot) => {
     querySnapshot.forEach((entry) => {
       var doc = entry.data();
+      var marker = L.marker([0, 0]);
       //console.log(doc);
-      var marker = L.marker([
-        parseFloat(doc.location_coordinates._lat),
-        parseFloat(doc.location_coordinates._long),
-      ]);
+      if(doc.location_coordinates != null){
+
+        marker = L.marker([
+          parseFloat(doc.location_coordinates._lat),
+          parseFloat(doc.location_coordinates._long),
+        ]);
+      }
       var popupContent = `
       <div class="leaflet-popup-container">
       <h2 class="partner-header">${doc.household_name}</h2>          

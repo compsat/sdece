@@ -131,7 +131,7 @@ function showModal(partner) {
   const modalHeader = document.getElementById("modalHeader");
   const modalContactNumber = document.getElementById("entry_contact_number");
   const modalAddress = document.getElementById("entry_address");
-  //const modalResidencyStatus = document.getElementById("entry_residency_status");
+  const modalResidencyStatus = document.getElementById("entry_residency_status");
   const modalHOA = document.getElementById("entry_HOA/NOA");
   const modalEvacArea = document.getElementById("entry_nearest_evacuation_area");
   const modalEarthquakeRL = document.getElementById("entry_earthquake_risk_level");
@@ -155,7 +155,7 @@ function showModal(partner) {
   modalHeader.innerHTML = "";
   modalContactNumber.innerHTML = "";
   modalAddress.innerHTML = "";
-  //modalResidencyStatus.innerHTML = "";
+  modalResidencyStatus.innerHTML = "";
   modalHOA.innerHTML = "";
   modalEvacArea.innerHTML = "";
   modalEarthquakeRL.innerHTML = "";
@@ -174,11 +174,17 @@ function showModal(partner) {
   modalPWD.innerHTML = "";
   modalSick.innerHTML = "";
   modalPregnant.innerHTML = "";
+  document.getElementById("default_earthquake").innerHTML = "";
+  document.getElementById("default_fire").innerHTML = "";
+  document.getElementById("default_flood").innerHTML = "";
+  document.getElementById("default_landslide").innerHTML = "";
+  document.getElementById("default_storm").innerHTML = "";
 
   // Create div elements for each piece of information
   const nameDiv = document.createElement("div");
   const contactNumberDiv = document.createElement("div");
   const addressDiv = document.createElement("div");
+  const residentsDiv = document.createElement("div");
   const isHOANOADiv = document.createElement("div");
   const evacAreaDiv = document.createElement("div");
   const earthquakeRiskLevelDiv = document.createElement("div");
@@ -199,23 +205,23 @@ function showModal(partner) {
   const pregnantResidentsDiv = document.createElement("div");
 
   var earthquake = partner.earthquake_risk;
-  var earthquake_split = earthquake.split(':');
+  var earthquake_split = earthquake.split(' RISK: ');
   var earthquake1 = earthquake_split[0];
   var earthquake2 = earthquake_split[1];
   var fire = partner.fire_risk;
-  var fire_split = fire.split(':');
+  var fire_split = fire.split(' RISK: ');
   var fire1 = fire_split[0];
   var fire2 = fire_split[1];
   var flood = partner.flood_risk;
-  var flood_split = flood.split(':');
+  var flood_split = flood.split(' RISK: ');
   var flood1 = flood_split[0];
   var flood2 = flood_split[1];
   var landslide = partner.landslide_risk;
-  var landslide_split = landslide.split(':');
+  var landslide_split = landslide.split(' RISK: ');
   var landslide1 = landslide_split[0];
   var landslide2 = landslide_split[1];
   var storm = partner.storm_risk;
-  var storm_split = storm.split(':');
+  var storm_split = storm.split(' RISK: ');
   var storm1 = storm_split[0];
   var storm2 = storm_split[1];
 
@@ -227,19 +233,19 @@ function showModal(partner) {
   // Set the content of each div
   nameDiv.textContent = partner.household_name;
   contactNumberDiv.innerHTML = partner.contact_number;
-  addressDiv.textContent = partner.household_address + " " + partner.household_phase;
-  //residentsDiv.innerHTML += "<div>" + partner.residency_status + "</div>";
+  addressDiv.textContent = partner.household_address;
+  residentsDiv.innerHTML = partner.residency_status;
   isHOANOADiv.innerHTML = partner.is_hoa_noa;
   evacAreaDiv.innerHTML = partner.nearest_evac;
-  earthquakeRiskLevelDiv.innerHTML = earthquake1;
+  earthquakeRiskLevelDiv.innerHTML = earthquake1 + " RISK";
   earthquakeRiskDescDiv.innerHTML = earthquake2;
-  fireRiskLevelDiv.innerHTML = fire1;
+  fireRiskLevelDiv.innerHTML = fire1  + " RISK";
   fireRiskDescDiv.innerHTML = fire2;
-  floodRiskLevelDiv.innerHTML = flood1;
+  floodRiskLevelDiv.innerHTML = flood1  + " RISK";
   floodRiskDescDiv.innerHTML = flood2;
-  landslideRiskLevelDiv.innerHTML = landslide1;
+  landslideRiskLevelDiv.innerHTML = landslide1  + " RISK";
   landslideRiskDescDiv.innerHTML = landslide2;
-  stormRiskLevelDiv.innerHTML = storm1;
+  stormRiskLevelDiv.innerHTML = storm1  + " RISK";
   stormRiskDescDiv.innerHTML = storm2;
   totalResidentsDiv.innerHTML = partner.number_residents;
   minorResidentsDiv.innerHTML = partner.number_minors;
@@ -252,7 +258,7 @@ function showModal(partner) {
   modalHeader.appendChild(nameDiv);
   modalContactNumber.appendChild(contactNumberDiv);
   modalAddress.appendChild(addressDiv);
-  //modalResidencyStatus.appendChild(nameDiv);
+  modalResidencyStatus.appendChild(residentsDiv);
   modalHOA.appendChild(isHOANOADiv);
   modalEvacArea.appendChild(evacAreaDiv);
   modalEarthquakeRL.appendChild(earthquakeRiskLevelDiv);
@@ -314,15 +320,15 @@ function showModal(partner) {
     document.getElementById("edit_number_of_pwd_residents").value = partner.number_pwd;
     document.getElementById("edit_number_of_sick_residents").value = partner.number_sick;
     document.getElementById("edit_number_of_pregnant_residents").value = partner.number_pregnant;
-    document.getElementById("edit_earthquake_risk_level").value = earthquake1;
+    document.getElementById("default_earthquake").append(earthquake1);
     document.getElementById("edit_earthquake_desc").value = earthquake2;
-    document.getElementById("edit_fire_risk_level").value = fire1;
+    document.getElementById("default_fire").append(fire1);
     document.getElementById("edit_fire_desc").value = fire2;
-    document.getElementById("edit_flood_risk_level").value = flood1;
+    document.getElementById("default_flood").append(flood1);
     document.getElementById("edit_flood_desc").value = flood2;
-    document.getElementById("edit_landslide_risk_level").value = landslide1;
+    document.getElementById("default_landslide").append(landslide1);
     document.getElementById("edit_landslide_desc").value = landslide2;
-    document.getElementById("edit_storm_risk_level").value = storm1;
+    document.getElementById("default_storm").append(storm1);
     document.getElementById("edit_storm_desc").value = storm2;
   }
   

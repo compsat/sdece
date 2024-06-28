@@ -39,9 +39,37 @@
 </head>
 
 <body>
-  <!--Logout Button-->
-  <div class="top-bar">
-    <button class="button-logout"><img class="logoutIcon" src="./img/logout.256x256.png" alt="logout"> Logout</button>
+  <!--Side menu: where the add location function, search bar, and list entries are-->
+  <div class="main">
+    <div class="sidenav">
+      <!--Search Bar-->
+      <div class="buttons">
+        <input class="search-bar" type="search" placeholder="Search... " oninput="searchEntries()">
+      </div>
+      <button class="container label-font" id="addHousehold" name="addHousehold">+ Add a Household</button>
+        <!--<button class="container label-font" href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon">
+        <path d="M23.7844 9.8585L21.4937 7.56787L10.1594 18.8991L9.67188 21.6804L12.45 21.1897L23.7844 9.8585Z"
+          fill="#568D9E" />
+        <path
+          d="M27.5 26.9741H4.5C3.94687 26.9741 3.5 27.421 3.5 27.9741V29.0991C3.5 29.2366 3.6125 29.3491 3.75 29.3491H28.25C28.3875 29.3491 28.5 29.2366 28.5 29.0991V27.9741C28.5 27.421 28.0531 26.9741 27.5 26.9741ZM8.05313 24.3491C8.11563 24.3491 8.17813 24.3429 8.24063 24.3335L13.4969 23.4116C13.5594 23.3991 13.6188 23.371 13.6625 23.3241L26.9094 10.0772C26.9383 10.0483 26.9613 10.014 26.977 9.97619C26.9927 9.93839 27.0008 9.89786 27.0008 9.85693C27.0008 9.81601 26.9927 9.77548 26.977 9.73768C26.9613 9.69987 26.9383 9.66553 26.9094 9.63662L21.7156 4.43975C21.6562 4.38037 21.5781 4.34912 21.4937 4.34912C21.4094 4.34912 21.3313 4.38037 21.2719 4.43975L8.025 17.6866C7.97812 17.7335 7.95 17.7897 7.9375 17.8522L7.01562 23.1085C6.98522 23.2759 6.99609 23.4482 7.04727 23.6105C7.09846 23.7727 7.18842 23.9201 7.30937 24.0397C7.51562 24.2397 7.775 24.3491 8.05313 24.3491ZM10.1594 18.8991L21.4937 7.56787L23.7844 9.8585L12.45 21.1897L9.67188 21.6804L10.1594 18.8991Z"
+          fill="#568D9E" />
+        </svg> Edit Location
+        </button>-->
+      <div class="entries">
+        <ul id="locationList" class="accordion">
+        </ul>
+      </div>
+    </div>
+    <!--Logout Button-->
+    <div class="top-bar">
+      <p>TEST</p>
+      <button class="button-logout"><img class="logoutIcon" src="./img/logout.256x256.png" alt="logout"> Logout</button>
+    </div>
+    <div class="map-container">
+      <div id="map">
+      </div>
+    </div>
   </div>
 
   <!--Modals of Entries-->
@@ -76,7 +104,7 @@
       </div>
       <!--Risk Levels-->
       <button type="button" class="collapsible">Risk Levels</button>
-      <div class="colcontent" style="display: none;">
+      <div class="colcontent" style="display: block;">
         <div class="modal-line">
           <label class="modal-label">Earthquake</label>
           <label class="modal-label" id="entry_earthquake_risk_level">RISK LEVEL</label>
@@ -115,7 +143,7 @@
       </div>
       <!--Residents-->
       <button type="button" class="collapsible">Residents</button>
-      <div class="colcontent" style="display: none;">
+      <div class="colcontent" style="display: block;">
         <br>
         <div class="modal-line">
           <label class="modal-label">Total</label>
@@ -173,69 +201,69 @@
       <!-- add Household form-->
       <div class="input_container">
           <label class="form" for="household_name">Household Name</label>
-          <input type="text" id="household_name" name="household_name" class="attribs" placeholder="">
+          <input type="text" id="household_name" name="household_name" class="attribs">
       </div>
       <br>
       <div class="input_container">
           <label class="form" for="address">Address</label>
-          <input type="text" id="address" name="address" class="attribs" placeholder="">    
+          <input type="text" id="address" name="address" class="attribs">    
       </div>
       <br>
       <div class="input_container">
           <label class="form" for="contact_number">Contact Number</label>
-          <input type="text" id="contact_number" name="contact_number" class="attribs" placeholder="">    
+          <input type="text" id="contact_number" name="contact_number" class="attribs">    
       </div>
       <br>
       <div class="input_container">
           <label class="form" for="residency_status">Residency Status</label>
-          <input type="text" id="residency_status" name="residency_status" class="attribs" placeholder=""> 
+          <input type="text" id="residency_status" name="residency_status" class="attribs"> 
       </div>
       <br>
       <div class="input_container">
           <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
-          <input type="text" id="HOA/NOA" name="HOA/NOA" class="attribs" placeholder=""> 
+          <input type="checkbox" id="HOA/NOA" name="HOA/NOA" class="attribs" style="margin-right: 203px; height: 30px;">
       </div>
       <br>
       <div class="input_container">
           <label class="form" for="materials_used_for_house">Materials Used for House</label>
-          <input type="text" id="materials_used_for_house" name="materials_used_for_house" class="attribs" placeholder=""> 
+          <input type="text" id="materials_used_for_house" name="materials_used_for_house" class="attribs"> 
       </div>
       <br>
       <div class="input_container">
           <label class="form" for="nearest_evacuation_area">Nearest Evacuation Area</label>
-          <input type="text" id="nearest_evacuation_area" name="nearest_evacuation_area" class="attribs" placeholder="">    
+          <input type="text" id="nearest_evacuation_area" name="nearest_evacuation_area" class="attribs">    
       </div>
       <br>
       <h2 class="sub-header">RESIDENT INFORMATION</h2>
       <br>
       <div class="input_container">
           <label class="form" for="number_of_residents">Number of Residents</label>
-          <input type="text" id="number_of_residents" name="number_of_residents" class="attribs" placeholder="">    
+          <input type="text" id="number_of_residents" name="number_of_residents" class="attribs">    
       </div>
       <br>
       <div class="input_container">
           <label class="form" for="number_of_minor_residents">Number of Minor Residents</label>
-          <input type="text" id="number_of_minor_residents" name="number_of_minor_residents" class="attribs" placeholder="">
+          <input type="text" id="number_of_minor_residents" name="number_of_minor_residents" class="attribs">
       </div>
       <br>
       <div class="input_container">
           <label class="form" for="number_of_senior_residents">Number of Senior Citizen Residents</label>
-          <input type="text" id="number_of_senior_residents" name="number_of_senior_residents" class="attribs" placeholder="">
+          <input type="text" id="number_of_senior_residents" name="number_of_senior_residents" class="attribs">
       </div>
       <br>
       <div class="input_container">
           <label class="form" for="number_of_pwd_residents">Number of PWD Residents</label>
-          <input type="text" id="number_of_pwd_residents" name="number_of_pwd_residents" class="attribs" placeholder="">
+          <input type="text" id="number_of_pwd_residents" name="number_of_pwd_residents" class="attribs">
       </div>
       <br>
       <div class="input_container">
           <label class="form" for="number_of_sick_residents">Number of Sick Residents</label>
-          <input type="text" id="number_of_sick_residents" name="number_of_sick_residents" class="attribs" placeholder="">
+          <input type="text" id="number_of_sick_residents" name="number_of_sick_residents" class="attribs">
       </div>
       <br>
       <div class="input_container">
           <label class="form" for="number_of_pregnant_residents">Number of Pregnant Residents</label>
-          <input type="text" id="number_of_pregnant_residents" name="number_of_pregnant_residents" class="attribs" placeholder="">
+          <input type="text" id="number_of_pregnant_residents" name="number_of_pregnant_residents" class="attribs">
       </div>
       <br>
       <h2 class="sub-header">RISK LEVELS</h2>
@@ -248,7 +276,7 @@
               <option value="medium">MEDIUM</option>
               <option value="low">LOW</option>
           </select>
-          <input type="text" id="earthquake" name="earthquake" class="attribs" placeholder="">
+          <input type="text" id="earthquake" name="earthquake" class="attribs">
       </div>
       <br>
       <div class="input_container">
@@ -259,7 +287,7 @@
               <option value="medium">MEDIUM</option>
               <option value="low">LOW</option>
           </select>
-          <input type="text" id="fire" name="fire" class="attribs" placeholder="">
+          <input type="text" id="fire" name="fire" class="attribs">
       </div>
       <br>
       <div class="input_container">
@@ -270,7 +298,7 @@
               <option value="medium">MEDIUM</option>
               <option value="low">LOW</option>
           </select>
-          <input type="email" id="flood" name="flood" class="attribs" placeholder="">
+          <input type="email" id="flood" name="flood" class="attribs">
       </div>
       <br>
       <div class="input_container">
@@ -281,7 +309,7 @@
               <option value="medium">MEDIUM</option>
               <option value="low">LOW</option>
           </select>
-          <input type="email" id="landslide" name="landslide" class="attribs" placeholder="">
+          <input type="email" id="landslide" name="landslide" class="attribs">
       </div>
       <br>
       <div class="input_container">
@@ -292,7 +320,7 @@
               <option value="medium">MEDIUM</option>
               <option value="low">LOW</option>
           </select>
-          <input type="email" id="storm" name="storm" class="attribs" placeholder="">
+          <input type="email" id="storm" name="storm" class="attribs">
       </div>
       <!-- save and Delete buttons -->
       <div class="button-container">
@@ -396,7 +424,7 @@
       <div class="input_container">
           <label class="disaster-form" for="earthquake">Earthquake</label>
           <select name="earthquake_level" id="edit_earthquake_risk_level" class="attribs">
-              <option value="" disabled selected hidden></option>
+              <option id="default_earthquake" value="" disabled selected hidden></option>
               <option value="high">HIGH</option>
               <option value="medium">MEDIUM</option>
               <option value="low">LOW</option>
@@ -407,7 +435,7 @@
       <div class="input_container">
           <label class="disaster-form" for="fire">Fire</label>
           <select name="fire_level" id="edit_fire_risk_level" class="attribs">
-              <option value="" disabled selected hidden></option>
+              <option id="default_fire" value="" disabled selected hidden></option>
               <option value="high">HIGH</option>
               <option value="medium">MEDIUM</option>
               <option value="low">LOW</option>
@@ -418,7 +446,7 @@
       <div class="input_container">
           <label class="disaster-form" for="flood">Flood</label>
           <select name="flood_level" id="edit_flood_risk_level" class="attribs">
-              <option value="" disabled selected hidden></option>
+              <option id="default_flood" value="" disabled selected hidden></option>
               <option value="high">HIGH</option>
               <option value="medium">MEDIUM</option>
               <option value="low">LOW</option>
@@ -429,7 +457,7 @@
       <div class="input_container">
           <label class="disaster-form" for="landslide">Landslide</label>
           <select name="landslide_level" id="edit_landslide_risk_level" class="attribs">
-              <option value="" disabled selected hidden></option>
+              <option id="default_landslide" value="" disabled selected hidden></option>
               <option value="high">HIGH</option>
               <option value="medium">MEDIUM</option>
               <option value="low">LOW</option>
@@ -440,7 +468,7 @@
       <div class="input_container">
           <label class="disaster-form" for="storm">Storm</label>
           <select name="storm_level" id="edit_storm_risk_level" class="attribs">
-              <option value="" disabled selected hidden></option>
+              <option id="default_storm" value="" disabled selected hidden></option>
               <option value="high">HIGH</option>
               <option value="medium">MEDIUM</option>
               <option value="low">LOW</option>
@@ -464,34 +492,6 @@
      <div class="formModalFooter"></div>
   </div>
   
-  <!--Side menu: where the add location function, search bar, and list entries are-->
-  <div class="main">
-    <div class="sidenav">
-      <!--Search Bar-->
-      <div class="buttons">
-        <input class="search-bar" type="search" placeholder="Search... " oninput="searchEntries()">
-      </div>
-      <button class="container label-font" id="addHousehold" name="addHousehold">+ Add a Household</button>
-        <!--<button class="container label-font" href="#">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon">
-        <path d="M23.7844 9.8585L21.4937 7.56787L10.1594 18.8991L9.67188 21.6804L12.45 21.1897L23.7844 9.8585Z"
-          fill="#568D9E" />
-        <path
-          d="M27.5 26.9741H4.5C3.94687 26.9741 3.5 27.421 3.5 27.9741V29.0991C3.5 29.2366 3.6125 29.3491 3.75 29.3491H28.25C28.3875 29.3491 28.5 29.2366 28.5 29.0991V27.9741C28.5 27.421 28.0531 26.9741 27.5 26.9741ZM8.05313 24.3491C8.11563 24.3491 8.17813 24.3429 8.24063 24.3335L13.4969 23.4116C13.5594 23.3991 13.6188 23.371 13.6625 23.3241L26.9094 10.0772C26.9383 10.0483 26.9613 10.014 26.977 9.97619C26.9927 9.93839 27.0008 9.89786 27.0008 9.85693C27.0008 9.81601 26.9927 9.77548 26.977 9.73768C26.9613 9.69987 26.9383 9.66553 26.9094 9.63662L21.7156 4.43975C21.6562 4.38037 21.5781 4.34912 21.4937 4.34912C21.4094 4.34912 21.3313 4.38037 21.2719 4.43975L8.025 17.6866C7.97812 17.7335 7.95 17.7897 7.9375 17.8522L7.01562 23.1085C6.98522 23.2759 6.99609 23.4482 7.04727 23.6105C7.09846 23.7727 7.18842 23.9201 7.30937 24.0397C7.51562 24.2397 7.775 24.3491 8.05313 24.3491ZM10.1594 18.8991L21.4937 7.56787L23.7844 9.8585L12.45 21.1897L9.67188 21.6804L10.1594 18.8991Z"
-          fill="#568D9E" />
-        </svg> Edit Location
-        </button>-->
-      <div class="entries">
-        <ul id="locationList" class="accordion">
-        </ul>
-      </div>
-    </div>
-    <div class="map-container">
-      <div id="map">
-      </div>
-    </div>
-  </div>
-  
   <!--script for map-->
   <script type="module" src="js/index.js"></script>
 
@@ -504,12 +504,12 @@
       coll[i].addEventListener("click", function() {
         this.classList.toggle("active");
         var colcontent = this.nextElementSibling;
-        if (colcontent.style.display === "none") {
-          colcontent.style.display = "block";
-          coll.style.transform = "rotate(180deg)";
-        } else {
+        if (colcontent.style.display === "block") {
           colcontent.style.display = "none";
           coll.style.transform = "none";
+        } else {
+          colcontent.style.display = "block";
+          coll.style.transform = "rotate(180deg)";
         }
       });
     }
@@ -556,29 +556,6 @@
   }
   </script>
 
-  <!--<script>
-  //script for edit household modal
-
-  // modal
-  var editFormModal = document.getElementById("editForm-modal");
-  
-  // open modal
-  var openEditForm = document.getElementById("editHousehold");
-  
-  // Get the <span> element that closes the modal
-  var closeEditForm = document.getElementsByClassName("close-editForm")[0];
-  
-  // When the user clicks the button, open the modal 
-  openEditForm.onclick = function() {
-    editFormModal.style.display = "block";
-    document.getElementById("edit_household_name").value = 'nameDiv';
-  }
-  
-  // When the user clicks on <span> (x), close the modal
-  closeEditForm.onclick = function() {
-    editFormModal.style.display = "none";
-  }
-  </script>-->
 </body>
 
 </html>
