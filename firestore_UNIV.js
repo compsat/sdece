@@ -335,7 +335,7 @@ export function validateData(collectionName, data) {
 		}
 
 		// Skip type validation if not required
-		if (!rule.required && (value == undefined || value == null)) {
+		if (!rule.required && (value == undefined || value == null || value == '')) {
 			continue;
 		}
 
@@ -359,13 +359,13 @@ export function validateData(collectionName, data) {
 		}
 
 
-		// Check for regular expression field
+		// Check for regular expression pattern
 		if (rule.regex && !rule.regex.test(value)) {
 			errors.push(`Field '${field}' is invalid.`);
 			continue;
 		}
 
-		// Check for enum field
+		// Check for enumerated values
 		if (rule.enum && !rule.enum.includes(value)) {
 			errors.push(`Field '${field}' must be one of ${rule.enum.join(',')}.`);
 			continue;
