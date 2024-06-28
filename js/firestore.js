@@ -39,7 +39,9 @@ getDocs(col_ref)
 				doc.data().name !== 'Test 2' ||
 				doc.data().name !== 'Test2'
 			) {
-				activities.push(doc.data());
+				let a = doc.data();
+				a["identifier"] = doc.id;
+				activities.push(a);
 			}
 		});
 
