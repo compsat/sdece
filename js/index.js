@@ -70,13 +70,11 @@ getDocs(colRef)
 				results.addLayer(marker);
 
 				marker.on('popupopen', function () {
-					var pin = document.getElementsByClassName('partner-popup')[0];
-					pin.addEventListener(
-						'click',
-						function () {
-
-						}
-					);
+					var pin =
+						document.getElementsByClassName(
+							'partner-popup'
+						)[0];
+					pin.addEventListener('click', function () {});
 					// var expandButtons =
 					// 	document.getElementsByClassName('expandPopUp');
 					// for (var i = 0; i < expandButtons.length; i++) {
@@ -239,4 +237,3 @@ function testFunction() {
 	m.classList.remove('hidden');
 	m.classList.add('flex');
 }
-
