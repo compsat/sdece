@@ -32,7 +32,7 @@ function onPinClick(doc){
     </div>
     <div class="leafletContent">
       <br>
-      <div class="leafletDetails>
+      <div styel="line-height: 1px;">
         <p>${doc.contact_number}</p>
         <p>${doc.household_address}</p>
       </div>
