@@ -5,7 +5,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NSTP Hazard Mapping</title>
-  <meta name="viewport" content="width=device-width,user-scalable=no" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
   <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
 
   <!--Load Leaflet from CDN-->
@@ -32,7 +33,7 @@
   <!--Load CSS sheets and Firestore Database-->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/form.css">
-  <!--<script type="module" src="js/firestore.js"></script>-->
+  <script type="module" src="js/firestore.js"></script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -47,7 +48,7 @@
   <div id="partnerModal" class="modal">
     <!--Modal Header: includes household owner-->
     <div class="modal-header">
-      <p id="modalHeader"></p>
+      <h1 id="modalHeader" class="modal-name"></h1>
       <span class="close">&times;</span>
     </div>
     <!--Modal Content: content of the entries-->
@@ -88,28 +89,28 @@
           <label class="modal-label" id="entry_fire_risk_level">RISK LEVEL</label>
         </div>
         <div>
-          <p class="modal-text" id="entry_earthquake_desc">Sample text</p>
+          <p class="modal-text" id="entry_fire_desc">Sample text</p>
         </div>
         <div class="modal-line">
           <label class="modal-label">Flood</label>
           <label class="modal-label" id="entry_flood_risk_level">RISK LEVEL</label>
         </div>
         <div>
-          <p class="modal-text" id="entry_earthquake_desc">Sample text</p>
+          <p class="modal-text" id="entry_flood_desc">Sample text</p>
         </div>
         <div class="modal-line">
           <label class="modal-label">Landslide</label>
           <label class="modal-label" id="entry_landslide_risk_level">RISK LEVEL</label>
         </div>
         <div>
-          <p class="modal-text" id="entry_earthquake_desc">Sample text</p>
+          <p class="modal-text" id="entry_landslide_desc">Sample text</p>
         </div>
         <div class="modal-line">
           <label class="modal-label">Storm</label>
           <label class="modal-label" id="entry_storm_risk_level">RISK LEVEL</label>
         </div>
         <div>
-          <p class="modal-text" id="entry_earthquake_desc">Sample text</p>
+          <p class="modal-text" id="entry_storm_desc">Sample text</p>
         </div>
       </div>
       <!--Residents-->
@@ -152,24 +153,24 @@
     <div class="modal-footer">
       <div class="modal-line">
         <button class="modal-button" type="submit" id="submit_form" name="submit_form" style="color:#D64747">Delete &nbsp;&nbsp;<img src="./img/delete.png" alt="delete" style="height: 20px; width: 20px;"></button>   
-        <button class="modal-button" type="submit" id="submit_form" name="submit_form" style="color:#3D97AF">Edit   &nbsp;&nbsp;<img src="./img/edit.png" alt="edit" style="height: 20px; width: 20px;"></button>   
+        <button class="modal-button" id="editHousehold" name="submit_form" style="color:#3D97AF">Edit   &nbsp;&nbsp;<img src="./img/edit.png" alt="edit" style="height: 20px; width: 20px;"></button>   
       </div>
     </div>
   </div>
 
-  <!--Modals of forms-->
+  <!--modal for add household form-->
   <div id="form-modal" class="form-modal" style="display: none;">
-    <!--Modal Header: includes title and address-->
+    <!--modal Header: includes title and address-->
     <div class="form-modal-header">
       <span class="close-form">&times;</span>
       <h1 class="form-header">Add Household</h1>
     </div>
 
-    <!--Modal Content: everything else-->
+    <!--modal Content: everything else-->
     <div class="form-modal-content">
       <h2 class="sub-header">HOUSEHOLD INFORMATION</h2>
       <br>
-      <!-- Add Household Form modal-->
+      <!-- add Household form-->
       <div class="input_container">
           <label class="form" for="household_name">Household Name</label>
           <input type="text" id="household_name" name="household_name" class="attribs" placeholder="">
@@ -293,22 +294,173 @@
           </select>
           <input type="email" id="storm" name="storm" class="attribs" placeholder="">
       </div>
-      <br>
-      <br>
-      <br>
-      <!-- Buttons -->
-      <div>
-          <!-- Submits contents of the form -->                                               
+      <!-- save and Delete buttons -->
+      <div class="button-container">
+        <div>
+          <!-- submits contents of the form -->                                               
           <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save</button>   
         </div>
         <div>
-          <!-- Clears all contents of the form -->
+          <!-- clears all contents of the form -->
           <button class="clear form">Delete</button>
         </div>
       </div>
     </div>
 
-    <!-- Modal Footer: empty space -->
+    <!-- modal Footer: empty space -->
+     <div class="formModalFooter"></div>
+  </div>
+
+  <!--modal for edit household form-->
+  <div id="editForm-modal" class="form-modal" style="display: none;">
+    <!--modal Header: includes title and address-->
+    <div class="form-modal-header">
+      <span class="close-editForm">&times;</span>
+      <h1 class="form-header">Edit Household</h1>
+    </div>
+
+    <!--modal Content: everything else-->
+    <div class="form-modal-content">
+      <h2 class="sub-header">HOUSEHOLD INFORMATION</h2>
+      <br>
+      <!-- edit household form-->
+      <div class="input_container">
+          <label class="form" for="household_name">Household Name</label>
+          <input type="text" id="edit_household_name" name="household_name" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="address">Address</label>
+          <input type="text" id="edit_address" name="address" class="attribs" placeholder="">    
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="contact_number">Contact Number</label>
+          <input type="text" id="edit_contact_number" name="contact_number" class="attribs" placeholder="">    
+      </div>
+      <br>
+      <!--<div class="input_container">
+          <label class="form" for="residency_status">Residency Status</label>
+          <input type="text" id="residency_status" name="residency_status" class="attribs" placeholder=""> 
+      </div>
+      <br>-->
+      <div class="input_container">
+          <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
+          <input type="text" id="edit_HOA/NOA" name="HOA/NOA" class="attribs" placeholder=""> 
+      </div>
+      <br>
+      <!--<div class="input_container">
+          <label class="form" for="materials_used_for_house">Materials Used for House</label>
+          <input type="text" id="materials_used_for_house" name="materials_used_for_house" class="attribs" placeholder=""> 
+      </div>
+      <br>-->
+      <div class="input_container">
+          <label class="form" for="nearest_evacuation_area">Nearest Evacuation Area</label>
+          <input type="text" id="edit_nearest_evacuation_area" name="nearest_evacuation_area" class="attribs" placeholder="">    
+      </div>
+      <br>
+      <h2 class="sub-header">RESIDENT INFORMATION</h2>
+      <br>
+      <div class="input_container">
+          <label class="form" for="number_of_residents">Number of Residents</label>
+          <input type="text" id="edit_number_of_residents" name="number_of_residents" class="attribs" placeholder="">    
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="number_of_minor_residents">Number of Minor Residents</label>
+          <input type="text" id="edit_number_of_minor_residents" name="number_of_minor_residents" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="number_of_senior_residents">Number of Senior Citizen Residents</label>
+          <input type="text" id="edit_number_of_senior_residents" name="number_of_senior_residents" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="number_of_pwd_residents">Number of PWD Residents</label>
+          <input type="text" id="edit_number_of_pwd_residents" name="number_of_pwd_residents" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="number_of_sick_residents">Number of Sick Residents</label>
+          <input type="text" id="edit_number_of_sick_residents" name="number_of_sick_residents" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="form" for="number_of_pregnant_residents">Number of Pregnant Residents</label>
+          <input type="text" id="edit_number_of_pregnant_residents" name="number_of_pregnant_residents" class="attribs" placeholder="">
+      </div>
+      <br>
+      <h2 class="sub-header">RISK LEVELS</h2>
+      <br>
+      <div class="input_container">
+          <label class="disaster-form" for="earthquake">Earthquake</label>
+          <select name="earthquake_level" id="edit_earthquake_risk_level" class="attribs">
+              <option value="" disabled selected hidden></option>
+              <option value="high">HIGH</option>
+              <option value="medium">MEDIUM</option>
+              <option value="low">LOW</option>
+          </select>
+          <input type="text" id="edit_earthquake_desc" name="earthquake" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="disaster-form" for="fire">Fire</label>
+          <select name="fire_level" id="edit_fire_risk_level" class="attribs">
+              <option value="" disabled selected hidden></option>
+              <option value="high">HIGH</option>
+              <option value="medium">MEDIUM</option>
+              <option value="low">LOW</option>
+          </select>
+          <input type="text" id="edit_fire_desc" name="fire" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="disaster-form" for="flood">Flood</label>
+          <select name="flood_level" id="edit_flood_risk_level" class="attribs">
+              <option value="" disabled selected hidden></option>
+              <option value="high">HIGH</option>
+              <option value="medium">MEDIUM</option>
+              <option value="low">LOW</option>
+          </select>
+          <input type="email" id="edit_flood_desc" name="flood" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="disaster-form" for="landslide">Landslide</label>
+          <select name="landslide_level" id="edit_landslide_risk_level" class="attribs">
+              <option value="" disabled selected hidden></option>
+              <option value="high">HIGH</option>
+              <option value="medium">MEDIUM</option>
+              <option value="low">LOW</option>
+          </select>
+          <input type="email" id="edit_landslide_desc" name="landslide" class="attribs" placeholder="">
+      </div>
+      <br>
+      <div class="input_container">
+          <label class="disaster-form" for="storm">Storm</label>
+          <select name="storm_level" id="edit_storm_risk_level" class="attribs">
+              <option value="" disabled selected hidden></option>
+              <option value="high">HIGH</option>
+              <option value="medium">MEDIUM</option>
+              <option value="low">LOW</option>
+          </select>
+          <input type="email" id="edit_storm_desc" name="storm" class="attribs" placeholder="">
+      </div>
+      <!-- save and Delete buttons -->
+      <div class="button-container">
+        <div>
+          <!-- submits contents of the form -->                                               
+          <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save</button>   
+        </div>
+        <div>
+          <!-- clears all contents of the form -->
+          <button class="clear form">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- modal Footer: empty space -->
      <div class="formModalFooter"></div>
   </div>
   
@@ -319,7 +471,7 @@
       <div class="buttons">
         <input class="search-bar" type="search" placeholder="Search... " oninput="searchEntries()">
       </div>
-      <button class="container label-font" id="addloc-modal" href="#" style="position: relative; box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2);">+ Add a Household</button>
+      <button class="container label-font" id="addHousehold" name="addHousehold">+ Add a Household</button>
         <!--<button class="container label-font" href="#">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon">
         <path d="M23.7844 9.8585L21.4937 7.56787L10.1594 18.8991L9.67188 21.6804L12.45 21.1897L23.7844 9.8585Z"
@@ -339,8 +491,11 @@
       </div>
     </div>
   </div>
+  
   <!--script for map-->
   <script type="module" src="js/index.js"></script>
+
+  <!--script for collapsibles-->
   <script>
     var coll = document.getElementsByClassName("collapsible");
     var i;
@@ -359,6 +514,71 @@
       });
     }
   </script>
+
+  <!--script for search bar-->
+  <script>
+    function searchEntries() {
+      var input = document.querySelector('.search-bar').value.toUpperCase();
+      var ul = document.getElementById("locationList");
+      var li = ul.getElementsByTagName('li');
+      for (var i = 0; i < li.length; i++) {
+        var a = li[i].getElementsByTagName("a")[0];
+        var txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(input) > -1) {
+          li[i].style.display = "";
+        } else {
+          li[i].style.display = "none";
+        }
+      }
+    }
+  </script>
+
+  <!--script for add household modal-->
+  
+  <script>
+  // modal
+  var formModal = document.getElementById("form-modal");
+
+  // open modal
+  var openForm = document.getElementById("addHousehold");
+
+  // Get the <span> element that closes the modal
+  var closeForm = document.getElementsByClassName("close-form")[0];
+
+  // When the user clicks the button, open the modal 
+  openForm.onclick = function() {
+    formModal.style.display = "block";
+  }
+
+  // When the user clicks on <span> (x), close the modal
+  closeForm.onclick = function() {
+    formModal.style.display = "none";
+  }
+  </script>
+
+  <!--<script>
+  //script for edit household modal
+
+  // modal
+  var editFormModal = document.getElementById("editForm-modal");
+  
+  // open modal
+  var openEditForm = document.getElementById("editHousehold");
+  
+  // Get the <span> element that closes the modal
+  var closeEditForm = document.getElementsByClassName("close-editForm")[0];
+  
+  // When the user clicks the button, open the modal 
+  openEditForm.onclick = function() {
+    editFormModal.style.display = "block";
+    document.getElementById("edit_household_name").value = 'nameDiv';
+  }
+  
+  // When the user clicks on <span> (x), close the modal
+  closeEditForm.onclick = function() {
+    editFormModal.style.display = "none";
+  }
+  </script>-->
 </body>
 
 </html>

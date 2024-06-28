@@ -6,9 +6,12 @@
             
         <script type="module">
             //import { addLocation } from "./js/firestore.js";
-            import { addEntry, BUKLOD_RULES_TEST, setCollection } from "/firestore_UNIV.js";
+            import { addEntry, BUKLOD_RULES_TEST, setCollection, validateData } from "/firestore_UNIV.js";
             setCollection("buklod-official-TEST");
-            document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
+            document.addEventListener("DOMContentLoaded", function() {
+                document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
+            });
+            
 
             function handleFormSubmit_v2(){
                 console.log("clicked");
@@ -25,9 +28,33 @@
                 }
 
                 console.log(collatedInput);
-                // This actually works but it needs some data validation
-                // uncomment at the db's risk
-                addEntry(collatedInput);
+
+                const errors = validateData("buklod-official-TEST", collatedInput);
+
+                if (errors.length > 0) {
+                    displayErrors(errors);
+                } else {
+                    addEntry(collatedInput);
+                }
+
+                function displayErrors(errors) {
+                let errorDiv = document.getElementById('error_messages');
+
+                if (errorDiv) {
+
+                    errorDiv.innerHTML = '';
+
+                    if (errors.length > 0) {
+                        for (let error of errors) {
+                            let errorParagraph = document.createElement('p');
+                            errorParagraph.textContent = error;
+                            errorDiv.appendChild(errorParagraph);
+                        }
+                    }
+                    } else {
+                        console.error("Error: Couldn't find element with ID 'error_messages'.");
+                    }
+                }
             }
         </script>
     </head>
@@ -79,7 +106,7 @@
 
             <div class="input_container">
                 <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
-                <input type="checkbox" id="HOA/NOA" name="HOA/NOA" class="attribs" value="yes"> 
+                <input type="checkbox" id="is_hoa_noa" name="HOA/NOA" class="attribs" value="yes"> 
             </div>
 
             <div class="input_container">
@@ -234,6 +261,12 @@
             <br>
 
             <br><br>
+
+            <!-- Error Messages -->
+            <div id="error_messages"></div>
+    
+            <br><br>
+    
     
             <!-- Buttons -->
             <div>

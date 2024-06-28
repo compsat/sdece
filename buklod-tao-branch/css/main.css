@@ -14,6 +14,11 @@ body {
 .map-container {
   flex: 0 0 20%;
   display: flex;
+  position: absolute;
+  top: 63px; /* containerizing based on the height of the topbar */
+  left: 380px; /* containerizing based on the height of the sidenav */
+  right: 0;
+  bottom: 0;
 }
 
 #map {
@@ -35,7 +40,7 @@ body {
 .sidenav {
   flex: 0 0 20%;
   display: flex;
-  position: absolute;
+  position: fixed;
   width: 380px;
   height: 100%;
   background-color: #FFFFFF;
@@ -337,8 +342,8 @@ h1.entries {
 .formModalFooter {
   margin-left: 23%;
   padding: 0px 32px;
-  height: 8px;
   max-width: 50%;
+  height: 8px;
   background-color: #fcfcfc;
   border-radius: 0px 0px 8px 8px;
 }
@@ -351,7 +356,6 @@ h1.entries {
   display: none;
   position: fixed;
   z-index: 9900;
-  top: 3%;
   left: 20%;
   width: 100%; /* Adjust the width of the modal as needed */
   max-width: 480px;
@@ -369,7 +373,7 @@ h1.entries {
   justify-content: space-between;
   margin-left: 25%;
   margin-top: 5%;
-  padding: 7px 24px;
+  padding: 0px 24px;
   width: 100%;
   background-color: #fcfcfc;
   z-index: 9901;
@@ -394,12 +398,12 @@ h1.entries {
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   margin-left: 25%;
-  padding: 24px;
+  padding: 16px 24px;
   width: 100%;
   background-color: #fcfcfc;
   position: relative;
   z-index: 9901;
-  box-shadow: 0 -5px 5px -5px rgba(0, 0, 0, 0.2); 
+  box-shadow: 0 -7px 5px -5px rgba(0, 0, 0, 0.2); 
 }
 
 .modal-line {
@@ -420,11 +424,9 @@ h1.entries {
 
 .modal-name {
   color: #387181;
-  font-family: Montserrat;
-  font-size: 20px;
   font-style: normal;
-  font-weight: 750;
-  letter-spacing: 0.48px;
+  font-family: "Montserrat";
+  font-size: 24px;
 }
 
 .modal-button {
@@ -434,12 +436,16 @@ h1.entries {
   justify-content: center;
   font-family: "Montserrat", sans-serif;
   font-size: 16px;
-  font-weight: 750;
+  font-weight: 600;
   cursor: pointer;
   outline: none;
   border: none;
   background-color: #fcfcfc;
-  
+}
+
+.modal-button:hover {
+  background-color: #fcfcfc;
+  cursor: pointer;
 }
 
 .modal-text {
@@ -464,6 +470,21 @@ h1.entries {
 
 .close-form:hover,
 .close-form:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.close-editForm {
+  color: #aaaaaa;
+  float: right;
+  padding-top: 15px;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.close-editForm:hover,
+.close-editForm:focus {
   color: #000;
   text-decoration: none;
   cursor: pointer;
@@ -509,9 +530,10 @@ button.collapsible {
 
 /* closing modal */
 .close {
-  text-align: center;
   color: #aaaaaa;
-  font-size: 40px;
+  float: right;
+  padding-top: 15px;
+  font-size: 30px;
   font-weight: bold;
 }
 
