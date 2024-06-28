@@ -161,7 +161,7 @@ const VALIDATION_RULES = { //Rules for Validating Data
 		'household_address': {type: 'string', required: true, maxLength: 255},
 		'household_material': {type: 'string,', required: true, enum: ['Concrete', 'Semi-Concrete', 'Light materials', 'Makeshift', 'Natural'] },
 		'household_name': {type: 'string', required: true, maxLength: 127},
-		'household_phase': {type: 'timestamp', required: true},
+		'household_phase': {type: 'string', required: true},
 		'is_hoa_noa': {type: 'string', required: true, minLength: 3, maxLength: 3, enum: ['HOA', 'N/A'] },
 		'landslide_risk': {type: 'string', required: true},
 		'location_coordinates:': {type: 'geolocation', required: true},
@@ -327,33 +327,47 @@ export function validateData(collectionName, data) {
 		const rule = rules[field];
 		const value = data[field];
 
+
+		// Check for required field
 		if (rule.required && (value == undefined || value == null || value == '')) {
 			errors.push(`Field '${field}' is required.`);
 			continue;
 		}
 
+		// Skip type validation if not required
+		if (!rule.required && (value == undefined || value == null)) {
+			continue;
+		}
+
+		// Check for type field
 		if (rule.type && typeof value !== rule.type) {
 			errors.push(`Field '${field}' must be of type ${rule.type}.`);
 			continue;
 		}
 
+
+		// Check for minimum length
 		if (rule.minLength && typeof value == 'string' && value.length < rule.minLength) {
 			errors.push(`Field '${field}' must be at least ${rule.minLength} characters long.`);
 			continue;
 		}
 
+		// Check for maximum length
 		if (rule.maxLength && typeof value == 'string' && value.length >  rule.maxLength) {
 			errors.push(`Field '${field}' cannot exceed ${rule.maxLength} characters.`);
 			continue;
 		}
 
+
+		// Check for regular expression field
 		if (rule.regex && !rule.regex.test(value)) {
 			errors.push(`Field '${field}' is invalid.`);
 			continue;
 		}
 
+		// Check for enum field
 		if (rule.enum && !rule.enum.includes(value)) {
-			errors.push(`Field '$(field)' must be one of ${rule.enum.join(',')}.`);
+			errors.push(`Field '${field}' must be one of ${rule.enum.join(',')}.`);
 			continue;
 		}
 
@@ -362,7 +376,3 @@ export function validateData(collectionName, data) {
 	
 	return errors;
 }
-
-//function isValidURL(value) {
-
-//}
