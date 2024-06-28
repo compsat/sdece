@@ -19,11 +19,13 @@
             
         <script type="module">
             //import { addLocation } from "./js/firestore.js";
-            import { addEntry, SDECE_RULES_TEST, setCollection } from "/firestore_UNIV.js";
+            import { addEntry, SDECE_RULES_TEST, setCollection, validateData } from "/firestore_UNIV.js";
 
             setCollection("sdece-official-TEST");
 
-            document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
+            document.addEventListener("DOMContentLoaded", function() {
+                document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
+            });
 
             function handleFormSubmit_v2(){
                 console.log("clicked");
@@ -42,7 +44,32 @@
                 console.log(collatedInput);
                 // This actually works but it needs some data validation
                 // uncomment at the db's risk
-                addEntry(collatedInput);
+
+                const errors = validateData("sdece-official-TEST", collatedInput);
+
+                if (errors > 0) {
+                    displayErrors(errors);
+                } else {
+                    addEntry(collatedInput);
+                }
+
+                function displayErrors(errors) {
+                    let errorDiv = document.getElementById('error_messages');
+
+                    if (errorDiv) {
+                        errorDiv.innerHTML = '';
+
+                        if (errors.length > 0) {
+                            for(let error of errors) {
+                                let errorParagraph = document.createElement('p');
+                                errorParagraph.textContent = error;
+                                errorDiv.appendChild(errorParagraph);
+                            }
+                        }
+                    } else {
+                        console.error("Error HAHAHHAHAHA")
+                    }
+                }
             }
         </script>
     </head>
@@ -57,7 +84,7 @@
 
             <div class="flex flex-row justify-between mb-6 items-center">
                 <label class="form font-montserrat text-xl text-customGray" for="activity_date">Date of Activity</label>
-                <input type="text" id="activity_date" name="activity_date" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
+                <input type="date" id="activity_date" name="activity_date" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
             </div>
 
             <div class="flex flex-row justify-between mb-6 items-center">
@@ -66,23 +93,23 @@
             </div>
 
             <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="partner_name">Partner</label>
-                <input type="text" id="partner_name" name="partner_name" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
+                <label class="form font-montserrat text-xl text-customGray" for="partner_contact_name">Partner</label>
+                <input type="text" id="partner_contact_name" name="partner_contact_name" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
             </div>
         
             <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="partner_contact">Contact Person of Partner</label>
-                <input type="text" id="partner_contact" name="partner_contact" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                <label class="form font-montserrat text-xl text-customGray" for="partner_contact_number">Contact Person of Partner</label>
+                <input type="text" id="partner_contact_number" name="partner_contact_number" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
             </div>
 
             <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="partner_city">City of Partner</label>
-                <input type="text" id="partner_city" name="partner_city" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                <label class="form font-montserrat text-xl text-customGray" for="partner_address">City of Partner</label>
+                <input type="text" id="partner_address" name="partner_address" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
             </div>
 
             <div class="flex flex-row justify-between mb-6 items-center">
                 <label class="form font-montserrat text-xl text-customGray" for="partner_coordinates">Coordinates of Partner</label>
-                <input type="text" id="partner_coordinates" name="partner_coordinates" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                <input type="geopoint" id="partner_coordinates" name="partner_coordinates" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
             </div>
 
             <div class="flex flex-row justify-between mb-6 items-center">
@@ -91,8 +118,8 @@
             </div>
 
             <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="partner_number">Contact number of Partner</label>
-                <input type="text" id="partner_number" name="partner_number" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                <label class="form font-montserrat text-xl text-customGray" for="partner_contact_number">Contact number of Partner</label>
+                <input type="text" id="partner_contact_number" name="partner_number" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
             </div>
 
             <div class="flex flex-row justify-between mb-6 items-center">
@@ -106,19 +133,36 @@
             </div>
                 
             <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="admu_office">Ateneo Office Oversight</label>
-                <input type="text" id="admu_office" name="admu_office" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                <label class="form font-montserrat text-xl text-customGray" for="ADMU_office">Ateneo Office Oversight</label>
+                <input type="text" id="ADMU_office" name="admu_office" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
             </div>
                 
             <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="admu_contact">Ateneo Contact Person</label>
-                <input type="text" id="admu_contact" name="admu_contact" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                <label class="form font-montserrat text-xl text-customGray" for="ADMU_contact_name">Ateneo Contact Person</label>
+                <input type="text" id="ADMU_contact_name" name="admu_contact" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
             </div>
                 
             <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="admu_email">Email</label>
-                <input type="email" id="admu_email" name="admu_email" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
+                <label class="form font-montserrat text-xl text-customGray" for="ADMU_email">Email</label>
+                <input type="text" id="ADMU_email" name="admu_email" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
             </div>
+
+            <br>
+
+            <br><br>
+
+            <!-- Error Messages -->
+            <div id="error_messages"></div>
+    
+            <br><br>
+    
+    
+            <!-- Buttons -->
+            <div>
+                <!-- Submits contents of the form -->                                               
+                <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save</button>   
+            </div>
+            <br>
     
             <!-- Buttons -->
             <span class="button_div">
