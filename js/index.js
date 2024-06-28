@@ -57,14 +57,14 @@ getDocs(colRef)
 			}
 			// TODO HAVE THIS BE CONSISTENT ACROSS EVERYTHING
 			getDivContent(doc.partner_name).then((div) => {
-				marker.bindPopup(div);
 				results.addLayer(marker);
 
 				// This is the popup for when the user clicks on a partner
 				var popupContent = `
-					<div class="leaflet-popup-container">
-					<h2 class="partner-popup"></h2>          				
+					<h2 class="partner-popup">				
 				`;
+				popupContent += doc.partner_name;
+				popupContent += `</h2>`;
 
 				marker.bindPopup(popupContent);
 				results.addLayer(marker);
@@ -74,7 +74,10 @@ getDocs(colRef)
 						document.getElementsByClassName(
 							'partner-popup'
 						)[0];
-					pin.addEventListener('click', function () {});
+
+					pin.addEventListener('click', function () {
+						console.log('Clicked on the popup content');
+					});
 					// var expandButtons =
 					// 	document.getElementsByClassName('expandPopUp');
 					// for (var i = 0; i < expandButtons.length; i++) {
@@ -109,30 +112,30 @@ getDocs(colRef)
 					// }
 
 					// Pop up toggle show/hide
-					var acc =
-						document.getElementsByClassName(
-							'popup-accordion'
-						);
-					var i;
+					// var acc =
+					// 	document.getElementsByClassName(
+					// 		'popup-accordion'
+					// 	);
+					// 		var i;
 
-					for (i = 0; i < acc.length; i++) {
-						acc[i].addEventListener('click', function () {
-							/* Toggle between adding and removing the "active" class,
-            to highlight the button that controls the panel */
-							this.classList.toggle('active');
+					// 		for (i = 0; i < acc.length; i++) {
+					// 			acc[i].addEventListener('click', function () {
+					// 				/* Toggle between adding and removing the "active" class,
+					// to highlight the button that controls the panel */
+					// 				this.classList.toggle('active');
 
-							/* Toggle between hiding and showing the active panel */
-							var contents = this.nextElementSibling;
-							if (contents.style.display === 'block') {
-								contents.style.display = 'none';
-							} else {
-								contents.style.display = 'block';
-							}
-						});
-					}
-				});
-				marker.on('click', function (event) {
-					console.log(getDetails(entry['name']));
+					// 				/* Toggle between hiding and showing the active panel */
+					// 				var contents = this.nextElementSibling;
+					// 				if (contents.style.display === 'block') {
+					// 					contents.style.display = 'none';
+					// 				} else {
+					// 					contents.style.display = 'block';
+					// 				}
+					// 			});
+					// 		}
+					pin.on('click', function (event) {
+						console.log('The pin popup was clicked.');
+					});
 				});
 			});
 		});
