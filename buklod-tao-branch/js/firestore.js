@@ -312,6 +312,7 @@ function showModal(partner) {
     document.getElementById("edit_household_name").value = partner.household_name;
     document.getElementById("edit_address").value = partner.household_address;
     document.getElementById("edit_contact_number").value = partner.contact_number;
+    document.getElementById("edit_residency_status").value = partner.residency_status;
     document.getElementById("edit_HOA/NOA").value = partner.is_hoa_noa;
     document.getElementById("edit_nearest_evacuation_area").value = partner.nearest_evac;
     document.getElementById("edit_number_of_residents").value = partner.number_residents;
