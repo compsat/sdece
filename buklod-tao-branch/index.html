@@ -211,9 +211,9 @@
           <input type="text" id="residency_status" name="residency_status" class="attribs"> 
       </div>
       <br>
-      <div class="input_container">
+      <div class="input_container" style="justify-content: flex-start;">
           <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
-          <input type="checkbox" id="HOA/NOA" name="HOA/NOA" class="attribs" style="margin-right: 203px; height: 30px;">
+          <input type="checkbox" id="HOA/NOA" name="HOA/NOA" class="attribs" style="height: 30px;">
       </div>
       <br>
       <div class="input_container">
@@ -519,30 +519,6 @@
       }
     }
   </script>
-
-  <!--script for add household modal-->
-  
-  <script>
-  // modal
-  var formModal = document.getElementById("form-modal");
-
-  // open modal
-  var openForm = document.getElementById("addHousehold");
-
-  // Get the <span> element that closes the modal
-  var closeForm = document.getElementsByClassName("close-form")[0];
-
-  // When the user clicks the button, open the modal 
-  openForm.onclick = function() {
-    formModal.style.display = "block";
-  }
-
-  // When the user clicks on <span> (x), close the modal
-  closeForm.onclick = function() {
-    formModal.style.display = "none";
-  }
-  </script>
-
 </body>
 
 </html>

@@ -108,3 +108,24 @@ searchControl.on("results", function (data) {
     results.addLayer(marker);
   }
 });
+
+//script for add household modal
+
+// modal
+var formModal = document.getElementById("form-modal");
+
+// open modal
+var openForm = document.getElementById("addHousehold");
+
+// Get the <span> element that closes the modal
+var closeForm = document.getElementsByClassName("close-form")[0];
+
+// When the user clicks the button, open the modal 
+openForm.onclick = function() {
+  formModal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+closeForm.onclick = function() {
+  formModal.style.display = "none";
+}
