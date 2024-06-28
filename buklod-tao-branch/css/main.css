@@ -403,7 +403,6 @@ h1.entries {
 }
 
 .modal-line {
-  margin-top: auto;
   display: flex; 
   justify-content: space-between;
 }
@@ -527,18 +526,56 @@ button.collapsible {
   align-items: center;
 }
 
-.leaflet-popup-container h2 {
-  overflow: hidden;
-  color: #387181;
+.leafletPopupContainer {
+  height: 400px;
+  width: 100%;
+  padding-right: 20px;
   text-overflow: ellipsis;
-  font-family: Hind;
-  font-size: 16px;
-  font-style: normal;
-  display: flex;
   align-items: center;
-  flex-shrink: 5;
-  font-weight: 600;
+  overflow-y: auto;
+}
+
+.leafletHeader {
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: 700;
   letter-spacing: 0.1px;
+  color: #387181;
+  background-color: #FFFFFF;
+  width: 89%;
+  position: fixed;
+  padding: 10px 0px 10px 0px;
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2)
+}
+
+.leafletSubHeader {
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  color: #3D97AF;
+  margin: 20px 0px 10px 0px;
+}
+
+.leafletLabel {
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 700;
+  color: #000000;
+}
+
+.leafletContent {
+  font-family: Hind;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.32px;
+  color: #A0A0A0;
+  width: 100%;
+  margin: 30px 0px 15px 0px;
+}
+
+.leafletDetails {
+  margin-bottom: 5px;
 }
 
 .leaflet-buttons {

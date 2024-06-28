@@ -22,20 +22,128 @@ var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
+// function to store the html for info display on pin click
+function onPinClick(doc){
+  let leaflet_html =
+  `
+  <div class="leafletPopupContainer" id="leafletModal">
+    <div class="leafletHeader">
+      <label>${doc.household_name}</label>
+    </div>
+    <div class="leafletContent">
+      <br>
+      <div class="leafletDetails>
+        <p>${doc.contact_number}</p>
+        <p>${doc.household_address}</p>
+      </div>
+      <div class="modal-line">
+        <label class="leafletLabel">Residency Status</label>
+        <label class="leafletLabel">Part of HOA/NOA</label>
+      </div>
+      <div class="modal-line" style="line-height: 3px; margin-bottom: 2px;">
+        <p class="leafletDetails">${doc.residency_status}</p>
+        <p class="leafletDetails">${doc.is_hoa_noa}</p>
+      </div>
+      <div style="line-height: 3px; margin-bottom: 2px;">
+        <label class="leafletLabel">Nearest Evacuation Area</label>
+        <p class="leafletDetails">${doc.nearest_evac}</p>
+      </div>
+    <div>
+      <div class="leafletSubHeader">
+        <label>Risk Levels</label>
+      </div>
+      <div class="modal-line">
+        <label class="leafletLabel">Earthquake</label>
+        <label class="leafletLabel">RISK LEVEL</label>
+      </div>
+      <div>
+        <p class="leafletDetails">${doc.earthquake_risk}</p>
+      </div>
+      <div class="modal-line">
+        <label class="leafletLabel">Fire</label>
+        <label class="leafletLabel">RISK LEVEL</label>
+      </div>
+      <div>
+        <p class="leafletDetails">${doc.fire_risk}</p>
+      </div>
+      <div class="modal-line">
+        <label class="leafletLabel">Flood</label>
+        <label class="leafletLabel">RISK LEVEL</label>
+      </div>
+      <div>
+        <p class="leafletDetails">${doc.flood_risk}</p>
+      </div>
+      <div class="modal-line">
+        <label class="leafletLabel">Landslide</label>
+        <label class="leafletLabel">RISK LEVEL</label>
+      </div>
+      <div>
+        <p class="leafletDetails">${doc.landslide_risk}</p>
+      </div>
+      <div class="modal-line">
+        <label class="leafletLabel">Storm</label>
+        <label class="leafletLabel">RISK LEVEL</label>
+      </div>
+      <div>
+        <p class="leafletDetails">${doc.storm_risk}</p>
+      </div>
+    </div>
+    <div>
+      <div class="leafletSubHeader">
+        <label>Residents</label>
+      </div>
+      <div class="modal-line">
+        <label class="leafletLabel">Total</label>
+        <label class="leafletLabel">${doc.number_residents}</label>
+      </div>
+      <hr style="border-top: 1px solid #CBD5E0;">
+      <div class="modal-line">
+        <label class="leafletLabel">Minors</label>
+        <label class="leafletLabel">${doc.number_minors}</label>
+      </div>
+      <br>
+      <div class="modal-line">
+        <label class="leafletLabel">Seniors</label>
+        <label class="leafletLabel">${doc.number_seniors}</label>
+      </div>
+      <br>
+      <div class="modal-line">
+        <label class="leafletLabel">PWD</label>
+        <label class="leafletLabel">${doc.number_pwd}</label>
+      </div>
+      <br>
+      <div class="modal-line">
+        <label class="leafletLabel">Sick</label>
+        <label class="leafletLabel">${doc.number_sick}</label>
+      </div>
+      <br>
+      <div class="modal-line">
+        <label class="leafletLabel">Pregnant</label>
+        <label class="leafletLabel">${doc.number_pregnant}</label>
+      </div>
+      </div>
+    </div>
+  </div>       
+  `
+  ;
+  return leaflet_html;
+}
+
 // Loads art the start
 getDocs(colRef)
   .then((querySnapshot) => {
     querySnapshot.forEach((entry) => {
       var doc = entry.data();
+      var marker = L.marker([0, 0]);  
       //console.log(doc);
-      var marker = L.marker([
-        parseFloat(doc.latitude),
-        parseFloat(doc.longitude),
-      ]);
-      var popupContent = `
-      <div class="leaflet-popup-container">
-      <h2 class="partner-header">${doc.household_name}</h2>          
-        `;
+      if(doc.location_coordinates != null){
+         marker = L.marker([
+          parseFloat(doc.location_coordinates._lat),
+          parseFloat(doc.location_coordinates._long),
+        ]);
+      }
+      // shows partner info on pin click
+      var popupContent = onPinClick(doc);
       marker.bindPopup(popupContent);
       results.addLayer(marker);
     });
@@ -45,7 +153,6 @@ getDocs(colRef)
   });
 
 addListeners();
-
 
 function onMapClick(e) {
   const lat = e.latlng.lat;
