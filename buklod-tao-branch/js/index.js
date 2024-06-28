@@ -1,6 +1,6 @@
-// import { getPartnersArray, addEntry } from "./firestore.js";
-import { getDocIdByPartnerName, getDocByID, setCollection, getCollection, DB } from "/firestore_UNIV.js";
-import { getDivContent, addListeners, map } from "/index_UNIV.js";
+import { getPartnersArray, addEntry } from "./firestore.js";
+import { getDocIdByPartnerName, getDocByID, setCollection, getCollection, DB, AddLayerData, LayerDataList, LayerDataDelete } from "/firestore_UNIV.js";
+import { getDivContent, addListeners } from "/index_UNIV.js";
 import {
   collectionGroup,
   getFirestore,
@@ -13,6 +13,12 @@ import {
 // const db = getFirestore();
 setCollection("buklod-official");
 var colRef = getCollection();
+let layer_data_list = []
+
+var base_collection = "geo_data_test"
+var layer_group_collection = "Layer1"
+var layer_group_sub = "geo_data"
+var layer_group_sub_attr = "geo_data"
 
 // console.log(colRef);
 
@@ -25,7 +31,7 @@ var test = L.marker([14.673, 121.11215]).bindPopup('Test marker')
 var test2 = L.marker([15.673, 121.11215]).bindPopup('Test marker 2')
 var test_layers = L.layerGroup([test, test2])
 
-// var map = L.map("map").setView([14.673, 121.11215], 21, [buklod, test_layers]);
+
 
 var map = L.map('map', {
   center: [14.673, 121.11215],
@@ -71,7 +77,7 @@ getDocs(colRef)
     console.error("Error getting documents: ", error);
   });
 
-addListeners();
+// addListeners();
 
 
 function onMapClick(e) {
@@ -123,24 +129,6 @@ function onMapClick(e) {
     }});
   }
 
-//function to add data to the DB when creating new layer elements
-function AddLayerData(layer_name, data) {
-  const layers = doc(DB, "geo_data_test", layer_name);
-
-  // "geo_data" is the (tentative) naming convention for the data sub-collection
-  addDoc(collection(layers, "geo_data"), {
-    geo_data: JSON.stringify(data),
-  })
-  .then(() => {
-    console.log('Document successfully written!');
-  })
-  .catch((error) => {
-    console.error('Error writing document: ', error);
-  });
-};
-
-
-
 // add Leaflet-Geoman controls with some options to the map  
 map.pm.addControls({  
 	position: 'bottomright',  
@@ -149,42 +137,44 @@ map.pm.addControls({
   });
 
 
-
-  map.on('pm:create', function (e) {
+//function to add data to the DB when creating new layer elements
+map.on('pm:create', function (e) {
   var layer = e.layer;
   var geojson = layer.toGeoJSON();  
   var data = JSON.stringify(geojson)
   console.log(data)
   
-  // AddLayerData("Layer3", data)
-
+  AddLayerData(layer_group_collection, data, base_collection, layer_group_sub)
+  // First parameter takes the name of the layer group collection the data should go to.
+  // Third parameter takes the name of the base collection containing the data (precedes layer collection). 
+  // Fourth parameter takes the name of the sub collection under the layer collection that should contain the geoJSON data.
+  // Collection order: Base collection > Layer group subcollection/doc > Layer data subcollection/doc > Layer geodata/doc
 });
 
+//function to remove data from the DB when erasing layer elements
 map.on('pm:remove', (e) => {
+  // Sends GeoJSON data to the function to determine which layer was deleted 
+  // Yes the attribute data field in the database is a string and not an Object. It works, I don't care
   console.log(JSON.stringify(e.layer.toGeoJSON()))
+  LayerDataDelete(JSON.stringify(e.layer.toGeoJSON()), layer_group_sub, layer_group_sub_attr)
+  // Second parameter takes the name of the collection group holding the data geoJSON data. 
+  // Third parameter takes the name of the attribute data in the collection group.
+
 })
 
-getDocs(collectionGroup(DB, "geo_data"))
-  .then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(doc.data())
-    });
+//function to load layer data to the map on load
+LayerDataList(layer_group_sub, layer_data_list)
+// First parameter takes the name of the collection group containing the geoJSON data 
+.then(() => {
+    layer_data_list.forEach((layer) => {
+
+      console.log(layer.data().geo_data)
+        L.geoJSON(JSON.parse(layer.data().geo_data)).addTo(map);
+        // Adds the layer data to the map
+        // Can still add a bindpopup stored from the database to display data. Would require assistance from frontend to implement  
+
+    })
   })
   .catch((error) => {
-    console.error('Error getting documents: ', error);
-  });
-
-// getDocs(collection(DB, "geo_data_test"))
-//   .then((querySnapshot) => {
-//     querySnapshot.forEach((doc) => {
-//       console.log(doc.data())
-//     });
-//   })
-//   .catch((error) => {
-//     console.error('Error getting documents: ', error);
-//   });
-
-
-
-// console.log(map.pm.Toolbar.getControlOrder())
+    console.error('Error fetching layer data: ', error);
+  })

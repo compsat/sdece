@@ -37,13 +37,8 @@ const firebaseConfig = {
 // Initialize Firebase
 initializeApp(firebaseConfig);
 const db = getFirestore();
-<<<<<<< HEAD
-const colRef = collection(db, "sdece-official");
-// console.log(colRef)
-=======
 setCollection('sdece-official');
 const colRef = getCollection();
->>>>>>> 5337f814aabb5c1203e26e080317d51257128906
 let partnersArray = [];
 
 export function getDocIdByPartnerName(partnerName) {
@@ -72,15 +67,6 @@ export function getDocIdByPartnerName(partnerName) {
 }
 
 export function getDocByID(docId) {
-<<<<<<< HEAD
-  const docReference = doc(db, "sdece-official", docId);
-  // console.log(docReference);
-  let docObj = {};
-  return getDoc(docReference).then((doc) => {
-    docObj = doc.data();
-    return docObj;
-  });
-=======
 	const docReference = doc(db, 'partners-2', docId);
 	console.log(docReference);
 	let docObj = {};
@@ -88,22 +74,10 @@ export function getDocByID(docId) {
 		docObj = doc.data();
 		return docObj;
 	});
->>>>>>> 5337f814aabb5c1203e26e080317d51257128906
 }
 
 // get docs from firestore
 
-<<<<<<< HEAD
-export function getStuff() {
-  getDocs(colRef)
-  .then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-      console.log(doc.data())
-      if (doc.data().name !== "Test 2" || doc.data().name !== "Test2") {
-        partnersArray.push(doc.data());
-      }
-    });
-=======
 getDocs(colRef)
 	.then((querySnapshot) => {
 		querySnapshot.forEach((doc) => {
@@ -114,7 +88,6 @@ getDocs(colRef)
 				partnersArray.push(doc.data());
 			}
 		});
->>>>>>> 5337f814aabb5c1203e26e080317d51257128906
 
 		// populate ul with partners
 		partnersArray.forEach((partner) => {
@@ -197,21 +170,6 @@ getDocs(colRef)
 			anchor.appendChild(addressDiv);
 			anchor.appendChild(activityDiv);
 
-<<<<<<< HEAD
-      listItem.appendChild(anchor);
-      containerDiv.appendChild(img);
-      containerDiv.appendChild(listItem);
-      locationList.appendChild(containerDiv);
-    });
-  })
-  .catch((error) => {
-    console.error("Error getting documents: ", error);
-  });
-}
-  
-
-export function showModal(partner) {
-=======
 			listItem.appendChild(anchor);
 			containerDiv.appendChild(img);
 			containerDiv.appendChild(listItem);
@@ -224,7 +182,6 @@ export function showModal(partner) {
 
 // Partner modal
 function showModal(partner) {
->>>>>>> 5337f814aabb5c1203e26e080317d51257128906
   const modal = document.getElementById("partnerModal");
   const modalHeader = document.getElementById("modalHeader");
   const modalContent = document.getElementById("modalContent");

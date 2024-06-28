@@ -6,6 +6,9 @@ import {
 	query,
 	where,
 	getDoc,
+	collectionGroup,
+	deleteDoc,
+	onSnapshot,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 
 // Your web app's Firebase configuration
@@ -217,7 +220,7 @@ export function getDocsByPartnerName(partner_name) {
 				)
 			)
 				.then((querySnapshot) => {
-					console.log(querySnapshot);
+					// console.log(querySnapshot);
 					if (!querySnapshot.empty) {
 						// Assuming there is only one document with the given partner name
 						const docs = querySnapshot.docs;
@@ -292,3 +295,45 @@ export function editEntry(inp_array, docId) {
 		}
 	}
 }
+
+// Leaflet Toolbar functions
+export function AddLayerData(layer_name, data, collection_name, sub_collection_name) {
+	const layers = doc(DB, collection_name, layer_name);
+	console.log(data)
+	// "geo_data" is the (tentative) naming convention for the data sub-collection
+	addDoc(collection(layers, sub_collection_name), {
+	  geo_data: data,
+	})
+	.then(() => {
+	  console.log('Document successfully written!');
+	})
+	.catch((error) => {
+	  console.error('Error writing document: ', error);
+	});
+  };
+
+export function LayerDataList(collection_group, layer_list) {
+	return getDocs(collectionGroup(DB, collection_group))
+  	.then((querySnapshot) => {
+		querySnapshot.forEach((doc) => {
+		// doc.data() is never undefined for query doc snapshots
+		layer_list.push(doc)
+	
+		});
+	})
+  	.catch((error) => {
+    	console.error('Error getting documents: ', error);
+		throw error
+  	});
+}
+
+export function LayerDataDelete(deleted_layer, collection_name, field_name) {
+	var deletion = query(collectionGroup(DB, collection_name), where(field_name, "==", deleted_layer))
+	
+	onSnapshot(deletion, (snapshot) => {
+		snapshot.forEach((result) => {
+			deleteDoc(result.ref)	
+		})
+	})
+}
+

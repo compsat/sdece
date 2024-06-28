@@ -496,7 +496,8 @@ button.collapsible {
   background-size: 100%;
 }
 
-.active:after {
+/* Generated a display error for the Element mapping toolbar*/
+/* .active:after {
   display: inline-block;
   width: 30px;
   height: 30px;
@@ -505,7 +506,7 @@ button.collapsible {
   background: url("../img/dropdown.png") no-repeat 0 0;
   background-size: 100%;
   transform: rotate(180deg);
-}
+} */
 
 /* closing modal */
 .close {

@@ -7,7 +7,7 @@ import {
 
 
 /// Will need to change how we do this if we ever restructure again
-export var map = L.map("map").setView([0, 0], 21);
+// export var map = L.map("map").setView([0, 0], 21);
 
 // Takes in a name to determine all field values which should be displayed
 // Current Issue: it doesn't display all the added things, could be due to the async nature of these functions
@@ -116,3 +116,5 @@ export function clearLocationList(){
   var locationList = document.getElementById(`locationList`);
   locationList.innerHTML = "";
 }
+
+

@@ -102,7 +102,8 @@ input.attribs::placeholder {
 }
 
 /* container for Save and Delete buttons */
-.button-container {
+/* This was .button-container | generated a display error for the Element mapping toolbar*/
+input.button-container {
     margin-top: 20px;
     width: 100%;
     text-align: center;

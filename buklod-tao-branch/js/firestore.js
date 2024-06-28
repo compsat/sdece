@@ -28,7 +28,7 @@ const firebaseConfig = {
 };
 initializeApp(firebaseConfig);
 const db = getFirestore();
-const colRef = collection(db, "sdece-official");
+const colRef = collection(db, "buklod-official");
 let partnersArray = [];
 
 export function getDocIdByPartnerName(partnerName) {
@@ -84,7 +84,7 @@ getDocs(colRef)
 
     // populate ul with partners
     partnersArray.forEach((partner) => {
-      console.log(partner)
+      // console.log(partner)
 
       // Creating DOM elements
       const containerDiv = document.createElement("div");
