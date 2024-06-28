@@ -159,18 +159,18 @@ const VALIDATION_RULES = { //Rules for Validating Data
 		'fire_risk': {type: 'string', required: true},
 		'flood_risk': {type: 'string', required: true},
 		'household_address': {type: 'string', required: true, maxLength: 255},
-		'household_material': {type: 'string,', required: true, enum: ['Concrete', 'Semi-Concrete', 'Light materials', 'Makeshift', 'Natural'] },
+		'household_material': {type: 'string', required: true, enum: ['Concrete', 'Semi-Concrete', 'Light materials', 'Makeshift', 'Natural'] },
 		'household_name': {type: 'string', required: true, maxLength: 127},
 		'household_phase': {type: 'string', required: true},
 		'is_hoa_noa': {type: 'string', required: true, minLength: 3, maxLength: 3, enum: ['HOA', 'N/A'] },
 		'landslide_risk': {type: 'string', required: true},
-		'location_coordinates:': {type: 'geolocation', required: true},
-		'location_link': {type: 'string', required: true, isURL: true},
+		'location_coordinates': {type: 'number', required: true},
+		'location_link': {type: 'string', required: true},
 		'nearest_evac': {type: 'string', required: true, maxLength: 255},
 		'number_minors': {type: 'number'},
 		'number_pregnant': {type: 'number'},
 		'number_pwd': {type: 'number'},
-		'number_resident': {type: 'number', required: true},
+		'number_residents': {type: 'number', required: true},
 		'number_sick': {type: 'number'},
 		'residency_status': {type: 'string', required: true, enum: ['May-Ari', 'Umuupa']},
 		'status': {type: 'string'},
@@ -392,4 +392,7 @@ export function validateData(collectionName, data) {
 	}
 	
 	return errors;
+
+	
 }
+
