@@ -256,8 +256,11 @@ getDocs(col_ref)
 	});
 
 // Display partner modal by clicking partner entry (WIP: and on pin pop up click)
-function showModal(partner) {
+export function showModal(partner) {
 	console.log('SHOW THE MODAL');
+
+	console.log('Partner being shown as modal: ' + partner[0][0]);
+
 	const modal = document.getElementById('partnerModal');
 	const modalHeader = document.getElementById('modalHeader');
 	const modalContent = document.getElementById('modalContent');

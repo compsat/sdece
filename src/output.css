@@ -616,19 +616,6 @@ video {
   z-index: 2400;
 }
 
-.float-right {
-  float: right;
-}
-
-.float-left {
-  float: left;
-}
-
-.my-6 {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
 .z-\[3500\] {
   z-index: 3500;
 }
@@ -639,6 +626,14 @@ video {
 
 .z-\[4500\] {
   z-index: 4500;
+}
+
+.float-right {
+  float: right;
+}
+
+.float-left {
+  float: left;
 }
 
 .mb-6 {
@@ -1045,6 +1040,10 @@ video {
   padding-right: 3rem;
 }
 
+.\!text-center {
+  text-align: center !important;
+}
+
 .text-center {
   text-align: center;
 }
@@ -1097,6 +1096,10 @@ video {
 
 .font-medium {
   font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
 }
 
 .leading-\[110\%\] {
@@ -1170,16 +1173,15 @@ video {
   flex-direction: row;
 }
 
-.leaflet-popup-container {
-  font-weight: bold;
-  background-color: white;
-}
+/* Removed styles first to account for new content */
 
 .leaflet-popup-content-wrapper {
-  border-radius: 8%;
-  padding: 2%;
-  width: -moz-fit-content;
-  width: fit-content;
+}
+
+.leaflet-popup-content-wrapper .leaflet-popup-content {
+}
+
+.leaflet-popup-tip-container {
 }
 
 /*

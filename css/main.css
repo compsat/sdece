@@ -14,15 +14,14 @@
 	flex-direction: row;
 }
 
-.leaflet-popup-container {
-	font-weight: bold;
-	background-color: white;
+/* Removed styles first to account for new content */
+.leaflet-popup-content-wrapper {
 }
 
-.leaflet-popup-content-wrapper {
-	border-radius: 8%;
-	padding: 2%;
-	width: fit-content;
+.leaflet-popup-content-wrapper .leaflet-popup-content {
+}
+
+.leaflet-popup-tip-container {
 }
 
 /*
@@ -126,7 +125,7 @@
 }
 
 .modal-name {
-	color: #387181;	
+	color: #387181;
 	font-family: Montserrat;
 	font-size: 24px;
 	font-style: normal;

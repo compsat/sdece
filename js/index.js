@@ -1,4 +1,4 @@
-import {} from './firestore.js';
+import { showModal } from './firestore.js';
 import {
 	getDocIdByPartnerName,
 	getDocByID,
@@ -42,12 +42,13 @@ var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
-// Loads art the start
+// Loads at the start
 getDocs(colRef)
 	.then((querySnapshot) => {
 		querySnapshot.forEach((entry) => {
 			var doc = entry.data();
 			var marker;
+
 			// Some coordinated are null, protective check
 			if (doc.partner_coordinates != null) {
 				marker = L.marker([
@@ -55,89 +56,23 @@ getDocs(colRef)
 					parseFloat(doc.partner_coordinates.longitude),
 				]);
 			}
-			// TODO HAVE THIS BE CONSISTENT ACROSS EVERYTHING
+
+			// TODO: Modify pop-up instantiation to use a custom pop-up instead of a marker bind (Low prio)
 			getDivContent(doc.partner_name).then((div) => {
 				results.addLayer(marker);
 
-				// This is the popup for when the user clicks on a partner
 				var popupContent = `
-					<h2 class="partner-popup">				
+					<div class="partner-popup w-auto font-semibold text-sm font-montserrat text-darkbg !text-center	">				
 				`;
 				popupContent += doc.partner_name;
-				popupContent += `</h2>`;
+				popupContent += `</div>`;
 
 				marker.bindPopup(popupContent);
 				results.addLayer(marker);
-
-				marker.on('popupopen', function () {
-					var pin =
-						document.getElementsByClassName(
-							'partner-popup'
-						)[0];
-
-					pin.addEventListener('click', function () {
-						console.log('Clicked on the popup content');
-					});
-					// var expandButtons =
-					// 	document.getElementsByClassName('expandPopUp');
-					// for (var i = 0; i < expandButtons.length; i++) {
-					// 	expandButtons[i].addEventListener(
-					// 		'click',
-					// 		function () {
-					// 			// Select the modal and partnerName elements
-					// 			var modal =
-					// 				document.getElementById(
-					// 					'partnerModal'
-					// 				);
-
-					// 			// TODO: Integrate this functionality into the modal instead
-					// 			// var partnerName = this.getAttribute("data-loc");
-					// 			//       window.open(
-					// 			//         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
-					// 			//         "_blank"
-					// 			//       );
-
-					// 			// Display the modal
-					// 			modal.classList.remove('hidden');
-					// 			modal.classList.add('flex');
-
-					// 			// Close the modal when the user clicks anywhere outside of it
-					// 			window.onclick = function (event) {
-					// 				if (event.target == modal) {
-					// 					modal.classList.add('hidden');
-					// 				}
-					// 			};
-					// 		}
-					// 	);
-					// }
-
-					// Pop up toggle show/hide
-					// var acc =
-					// 	document.getElementsByClassName(
-					// 		'popup-accordion'
-					// 	);
-					// 		var i;
-
-					// 		for (i = 0; i < acc.length; i++) {
-					// 			acc[i].addEventListener('click', function () {
-					// 				/* Toggle between adding and removing the "active" class,
-					// to highlight the button that controls the panel */
-					// 				this.classList.toggle('active');
-
-					// 				/* Toggle between hiding and showing the active panel */
-					// 				var contents = this.nextElementSibling;
-					// 				if (contents.style.display === 'block') {
-					// 					contents.style.display = 'none';
-					// 				} else {
-					// 					contents.style.display = 'block';
-					// 				}
-					// 			});
-					// 		}
-					pin.on('click', function (event) {
-						console.log('The pin popup was clicked.');
-					});
-				});
 			});
+
+			// TODO: Add the showModal() function from firestore.js to each marker since modal should be the same
+			// marker.addEventListener('click', showModal(doc[0]));
 		});
 	})
 	.catch((error) => {
@@ -206,11 +141,11 @@ function onMapClick(e) {
 map.on('click', onMapClick);
 map.panTo(new L.LatLng(14.652538, 121.077818));
 
-// Show main Add an activity modal
+// Show Main modal
 const element = document.getElementById('mainButton');
 element.addEventListener('click', showModal);
 
-function showModal() {
+function showMainModal() {
 	console.log("'Add an activity' button was clicked!");
 
 	var mainModal = document.getElementById('mainModal');
@@ -229,7 +164,6 @@ function closeModal() {
 }
 
 // Fuction for filtering results upon searching partners
-
 const newButton = document.getElementById('otherButton');
 newButton.addEventListener('click', testFunction);
 
