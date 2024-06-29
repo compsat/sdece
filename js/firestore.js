@@ -17,6 +17,8 @@ import {
 	SDECE_RULES,
 	getDocIdByPartnerName,
 } from '/firestore_UNIV.js';
+
+import { showAddModal } from './index.js';
 // Your Firestore code here
 
 // Import the functions you need from the SDKs you need
@@ -332,6 +334,7 @@ export function showModal(partner) {
 	// Add button for adding activities
 	addActivity.addEventListener('click', () => {
 		console.log('Clicked add activity in the partner modal');
+		showAddModal();
 	});
 
 	activityHeaderDiv.appendChild(addActivity);
@@ -461,6 +464,7 @@ export function showModal(partner) {
 	});
 
 	var editButtons = document.getElementsByClassName('editButton');
+
 	for (var i = 0; i < editButtons.length; i++) {
 		editButtons[i].addEventListener('click', function () {
 			console.log('Clicked edit activity');

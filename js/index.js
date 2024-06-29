@@ -176,9 +176,9 @@ function closeModal() {
 
 // Fuction for filtering results upon searching partners
 const newButton = document.getElementById('otherButton');
-newButton.addEventListener('click', testFunction);
+newButton.addEventListener('click', showAddModal);
 
-function testFunction() {
+export function showAddModal() {
 	console.log('The button is working');
 
 	var m = document.getElementById('addModal');

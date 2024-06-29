@@ -628,6 +628,10 @@ video {
   z-index: 4500;
 }
 
+.z-\[99999999999999999999\] {
+  z-index: 99999999999999999999;
+}
+
 .float-right {
   float: right;
 }
@@ -1203,10 +1207,10 @@ video {
 
 .modal {
   display: none;
-  position: fixed;
-  z-index: 9999;
-  top: 12%;
-  left: 22%;
+  position: absolute;
+  z-index: 2000;
+  top: 190px;
+  left: 400px;
   width: auto;
   /* Adjust the width of the modal as needed */
   min-width: 30%;
