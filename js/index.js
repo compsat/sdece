@@ -42,10 +42,12 @@ var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
 // Loads at the start
+
 getDocs(colRef)
 	.then((querySnapshot) => {
 		querySnapshot.forEach((entry) => {
 			var doc = entry.data();
+
 			var marker;
 
 			// Some coordinated are null, protective check
@@ -152,7 +154,7 @@ map.panTo(new L.LatLng(14.652538, 121.077818));
 
 // Show Main modal
 const element = document.getElementById('mainButton');
-element.addEventListener('click', showModal);
+element.addEventListener('click', showMainModal);
 
 function showMainModal() {
 	console.log("'Add an activity' button was clicked!");
