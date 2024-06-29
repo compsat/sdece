@@ -8,12 +8,16 @@ body {
 .main {
   display: flex;
   flex-direction: row;
-  z-index: 3;
 }
 
 .map-container {
   flex: 0 0 20%;
   display: flex;
+  position: absolute;
+  top: 63px; /* containerizing based on the height of the topbar */
+  left: 380px; /* containerizing based on the height of the sidenav */
+  right: 0;
+  bottom: 0;
 }
 
 #map {
@@ -33,9 +37,8 @@ body {
 }
 
 .sidenav {
-  flex: 0 0 20%;
   display: flex;
-  position: absolute;
+  position: fixed;
   width: 380px;
   height: 100%;
   background-color: #FFFFFF;
@@ -149,7 +152,7 @@ li {
   border: none;
   border-radius: 4px;
   display: block;
-  position: absolute;
+  position: relative;
   top: 50%;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
@@ -165,10 +168,13 @@ li {
 
 button.container {
   display: flex;
+  position: relative;
+  z-index: 10;
   align-items: center;
   gap: 8px;
   align-self: stretch;
   border: 0;
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2); 
 }
 
 button.label-font {
@@ -193,7 +199,7 @@ button:hover {
 div.buttons {
   position: relative;
   display: flex;
-  padding: 20px;
+  padding: 24px 20px;
   flex-direction: column;
   align-items: flex-start;
   gap: 18px;
@@ -438,7 +444,10 @@ h1.entries {
   outline: none;
   border: none;
   background-color: #fcfcfc;
-  
+}
+
+.modal-button:hover {
+  background-color: #fcfcfc;
 }
 
 .modal-text {
@@ -648,4 +657,19 @@ button.collapsible {
   font-weight: 600;
   line-height: 110%;
   letter-spacing: 0.4px;
+}
+
+.close-editForm {
+  color: #aaaaaa;
+  float: right;
+  padding-top: 15px;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.close-editForm:hover,
+.close-editForm:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
 }

@@ -1,6 +1,6 @@
 
 import {  } from "./firestore.js";
-import { getDocIdByPartnerName, getDocByID, setCollection, getCollection, DB } from "/firestore_UNIV.js";
+import { getDocIdByPartnerName, getDocByID, setCollection, getCollection, DB, addEntry, BUKLOD_RULES_TEST } from "/firestore_UNIV.js";
 import { getDivContent, addListeners, map } from "/index_UNIV.js";
 import {
   getFirestore,
@@ -134,10 +134,11 @@ getDocs(colRef)
   .then((querySnapshot) => {
     querySnapshot.forEach((entry) => {
       var doc = entry.data();
-      var marker = L.marker([0, 0]);  
+      var marker = L.marker([0, 0]);
       //console.log(doc);
       if(doc.location_coordinates != null){
-         marker = L.marker([
+
+        marker = L.marker([
           parseFloat(doc.location_coordinates._lat),
           parseFloat(doc.location_coordinates._long),
         ]);
@@ -211,3 +212,24 @@ searchControl.on("results", function (data) {
     results.addLayer(marker);
   }
 });
+
+//script for add household modal
+
+// modal
+var formModal = document.getElementById("form-modal");
+
+// open modal
+var openForm = document.getElementById("addHousehold");
+
+// Get the <span> element that closes the modal
+var closeForm = document.getElementsByClassName("close-form")[0];
+
+// When the user clicks the button, open the modal 
+openForm.onclick = function() {
+  formModal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+closeForm.onclick = function() {
+  formModal.style.display = "none";
+}

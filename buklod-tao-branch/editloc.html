@@ -70,80 +70,219 @@
 
 <body>
     <br>
-    <div class="container">
+    <div class="container"> 
         <!-- Div for margin -->
-        <h1>Edit Location</h1>
+        <h1 class="form-header">Edit Household</h1>
         <br>
-
+        
+        <h2 class="sub-header">HOUSEHOLD INFORMATION</h2>
+        <br>
         <!-- Form -->
         <div class="input_container">
-            <label class="form" for="partner">Partner</label><br>
-            <input type="text" id="partner" name="partner" class="attribs" placeholder="">
+            <label class="form" for="household_name">Household Name</label>
+            <input type="text" id="household_name" name="household_name" class="attribs" placeholder="">
         </div>
-
+    
         <br>
 
         <div class="input_container">
-            <label class="form" for="partner_contact-person">Contact Person of Partner</label><br>
-            <input type="text" id="partner_contact-person" name="partner_contact-person" class="attribs" placeholder="">
+            <label class="form" for="household_address">Address</label>
+            <input type="text" id="household_address" name="household_address" class="attribs" placeholder="">    
         </div>
-
+        
         <br>
 
         <div class="input_container">
-            <label class="form" for="organization">Organization / Unit</label><br>
-            <input type="text" id="organization" name="organization" class="attribs" placeholder="">
+            <label class="form" for="household_phase">Phase</label>
+            <input type="text" id="household_phase" name="household_phase" class="attribs" placeholder="">    
         </div>
-
+        
         <br>
 
         <div class="input_container">
-            <label class="form" for="nature_of_act">Nature of Activity</label><br>
-            <input type="text" id="nature_of_act" name="nature_of_act" class="attribs" placeholder="">
+            <label class="form" for="contact_number">Contact Number</label>
+            <input type="text" id="contact_number" name="contact_number" class="attribs" placeholder="">    
+        </div>
+        
+        <br>
+
+        <div class="input_container">
+            <label class="form" for="residency_status">Residency Status</label>
+            <input type="text" id="residency_status" name="residency_status" class="attribs" placeholder=""> 
+        </div>
+        
+        <br>
+
+        <div class="input_container">
+            <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
+            <input type="checkbox" id="HOA/NOA" name="HOA/NOA" class="attribs" value="yes"> 
         </div>
 
+        <div class="input_container">
+            <label class="form" for="location_link">Location link</label>
+            <input type="text" id="location_link" name="location_link" class="attribs" placeholder=""> 
+        </div>
+        
+        <div class="input_container">
+            <label class="form" for="location_coordinates">Location coords</label>
+            <input type="text" id="location_coordinates" name="location_coordinates" class="attribs" placeholder=""> 
+        </div>
+        
         <br>
 
         <!-- Pressing a button adds another date -->
 
         <div class="input_container">
-            <label class="form" for="dates_of_partnership">Dates of Partnership</label><br>
-            <input type="date" id="dates_of_partnership" name="dates_of_partnership" class="attribs" placeholder="">
+            <label class="form" for="household_material">Materials Used for House</label>
+            <input type="text" id="household_material" name="household_material" class="attribs" placeholder=""> 
+        </div>
+        
+        <br>
+
+        <div class="input_container">
+            <label class="form" for="nearest_evac">Nearest Evactuation Area</label>
+            <input type="text" id="nearest_evac" name="nearest_evac" class="attribs" placeholder="">    
+        </div>
+
+        <div class="input_container">
+            <label class="form" for="status">status</label>
+            <input type="text" id="status" name="status" class="attribs" placeholder="">    
+        </div>
+        
+        <br>
+
+        <h2 class="sub-header">RESIDENT INFORMATION</h2>
+        <br>
+
+        <div class="input_container">
+            <label class="form" for="number_residents">Number of Residents</label>
+            <input type="text" id="number_residents" name="number_residents" class="attribs" placeholder="">    
+        </div>
+        
+        <br>
+
+        <div class="input_container">
+            <label class="form" for="number_minors">Number of Minor Residents</label>
+            <input type="text" id="number_minors" name="number_minors" class="attribs" placeholder="">
         </div>
 
         <br>
 
         <div class="input_container">
-            <label class="form" for="ateneo_office">Ateneo Office Oversight</label><br>
-            <input type="text" id="ateneo_office" name="ateneo_office" class="attribs" placeholder="">
+            <label class="form" for="number_seniors">Number of Senior Citizen Residents</label>
+            <input type="text" id="number_seniors" name="number_seniors" class="attribs" placeholder="">
         </div>
 
         <br>
 
         <div class="input_container">
-            <label class="form" for="ateneo_contact-person">Ateneo Contact Person</label><br>
-            <input type="text" id="ateneo_contact-person" name="ateneo_contact-person" class="attribs" placeholder="">
+            <label class="form" for="number_pwd">Number of PWD Residents</label>
+            <input type="text" id="number_pwd" name="number_pwd" class="attribs" placeholder="">
         </div>
 
         <br>
 
         <div class="input_container">
-            <label class="form" for="ateneo_contact-email">Email</label><br>
-            <input type="email" id="ateneo_contact-email" name="ateneo_contact-email" class="attribs" placeholder="">
+            <label class="form" for="number_sick">Number of Sick Residents</label>
+            <input type="text" id="number_sick" name="number_sick" class="attribs" placeholder="">
         </div>
+
+        <div class="input_container">
+            <label class="form" for="sickness_present">sickness present</label>
+            <input type="text" id="sickness_present" name="sickness_present" class="attribs" placeholder="">
+        </div>
+        
+        <br>
+
+        <div class="input_container">
+            <label class="form" for="number_pregnant">Number of Pregnant Residents</label>
+            <input type="text" id="number_pregnant" name="number_pregnant" class="attribs" placeholder="">
+        </div>
+
+        <br>
+
+        <h2 class="sub-header">RISK LEVELS</h2>
+        <br>
+
+        <div class="input_container">
+            <label class="disaster-form" for="earthquake">Earthquake</label>
+            <select name="earthquake_level" id="earthquake" class="attribs">
+                <option value="" disabled selected hidden></option>
+                <option value="high">HIGH</option>
+                <option value="medium">MEDIUM</option>
+                <option value="low">LOW</option>
+            </select>
+            <input type="text" id="earthquake_risk" name="earthquake_risk" class="attribs" placeholder="">
+        </div>
+
+        <br>
+
+        <div class="input_container">
+            <label class="disaster-form" for="fire">Fire</label>
+            <select name="fire_level" id="fire" class="attribs">
+                <option value="" disabled selected hidden></option>
+                <option value="high">HIGH</option>
+                <option value="medium">MEDIUM</option>
+                <option value="low">LOW</option>
+            </select>
+            <input type="text" id="fire_risk" name="fire_risk" class="attribs" placeholder="">
+        </div>
+
+        <br>
+        
+        <div class="input_container">
+            <label class="disaster-form" for="flood">Flood</label>
+            <select name="flood_level" id="flood" class="attribs">
+                <option value="" disabled selected hidden></option>
+                <option value="high">HIGH</option>
+                <option value="medium">MEDIUM</option>
+                <option value="low">LOW</option>
+            </select>
+            <input type="email" id="flood_risk" name="flood" class="attribs" placeholder="">
+        </div>
+
+        <br>
+        
+        <div class="input_container">
+            <label class="disaster-form" for="landslide">Landslide</label>
+            <select name="landslide_level" id="landslide" class="attribs">
+                <option value="" disabled selected hidden></option>
+                <option value="high">HIGH</option>
+                <option value="medium">MEDIUM</option>
+                <option value="low">LOW</option>
+            </select>
+            <input type="email" id="landslide_risk" name="landslide" class="attribs" placeholder="">
+        </div>
+
+        <br>
+
+        <div class="input_container">
+            <label class="disaster-form" for="storm">Storm</label>
+            <select name="storm_level" id="storm" class="attribs">
+                <option value="" disabled selected hidden></option>
+                <option value="high">HIGH</option>
+                <option value="medium">MEDIUM</option>
+                <option value="low">LOW</option>
+            </select>
+            <input type="email" id="storm_risk" name="storm_risk" class="attribs" placeholder="">
+        </div>
+
+        <br>
 
         <br><br>
 
         <!-- Buttons -->
-        <span class="button_div">
+        <div>
+            <!-- Submits contents of the form -->                                               
+            <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save</button>   
+        </div>
+        <br>
+        <div>
             <!-- Clears all contents of the form -->
-            <button class="clear form">Clear Contents</button>
-            <!-- Submits contents of the form -->
-            <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save Edit</button>
-        </span>
-
-        <br><br><br>
+            <button class="clear form">Delete</button>
+        </div>
     </div>
-</body>
+
+</body>  
 
 </html>
