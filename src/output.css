@@ -1205,6 +1205,10 @@ video {
   align-items: center;
 }
 
+.leaflet-popup-close-button {
+  display: none !important;
+}
+
 .modal {
   display: none;
   position: absolute;
