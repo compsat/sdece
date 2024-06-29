@@ -173,6 +173,7 @@ export function getCollection() {
 }
 
 export function getDocIdByPartnerName(partner_name) {
+	console.log(partner_name);
 	const endName = partner_name.replace(/\s/g, '\uf8ff');
 
 	//rule loop
@@ -187,8 +188,10 @@ export function getDocIdByPartnerName(partner_name) {
 			)
 				.then((querySnapshot) => {
 					if (!querySnapshot.empty) {
+						console.log("not empty, here the only document");
 						// Assuming there is only one document with the given partner name
 						const doc = querySnapshot.docs[0];
+						console.log(doc.id);
 						return doc.id;
 					} else {
 						console.log('EMPTY: No matching document found.');
@@ -212,15 +215,16 @@ export function getDocsByPartnerName(partner_name) {
 			return getDocs(
 				query(
 					collection_reference,
-					where(rule[1], '>=', rule[1]), // let's wait for Luigi's standardization. IF_ELSE nalang muna
-					where(rule[1], '<=', rule[1] + endName)
+					where(rule[1], '>=', partner_name), // let's wait for Luigi's standardization. IF_ELSE nalang muna
+					where(rule[1], '<=', partner_name + endName)
 				)
 			)
 				.then((querySnapshot) => {
 					console.log(querySnapshot);
 					if (!querySnapshot.empty) {
-						// Assuming there is only one document with the given partner name
+						console.log("not empty, here are the docs");
 						const docs = querySnapshot.docs;
+						console.log(docs);
 						return docs;
 					} else {
 						console.log('EMPTY: No matching document found.');

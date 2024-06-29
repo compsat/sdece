@@ -616,6 +616,31 @@ video {
   z-index: 2400;
 }
 
+.float-right {
+  float: right;
+}
+
+.float-left {
+  float: left;
+}
+
+.my-6 {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.z-\[3500\] {
+  z-index: 3500;
+}
+
+.z-\[4000\] {
+  z-index: 4000;
+}
+
+.z-\[4500\] {
+  z-index: 4500;
+}
+
 .mb-6 {
   margin-bottom: 1.5rem;
 }
@@ -626,6 +651,10 @@ video {
 
 .ml-2 {
   margin-left: 0.5rem;
+}
+
+.ml-3 {
+  margin-left: 0.75rem;
 }
 
 .ml-4 {
@@ -668,6 +697,10 @@ video {
   margin-top: 1.5rem;
 }
 
+.mt-8 {
+  margin-top: 2rem;
+}
+
 .mt-9 {
   margin-top: 2.25rem;
 }
@@ -706,8 +739,16 @@ video {
   height: 5rem;
 }
 
+.h-6 {
+  height: 1.5rem;
+}
+
 .h-8 {
   height: 2rem;
+}
+
+.h-\[69\%\] {
+  height: 69%;
 }
 
 .h-auto {
@@ -722,12 +763,16 @@ video {
   height: 100vh;
 }
 
-.w-1\/2 {
-  width: 50%;
-}
-
 .w-14 {
   width: 3.5rem;
+}
+
+.w-6 {
+  width: 1.5rem;
+}
+
+.w-8 {
+  width: 2rem;
 }
 
 .w-96 {
@@ -736,6 +781,10 @@ video {
 
 .w-\[432px\] {
   width: 432px;
+}
+
+.w-\[45\%\] {
+  width: 45%;
 }
 
 .w-\[480px\] {
@@ -754,8 +803,16 @@ video {
   width: 100%;
 }
 
+.w-screen {
+  width: 100vw;
+}
+
 .flex-1 {
   flex: 1 1 0%;
+}
+
+.transform {
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .flex-row {
@@ -766,8 +823,16 @@ video {
   flex-direction: column;
 }
 
+.items-start {
+  align-items: flex-start;
+}
+
 .items-center {
   align-items: center;
+}
+
+.justify-start {
+  justify-content: flex-start;
 }
 
 .justify-end {
@@ -830,6 +895,10 @@ video {
   border-bottom-width: 1px;
 }
 
+.border-none {
+  border-style: none;
+}
+
 .border-customDarkGray {
   --tw-border-opacity: 1;
   border-color: rgb(151 151 151 / var(--tw-border-opacity));
@@ -853,6 +922,10 @@ video {
 .bg-black {
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
+
+.bg-black\/10 {
+  background-color: rgb(0 0 0 / 0.1);
 }
 
 .bg-customLightGray {
@@ -882,6 +955,10 @@ video {
 
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
+}
+
+.fill-customLightGray {
+  fill: #FCFCFC;
 }
 
 .stroke-customDarkGray {
@@ -943,6 +1020,11 @@ video {
   padding-bottom: 1.5rem;
 }
 
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
 .pb-2 {
   padding-bottom: 0.5rem;
 }
@@ -957,6 +1039,10 @@ video {
 
 .pl-5 {
   padding-left: 1.25rem;
+}
+
+.pr-12 {
+  padding-right: 3rem;
 }
 
 .text-center {
@@ -983,6 +1069,11 @@ video {
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
+}
+
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
 
 .text-lg {
@@ -1031,6 +1122,11 @@ video {
   color: rgb(160 160 160 / var(--tw-text-opacity));
 }
 
+.text-customLightGray {
+  --tw-text-opacity: 1;
+  color: rgb(252 252 252 / var(--tw-text-opacity));
+}
+
 .text-darkbg {
   --tw-text-opacity: 1;
   color: rgb(56 113 129 / var(--tw-text-opacity));
@@ -1049,6 +1145,10 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.underline {
+  text-decoration-line: underline;
 }
 
 .shadow-md {
@@ -1075,7 +1175,7 @@ video {
   background-color: white;
 }
 
-.leaflet-popup-content-wrapper{
+.leaflet-popup-content-wrapper {
   border-radius: 8%;
   padding: 2%;
   width: -moz-fit-content;
@@ -1103,38 +1203,59 @@ video {
   display: none;
   position: fixed;
   z-index: 9999;
-  top: 10%;
-  left: 25%;
-  width: 100%;
+  top: 12%;
+  left: 22%;
+  width: auto;
   /* Adjust the width of the modal as needed */
-  max-width: 480px;
-  height: 100%;
+  min-width: 30%;
+  max-width: 35%;
+  height: auto;
   /* Adjust the height of the modal as needed */
   justify-content: center;
-  padding: 20px;
   box-sizing: border-box;
 }
 
 .modal-header {
-  margin-left: 25%;
-  margin-top: 5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 24px 24px;
   width: 100%;
+  height: auto;
   background-color: #fcfcfc;
   transition: 0.4s;
+  position: relative;
+  box-shadow: 0px 2px 5px rgb(225, 225, 225);
+  z-index: 1;
+  border-top-left-radius: 5%;
+  border-top-right-radius: 5%;
 }
 
 .modal-content {
-  margin-top: -72px;
-  margin-left: 25%;
-  padding: 24px 32px;
+  position: relative;
+  padding: 32px 32px;
   width: 100%;
   background-color: #fcfcfc;
   font-family: Hind;
   font-size: 16px;
   font-style: normal;
-  height: calc(80% - 140px);
+  /* height: calc(80% - 140px); */
   overflow-y: auto;
+}
+
+.modal-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 24px 24px;
+  width: 100%;
+  height: auto;
+  background-color: #fcfcfc;
+  position: relative;
+  box-shadow: 0px -2px 50px rgb(235, 235, 235);
+  z-index: 1;
+  border-bottom-left-radius: 5%;
+  border-bottom-right-radius: 5%;
 }
 
 #modalContent > div {
@@ -1142,31 +1263,41 @@ video {
 }
 
 .modal-activities {
+  margin-left: 100;
+  position: relative;
+  width: 100%;
   font-size: 20px;
   font-weight: bold;
 }
 
-.modal-button {
-  margin-left: 25%;
-  margin-top: -15%;
-  padding: 10px 24px;
-  width: 100%;
-}
-
-.modal-name {
+.modal-activities-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   color: #3d97af;
   font-family: Montserrat;
   font-size: 24px;
   font-style: normal;
-  font-weight: 900;
+  font-weight: bolder;
   line-height: 110%;
   letter-spacing: 0.48px;
-  margin-bottom: 24px;
+  margin-bottom: 2px;
+}
+
+.modal-name {
+  color: #387181;
+  font-family: Montserrat;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: bolder;
+  line-height: 110%;
+  letter-spacing: 0.48px;
+  margin-bottom: 2px;
 }
 
 .modal-address {
   color: #a0a0a0;
-  font-family: Hind;
+  font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -1177,14 +1308,13 @@ video {
 
 .close {
   color: #aaaaaa;
-  float: right;
   font-size: 28px;
   font-weight: bold;
 }
 
 .close:hover,
 .close:focus {
-  color: #000;
+  color: #3d97af;
   text-decoration: none;
   cursor: pointer;
 }
@@ -1210,6 +1340,10 @@ video {
 .hover\:text-darkbg:hover {
   --tw-text-opacity: 1;
   color: rgb(56 113 129 / var(--tw-text-opacity));
+}
+
+.focus\:border-none:focus {
+  border-style: none;
 }
 
 .focus\:outline-none:focus {
