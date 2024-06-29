@@ -1,134 +1,375 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Add Location</title>
-        
-        <!-- Import Tailwind CSS output file -->
-        <link href="./src/output.css" rel="stylesheet">
-        
-        <!-- Import Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-            
-        <script type="module">
-            //import { addLocation } from "./js/firestore.js";
-            import { addEntry, SDECE_RULES_TEST, setCollection } from "/firestore_UNIV.js";
+	<head>
+		<title>Add Location</title>
 
-            setCollection("sdece-official-TEST");
+		<!-- Import Tailwind CSS output file -->
+		<link href="./src/output.css" rel="stylesheet" />
 
-            document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
+		<!-- Import Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap"
+			rel="stylesheet"
+		/>
 
-            function handleFormSubmit_v2(){
-                console.log("clicked");
-                var collatedInput = {};
+		<script type="module">
+			//import { addLocation } from "./js/firestore.js";
+			import {
+				addEntry,
+				SDECE_RULES_TEST,
+				setCollection,
+			} from '/firestore_UNIV.js';
 
-                for(let i = 0; i < SDECE_RULES_TEST[2].length; i++){
-                    //SDECE_RULES_TEST[2] are just the field names of each document
-                    console.log(SDECE_RULES_TEST[2][i]);
-                    let q = document.getElementById(SDECE_RULES_TEST[2][i]).value;
-                    collatedInput[SDECE_RULES_TEST[2][i]] = q;
+			setCollection('sdece-official-TEST');
 
-                    // this is where data validation will happen
-                    // add the if-else statements of edge cases here
-                }
+			document
+				.getElementById('submit_form')
+				.addEventListener('click', handleFormSubmit_v2);
 
-                console.log(collatedInput);
-                // This actually works but it needs some data validation
-                // uncomment at the db's risk
-                addEntry(collatedInput);
-            }
-        </script>
-    </head>
-    
-    <body>
-        <div class="p-8 bg-customLightGray w-1/2"> 
-            <h1 class="font-montserrat text-3xl font-bold text-darkbg mb-8">Add Activity</h1>
-            <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="activity_name">Name of Activity</label>
-                <input type="text" id="activity_name" name="activity_name" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
-            </div>
+			function handleFormSubmit_v2() {
+				console.log('clicked');
+				var collatedInput = {};
 
-            <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="activity_date">Date of Activity</label>
-                <input type="text" id="activity_date" name="activity_date" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
-            </div>
+				for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
+					//SDECE_RULES_TEST[2] are just the field names of each document
+					console.log(SDECE_RULES_TEST[2][i]);
+					let q = document.getElementById(
+						SDECE_RULES_TEST[2][i]
+					).value;
+					collatedInput[SDECE_RULES_TEST[2][i]] = q;
 
-            <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="activity_nature">Nature of Activity</label>
-                <input type="text" id="activity_nature" name="activity_nature" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder=""> 
-            </div>
+					// this is where data validation will happen
+					// add the if-else statements of edge cases here
+				}
 
-            <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="partner_name">Partner</label>
-                <input type="text" id="partner_name" name="partner_name" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">
-            </div>
-        
-            <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="partner_contact">Contact Person of Partner</label>
-                <input type="text" id="partner_contact" name="partner_contact" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-            </div>
+				console.log(collatedInput);
+				// This actually works but it needs some data validation
+				// uncomment at the db's risk
+				addEntry(collatedInput);
+			}
+		</script>
+	</head>
+	<body>
+		<form
+			action=""
+			id="addLocForm"
+			class="flex flex-row justify-center items-center z-[4000] bg-customLightGray"
+		>
+			<div class="p-8 overflow-y-scroll rounded-lg w-full">
+				<!-- Header -->
+				<div class="flex flex-row justify-between">
+					<h1
+						class="font-montserrat text-3xl font-bold text-darkbg mb-8"
+					>
+						Add Activity
+					</h1>
 
-            <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="partner_city">City of Partner</label>
-                <input type="text" id="partner_city" name="partner_city" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-            </div>
+					<button id="close-btn">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							class="size-8 stroke-customDarkGray"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M6 18 18 6M6 6l12 12"
+							/>
+						</svg>
+					</button>
+				</div>
 
-            <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="partner_coordinates">Coordinates of Partner</label>
-                <input type="text" id="partner_coordinates" name="partner_coordinates" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-            </div>
+				<!-- General Information -->
+				<div class="">
+					<div
+						class="flex flex-row justify-between mb-6 items-center"
+					>
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="activity_name"
+							>Activity Name</label
+						>
+						<input
+							type="text"
+							id="activity_name"
+							name="activity_name"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
+							placeholder=""
+						/>
+					</div>
 
-            <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="partner_email">Email of Partner</label>
-                <input type="text" id="partner_email" name="partner_email" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-            </div>
+					<div
+						class="flex flex-row justify-between mb-6 items-center"
+					>
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="activity_nature"
+							>Nature of Activity</label
+						>
+						<input
+							type="text"
+							id="activity_nature"
+							name="activity_nature"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
+							placeholder=""
+						/>
+					</div>
 
-            <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="partner_number">Contact number of Partner</label>
-                <input type="text" id="partner_number" name="partner_number" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-            </div>
+					<div class="flex flex-row justify-between w-full mb-6">
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="activity_date"
+							>Dates of Partnership</label
+						>
 
-            <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="additional_partnership">additional Partner</label>
-                <input type="text" id="additional_partnership" name="additional_partnership" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-            </div>
-                
-            <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="organization_unit">Organization / Unit</label>
-                <input type="text" id="organization_unit" name="organization_unit" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-            </div>
-                
-            <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="admu_office">Ateneo Office Oversight</label>
-                <input type="text" id="admu_office" name="admu_office" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-            </div>
-                
-            <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="admu_contact">Ateneo Contact Person</label>
-                <input type="text" id="admu_contact" name="admu_contact" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-            </div>
-                
-            <div class="flex flex-row justify-between mb-6 items-center">
-                <label class="form font-montserrat text-xl text-customGray" for="admu_email">Email</label>
-                <input type="email" id="admu_email" name="admu_email" class="py-4 px-8 w-96 rounded border font-montserrat" placeholder="">    
-            </div>
-    
-            <!-- Buttons -->
-            <span class="button_div">
-                <!-- Clears all contents of the form -->
-                <button class="w-full py-4 text-center font-montserrat text-2xl bg-lightbg text-white font-bold rounded-lg" type="submit" id="submit_form" name="submit_form">Add Activity</button>   
-                <button class="w-full py-4 text-center font-montserrat text-2xl text-red-700 font-bold border border-red-700 rounded-lg mt-4">Clear</button>
-                <!-- Submits contents of the form -->                                               
-            </span>
+						<div
+							class="flex flex-col items-start"
+							id="date-container"
+						>
+							<input
+								type="date"
+								id="activity_date"
+								name="activity_date"
+								class="py-4 px-8 w-96 rounded border font-montserrat"
+								placeholder=""
+							/>
+							<a
+								href=""
+								class="text-base font-montserrat text-lightbg underline mt-4"
+								id="add-date"
+								>Add another date</a
+							>
+						</div>
+					</div>
+				</div>
 
-        </div>
+				<!-- PARTNER INFORMATION -->
+				<div class="">
+					<h2
+						class="w-full text-lightbg font-montserrat text-xl mt-10 font-bold mb-6"
+					>
+						PARTNER INFORMATION
+					</h2>
 
-    </body>  
+					<div
+						class="flex flex-row justify-between mb-6 items-center"
+					>
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="partner_name"
+							>Name of Host Partner</label
+						>
+						<input
+							type="text"
+							id="partner_name"
+							name="partner_name"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
+							placeholder=""
+						/>
+					</div>
+
+					<div
+						class="flex flex-row justify-between mb-6 items-center"
+					>
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="partner_contact"
+							>Address of Host Partner</label
+						>
+						<input
+							type="text"
+							id="partner_contact"
+							name="partner_contact"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
+							placeholder=""
+						/>
+					</div>
+					<div
+						class="flex flex-row justify-between mb-6 items-center"
+					>
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="partner_contact"
+							>Name of Contact Person</label
+						>
+						<input
+							type="text"
+							id="partner_contact"
+							name="partner_contact"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
+							placeholder=""
+						/>
+					</div>
+
+					<div
+						class="flex flex-row justify-between mb-6 items-center"
+					>
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="partner_number"
+							>Number of Contact Person
+						</label>
+						<input
+							type="text"
+							id="partner_number"
+							name="partner_number"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
+							placeholder=""
+						/>
+					</div>
+					<div
+						class="flex flex-row justify-between mb-6 items-center"
+					>
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="partner_email"
+							>Email of Contact Person / Partner</label
+						>
+						<input
+							type="email"
+							id="partner_email"
+							name="partner_email"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
+							placeholder=""
+						/>
+					</div>
+				</div>
+
+				<div class="">
+					<h2
+						class="w-full text-lightbg font-montserrat text-xl mt-10 font-bold mb-6"
+					>
+						ATENEO OFFICE OVERSIGHT
+					</h2>
+
+					<div
+						class="flex flex-row justify-between mb-6 items-center"
+					>
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="admu_office"
+							>Name of Office</label
+						>
+						<input
+							type="text"
+							id="admu_office"
+							name="admu_office"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
+							placeholder=""
+						/>
+					</div>
+					<div
+						class="flex flex-row justify-between mb-6 items-center"
+					>
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="admu_contact"
+							>Name of Ateneo Contact Person</label
+						>
+						<input
+							type="text"
+							id="admu_contact"
+							name="admu_contact"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
+							placeholder=""
+						/>
+					</div>
+
+					<div
+						class="flex flex-row justify-between items-center"
+					>
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="admu_email"
+							>Email of Ateneo Contact Person</label
+						>
+						<input
+							type="email"
+							id="admu_email"
+							name="admu_email"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
+							placeholder=""
+						/>
+					</div>
+				</div>
+
+				<!-- Buttons -->
+				<div class="button_div py-8 mt-8">
+					<!-- Clears all contents of the form -->
+					<button
+						class="w-full py-4 text-center font-montserrat text-2xl bg-lightbg text-white font-bold rounded-lg"
+						type="submit"
+						id="submit_form"
+						name="submit_form"
+					>
+						Save
+					</button>
+					<button
+						class="w-full py-4 text-center font-montserrat text-2xl text-red-700 font-bold border border-red-700 rounded-lg mt-4"
+					>
+						Delete
+					</button>
+					<!-- Submits contents of the form -->
+				</div>
+			</div>
+		</form>
+
+		<script>
+			document
+				.getElementById('addLocForm')
+				.addEventListener('submit', function (event) {
+					event.preventDefault(); // Prevent the default form submission
+
+					// Simulate successful submission (replace with actual form submission code)
+					// Example: Submit form data via AJAX or fetch API
+
+					// Assuming form submission is successful
+					// Notify parent window (where the iframe is embedded)
+					window.parent.postMessage(
+						{ type: 'addlocFormSuccess' },
+						'*'
+					);
+				});
+
+			document
+				.getElementById('add-date')
+				.addEventListener('click', function (event) {
+					event.preventDefault();
+					var dateContainer =
+						document.getElementById('date-container');
+					var newDateInput = document.createElement('input');
+					newDateInput.type = 'date';
+					newDateInput.name = 'activity_date';
+					newDateInput.className =
+						'py-4 px-8 w-96 rounded border font-montserrat mt-2';
+					dateContainer.insertBefore(newDateInput, this);
+				});
+
+			document
+				.getElementById('close-btn')
+				.addEventListener('click', function (event) {
+					event.preventDefault();
+					console.log(
+						'The user has closed the Add Activity modal.'
+					);
+					window.parent.postMessage('closeAddModal', '*');
+				});
+		</script>
+	</body>
 </html>

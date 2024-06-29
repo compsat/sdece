@@ -63,20 +63,18 @@ getDocs(colRef)
 				// This is the popup for when the user clicks on a partner
 				var popupContent = `
 					<div class="leaflet-popup-container">
-					<h2 class="partner-popup">${loc}</h2>          				
+					<h2 class="partner-popup"></h2>          				
 				`;
 
 				marker.bindPopup(popupContent);
 				results.addLayer(marker);
 
 				marker.on('popupopen', function () {
-					var pin = document.getElementsByClassName('partner-popup')[0];
-					pin.addEventListener(
-						'click',
-						function () {
-
-						}
-					);
+					var pin =
+						document.getElementsByClassName(
+							'partner-popup'
+						)[0];
+					pin.addEventListener('click', function () {});
 					// var expandButtons =
 					// 	document.getElementsByClassName('expandPopUp');
 					// for (var i = 0; i < expandButtons.length; i++) {
@@ -239,4 +237,3 @@ function testFunction() {
 	m.classList.remove('hidden');
 	m.classList.add('flex');
 }
-
