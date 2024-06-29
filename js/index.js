@@ -38,7 +38,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 var searchControl = L.esri.Geocoding.geosearch().addTo(map);
-
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
@@ -62,8 +61,9 @@ getDocs(colRef)
 				results.addLayer(marker);
 
 				var popupContent = `
-					<div class="partner-popup w-auto font-semibold text-sm font-montserrat text-darkbg !text-center	">				
-				`;
+					<div class="partner-popup w-auto font-semibold text-sm font-montserrat text-darkbg !text-center	" id="`;
+				popupContent += doc.partner_name;
+				popupContent += `">`;
 				popupContent += doc.partner_name;
 				popupContent += `</div>`;
 
@@ -71,8 +71,19 @@ getDocs(colRef)
 				results.addLayer(marker);
 			});
 
-			// TODO: Add the showModal() function from firestore.js to each marker since modal should be the same
-			// marker.addEventListener('click', showModal(doc[0]));
+			marker.on('popupopen', function () {
+				console.log('Clicked on ' + doc.partner_name + ' pin!');
+
+				var test = document.getElementById(doc.partner_name);
+				test.addEventListener('click', function () {
+					console.log(
+						'Clicked on the pop-up content of ' +
+							doc.partner_name
+					);
+
+					// TODO: call showModal(partner) here!
+				});
+			});
 		});
 	})
 	.catch((error) => {
