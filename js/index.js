@@ -56,10 +56,8 @@ getDocs(colRef)
 				]);
 			}
 
-			// TODO: Modify pop-up instantiation to use a custom pop-up instead of a marker bind (Low prio)
 			getDivContent(doc.partner_name).then((div) => {
 				results.addLayer(marker);
-
 				var popupContent = `
 					<div class="partner-popup w-auto font-semibold text-sm font-montserrat text-darkbg !text-center	" id="`;
 				popupContent += doc.partner_name;
@@ -81,7 +79,7 @@ getDocs(colRef)
 							doc.partner_name
 					);
 
-					// TODO: call showModal(partner) here!
+					// TODO: call showModal(partner) here! Not super sure what the partner object should be in this case
 				});
 			});
 		});
