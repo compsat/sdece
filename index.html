@@ -810,14 +810,16 @@
 			function hideAddModalContainer() {
 				var iframeContainer = document.getElementById('addModal');
 				if (iframeContainer) {
-					iframeContainer.style.display = 'none';
+					iframeContainer.classList.add('hidden');
+					iframeContainer.classList.remove('flex');
 				}
 			}
 
 			function hideEditModalContainer() {
 				var iframeContainer = document.getElementById('editModal');
 				if (iframeContainer) {
-					iframeContainer.style.display = 'none';
+					iframeContainer.classList.add('hidden');
+					iframeContainer.classList.remove('flex');
 				}
 			}
 
