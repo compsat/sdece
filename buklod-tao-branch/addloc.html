@@ -6,9 +6,12 @@
             
         <script type="module">
             //import { addLocation } from "./js/firestore.js";
-            import { addEntry, BUKLOD_RULES_TEST, setCollection } from "/firestore_UNIV.js";
+            import { addEntry, BUKLOD_RULES_TEST, setCollection, validateData } from "/firestore_UNIV.js";
             setCollection("buklod-official-TEST");
-            document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
+            document.addEventListener("DOMContentLoaded", function() {
+                document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
+            });
+            
 
             function handleFormSubmit_v2(){
                 console.log("clicked");
@@ -17,17 +20,50 @@
                 for(let i = 0; i < BUKLOD_RULES_TEST[2].length; i++){
                     //BUKLOD_RULES_TEST[2] are just the field names of each document
                     console.log(BUKLOD_RULES_TEST[2][i]);
-                    let q = document.getElementById(BUKLOD_RULES_TEST[2][i]).value;
-                    collatedInput[BUKLOD_RULES_TEST[2][i]] = q;
+                    // let q = document.getElementById(BUKLOD_RULES_TEST[2][i]).value;
+                    // collatedInput[BUKLOD_RULES_TEST[2][i]] = q;
+
+                    let fieldName = BUKLOD_RULES_TEST[2][i];
+                    let inputValue = document.getElementById(fieldName).value;
+
+                    if (fieldName == 'number_residents' || fieldName == 'location_coordinates' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick') {
+                        collatedInput[fieldName] = Number(inputValue);
+                    } else {
+                        collatedInput[fieldName] = inputValue;
+                    }
 
                     // this is where data validation will happen
                     // add the if-else statements of edge cases here
                 }
 
                 console.log(collatedInput);
-                // This actually works but it needs some data validation
-                // uncomment at the db's risk
-                addEntry(collatedInput);
+
+                const errors = validateData("buklod-official-TEST", collatedInput);
+
+                if (errors.length > 0) {
+                    displayErrors(errors);
+                } else {
+                    addEntry(collatedInput);
+                }
+
+                function displayErrors(errors) {
+                let errorDiv = document.getElementById('error_messages');
+
+                if (errorDiv) {
+
+                    errorDiv.innerHTML = '';
+
+                    if (errors.length > 0) {
+                        for (let error of errors) {
+                            let errorParagraph = document.createElement('p');
+                            errorParagraph.textContent = error;
+                            errorDiv.appendChild(errorParagraph);
+                        }
+                    }
+                    } else {
+                        console.error("Error: Couldn't find element with ID 'error_messages'.");
+                    }
+                }
             }
         </script>
     </head>
@@ -79,7 +115,7 @@
 
             <div class="input_container">
                 <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
-                <input type="checkbox" id="HOA/NOA" name="HOA/NOA" class="attribs" value="yes"> 
+                <input type="text" id="is_hoa_noa" name="HOA/NOA" class="attribs" placeholder=""> 
             </div>
 
             <div class="input_container">
@@ -120,7 +156,7 @@
     
             <div class="input_container">
                 <label class="form" for="number_residents">Number of Residents</label>
-                <input type="text" id="number_residents" name="number_residents" class="attribs" placeholder="">    
+                <input type="number" id="number_residents" name="number_residents" class="attribs" placeholder="">    
             </div>
             
             <br>
@@ -234,6 +270,12 @@
             <br>
 
             <br><br>
+
+            <!-- Error Messages -->
+            <div id="error_messages"></div>
+    
+            <br><br>
+    
     
             <!-- Buttons -->
             <div>
