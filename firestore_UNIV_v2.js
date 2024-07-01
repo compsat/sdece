@@ -95,6 +95,7 @@ DB_RULES_ENGINE
 )
 
 export function setCollection(collection_name){
+  console.log(DB_RULES_ENGINE)
   if(DB_RULES_ENGINE.has(collection_name)){
     // Gets the rules from the branch
     rules = DB_RULES_ENGINE.get(collection_name);
@@ -120,7 +121,8 @@ export function loadDocs() {
 }
 
 function testing(){
-  document_values = getValuesFromMap('flood_risk')
+  console.log(document_map);
+  document_values = getValuesFromMap('fire_risk');
   console.log(document_values);
 }
 
@@ -129,7 +131,7 @@ function getValuesFromMap(desired_keys){
   document_map.forEach((values, keys) => {
     Object.entries(values).forEach((val) =>{
       if(val[0] == desired_keys){
-        array.push(val[1]);
+        array.push([val[0], val[1]]);
       }
     })
   });
