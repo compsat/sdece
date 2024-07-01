@@ -39,6 +39,7 @@
 			document
 				.getElementById('submit_form')
 				.addEventListener('click', handleFormSubmit_v2);
+				// .addEventListener('click', handleFormSubmit_v3);
 
 			function handleFormSubmit_v2() {
 				console.log('clicked');
@@ -61,6 +62,22 @@
 				// uncomment at the db's risk
 				addEntry(collatedInput);
 			}
+			
+			// function handleFormSubmit_v3() {
+			// 	console.log("v3 clicked!");
+			// 	var collatedInput = {};
+
+			// 	for (let i = 0; i < SDECE_RULES_TEST[2].length; i++){
+			// 		console.log(SDECE_RULES_TEST[2][i]);
+			// 		let q = document.getElementById(SDECE_RULES_TEST[2][i]).value;
+			// 		collatedInput[SDECE_RULES_TEST[2][i]] = q;
+			// 	}
+
+			// 	console.log(collatedInput);
+			// 	addEntry(collatedInput);
+
+			// }
+
 		</script>
 	</head>
 	<body>
@@ -373,5 +390,6 @@
 					window.parent.postMessage('closeAddModal', '*');
 				});
 		</script>
+
 	</body>
 </html>
