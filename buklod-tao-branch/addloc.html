@@ -26,8 +26,12 @@
                     let fieldName = BUKLOD_RULES_TEST[2][i];
                     let inputValue = document.getElementById(fieldName).value;
 
-                    if (fieldName == 'number_residents' || fieldName == 'location_coordinates' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick') {
-                        collatedInput[fieldName] = Number(inputValue);
+                    if (fieldName == 'number_residents' || fieldName == 'location_coordinates' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick' || fieldName == 'number_seniors') {
+                        if (isNaN(collatedInput[fieldName] = Number(inputValue)) == true) {
+                            collatedInput[fieldName] = inputValue;
+                        } else {
+                            collatedInput[fieldName] = Number(inputValue);
+                        }
                     } else {
                         collatedInput[fieldName] = inputValue;
                     }

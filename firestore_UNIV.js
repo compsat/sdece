@@ -345,7 +345,6 @@ export function validateData(collectionName, data) {
 			continue;
 		}
 
-
 		// Check for minimum length
 		if (rule.minLength && typeof value == 'string' && value.length < rule.minLength) {
 			errors.push(`Field '${field}' must be at least ${rule.minLength} characters long.`);
