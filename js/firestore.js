@@ -17,6 +17,8 @@ import {
 	SDECE_RULES,
 	getDocIdByPartnerName,
 } from '/firestore_UNIV.js';
+
+import { showAddModal } from './index.js';
 // Your Firestore code here
 
 // Import the functions you need from the SDKs you need
@@ -256,8 +258,11 @@ getDocs(col_ref)
 	});
 
 // Display partner modal by clicking partner entry (WIP: and on pin pop up click)
-function showModal(partner) {
+export function showModal(partner) {
 	console.log('SHOW THE MODAL');
+
+	console.log('Partner being shown as modal: ' + partner[0][0]);
+
 	const modal = document.getElementById('partnerModal');
 	const modalHeader = document.getElementById('modalHeader');
 	const modalContent = document.getElementById('modalContent');
@@ -329,6 +334,7 @@ function showModal(partner) {
 	// Add button for adding activities
 	addActivity.addEventListener('click', () => {
 		console.log('Clicked add activity in the partner modal');
+		showAddModal();
 	});
 
 	activityHeaderDiv.appendChild(addActivity);
@@ -458,6 +464,7 @@ function showModal(partner) {
 	});
 
 	var editButtons = document.getElementsByClassName('editButton');
+
 	for (var i = 0; i < editButtons.length; i++) {
 		editButtons[i].addEventListener('click', function () {
 			console.log('Clicked edit activity');

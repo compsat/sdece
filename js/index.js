@@ -1,4 +1,4 @@
-import {} from './firestore.js';
+import { showModal } from './firestore.js';
 import {
 	getDocIdByPartnerName,
 	getDocByID,
@@ -38,16 +38,18 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 var searchControl = L.esri.Geocoding.geosearch().addTo(map);
-
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
-// Loads art the start
+// Loads at the start
+
 getDocs(colRef)
 	.then((querySnapshot) => {
 		querySnapshot.forEach((entry) => {
 			var doc = entry.data();
+
 			var marker;
+
 			// Some coordinated are null, protective check
 			if (doc.partner_coordinates != null) {
 				marker = L.marker([
@@ -55,84 +57,31 @@ getDocs(colRef)
 					parseFloat(doc.partner_coordinates.longitude),
 				]);
 			}
-			// TODO HAVE THIS BE CONSISTENT ACROSS EVERYTHING
-			getDivContent(doc.partner_name).then((div) => {
-				marker.bindPopup(div);
-				results.addLayer(marker);
 
-				// This is the popup for when the user clicks on a partner
+			getDivContent(doc.partner_name).then((div) => {
+				results.addLayer(marker);
 				var popupContent = `
-					<div class="leaflet-popup-container">
-					<h2 class="partner-popup"></h2>          				
-				`;
+					<div class="partner-popup w-auto font-semibold text-sm font-montserrat text-darkbg !text-center	" id="`;
+				popupContent += doc.partner_name;
+				popupContent += `">`;
+				popupContent += doc.partner_name;
+				popupContent += `</div>`;
 
 				marker.bindPopup(popupContent);
 				results.addLayer(marker);
+			});
 
-				marker.on('popupopen', function () {
-					var pin =
-						document.getElementsByClassName(
-							'partner-popup'
-						)[0];
-					pin.addEventListener('click', function () {});
-					// var expandButtons =
-					// 	document.getElementsByClassName('expandPopUp');
-					// for (var i = 0; i < expandButtons.length; i++) {
-					// 	expandButtons[i].addEventListener(
-					// 		'click',
-					// 		function () {
-					// 			// Select the modal and partnerName elements
-					// 			var modal =
-					// 				document.getElementById(
-					// 					'partnerModal'
-					// 				);
+			marker.on('popupopen', function () {
+				console.log('Clicked on ' + doc.partner_name + ' pin!');
 
-					// 			// TODO: Integrate this functionality into the modal instead
-					// 			// var partnerName = this.getAttribute("data-loc");
-					// 			//       window.open(
-					// 			//         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
-					// 			//         "_blank"
-					// 			//       );
+				var test = document.getElementById(doc.partner_name);
+				test.addEventListener('click', function () {
+					console.log(
+						'Clicked on the pop-up content of ' +
+							doc.partner_name
+					);
 
-					// 			// Display the modal
-					// 			modal.classList.remove('hidden');
-					// 			modal.classList.add('flex');
-
-					// 			// Close the modal when the user clicks anywhere outside of it
-					// 			window.onclick = function (event) {
-					// 				if (event.target == modal) {
-					// 					modal.classList.add('hidden');
-					// 				}
-					// 			};
-					// 		}
-					// 	);
-					// }
-
-					// Pop up toggle show/hide
-					var acc =
-						document.getElementsByClassName(
-							'popup-accordion'
-						);
-					var i;
-
-					for (i = 0; i < acc.length; i++) {
-						acc[i].addEventListener('click', function () {
-							/* Toggle between adding and removing the "active" class,
-            to highlight the button that controls the panel */
-							this.classList.toggle('active');
-
-							/* Toggle between hiding and showing the active panel */
-							var contents = this.nextElementSibling;
-							if (contents.style.display === 'block') {
-								contents.style.display = 'none';
-							} else {
-								contents.style.display = 'block';
-							}
-						});
-					}
-				});
-				marker.on('click', function (event) {
-					console.log(getDetails(entry['name']));
+					// TODO: call showModal(partner) here! Not super sure what the partner object should be in this case
 				});
 			});
 		});
@@ -203,11 +152,11 @@ function onMapClick(e) {
 map.on('click', onMapClick);
 map.panTo(new L.LatLng(14.652538, 121.077818));
 
-// Show main Add an activity modal
+// Show Main modal
 const element = document.getElementById('mainButton');
-element.addEventListener('click', showModal);
+element.addEventListener('click', showMainModal);
 
-function showModal() {
+function showMainModal() {
 	console.log("'Add an activity' button was clicked!");
 
 	var mainModal = document.getElementById('mainModal');
@@ -215,7 +164,7 @@ function showModal() {
 	mainModal.classList.add('flex');
 }
 
-// Close main Add an activity modal
+// Close Main modal
 const elementCloseButton = document.getElementById('closeButton');
 elementCloseButton.addEventListener('click', closeModal);
 
@@ -226,11 +175,10 @@ function closeModal() {
 }
 
 // Fuction for filtering results upon searching partners
-
 const newButton = document.getElementById('otherButton');
-newButton.addEventListener('click', testFunction);
+newButton.addEventListener('click', showAddModal);
 
-function testFunction() {
+export function showAddModal() {
 	console.log('The button is working');
 
 	var m = document.getElementById('addModal');
