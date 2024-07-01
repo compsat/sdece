@@ -215,6 +215,40 @@
 					>
 						<label
 							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="additional_partnership"
+							>Additional Partnership</label
+						>
+						<input
+							type="text"
+							id="additional_partnership"
+							name="additional_partnership"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
+							placeholder=""
+						/>
+					</div>
+
+					<div
+						class="flex flex-row justify-between mb-6 items-center"
+					>
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="organization_unit"
+							>Organization Unit</label
+						>
+						<input
+							type="text"
+							id="organization_unit"
+							name="organization_unit"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
+							placeholder=""
+						/>
+					</div>
+
+					<div
+						class="flex flex-row justify-between mb-6 items-center"
+					>
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
 							for="partner_name"
 							>Name of Host Partner</label
 						>
@@ -232,13 +266,13 @@
 					>
 						<label
 							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="partner_contact"
+							for="partner_address"
 							>Address of Host Partner</label
 						>
 						<input
 							type="text"
-							id="partner_contact"
-							name="partner_contact"
+							id="partner_address"
+							name="partner_address"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
 							placeholder=""
 						/>
@@ -248,13 +282,13 @@
 					>
 						<label
 							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="partner_contact"
+							for="partner_contact_name"
 							>Name of Contact Person</label
 						>
 						<input
 							type="text"
-							id="partner_contact"
-							name="partner_contact"
+							id="partner_contact_name"
+							name="partner_contact_name"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
 							placeholder=""
 						/>
@@ -265,13 +299,13 @@
 					>
 						<label
 							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="partner_number"
+							for="partner_contact_number"
 							>Number of Contact Person
 						</label>
 						<input
 							type="text"
-							id="partner_number"
-							name="partner_number"
+							id="partner_contact_number"
+							name="partner_contact_number"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
 							placeholder=""
 						/>
@@ -292,6 +326,23 @@
 							placeholder=""
 						/>
 					</div>
+
+					<div
+						class="flex flex-row justify-between mb-6 items-center"
+					>
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="partner_coordinates"
+							>Coordinates</label
+						>
+						<input
+							type="geopoint"
+							id="partner_coordinates"
+							name="partner_coordinates"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
+							placeholder=""
+						/>
+					</div>
 				</div>
 
 				<div class="">
@@ -306,13 +357,13 @@
 					>
 						<label
 							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="admu_office"
+							for="ADMU_office"
 							>Name of Office</label
 						>
 						<input
 							type="text"
-							id="admu_office"
-							name="admu_office"
+							id="ADMU_office"
+							name="ADMU_office"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
 							placeholder=""
 						/>
@@ -322,13 +373,13 @@
 					>
 						<label
 							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="admu_contact"
+							for="ADMU_contact_name"
 							>Name of Ateneo Contact Person</label
 						>
 						<input
 							type="text"
-							id="admu_contact"
-							name="admu_contact"
+							id="ADMU_contact_name"
+							name="ADMU_contact_name"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
 							placeholder=""
 						/>
@@ -339,13 +390,13 @@
 					>
 						<label
 							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="admu_email"
+							for="ADMU_email"
 							>Email of Ateneo Contact Person</label
 						>
 						<input
 							type="email"
-							id="admu_email"
-							name="admu_email"
+							id="ADMU_email"
+							name="ADMU_email"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
 							placeholder=""
 						/>
@@ -370,6 +421,9 @@
 					</button>
 					<!-- Submits contents of the form -->
 				</div>
+				<div id="error_messages"></div>
+    
+            <br><br>
 			</div>
 		</form>
 
