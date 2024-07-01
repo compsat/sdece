@@ -111,7 +111,7 @@
 							id="activity_name"
 							name="activity_name"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
+							placeholder="Ex. CSIP Session Week 3"
 						/>
 					</div>
 
@@ -128,7 +128,7 @@
 							id="activity_nature"
 							name="activity_nature"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
+							placeholder="Ex. Tutorial Classes"
 						/>
 					</div>
 
@@ -173,6 +173,40 @@
 					>
 						<label
 							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="additional_partnership"
+							>Additional Partnership</label
+						>
+						<input
+							type="text"
+							id="additional_partnership"
+							name="additional_partnership"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
+							placeholder="Ex. Couples for Christ North B Sector"
+						/>
+					</div>
+
+					<div
+						class="flex flex-row justify-between mb-6 items-center"
+					>
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="organization_unit"
+							>Organization Unit</label
+						>
+						<input
+							type="text"
+							id="organization_unit"
+							name="organization_unit"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
+							placeholder="ACIL"
+						/>
+					</div>
+
+					<div
+						class="flex flex-row justify-between mb-6 items-center"
+					>
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
 							for="partner_name"
 							>Name of Host Partner</label
 						>
@@ -181,7 +215,7 @@
 							id="partner_name"
 							name="partner_name"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
+							placeholder="Ex. Íñigo López de Loyola"
 						/>
 					</div>
 
@@ -190,15 +224,15 @@
 					>
 						<label
 							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="partner_contact"
+							for="partner_address"
 							>Address of Host Partner</label
 						>
 						<input
 							type="text"
-							id="partner_contact"
-							name="partner_contact"
+							id="partner_address"
+							name="partner_address"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
+							placeholder="Ex. Katipunan, Quezon City"
 						/>
 					</div>
 					<div
@@ -206,15 +240,15 @@
 					>
 						<label
 							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="partner_contact"
+							for="partner_contact_name"
 							>Name of Contact Person</label
 						>
 						<input
 							type="text"
-							id="partner_contact"
-							name="partner_contact"
+							id="partner_contact_name"
+							name="partner_contact_name"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
+							placeholder="Ex. Íñigo López de Loyola"
 						/>
 					</div>
 
@@ -223,15 +257,15 @@
 					>
 						<label
 							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="partner_number"
-							>Number of Contact Person
+							for="partner_contact_number"
+							>Contact Number of Contact Person
 						</label>
 						<input
 							type="text"
-							id="partner_number"
-							name="partner_number"
+							id="partner_contact_number"
+							name="partner_contact_number"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
+							placeholder="09XX XXX XXXX"
 						/>
 					</div>
 					<div
@@ -247,7 +281,24 @@
 							id="partner_email"
 							name="partner_email"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
+							placeholder="Ex. ignatius@ateneo.edu"
+						/>
+					</div>
+
+					<div
+						class="flex flex-row justify-between mb-6 items-center"
+					>
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="partner_coordinates"
+							>Partner Coordinates</label
+						>
+						<input
+							type="geopoint"
+							id="partner_coordinates"
+							name="partner_coordinates"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
+							placeholder="Ex. 14.6895421, 121.0818291"
 						/>
 					</div>
 				</div>
@@ -264,15 +315,15 @@
 					>
 						<label
 							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="admu_office"
-							>Name of Office</label
+							for="ADMU_office"
+							>Name of Ateneo Office</label
 						>
 						<input
 							type="text"
-							id="admu_office"
-							name="admu_office"
+							id="ADMU_office"
+							name="ADMU_office"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
+							placeholder="Ex. OSA"
 						/>
 					</div>
 					<div
@@ -280,15 +331,15 @@
 					>
 						<label
 							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="admu_contact"
+							for="ADMU_contact_name"
 							>Name of Ateneo Contact Person</label
 						>
 						<input
 							type="text"
-							id="admu_contact"
-							name="admu_contact"
+							id="ADMU_contact_name"
+							name="ADMU_contact_name"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
+							placeholder="Ex. Íñigo López de Loyola"
 						/>
 					</div>
 
@@ -297,15 +348,15 @@
 					>
 						<label
 							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="admu_email"
+							for="ADMU_email"
 							>Email of Ateneo Contact Person</label
 						>
 						<input
 							type="email"
-							id="admu_email"
-							name="admu_email"
+							id="ADMU_email"
+							name="ADMU_email"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder=""
+							placeholder="Ex. ignatius@ateneo.edu"
 						/>
 					</div>
 				</div>
