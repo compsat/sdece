@@ -6,7 +6,7 @@ div.container {
 }
 
 /* container for each input field */
-div.input_container {
+div.inputContainer {
     margin-top: 2px;
     margin-bottom: 2spx;
     display: flex;
@@ -15,7 +15,7 @@ div.input_container {
 }
 
 /* form header */
-.form-header {
+.formHeader {
     font-family: "Montserrat";
     font-weight: 700;
     font-size: 32px;
@@ -24,7 +24,7 @@ div.input_container {
 }
 
 /* form sub-headers */
-.sub-header {
+.subHeader {
     font-family: "Montserrat";
     font-weight: 700;
     font-size: 20px;
@@ -42,7 +42,7 @@ label.form {
 }
 
 /* specific to disaster risk level (uses both selects and inputs) labels */
-label.disaster-form {
+label.disasterForm {
     font-family: "Montserrat", sans-serif;
     font-weight: 400;
     font-size: 18px;
@@ -102,7 +102,7 @@ input.attribs::placeholder {
 }
 
 /* container for Save and Delete buttons */
-.button-container {
+.buttonContainer {
     margin-top: 20px;
     width: 100%;
     text-align: center;
