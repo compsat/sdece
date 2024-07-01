@@ -32,52 +32,76 @@
 				addEntry,
 				SDECE_RULES_TEST,
 				setCollection,
+				validateData
 			} from '/firestore_UNIV.js';
+			
 
 			setCollection('sdece-official-TEST');
 
-			document
-				.getElementById('submit_form')
-				.addEventListener('click', handleFormSubmit_v2);
+			document.addEventListener("DOMContentLoaded", function() {
+                document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
+            });
 				// .addEventListener('click', handleFormSubmit_v3);
 
 			function handleFormSubmit_v2() {
 				console.log('clicked');
 				var collatedInput = {};
 
-				for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
-					//SDECE_RULES_TEST[2] are just the field names of each document
-					console.log(SDECE_RULES_TEST[2][i]);
-					let q = document.getElementById(
-						SDECE_RULES_TEST[2][i]
-					).value;
-					collatedInput[SDECE_RULES_TEST[2][i]] = q;
+				// for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
+				// 	//SDECE_RULES_TEST[2] are just the field names of each document
+				// 	console.log(SDECE_RULES_TEST[2][i]);
+				// 	let q = document.getElementById(
+				// 		SDECE_RULES_TEST[2][i]
+				// 	).value;
+				// 	collatedInput[SDECE_RULES_TEST[2][i]] = q;
 
-					// this is where data validation will happen
-					// add the if-else statements of edge cases here
+				// 	// this is where data validation will happen
+				// 	// add the if-else statements of edge cases here
+				// }
+
+				for (let i = 0; i < SDECE_RULES_TEST[2].length; i++){
+					console.log(SDECE_RULES_TEST[2][i]);
+
+					let fieldName = SDECE_RULES_TEST[2][i];
+					let inputValue = document.getElementById(fieldName).value;
+
+					collatedInput[fieldName] = inputValue;
 				}
 
 				console.log(collatedInput);
 				// This actually works but it needs some data validation
 				// uncomment at the db's risk
-				addEntry(collatedInput);
+				// addEntry(collatedInput);
+
+				const errors = validateData("sdece-official-TEST", collatedInput);
+
+				if (errors.length > 0) {
+					displayErrors(errors);
+				} else {
+					addEntry(collatedInput);
+				}
+
+				function displayErrors(errors) {
+					let errorDiv = document.getElementById('error_messages');
+
+					if (errorDiv) {
+						errorDiv.innerHTML = '';
+
+						if (errors.length > 0) {
+							for (let error of errors) {
+								let errorParagraph = document.createElement('p');
+								errorParagraph.textContent = error;
+								errorDiv.appendChild(errorParagraph);
+							}
+						} else {
+							console.error("Error: Couldn't find element with ID 'error_messages'.");
+						}
+					}
+					
+				}
+
 			}
 			
-			// function handleFormSubmit_v3() {
-			// 	console.log("v3 clicked!");
-			// 	var collatedInput = {};
-
-			// 	for (let i = 0; i < SDECE_RULES_TEST[2].length; i++){
-			// 		console.log(SDECE_RULES_TEST[2][i]);
-			// 		let q = document.getElementById(SDECE_RULES_TEST[2][i]).value;
-			// 		collatedInput[SDECE_RULES_TEST[2][i]] = q;
-			// 	}
-
-			// 	console.log(collatedInput);
-			// 	addEntry(collatedInput);
-
-			// }
-
 		</script>
 	</head>
 	<body>

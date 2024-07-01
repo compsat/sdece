@@ -176,6 +176,23 @@ const VALIDATION_RULES = { //Rules for Validating Data
 		'status': {type: 'string'},
 		'storm_risk': {type: 'string', required:true}
 	},
+	'sdece-official-TEST': {
+		'partner_name': {type: 'string', required: true, maxLength: 255},
+		'partner_address': {type: 'string', required: true, maxLength: 255},
+		'partner_coordinates': {type: 'geolocation', required: true},
+		'partner_contact_name': {type: 'string', required: true, maxLength: 255},
+		'partner_contact_number': {type: 'string', required: true, minLength: 11, maxLength: 11, regex: /^[0-9]+$/},
+		'partner_email': {type: 'string', required: true, maxLength: 127},
+		'activity_name': {type: 'string', required: true},
+		'activity_nature': {type: 'string', required: true, maxLength:255},
+		'activity_date': {type: 'Date', required: true},
+		'addtional_partnership': {type: 'string', required: true, maxLength: 255},
+		'organization_unit': {type: 'string', required: true,  maxLength: 127},
+		'ADMU_office': {type: 'string', required: true, maxLength: 127},
+		'ADMU_contact_name': {type: 'string', required: true, maxLength: 255},
+		'ADMU_email': {type: 'string', required: true, required: true, maxLength: 127},
+
+	}
 };
 
 export const BUKLOD_RULES = DB_RULES_AND_DATA[0];
