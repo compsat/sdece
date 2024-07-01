@@ -54,16 +54,11 @@ getDocs(colRef)
 					parseFloat(doc.partner_coordinates.latitude),
 					parseFloat(doc.partner_coordinates.longitude),
 				]);
-			}
-			// TODO HAVE THIS BE CONSISTENT ACROSS EVERYTHING
-			getDivContent(doc.partner_name).then((div) => {
-				marker.bindPopup(div);
-				results.addLayer(marker);
 
 				// This is the popup for when the user clicks on a partner
 				var popupContent = `
 					<div class="leaflet-popup-container">
-					<h2 class="partner-popup">${loc}</h2>          				
+					<h2 class="partner-popup"></h2>          				
 				`;
 
 				marker.bindPopup(popupContent);
@@ -136,6 +131,11 @@ getDocs(colRef)
 				marker.on('click', function (event) {
 					console.log(getDetails(entry['name']));
 				});
+			}
+			// TODO HAVE THIS BE CONSISTENT ACROSS EVERYTHING
+			getDivContent(doc.partner_name).then((div) => {
+				marker.bindPopup(div);
+				results.addLayer(marker);
 			});
 		});
 	})

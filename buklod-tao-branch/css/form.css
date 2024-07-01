@@ -1,154 +1,117 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&family=Source+Sans+Pro:ital,wght@0,200;0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
 
 div.container {
     margin: auto;
     width: 50%; 
 }
 
-/* container for each input field */
 div.input_container {
-    margin-top: 2px;
-    margin-bottom: 2spx;
+    align-self: center;
+    margin-top: 8px;
+    margin-bottom: 16px;
     display: flex;
-    align-items: center;
     justify-content: space-between;
 }
 
-/* form header */
-.form-header {
-    font-family: "Montserrat";
-    font-weight: 700;
-    font-size: 32px;
-    letter-spacing: 0.5px;
-    color: #387181;
-}
-
-/* form sub-headers */
-.sub-header {
-    font-family: "Montserrat";
-    font-weight: 700;
-    font-size: 20px;
-    color: #3D97AF;
-    letter-spacing: 0.5px;
-}
-
-/* input field labels */
-label.form {
-    font-family: "Montserrat";
-    font-weight: 400;
-    font-size: 18px;
-    letter-spacing: 0.5px;
-    color: #979797;
-}
-
-/* specific to disaster risk level (uses both selects and inputs) labels */
-label.disaster-form {
-    font-family: "Montserrat", sans-serif;
-    font-weight: 400;
-    font-size: 18px;
-    letter-spacing: 0.5px;
-    color: #979797;
-    width: 100px;
-}
-
-/* CSS for select elements */
 select.attribs {
     display: block; 
-    width: 125px;
-    height: 40px;
+    margin-bottom: 10px;
+    width: 100px;
+    padding: 0px;
     box-sizing: border-box;
-    font-family: 'Hind'; font-size: 18px;
+    font-family: 'Hind'; font-size: 20px;
     border-style: double;
     border-color: rgb(196, 196, 196);
     border-width: 0.5px;
-    border-radius: 4px;
-    padding-inline: 5px;
+    border-radius: 3px;
 }
 
-/* when hovering over input field */
-select.attribs:hover {
-    border-color: #000000;
-}
-
-/* CSS for input elements */
 input.attribs {
     display: block; 
-    width: 400px;
-    height: 40px;
+    margin-bottom: 10px;
+    width: 300px;
+    padding: 0px;
     box-sizing: border-box;
-    font-family: 'Hind'; font-size: 18px;
+    font-family: 'Hind'; font-size: 20px;
     border-style: double;
     border-color: rgb(196, 196, 196);
     border-width: 0.5px;
-    border-radius: 4px;
-    padding-inline: 15px;
+    border-radius: 3px;
 }
 
-/* when hovering over input field */
-input.attribs:hover {
-    border-color: #000000;
-}
-
-/* when typing in an input field */
 input.attribs:focus {
     outline: none;
     border-bottom: 3px solid #3D97AF;
 }
 
-/* for placeholders in input fields */
 input.attribs::placeholder {
     font-family: "Source Sans Pro";
     font-style: italic;
 }
 
-/* container for Save and Delete buttons */
 .button-container {
-    margin-top: 20px;
     width: 100%;
     text-align: center;
 }
 
-/* CSS for buttons */
-button.form {
-    align-items: center;
-    width: 100%;
-    height: 48px;
-    font-family: "Montserrat";
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    outline: none;
-}
-
-/* specific to delete button */
 button.clear {
     background-color: white;
-    color: #D64747;
-    border-width: 1px;
-    border-radius: 8px;
-    border-color: #D64747;
-    transition: transform 0.1s ease-out;
+    color: red;
+    border-width: 4px;
+    border-radius: 10px;
+    border-color: red;
 }
 
-/* when hovering cursor over delete button */
 button.clear:hover {
-    background-color: #ededed;
-    transform: translateY(-2px);
+    background-color: #F8F8F8;
 }
 
-/* specific to save button */
 button.confirm {
     background-color: #49A2BB;
     color: #FFFFFF;
     border: none;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    transition: transform 0.1s ease-out;
+    border-radius: 10px;
 }
 
-/* when hovering over save button */
 button.confirm:hover {
-    background-color: #2d839b;
-    transform: translateY(-2px);
+    background-color: #3698B4;   
+}
+
+button.form {
+    align-items: center;
+    width: 100%;
+    height: 48px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 900;
+    cursor: pointer;
+    outline: none;
+}
+
+label.form {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: #7DAAB7;
+}
+
+label.disaster-form {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: #7DAAB7;
+    width: 100px;
+}
+
+.form-header {
+    font-family: "Montserrat";
+    font-weight: 900;
+    font-size: 24px;
+    color: #004153;
+}
+
+.sub-header {
+    font-family: "Montserrat";
+    font-weight: 900;
+    font-size: 20px;
+    color: #10abd5;
 }
