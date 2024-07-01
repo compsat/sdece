@@ -217,8 +217,7 @@ function showModal() {
 	mainModal.classList.add('flex');
 }
 
-// Close main Add an activity modal
-const elementCloseButton = document.getElementById('closeButton');
+// Close main Add an activity modal const elementCloseButton = document.getElementById('closeButton');
 elementCloseButton.addEventListener('click', closeModal);
 
 function closeModal() {

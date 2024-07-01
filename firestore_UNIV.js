@@ -158,15 +158,11 @@ export const SDECE_RULES = DB_RULES_AND_DATA[2];
 export const SDECE_RULES_TEST = DB_RULES_AND_DATA[3];
 
 export function setCollection(collection_name){
-	console.log(collection_name);
-    for(let rule of DB_RULES_AND_DATA ){
-        console.log("rule[0]: " + rule[0]);
-        if (rule[0] === collection_name){
-            console.log("IS EQUAL");
-            collection_reference = collection( DB, collection_name );
-        }
-    }
-	console.log(collection_reference);
+  for(let rule of DB_RULES_AND_DATA ){
+      if (rule[0] === collection_name){
+          collection_reference = collection( DB, collection_name );
+      }
+  }
 }
 
 export function getCollection() {
@@ -218,7 +214,6 @@ export function getDocsByPartnerName(partner_name) {
 				)
 			)
 				.then((querySnapshot) => {
-					console.log(querySnapshot);
 					if (!querySnapshot.empty) {
 						// Assuming there is only one document with the given partner name
 						const docs = querySnapshot.docs;
@@ -252,8 +247,6 @@ export function getDocByID(docId) {
 }
 
 export function addEntry(inp_obj){
-    console.log("add Entry");
-
     for (let rule of DB_RULES_AND_DATA){
         if(rule[0] === collection_reference.id){
             let input = {}; // contents depend on the rule engine
@@ -272,8 +265,6 @@ export function addEntry(inp_obj){
 }
 
 export function editEntry(inp_array, docId) {
-	console.log('edit entry with id ' + docId);
-
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_reference.id) {
 			const DOC_REFERENCE = doc(DB, rule[0], docId);
@@ -293,3 +284,8 @@ export function editEntry(inp_array, docId) {
 		}
 	}
 }
+
+
+
+/// QUERYING Functions
+	

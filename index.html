@@ -41,10 +41,12 @@
   
         <!--  Module for the implementation of the Rules Engine for switching maps -->
         <script type="module">
-          import { setCollection, getCollection, DB_RULES_AND_DATA } from "/firestore_UNIV.js";
+          import {  DB_RULES_AND_DATA } from "/firestore_UNIV.js";
           import { readyField, clearMarkers, clearLocationList, map, getDivContent, loadJsCssFiles, removeJsCssFiles } from "/index_UNIV.js";
           import { getDocs, query } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
           import { getCurrentBranchCookie, setCurrentBranchCookie } from "/cookies.js";
+          import { setCollection, getCollection, DB_RULES_ENGINE } from '/firestore_UNIV_v2.js';
+          console.log(DB_RULES_ENGINE);
 
           console.log('running through this');
           var collections = document.getElementById("collections");

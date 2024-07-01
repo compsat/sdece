@@ -134,7 +134,6 @@ export function clearMarkers(){
 }
 
 export function clearLocationList(){
-  console.log("test2");
   var locationList = document.getElementById(`locationList`);
   locationList.innerHTML = "";
 }
