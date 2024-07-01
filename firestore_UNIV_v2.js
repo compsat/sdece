@@ -37,6 +37,7 @@ export const DB = getFirestore();
 var collection_reference = null; 
 
 var document_map = new Map();
+var document_values = [];
 
 export const DB_RULES_ENGINE = new Map();
 export var rules = [];
@@ -95,12 +96,12 @@ DB_RULES_ENGINE
 
 export function setCollection(collection_name){
   if(DB_RULES_ENGINE.has(collection_name)){
+    // Gets the rules from the branch
     rules = DB_RULES_ENGINE.get(collection_name);
-    collection_reference = collection_name;
-    loadDocs();
+    collection_reference = collection( DB, collection_name );
   }
   else{
-    return "pass a valid collection_name";
+    console.error("pass a valid collection_name");
   }
 }
 
@@ -109,12 +110,30 @@ export function getCollection() {
 }
 
 export function loadDocs() {
-    getDocs(getCollection())
-        .then((query_snapshot) => {
-            query_snapshot.forEach((doc) => {
-            document_map.set(doc.id, doc.data());
-        })
+  getDocs(getCollection())
+    .then((query_snapshot) => {
+      query_snapshot.forEach((doc) => {
+        document_map.set(doc.id, doc.data());
     })
+    testing();
+  })
+}
+
+function testing(){
+  document_values = getValuesFromMap('flood_risk')
+  console.log(document_values);
+}
+
+function getValuesFromMap(desired_keys){
+  let array = [];
+  document_map.forEach((values, keys) => {
+    Object.entries(values).forEach((val) =>{
+      if(val[0] == desired_keys){
+        array.push(val[1]);
+      }
+    })
+  });
+  return array;
 }
 
 export function addEntry() {
@@ -127,4 +146,16 @@ export function editEntry() {
   if(collection_reference == null){
     return "collection_reference must not be null";
   }
+}
+
+Array.prototype.query_filter = function(queryfn) {
+  var result_array = [];
+  
+  for(var i = 0; i < this.length; i++) {
+    if(queryfn(this[i], i)) {
+      result_array.push(this[i]);
+    }
+  }
+
+  return result_array;
 }

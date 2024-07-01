@@ -45,8 +45,7 @@
           import { readyField, clearMarkers, clearLocationList, map, getDivContent, loadJsCssFiles, removeJsCssFiles } from "/index_UNIV.js";
           import { getDocs, query } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
           import { getCurrentBranchCookie, setCurrentBranchCookie } from "/cookies.js";
-          import { setCollection, getCollection, DB_RULES_ENGINE } from '/firestore_UNIV_v2.js';
-          console.log(DB_RULES_ENGINE);
+          import { setCollection, getCollection, DB_RULES_ENGINE, loadDocs } from '/firestore_UNIV_v2.js';
 
           console.log('running through this');
           var collections = document.getElementById("collections");
@@ -63,16 +62,16 @@
           });        
           
           if(getCurrentBranchCookie() === null){       
-            console.log(DB_RULES_AND_DATA[0][0]);     
             setCollection(DB_RULES_AND_DATA[0][0]);
             setCurrentBranchCookie("current_branch", DB_RULES_AND_DATA[0][0]);
-            console.log(getCollection());
             loadJsCssFiles(getCurrentBranchCookie());
+            loadDocs();
           }              
           else{
             setCollection(getCurrentBranchCookie());
             collections.value = getCurrentBranchCookie();
             loadJsCssFiles(getCurrentBranchCookie());
+            loadDocs();
           }
       </script>
 </head>
