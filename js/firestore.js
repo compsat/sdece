@@ -186,30 +186,30 @@ getDocs(col_ref)
 			}
 
 			nameDiv.classList.add(
-				'name',
-				'font-montserrat',
-				'font-bold',
-				'text-lg',
-				'text-darkbg',
-				'leading-[110%]'
+				'name'
+				// 'font-montserrat',
+				// 'font-bold',
+				// 'text-lg',
+				// 'text-darkbg',
+				// 'leading-[110%]'
 			);
 			addressDiv.classList.add(
-				'address',
-				'text-sm',
-				'text-customGray',
-				'font-hind',
-				'font-regular',
-				'leading-[120%]',
-				'mt-2'
+				'address'
+				// 'text-sm',
+				// 'text-customGray',
+				// 'font-hind',
+				// 'font-regular',
+				// 'leading-[120%]',
+				// 'mt-2'
 			);
 			activityDiv.classList.add(
-				'activity',
-				'text-sm',
-				'text-customBlack',
-				'font-hind',
-				'font-regular',
-				'leading-[110%]',
-				'mt-2'
+				'activity'
+				// 'text-sm',
+				// 'text-customBlack',
+				// 'font-hind',
+				// 'font-regular',
+				// 'leading-[110%]',
+				// 'mt-2'
 			);
 
 			nameDiv.textContent = partner;
@@ -233,14 +233,13 @@ getDocs(col_ref)
 			//   }
 
 			listItem.classList.add(
-				'accordion',
-				'py-6',
-				'px-8',
-				'border-b',
-				'border-customGray',
-				'w-full'
+				'accordion'
+				// 'py-6',
+				// 'px-8',
+				// 'border-customGray',
+				// 'w-full'
 			);
-			anchor.classList.add('accordion', 'link');
+			// anchor.classList.add('accordion', 'link');
 
 			// Append elements to the DOM
 			anchor.appendChild(nameDiv);

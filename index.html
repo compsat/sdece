@@ -54,7 +54,7 @@
 			integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
 			crossorigin=""
 		></script>
-		<link href="./src/output.css" rel="stylesheet" />
+		<link href="./css/main.css" rel="stylesheet" />
 		<!--<script type="module" src="js/firestore.js"></script>-->
 
 		<!--  Module for the implementation of the Rules Engine for switching maps -->
@@ -195,19 +195,13 @@
 					</button>
 				</div>
 				<div class="entries">
-					<ul
-						id="locationList"
-						class="accordion"
-						style="width: 100%"
-					></ul>
+					<ul id="locationList" style="width: 100%"></ul>
 				</div>
 			</div>
 			<!-- Right container containing Login/Logout header and map -->
 			<div class="main-container">
 				<!-- Header -->
-				<div
-					class="h-20 px-9 bg-darkbg w-full flex flex-row justify-between items-center"
-				>
+				<div class="main-header">
 					<!-- Layer Toggle -->
 					<div class="layer-toggle-container">
 						<svg
@@ -256,28 +250,27 @@
 		<!-- MODALS -->
 
 		<!-- Main Modal: This is the modal that shows up when pressing the main button in the side navigation panel. -->
-		<div
-			id="mainModal"
-			class="h-full w-full flex-row fixed z-[2400] items-center justify-center inset-0 hidden"
-		>
+		<div id="mainModal" class="modal-screen">
 			<!--  content -->
-			<div class="bg-customLightGray h-auto w-[480px] shadow-md">
+			<div class="main-modal">
 				<div class="flex flex-row justify-end p-4">
-					<svg
-						id="closeButton"
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.5"
-						stroke="currentColor"
-						class="size-6"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M6 18 18 6M6 6l12 12"
-						/>
-					</svg>
+					<button>
+						<svg
+							id="closeButton"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="size-6"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M6 18 18 6M6 6l12 12"
+							/>
+						</svg>
+					</button>
 				</div>
 
 				<div class="p-5">
@@ -497,19 +490,13 @@
 		</div>
 
 		<!-- Add Modal: This is the modal that shows up when clicking on the '+' sign that is nested inside the Main Modal. This allows the user to add a new activity to the SDECE collections. -->
-		<div class="form-modal-screen" id="addModal">
-			<iframe
-				src="./addloc.html"
-				class="h-[69%] w-[45%] z-[3500] flex rounded-lg overflow-hidden"
-			></iframe>
+		<div class="modal-screen" id="addModal">
+			<iframe src="./addloc.html" class="form-modal"></iframe>
 		</div>
 
 		<!-- Edit Modal: This is the modal that shows up when clicking on the Edit button that is nested within Partner Modal. This allows the user to edit an existing activity within the SDECE Collections. -->
-		<div class="form-modal-screen" id="editModal">
-			<iframe
-				src="./editloc.html"
-				class="h-[69%] w-[45%] z-[3500] flex rounded-lg overflow-hidden"
-			></iframe>
+		<div class="modal-screen" id="editModal">
+			<iframe src="./editloc.html" class="form-modal"></iframe>
 		</div>
 
 		<!-- SCRIPTS -->
