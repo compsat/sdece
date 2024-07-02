@@ -10,9 +10,10 @@ import {
 	query,
 	where,
 	getDoc,
+	GeoPoint,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 //import { getCollection, setCollection, SDECE_RULES, getDocIdByPartnerName, editEntry } from '/firestore_UNIV.js';
-import {getCollection, setCollection, getDocMap, groupBy, SDECE_RULES_TEST, } from '/firestore_UNIV_v2_mirror.js';
+import {getCollection, setCollection, getDocMap, groupBy, SDECE_RULES_TEST, editEntry } from '/firestore_UNIV_v2_mirror.js';
 // Your Firestore code here
 
 // Your web app's Firebase configuration
@@ -351,7 +352,16 @@ function showModal(partner) {
 			console.log(activities[currently_viewed_activity]);
 			Object.keys(activities[currently_viewed_activity]).forEach((activity_field) => {
 				console.log(activity_field);
-				document.getElementById(activity_field).value = activities[currently_viewed_activity][activity_field];
+				if(activity_field == "partner_coordinates"){
+					console.log(activities[currently_viewed_activity][activity_field]._lat);
+					document.getElementById("partner_coordinates_lat").value = activities[currently_viewed_activity][activity_field]._lat;
+					document.getElementById("partner_coordinates_long").value = activities[currently_viewed_activity][activity_field]._long;
+
+				} else if (activity_field == "identifier"){
+			
+				} else {
+					document.getElementById(activity_field).value = activities[currently_viewed_activity][activity_field];
+				}
 			});
 
 			
@@ -374,15 +384,20 @@ function submitEdit(){
 	console.log("submitted edit for doc with id: " + currently_viewed_activity);
 	let collated_input = {};
 
-	for(let i = 0; i < SDECE_RULES[2].length; i++){
-		//SDECE_RULES_TEST[2] are just the field names of each document
-		console.log(SDECE_RULES[2][i]);
-		let q = document.getElementById(SDECE_RULES[2][i]).value;
-		collated_input[SDECE_RULES[2][i]] = q;
+	SDECE_RULES_TEST.fields.forEach((field) =>{
+		let form_val = null;
+		if (field == "partner_coordinates"){
+			let lat = document.getElementById("partner_coordinates_lat").value;
+			let long = document.getElementById("partner_coordinates_long").value;
 
-		// this is where data validation will happen
-		// add the if-else statements of edge cases here
-	}
+			form_val = new GeoPoint(lat, long);
+		} else if (field == "identifier"){
+
+		} else {
+			form_val = document.getElementById(field).value
+		}
+		collated_input[field] = form_val;
+	});
 
 	collated_input["identifier"] = currently_viewed_activity;
 
@@ -390,7 +405,7 @@ function submitEdit(){
 	console.log(collated_input);
 	// This actually works but it needs some data validation
 	// uncomment at the db's risk
-	editEntry(collated_input, currently_viewed_activity);
+	editEntry(collated_input, currently_viewed_activity, true);
 
 }
 

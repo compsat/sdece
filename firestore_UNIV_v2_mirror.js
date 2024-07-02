@@ -50,7 +50,7 @@ const DB_RULES_AND_DATA = { // can only be changed in hardcode
 				"ADMU_contact_name",
 				"ADMU_email",
 				"ADMU_office",
-				"identifier",
+				"identifier", // contains the docId of the firebase document, shouldn't be included in edits
 				"organization_unit",
 				"partner_address",
 				"partner_contact_name",
@@ -173,8 +173,11 @@ export function groupBy(custom_key_identifier){
 }
 
 export function addEntry(obj_input){
-    let needed_fields = DB_RULES_AND_DATA[collection_reference.id][fields];
+    console.log(collection_reference.id);
+    let needed_fields = DB_RULES_AND_DATA[collection_reference.id].fields;
     let inp_send = {};
+
+    
     for(let field of needed_fields){ // sets value to null when field not found
         inp_send[field] = obj_input[field];
     }
@@ -187,8 +190,17 @@ export function addEntry(obj_input){
     });
 }
 
-export function editEntry(obj_input, doc_id){
-    let needed_fields = DB_RULES_AND_DATA[collection_reference.id][fields];
+export function editEntry(obj_input, doc_id, is_debug_mode = false){
+    console.log(collection_reference.id);
+
+    let needed_fields = null;
+
+    if (is_debug_mode){
+        needed_fields = DB_RULES_AND_DATA_TEST[collection_reference.id]["fields"];
+    } else {
+        needed_fields = DB_RULES_AND_DATA[collection_reference.id]["fields"];
+    }
+    
     let inp_send = {};
     for(let field of needed_fields){ // sets value to null when field not found
         inp_send[field] = obj_input[field];
@@ -197,7 +209,7 @@ export function editEntry(obj_input, doc_id){
     const DOC_REFERENCE = doc(DB, collection_reference.id, doc_id);
 
     updateDoc(DOC_REFERENCE, inp_send)
-        .then((docRef) => {
+        .then(() => {
             console.log("it worked");
             //console.log('Document written with ID: ', docRef.id);
         })
