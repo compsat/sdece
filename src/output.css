@@ -596,20 +596,8 @@ video {
   position: absolute;
 }
 
-.relative {
-  position: relative;
-}
-
-.sticky {
-  position: sticky;
-}
-
 .inset-0 {
   inset: 0px;
-}
-
-.top-0 {
-  top: 0px;
 }
 
 .z-\[2400\] {
@@ -858,20 +846,12 @@ video {
   overflow-y: hidden;
 }
 
-.overflow-x-visible {
-  overflow-x: visible;
-}
-
 .overflow-y-scroll {
   overflow-y: scroll;
 }
 
 .rounded {
   border-radius: 0.25rem;
-}
-
-.rounded-2xl {
-  border-radius: 1rem;
 }
 
 .rounded-lg {
@@ -947,11 +927,6 @@ video {
   background-color: rgb(61 151 175 / var(--tw-bg-opacity));
 }
 
-.bg-white {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }
@@ -982,11 +957,6 @@ video {
 
 .p-8 {
   padding: 2rem;
-}
-
-.px-3 {
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
 }
 
 .px-6 {
@@ -1030,14 +1000,6 @@ video {
 
 .pb-3 {
   padding-bottom: 0.75rem;
-}
-
-.pb-6 {
-  padding-bottom: 1.5rem;
-}
-
-.pl-5 {
-  padding-left: 1.25rem;
 }
 
 .pr-12 {
@@ -1164,6 +1126,20 @@ video {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+/* Import fonts */
+
+/* In your CSS file */
+
+/* Example of using the fonts */
+
+.hind-font {
+  font-family: 'Hind', sans-serif;
+}
+
+.montserrat-font {
+  font-family: 'Montserrat', sans-serif;
+}
+
 /* Reset default margin and spacing */
 
 * {
@@ -1175,24 +1151,24 @@ video {
 .main {
   display: flex;
   flex-direction: row;
+  width: 100%;
+  height: 100vh;
+  position: relative;
 }
 
-/* Removed styles first to account for new content */
+/* Color Definition */
 
-.leaflet-popup-content-wrapper {
+:root {
+  --darkbg: #387181;
+  --lightbg: #3d97af;
+  --custom-black: #2f2f2f;
+  --custom-gray: #a0a0a0;
+  --custom-dark-gray: #979797;
+  --custom-medium-gray: #f6f6f6;
+  --custom-light-gray: #fcfcfc;
 }
 
-.leaflet-popup-content-wrapper .leaflet-popup-content {
-}
-
-.leaflet-popup-tip-container {
-}
-
-/*
-.leaflet-popup-content-wrapper:hover, .popup-accordion:not(.active) {
-	background-color: #91C9DB;
-}
-*/
+/* Aren's Styles */
 
 .partner-popup {
   cursor: pointer;
@@ -1340,6 +1316,72 @@ video {
 
 .partner-label {
   font-weight: bold;
+}
+
+/* Charm's Styles for index.html */
+
+.side-nav {
+  background-color: var(--custom-light-gray);
+  width: 480px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.side-nav-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: var(--custom-medium-gray);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+		0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding-bottom: 1.5rem;
+}
+
+.search-bar-container {
+  height: 5rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  background-color: white;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.search-bar {
+  background-color: var(--custom-medium-gray);
+  font-size: 1.5rem;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  border-radius: 1rem;
+  overflow: hidden;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.search-input-field {
+  background-color: var(--custom-medium-gray);
+  outline: none;
+  box-shadow: none;
+  width: 100%;
+  font-family: 'Hind', sans-serif;
+}
+
+.search-bar-btn-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
+}
+
+.search-btn {
+  width: 2rem;
+  height: 2rem;
+  stroke: var(--custom-dark-gray);
 }
 
 .hover\:bg-darkbg:hover {

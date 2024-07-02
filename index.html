@@ -134,37 +134,26 @@
 	</head>
 
 	<body>
-		<div class="main w-full h-screen relative">
-			<div
-				class="sidenav bg-customLightGray w-[480px] overflow-y-scroll overflow-x-visible relative"
-			>
-				<div
-					class="sticky top-0 w-full bg-customMediumGray shadow-md pb-6"
-				>
-					<div
-						class="lord h-20 px-3 bg-white w-full flex flex-row items-center"
-					>
-						<div
-							class="bg-customMediumGray text-2xl flex flex-row w-full rounded-2xl overflow-hidden py-3 px-8"
-						>
+		<div class="main">
+			<div class="side-nav">
+				<div class="side-nav-header">
+					<div class="search-bar-container">
+						<div class="search-bar">
 							<input
 								onkeyup="onSearchInput()"
 								type="text"
 								id="search-input"
 								placeholder="Search..."
-								class="bg-customMediumGray focus:outline-none focus:ring-0 w-full font-hind"
+								class="search-input-field"
 							/>
-							<div
-								class="flex flex-row items-center justify-end"
-							>
-								<!-- Hiding the Search icon first since it doesn't have any functionality as of now -->
-								<button class="hidden">
+							<div class="search-bar-btn-container">
+								<button>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
 										viewBox="0 0 24 24"
 										stroke-width="1.5"
-										class="size-8 stroke-customDarkGray"
+										class="search-btn"
 									>
 										<path
 											stroke-linecap="round"
@@ -176,14 +165,17 @@
 								<button
 									id="searchClear"
 									onclick="clearSearch()"
-									class="pl-5 hidden"
+									style="
+										padding-left: 1.25rem;
+										display: none;
+									"
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
 										viewBox="0 0 24 24"
 										stroke-width="1.5"
-										class="size-8 stroke-customDarkGray"
+										class="search-btn"
 									>
 										<path
 											stroke-linecap="round"
@@ -772,9 +764,9 @@
 
 				// Show the button if input is not empty, hide it otherwise
 				if (input !== '') {
-					button.classList.remove('hidden');
+					button.style.display = 'flex';
 				} else {
-					button.classList.add('hidden');
+					button.style.display = 'none';
 				}
 
 				console.log('The user has typed ' + input);
