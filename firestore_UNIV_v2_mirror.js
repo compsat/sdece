@@ -115,8 +115,14 @@ export const BUKLOD_RULES = DB_RULES_AND_DATA["buklod-official"];
 export const SDECE_RULES_TEST = DB_RULES_AND_DATA_TEST["sdece-official-TEST"];
 export const BUKLOD_RULES_TEST = DB_RULES_AND_DATA_TEST["buklod-official-TEST"];
 
-export async function setCollection(collection_name, include_doc_id){
-    let currentCollection = DB_RULES_AND_DATA[collection_name]; // remove _TEST once working properly
+export async function setCollection(collection_name, include_doc_id, is_debug_mode = false){
+    let currentCollection = null;
+    if (is_debug_mode){
+        currentCollection = DB_RULES_AND_DATA_TEST[collection_name];
+    } else {
+        currentCollection = DB_RULES_AND_DATA[collection_name];
+    } 
+    
     if(currentCollection != null){
         collection_reference = collection(DB, collection_name);
         console.log("collection set to: " + collection_name + " now loading to docs");
