@@ -264,6 +264,7 @@ export function showModal(partner) {
 	console.log('Partner being shown as modal: ' + partner[0][0]);
 
 	const modal = document.getElementById('partnerModal');
+
 	const modalHeader = document.getElementById('modalHeader');
 	const modalContent = document.getElementById('modalContent');
 
@@ -470,8 +471,6 @@ export function showModal(partner) {
 			console.log('Clicked edit activity');
 
 			//Close activity details modal
-			document.getElementById('partnerModal').style.display = 'none';
-			console.log('Activity modal closed');
 
 			// Select the modal and partnerName elements
 			var modal = document.getElementById('editModal');
@@ -485,14 +484,13 @@ export function showModal(partner) {
 			//       );
 
 			// Display the modal
-			modal.classList.remove('hidden');
-			modal.classList.add('flex');
-			partnerModal.classList.add('hidden'); // Not sure if this should be hidden nalang, or should be kept open with the editModal on top nalang
+			modal.style.display = 'flex';
+			// partnerModal.classList.add('hidden'); // Not sure if this should be hidden nalang, or should be kept open with the editModal on top nalang
 
 			// Close the modal when the user clicks anywhere outside of it
 			window.onclick = function (event) {
 				if (event.target == modal) {
-					modal.classList.add('hidden');
+					modal.style.display = 'none';
 				}
 			};
 		});

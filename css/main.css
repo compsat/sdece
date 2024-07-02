@@ -2,19 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import fonts */
-/* In your CSS file */
-@import url('https://fonts.googleapis.com/css2?family=Hind:wght@400;700&family=Montserrat:wght@400;700&display=swap');
-
-/* Example of using the fonts */
-.hind-font {
-	font-family: 'Hind', sans-serif;
-}
-
-.montserrat-font {
-	font-family: 'Montserrat', sans-serif;
-}
-
 /* Reset default margin and spacing */
 * {
 	margin: 0px;
@@ -194,6 +181,23 @@
 	width: 1.5rem;
 	height: 1.5rem;
 	margin-right: 0.5rem;
+}
+
+.form-modal-screen {
+	display: none;
+	width: 100vw;
+	height: 100vh;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.1); /* 10% opacity black */
+	z-index: 4500;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
 }
 
 .map-container {

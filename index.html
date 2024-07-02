@@ -134,6 +134,8 @@
 	</head>
 
 	<body>
+		<!-- MAIN CONTENT -->
+
 		<div class="main">
 			<div class="side-nav">
 				<div class="side-nav-header">
@@ -200,7 +202,6 @@
 					></ul>
 				</div>
 			</div>
-
 			<!-- Right container containing Login/Logout header and map -->
 			<div class="main-container">
 				<!-- Header -->
@@ -252,7 +253,9 @@
 			</div>
 		</div>
 
-		<!-- Add Activity Modal -->
+		<!-- MODALS -->
+
+		<!-- Main Modal: This is the modal that shows up when pressing the main button in the side navigation panel. -->
 		<div
 			id="mainModal"
 			class="h-full w-full flex-row fixed z-[2400] items-center justify-center inset-0 hidden"
@@ -391,7 +394,7 @@
 						<h2 class="font-montserrat font-bold text-2xl">
 							List of Activities
 						</h2>
-						<button id="otherButton">
+						<button id="addModalButton">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
@@ -423,232 +426,7 @@
 			</div>
 		</div>
 
-		<div
-			id=""
-			class="h-full w-full flex-row fixed z-[2400] items-center justify-center bg-black bg-opacity-50 inset-0 hidden"
-		>
-			<!-- Modal content -->
-			<form
-				action=""
-				class="p-8 bg-customLightGray h-2/3 w-[862px] shadow-md overflow-y-scroll"
-			>
-				<h1
-					class="font-montserrat text-3xl font-bold text-darkbg mb-8"
-				>
-					Add Activity
-				</h1>
-
-				<div
-					class="flex flex-row justify-between mb-6 items-center"
-				>
-					<label
-						class="form font-montserrat text-xl text-customGray"
-						for="partner"
-						>Activity Name</label
-					>
-					<input
-						type="text"
-						id="partner"
-						name="partner"
-						class="py-4 px-8 w-96 rounded border font-montserrat"
-						placeholder=""
-					/>
-				</div>
-				<div
-					class="flex flex-row justify-between mb-6 items-center"
-				>
-					<label
-						class="form font-montserrat text-xl text-customGray"
-						for="partner"
-						>Nature of Activity</label
-					>
-					<input
-						type="text"
-						id="partner"
-						name="partner"
-						class="py-4 px-8 w-96 rounded border font-montserrat"
-						placeholder=""
-					/>
-				</div>
-				<div
-					class="flex flex-row justify-between mb-6 items-center"
-				>
-					<label
-						class="form font-montserrat text-xl text-customGray"
-						for="partner"
-						>Dates of Partnership</label
-					>
-					<input
-						type="date"
-						id="partner"
-						name="partner"
-						class="py-4 px-8 w-96 rounded border font-montserrat"
-						placeholder=""
-					/>
-				</div>
-
-				<h2
-					class="mt-9 font-montserrat text-xl text-lightbg font-bold leading-[110%] mb-6"
-				>
-					PARTNER INFORMATION
-				</h2>
-				<div
-					class="flex flex-row justify-between mb-6 items-center"
-				>
-					<label
-						class="form font-montserrat text-xl text-customGray"
-						for="partner"
-						>Name of Host Partner</label
-					>
-					<input
-						type="text"
-						id="partner"
-						name="partner"
-						class="py-4 px-8 w-96 rounded border font-montserrat"
-						placeholder=""
-					/>
-				</div>
-				<div
-					class="flex flex-row justify-between mb-6 items-center"
-				>
-					<label
-						class="form font-montserrat text-xl text-customGray"
-						for="partner_contact-person"
-						>Address of Host Partner</label
-					>
-					<input
-						type="text"
-						id="partner_contact-person"
-						name="partner_contact-person"
-						class="py-4 px-8 w-96 rounded border font-montserrat"
-						placeholder=""
-					/>
-				</div>
-				<div
-					class="flex flex-row justify-between mb-6 items-center"
-				>
-					<label
-						class="form font-montserrat text-xl text-customGray"
-						for="organization"
-						>Name of Contact Person</label
-					>
-					<input
-						type="text"
-						id="organization"
-						name="organization"
-						class="py-4 px-8 w-96 rounded border font-montserrat"
-						placeholder=""
-					/>
-				</div>
-				<div
-					class="flex flex-row justify-between mb-6 items-center"
-				>
-					<label
-						class="form font-montserrat text-xl text-customGray"
-						for="nature_of_act"
-						>Number of Contact Person</label
-					>
-					<input
-						type="text"
-						id="nature_of_act"
-						name="nature_of_act"
-						class="py-4 px-8 w-96 rounded border font-montserrat"
-						placeholder=""
-					/>
-				</div>
-				<div
-					class="flex flex-row justify-between mb-6 items-center"
-				>
-					<label
-						class="form font-montserrat text-xl text-customGray"
-						for="dates_of_partnership"
-						>Email of Contact Person / Partner</label
-					>
-					<input
-						type="date"
-						id="dates_of_partnership"
-						name="dates_of_partnership"
-						class="py-4 px-8 w-96 rounded border font-montserrat"
-						placeholder=""
-					/>
-				</div>
-
-				<h2
-					class="mt-9 font-montserrat text-xl text-lightbg font-bold leading-[110%] mb-6"
-				>
-					ATENEO OFFICE OVERSIGHT
-				</h2>
-				<div
-					class="flex flex-row justify-between mb-6 items-center"
-				>
-					<label
-						class="form font-montserrat text-xl text-customGray"
-						for="ateneo_office"
-						>Name of Office</label
-					>
-					<input
-						type="text"
-						id="ateneo_office"
-						name="ateneo_office"
-						class="py-4 px-8 w-96 rounded border font-montserrat"
-						placeholder=""
-					/>
-				</div>
-				<div
-					class="flex flex-row justify-between mb-6 items-center"
-				>
-					<label
-						class="form font-montserrat text-xl text-customGray"
-						for="ateneo_contact-person"
-						>Name of Ateneo Contact Person</label
-					>
-					<input
-						type="text"
-						id="ateneo_contact-person"
-						name="ateneo_contact-person"
-						class="py-4 px-8 w-96 rounded border font-montserrat"
-						placeholder=""
-					/>
-				</div>
-				<div
-					class="flex flex-row justify-between mb-6 items-center"
-				>
-					<label
-						class="form font-montserrat text-xl text-customGray"
-						for="ateneo_contact-email"
-						>Email of Ateneo Contact Person</label
-					>
-					<input
-						type="email"
-						id="ateneo_contact-email"
-						name="ateneo_contact-email"
-						class="py-4 px-8 w-96 rounded border font-montserrat"
-						placeholder=""
-					/>
-				</div>
-
-				<!-- Buttons -->
-				<span class="button_div">
-					<!-- Clears all contents of the form -->
-					<button
-						class="w-full py-4 text-center font-montserrat text-2xl bg-lightbg text-white font-bold rounded-lg"
-						type="submit"
-						id="submit_form"
-						name="submit_form"
-					>
-						Add Activity
-					</button>
-					<button
-						class="w-full py-4 text-center font-montserrat text-2xl text-red-700 font-bold border border-red-700 rounded-lg mt-4"
-					>
-						Clear
-					</button>
-					<!-- Submits contents of the form -->
-				</span>
-			</form>
-		</div>
-
-		<!-- Partner Modal -->
+		<!-- Partner Modal: This is the modal that shows up when clicking on an SDECE entry in the side navigation panel OR the pop-up of a map marker pin. -->
 		<div id="partnerModal" class="modal">
 			<!-- Modal Header -->
 			<div class="modal-header">
@@ -718,32 +496,24 @@
 			</span>
 		</div>
 
-		<!-- MODALS -->
-
-		<!-- Add Activity Modal -->
-		<div
-			class="hidden w-screen h-screen fixed inset-0 bg-black/10 z-[4500] flex-row justify-center items-center overflow-hidden"
-			id="addModal"
-		>
+		<!-- Add Modal: This is the modal that shows up when clicking on the '+' sign that is nested inside the Main Modal. This allows the user to add a new activity to the SDECE collections. -->
+		<div class="form-modal-screen" id="addModal">
 			<iframe
 				src="./addloc.html"
 				class="h-[69%] w-[45%] z-[3500] flex rounded-lg overflow-hidden"
 			></iframe>
 		</div>
 
-		<!-- Edit Activity Modal -->
-		<div
-			class="hidden w-screen h-screen fixed inset-0 bg-black/10 z-[4500] flex-row justify-center items-center overflow-hidden"
-			id="editModal"
-		>
+		<!-- Edit Modal: This is the modal that shows up when clicking on the Edit button that is nested within Partner Modal. This allows the user to edit an existing activity within the SDECE Collections. -->
+		<div class="form-modal-screen" id="editModal">
 			<iframe
 				src="./editloc.html"
 				class="h-[69%] w-[45%] z-[3500] flex rounded-lg overflow-hidden"
 			></iframe>
 		</div>
 
+		<!-- SCRIPTS -->
 		<script type="module" src="js/index.js"></script>
-
 		<script>
 			// This hides the Add Activity modal when the user submits the form
 			window.addEventListener('message', function (event) {
@@ -801,16 +571,14 @@
 			function hideAddModalContainer() {
 				var iframeContainer = document.getElementById('addModal');
 				if (iframeContainer) {
-					iframeContainer.classList.add('hidden');
-					iframeContainer.classList.remove('flex');
+					iframeContainer.style.display = 'none';
 				}
 			}
 
 			function hideEditModalContainer() {
 				var iframeContainer = document.getElementById('editModal');
 				if (iframeContainer) {
-					iframeContainer.classList.add('hidden');
-					iframeContainer.classList.remove('flex');
+					iframeContainer.style.display = 'none';
 				}
 			}
 
