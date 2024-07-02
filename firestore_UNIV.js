@@ -179,7 +179,7 @@ const VALIDATION_RULES = { //Rules for Validating Data
 	'sdece-official-TEST': {
 		'partner_name': {type: 'string', required: true, maxLength: 255},
 		'partner_address': {type: 'string', required: true, maxLength: 255},
-		'partner_coordinates': {type: 'geolocation', required: true},
+		'partner_coordinates': {type: 'number', required: true},
 		'partner_contact_name': {type: 'string', required: true, maxLength: 255},
 		'partner_contact_number': {type: 'string', required: true, minLength: 11, maxLength: 11, regex: /^[0-9]+$/},
 		'partner_email': {type: 'string', required: true, maxLength: 127},
