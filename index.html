@@ -187,32 +187,33 @@
 							</div>
 						</div>
 					</div>
-					<button
-						id="mainButton"
-						class="text-xl flex flex-row items-center px-8 py-4 bg-customMediumGray w-full text-lightbg mt-6 hover:text-darkbg"
-					>
+					<button id="mainButton" class="main-btn">
 						<div>+</div>
-						<p class="ml-4 font-bold font-montserrat">
-							Add an activity
-						</p>
+						<p class="main-btn-text">Add an activity</p>
 					</button>
 				</div>
-				<div class="entries bg-customLightGray w-full">
-					<ul id="locationList" class="accordion w-full"></ul>
+				<div class="entries">
+					<ul
+						id="locationList"
+						class="accordion"
+						style="width: 100%"
+					></ul>
 				</div>
 			</div>
 
 			<!-- Right container containing Login/Logout header and map -->
-			<div class="w-full h-screen overflow-y-hidden flex flex-col">
+			<div class="main-container">
+				<!-- Header -->
 				<div
 					class="h-20 px-9 bg-darkbg w-full flex flex-row justify-between items-center"
 				>
-					<div class="flex flex-row justify-start items-center">
+					<!-- Layer Toggle -->
+					<div class="layer-toggle-container">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							width="24"
 							height="24"
-							class="bi bi-layers fill-customLightGray"
+							class="bi bi-layers layers-icon"
 							viewBox="0 0 16 16"
 						>
 							<path
@@ -222,19 +223,19 @@
 						<select
 							name="collections"
 							id="collections"
-							class="block w-auto font-montserrat text-lg font-bold border-none bg-darkbg text-customLightGray focus:outline-none focus:border-none focus:ring-0 ml-3"
+							class="layer-toggle"
 						></select>
 					</div>
-					<button
-						class="shadow-md py-3 px-6 bg-lightbg font-montserrat font-bold text-xl rounded flex flex-row text-white justify-center items-center"
-					>
+
+					<!-- Logout Button -->
+					<button class="logout-btn">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
 							viewBox="0 0 24 24"
 							stroke-width="1.5"
 							stroke="currentColor"
-							class="size-6 mr-2"
+							class="logout-icon"
 						>
 							<path
 								stroke-linecap="round"
@@ -247,9 +248,7 @@
 					</button>
 				</div>
 
-				<div class="flex flex-1">
-					<div id="map" class="w-full h-full"></div>
-				</div>
+				<div id="map" class="map-container"></div>
 			</div>
 		</div>
 
