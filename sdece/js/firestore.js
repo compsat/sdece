@@ -11,165 +11,120 @@ import {
 	where,
 	getDoc,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-import { getCollection, setCollection, SDECE_RULES, getDocIdByPartnerName, editEntry } from '/firestore_UNIV.js';
+//import { getCollection, setCollection, SDECE_RULES, getDocIdByPartnerName, editEntry } from '/firestore_UNIV.js';
+import {getCollection, setCollection, getDocMap, groupBy, SDECE_RULES_TEST, } from '/firestore_UNIV_v2_mirror.js';
 // Your Firestore code here
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-setCollection("sdece-official-TEST");
-
 var col_ref = null;
 
-col_ref = getCollection();
+var activities = null;
+var partners = null;
 
+setCollection("sdece-official-TEST", true, true).then(() => {
+	col_ref = getCollection();
 
-console.log(col_ref);
+	activities = getDocMap();
+	partners = groupBy("partner_name"); // queried
 
-var partners = {}; // queried
-var activities = {};
+	console.log(activities);
+	console.log(partners);
 
-// get docs from firestore and place them in partner and activities
+	// get docs from firestore and place them in partner and activities
+	Object.keys(partners).forEach((partner) => {
+		const containerDiv = document.createElement('div');
+		const img = document.createElement('svg');
+		const listItem = document.createElement('li');
+		const anchor = document.createElement('a');
+		const nameDiv = document.createElement('div');
+		const addressDiv = document.createElement('div');
+		const activityDiv = document.createElement('div');
 
-getDocs(col_ref)
-	.then((querySnapshot) => {
+		// Set attributes
+		anchor.href = '#';
 
-		//populate activities
-		querySnapshot.forEach((doc) => {
-			if (
-				doc.data().name !== 'Test 2' ||
-				doc.data().name !== 'Test2'
-			) {
-				let a = doc.data();
-				a["identifier"] = doc.id;
-
-				activities[doc.id] = a;
-			}
+		anchor.addEventListener('click', 
+			function () {
+				showModal(partners[partner]);
 		});
 
-		console.log("Activities:")
-		console.log(activities);
+		// Adding classes and setting text content
+		containerDiv.classList.add('partnerDiv');
 
-		//populate with partners
-		Object.keys(activities).forEach((activity) => {
-			let partner = activities[activity][SDECE_RULES[1]];
-
-			//console.log(partner);
-
-			if (partners[partner] == null){
-				partners[partner] = [];
-				partners[partner].push(activities[activity]);
-			} 
-			else {
-				partners[partner].push(activities[activity]);
-			}
-
-			
-		});
-
-		console.log("Partners: ")
-		console.log(partners);
-
-		Object.keys(partners).forEach((partner) => {
-			const containerDiv = document.createElement('div');
-			const img = document.createElement('svg');
-			const listItem = document.createElement('li');
-			const anchor = document.createElement('a');
-			const nameDiv = document.createElement('div');
-			const addressDiv = document.createElement('div');
-			const activityDiv = document.createElement('div');
-
-			// Set attributes
-			anchor.href = '#';
-
-			anchor.addEventListener('click', 
-				function () {
-					showModal(partners[partner]);
+		if (Object.keys(activities).length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
+		{
+			Object.keys(activities).forEach( (activity) => {
+			activityDiv.innerHTML += activity.activity_name + "<br/>";       // there might be a better way to display multiple activities
 			});
+		}
+		else {
+			console.log("No activities found");
+		}
+		
+		nameDiv.classList.add(
+			'name',
+			'font-montserrat',
+			'font-bold',
+			'text-lg',
+			'text-darkbg',
+			'leading-[110%]'
+		);
+		addressDiv.classList.add(
+			'address',
+			'text-sm',
+			'text-customGray',
+			'font-hind',
+			'font-regular',
+			'leading-[120%]',
+			'mt-2'
+		);
+		activityDiv.classList.add(
+			'activity',
+			'text-sm',
+			'text-customBlack',
+			'font-hind',
+			'font-regular',
+			'leading-[110%]',
+			'mt-2'
+		);
 
-			// Adding classes and setting text content
+		nameDiv.textContent = partner;
+		addressDiv.textContent = partners[partner][0]["partner_address"];
+		
+		let qq = "";
 
-			containerDiv.classList.add('partnerDiv');
+		for( let activityy of partners[partner]){ // the little texts on the partner sidenav
+			qq += (activityy["activity_nature"] + "\n");
+		}
+		activityDiv.textContent = qq;
 
-	//   var activities = getDocIdByPartnerName(partner.partner_name);
-      if (activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
-      {
-        activities.forEach( (activity) => {
-          activityDiv.innerHTML += activity.activity_name + "<br/>";       // there might be a better way to display multiple activities
-        });
-      }
-      else {
-        console.log("No activities found");
-      }
-      
-			nameDiv.classList.add(
-				'name',
-				'font-montserrat',
-				'font-bold',
-				'text-lg',
-				'text-darkbg',
-				'leading-[110%]'
-			);
-			addressDiv.classList.add(
-				'address',
-				'text-sm',
-				'text-customGray',
-				'font-hind',
-				'font-regular',
-				'leading-[120%]',
-				'mt-2'
-			);
-			activityDiv.classList.add(
-				'activity',
-				'text-sm',
-				'text-customBlack',
-				'font-hind',
-				'font-regular',
-				'leading-[110%]',
-				'mt-2'
-			);
+		listItem.classList.add(
+			'accordion',
+			'py-6',
+			'px-8',
+			'border-b',
+			'border-customGray',
+			'w-full'
+		);
+		anchor.classList.add('accordion', 'link');
 
-			nameDiv.textContent = partner;
-			addressDiv.textContent = partners[partner][0]["partner_city"];
-			
-			let qq = "";
+		// Append elements to the DOM
+		anchor.appendChild(nameDiv);
+		anchor.appendChild(addressDiv);
+		anchor.appendChild(activityDiv);
 
-			for( let activityy of partners[partner]){
-				qq += (activityy["activity_nature"] + "\n");
-			}
-			activityDiv.textContent = qq;
+		listItem.appendChild(anchor);
+		containerDiv.appendChild(img);
+		containerDiv.appendChild(listItem);
+		locationList.appendChild(containerDiv);
 
-			// if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
-			// {
-			//   partner.activities.forEach( (activity) => {
-			//     activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
-			//   });
-			// }
-
-			listItem.classList.add(
-				'accordion',
-				'py-6',
-				'px-8',
-				'border-b',
-				'border-customGray',
-				'w-full'
-			);
-			anchor.classList.add('accordion', 'link');
-
-			// Append elements to the DOM
-			anchor.appendChild(nameDiv);
-			anchor.appendChild(addressDiv);
-			anchor.appendChild(activityDiv);
-
-			listItem.appendChild(anchor);
-			containerDiv.appendChild(img);
-			containerDiv.appendChild(listItem);
-			locationList.appendChild(containerDiv);
-
-		});
-	})
-	.catch((error) => {
-		console.error('Error getting documents: ', error);
 	});
+});
+
+
+
+
 
 var currently_viewed_activity = null;
 
