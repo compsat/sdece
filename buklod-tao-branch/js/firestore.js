@@ -303,7 +303,7 @@ function showModal(partner) {
   var openEditForm = document.getElementById("editHousehold");
   
   // Get the <span> element that closes the modal
-  var closeEditForm = document.getElementsByClassName("close-editForm")[0];
+  var closeEditForm = document.getElementsByClassName("closeEditForm")[0];
   
   // When the user clicks the button, open the modal 
   openEditForm.onclick = function() {

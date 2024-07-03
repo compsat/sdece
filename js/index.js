@@ -61,7 +61,7 @@ getDocs(colRef)
 			getDivContent(doc.partner_name).then((div) => {
 				results.addLayer(marker);
 				var popupContent = `
-					<div class="partner-popup w-auto font-semibold text-sm font-montserrat text-darkbg !text-center	" id="`;
+					<div class="partner-popup font-montserrat text-darkbg !text-center	" id="`;
 				popupContent += doc.partner_name;
 				popupContent += `">`;
 				popupContent += doc.partner_name;
@@ -80,7 +80,7 @@ getDocs(colRef)
 						'Clicked on the pop-up content of ' +
 							doc.partner_name
 					);
-
+					showModal(doc)
 					// TODO: call showModal(partner) here! Not super sure what the partner object should be in this case
 				});
 			});
@@ -168,6 +168,7 @@ function showMainModal() {
 		}
 	};
 }
+
 // Close Main modal
 const elementCloseButton = document.getElementById('closeButton');
 elementCloseButton.addEventListener('click', closeModal);
@@ -180,6 +181,7 @@ function closeModal() {
 // Fuction for filtering results upon searching partners
 const newButton = document.getElementById('addModalButton');
 newButton.addEventListener('click', showAddModal);
+
 export function showAddModal() {
 	console.log("The user clicked the '+' button within the Main Modal");
 	var addModal = document.getElementById('addModal');
