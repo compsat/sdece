@@ -47,25 +47,19 @@
 				console.log('clicked');
 				var collatedInput = {};
 
-				// for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
-				// 	//SDECE_RULES_TEST[2] are just the field names of each document
-				// 	console.log(SDECE_RULES_TEST[2][i]);
-				// 	let q = document.getElementById(
-				// 		SDECE_RULES_TEST[2][i]
-				// 	).value;
-				// 	collatedInput[SDECE_RULES_TEST[2][i]] = q;
-
-				// 	// this is where data validation will happen
-				// 	// add the if-else statements of edge cases here
-				// }
-
 				for (let i = 0; i < SDECE_RULES_TEST[2].length; i++){
 					console.log(SDECE_RULES_TEST[2][i]);
 
 					let fieldName = SDECE_RULES_TEST[2][i];
 					let inputValue = document.getElementById(fieldName).value;
 
-					collatedInput[fieldName] = inputValue;
+					if (fieldName == 'partner_coordinates') {
+                        collatedInput[fieldName] = Number(inputValue);
+						
+                    } else {
+                        collatedInput[fieldName] = inputValue;
+                    }
+
 				}
 
 				console.log(collatedInput);
@@ -307,7 +301,7 @@
 							>Partner Coordinates
 						</label>
 						<input
-							type="geopoint"
+							type="number"
 							id="partner_coordinates"
 							name="partner_coordinates"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
@@ -427,6 +421,7 @@
 					);
 					window.parent.postMessage('closeAddModal', '*');
 				});
+				
 		</script>
 
 	</body>
