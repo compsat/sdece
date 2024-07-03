@@ -10,7 +10,7 @@ body {
   flex-direction: row;
 }
 
-.map-container {
+.mapContainer {
   flex: 0 0 20%;
   display: flex;
   position: absolute;
@@ -26,7 +26,7 @@ body {
   height: 100%;
 }
 
-.top-bar{
+.topBar{
   background-color: #387181;
   height: 63px;
   width: 100%;
@@ -36,7 +36,7 @@ body {
   justify-content: flex-end;
 }
 
-.sidenav {
+.sideNav {
   display: flex;
   position: fixed;
   width: 380px;
@@ -55,7 +55,7 @@ body {
 }
 
 /* search bar itself */
-.search-bar {
+.searchBar {
   height: 45px;
   margin: -15px -15px -15px -15px;
   padding: 15px 32px;
@@ -74,14 +74,14 @@ body {
   justify-content: right;
 }
 
-.search-bar:hover {
+.searchBar:hover {
   background-color: #e4e3e3;
 }
-.search-bar:focus {
+.searchBar:focus {
   background-image: none;
 }
 
-.logo-container {
+.logoContainer {
   display: flex;
   padding: 8px 40px;
   align-items: center;
@@ -139,7 +139,7 @@ li {
 }
 
 /* logout button */
-.button-logout {
+.buttonLogout {
   font-family: Montserrat;
   font-size: 16px;
   font-weight: 700;
@@ -177,7 +177,7 @@ button.container {
   box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2); 
 }
 
-button.label-font {
+button.labelFont {
   font-family: Montserrat;
   padding-top: 30px;
   padding-left: 30px;
@@ -208,7 +208,7 @@ div.buttons {
 }
 
 /* magnifying glass icon */
-.search-button {
+.searchButton {
   background-image: url("./img/search-icon.png");
   background-repeat: no-repeat;
   justify-content: right;
@@ -245,7 +245,7 @@ ul.accordion {
   padding-inline-start: 0px !important;
 }
 
-.container-entry {
+.containerEntry {
   width: 100%;
 }
 
@@ -302,7 +302,7 @@ h1.entries {
 }
 
 /* CSS for "Add Household" modal*/
-.form-modal {
+.formModal {
   background-color:rgb(107, 106, 106, 0.4);
   align-items: center;
   position: fixed;
@@ -316,7 +316,7 @@ h1.entries {
   box-sizing: border-box;
 }
 
-.form-modal-header {
+.formModalHeader {
   margin-left: 23%;
   margin-top: 2%;
   padding: 1px 32px;
@@ -325,7 +325,7 @@ h1.entries {
   border-radius: 8px 8px 0px 0px;
 }
 
-.form-modal-content {
+.formModalContent {
   margin-left: 23%;
   padding: 1px 32px;
   padding-bottom: 32px;
@@ -367,7 +367,7 @@ h1.entries {
   box-sizing: border-box;
 }
 
-.modal-header {
+.modalHeader {
   position: relative;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -382,7 +382,7 @@ h1.entries {
   box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2); 
 }
 
-.modal-content {
+.modalContent {
   margin-top: 0px;
   margin-left: 25%;
   padding: 10px 24px;
@@ -396,7 +396,7 @@ h1.entries {
   scrollbar-gutter: stable;
 }
 
-.modal-footer {
+.modalFooter {
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   margin-left: 25%;
@@ -408,13 +408,13 @@ h1.entries {
   box-shadow: 0 -5px 5px -5px rgba(0, 0, 0, 0.2); 
 }
 
-.modal-line {
+.modalLine {
   display: flex; 
   justify-content: space-between;
 }
 
 /* modal text */
-.modal-label {
+.modalLabel {
   font-family: 'Montserrat';
   font-size: 16px;
   color: #000;
@@ -423,7 +423,7 @@ h1.entries {
   letter-spacing: 2%;
 }
 
-.modal-name {
+.modalName {
   color: #387181;
   font-family: Montserrat;
   font-size: 24px;
@@ -432,7 +432,7 @@ h1.entries {
   letter-spacing: 0.48px;
 }
 
-.modal-button {
+.modalButton {
   width: 100%;
   display: flex;
   position: relative;
@@ -446,11 +446,11 @@ h1.entries {
   background-color: #fcfcfc;
 }
 
-.modal-button:hover {
+.modalButton:hover {
   background-color: #fcfcfc;
 }
 
-.modal-text {
+.modalText {
   color: #a0a0a0;
   font-family: Hind;
   font-size: 16px;
@@ -462,7 +462,7 @@ h1.entries {
   top: -10px;
 }
 
-.close-form {
+.closeForm {
   color: #aaaaaa;
   float: right;
   padding-top: 15px;
@@ -470,8 +470,8 @@ h1.entries {
   font-weight: bold;
 }
 
-.close-form:hover,
-.close-form:focus {
+.closeForm:hover,
+.closeForm:focus {
   color: #000;
   text-decoration: none;
   cursor: pointer;
@@ -530,7 +530,7 @@ button.collapsible {
   cursor: pointer;
 }
 
-.partner-geolocation {
+.partnerGeolocation {
   display: flex;
   align-items: center;
 }
@@ -627,7 +627,7 @@ button.collapsible {
   cursor: pointer;
 }
 
-.partner-value {
+.partnerValue {
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: Hind;
@@ -638,7 +638,7 @@ button.collapsible {
   margin: 0 !important;
 }
 
-.partner-label {
+.partnerLabel {
   color: #3d97af;
   font-family: Hind;
   font-style: normal;
@@ -649,7 +649,7 @@ button.collapsible {
   margin: 12px 0 8px 0 !important;
 }
 
-.partner-activity {
+.partnerActivity {
   color: #2f2f2f;
   font-family: Hind;
   font-size: 12px;
@@ -659,7 +659,7 @@ button.collapsible {
   letter-spacing: 0.4px;
 }
 
-.close-editForm {
+.closeEditForm {
   color: #aaaaaa;
   float: right;
   padding-top: 15px;
@@ -667,8 +667,8 @@ button.collapsible {
   font-weight: bold;
 }
 
-.close-editForm:hover,
-.close-editForm:focus {
+.closeEditForm:hover,
+.closeEditForm:focus {
   color: #000;
   text-decoration: none;
   cursor: pointer;

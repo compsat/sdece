@@ -6,9 +6,9 @@ div.container {
 }
 
 /* container for each input field */
-div.input_container {
+div.inputContainer {
     margin-top: 2px;
-    margin-bottom: 2spx;
+    margin-bottom: 2px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -16,31 +16,31 @@ div.input_container {
 }
 
 /* Specific to the checkbox container for the HOA / NOA option */
-div.input_container.checkbox-container {
+div.inputContainer.checkboxContainer {
     display: flex;
 }
 
 /* Specific to the select input for residency status */
-#residency_status {
+#residencyStatus {
     width: 400px; 
   }
 
 /* Styling for the label column specific for the HOA / NOA option */
-div.label-column {
+div.labelColumn {
     flex: 1; 
     display: flex;
     justify-content: flex-start; 
 }
 
 /* Styling for the checkbox column specific for the HOA / NOA option */
-div.checkbox-column {
+div.checkboxColumn {
     display: flex;
     justify-content: left; 
     padding-right: 180px;
 }
 
 /* form header */
-.form-header {
+.formHeader {
     font-family: "Montserrat";
     font-weight: 700;
     font-size: 32px;
@@ -49,7 +49,7 @@ div.checkbox-column {
 }
 
 /* form sub-headers */
-.sub-header {
+.subHeader {
     font-family: "Montserrat";
     font-weight: 700;
     font-size: 20px;
@@ -67,7 +67,7 @@ label.form {
 }
 
 /* specific to disaster risk level (uses both selects and inputs) labels */
-label.disaster-form {
+label.disasterForm {
     font-family: "Montserrat", sans-serif;
     font-weight: 400;
     font-size: 18px;
@@ -127,7 +127,7 @@ input.attribs::placeholder {
 }
 
 /* container for Save and Delete buttons */
-.button-container {
+.buttonContainer {
     margin-top: 20px;
     width: 100%;
     text-align: center;
