@@ -12,6 +12,31 @@ div.input_container {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
+}
+
+/* Specific to the checkbox container for the HOA / NOA option */
+div.input_container.checkbox-container {
+    display: flex;
+}
+
+/* Specific to the select input for residency status */
+#residency_status {
+    width: 400px; 
+  }
+
+/* Styling for the label column specific for the HOA / NOA option */
+div.label-column {
+    flex: 1; 
+    display: flex;
+    justify-content: flex-start; 
+}
+
+/* Styling for the checkbox column specific for the HOA / NOA option */
+div.checkbox-column {
+    display: flex;
+    justify-content: left; 
+    padding-right: 180px;
 }
 
 /* form header */
