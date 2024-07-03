@@ -209,13 +209,13 @@ export function showModal(partner) {
 	const datesDiv = document.createElement('div');
 
 	nameDiv.classList.add('modal-name');
-	nameDiv.style = ("float: left;")
+	nameDiv.style = 'float: left;';
 	addressDiv.classList.add('modal-address');
 
 	// Set the content of each div
 	backarrowDiv.innerHTML =
 		'<svg viewBox="0 0 1024 1024" class="w-6 h-6" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#a0a0a0" stroke="#a0a0a0" stroke-width="50" transform="matrix(-1, 0, 0, -1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="#a0a0a0"></path></g></svg>';
-	backarrowDiv.style = ('float-left');
+	backarrowDiv.style = 'float-left';
 	backarrowDiv.addEventListener('click', () => {
 		modalHeader.innerHTML = '';
 		modalContent.innerHTML = '';
@@ -232,7 +232,7 @@ export function showModal(partner) {
 	closeDiv.innerHTML =
 		'<svg viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><path d="M20.7457 3.32851C20.3552 2.93798 19.722 2.93798 19.3315 3.32851L12.0371 10.6229L4.74275 3.32851C4.35223 2.93798 3.71906 2.93798 3.32854 3.32851C2.93801 3.71903 2.93801 4.3522 3.32854 4.74272L10.6229 12.0371L3.32856 19.3314C2.93803 19.722 2.93803 20.3551 3.32856 20.7457C3.71908 21.1362 4.35225 21.1362 4.74277 20.7457L12.0371 13.4513L19.3315 20.7457C19.722 21.1362 20.3552 21.1362 20.7457 20.7457C21.1362 20.3551 21.1362 19.722 20.7457 19.3315L13.4513 12.0371L20.7457 4.74272C21.1362 4.3522 21.1362 3.71903 20.7457 3.32851Z" fill="currentColor"></path></svg>';
 	closeDiv.classList.add('close-btn');
-	closeDiv.style = ("float: right;")
+	closeDiv.style = 'float: right;';
 	// Close the modal when the close button is clicked
 	closeDiv.addEventListener('click', () => {
 		console.log('modal closed');
@@ -242,10 +242,10 @@ export function showModal(partner) {
 	console.log(partner[0]);
 
 	//limit partner_name to 30 characters
-	if(partner[0].partner_name.length > 30){
-		nameDiv.textContent = partner[0].partner_name.substring(0, 30) + '...';	
-	}
-	else{
+	if (partner[0].partner_name.length > 30) {
+		nameDiv.textContent =
+			partner[0].partner_name.substring(0, 30) + '...';
+	} else {
 		nameDiv.textContent = partner[0].partner_name;
 	}
 
@@ -259,7 +259,7 @@ export function showModal(partner) {
 	activityHeaderDiv.innerHTML = 'List of activities: ';
 	const addActivity = document.createElement('button');
 	addActivity.innerHTML =
-	'<svg width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 12H20M12 4V20" stroke="#3d97af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>';
+		'<svg width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 12H20M12 4V20" stroke="#3d97af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>';
 
 	// Add button for adding activities
 	addActivity.addEventListener('click', () => {
@@ -279,9 +279,7 @@ export function showModal(partner) {
 			console.log(activity);
 			// View activity details button
 			const activityButton = document.createElement('button');
-			activityButton.classList.add(
-				'modal-activities',
-			);
+			activityButton.classList.add('modal-activities');
 
 			const activityName = document.createElement('div');
 			const arrow = document.createElement('div');
@@ -289,7 +287,7 @@ export function showModal(partner) {
 			activityName.textContent = activity.activity_nature + '';
 			arrow.innerHTML =
 				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#a0a0a0" class="w-6 h-6"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="#a0a0a0"></path></g></svg>';
-			arrow.classList.add("arrow");
+			arrow.classList.add('arrow');
 
 			activityButton.appendChild(activityName);
 			activityButton.appendChild(arrow);
@@ -360,8 +358,7 @@ export function showModal(partner) {
 
 	activityDiv.classList.add('modal-activities');
 
-	admuContactDiv.innerHTML =
-		'<b>AdMU Contact: </b>' + partner.ADMU_contact;
+	admuContactDiv.innerHTML = '<b>AdMU Contact: </b>' + partner.ADMU_contact;
 	admuEmailDiv.innerHTML = '<b>AdMU Email: </b>' + partner.ADMU_email;
 	admuOfficeDiv.innerHTML = '<b>AdMU Office: </b>' + partner.ADMU_office;
 	orgDiv.innerHTML = '<b>Organization: </b>' + partner.organization_unit;
@@ -391,7 +388,7 @@ export function showModal(partner) {
 		}
 	});
 
-	var editButtons = document.getElementsByClassName('editButton');
+	var editButtons = document.getElementsByClassName('edit-button');
 
 	for (var i = 0; i < editButtons.length; i++) {
 		editButtons[i].addEventListener('click', function () {
