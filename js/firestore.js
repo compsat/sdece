@@ -360,11 +360,10 @@ export function showModal(partner) {
 			});
 
 			activityDiv.appendChild(activityButton);
-			activityDiv.appendChild(document.createElement('br'));
 		});
 	}
 
-	activityDiv.classList.add('modal-activities');
+	activityDiv.classList.add('modal-activities-list');
 
 	admuContactDiv.innerHTML = '<b>AdMU Contact: </b>' + partner.ADMU_contact;
 	admuEmailDiv.innerHTML = '<b>AdMU Email: </b>' + partner.ADMU_email;

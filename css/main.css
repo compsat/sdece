@@ -611,7 +611,13 @@ iframe {
 	margin-bottom: 15px;
 }
 
+.modal-activities-list {
+	padding: 0;
+}
 .modal-activities {
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
