@@ -180,7 +180,7 @@ export function groupBy(custom_key_identifier){
 }
 
 export async function addEntry(obj_input, is_debug_mode = false){
-    collection_reference = collection(DB, "sdece-official-TEST"); // temporary. remove after testing
+    //collection_reference = collection(DB, "sdece-official-TEST"); // temporary. remove after testing
     console.log(collection_reference.id);
     let needed_fields = null;
 
@@ -207,7 +207,7 @@ export async function addEntry(obj_input, is_debug_mode = false){
 }
 
 export async function editEntry(obj_input, doc_id, is_debug_mode = false){
-    collection_reference = collection(DB, "sdece-official-TEST"); // temporary. remove after testing
+    //collection_reference = collection(DB, "sdece-official-TEST"); // temporary. remove after testing
     console.log(collection_reference.id, doc_id);
 
     let needed_fields = null;

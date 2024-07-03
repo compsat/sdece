@@ -11,14 +11,26 @@ import {
 	where,
 	getDoc,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+/*
 import {
 	getCollection,
 	setCollection,
 	SDECE_RULES,
 	getDocIdByPartnerName,
-} from '/firestore_UNIV.js';
+} from '/firestore_UNIV.js';*/
 
-import { showAddModal } from './index.js';
+import {
+    setCollection,
+    getCollection,
+    getDocMap,
+    groupBy,
+	SDECE_RULES,
+    SDECE_RULES_TEST,
+    addEntry,
+    editEntry,
+} from '/firestore_UNIV_v2_mirror.js'
+
+import { showAddModal, loadMapMarkers } from './index.js';
 // Your Firestore code here
 
 // Import the functions you need from the SDKs you need
@@ -29,41 +41,19 @@ import { showAddModal } from './index.js';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-
 var col_ref = null;
+var activities = null;
+var partners = null;
 
-col_ref = getCollection();
+setCollection('sdece-official',true).then(() => {
+	col_ref = getCollection();
 
-
-var partners = {}; // queried
-var activities = [];
-
-// get docs from firestore and place them in partner and activities
-
-getDocs(col_ref)
-	.then((querySnapshot) => {
-		//populate activities
-		querySnapshot.forEach((doc) => {
-			if (
-				doc.data().name !== 'Test 2' ||
-				doc.data().name !== 'Test2'
-			) {
-				activities.push(doc.data());
-			}
-		});
-		//populate with partners
-		activities.forEach((activity) => {
-			let partner = activity[SDECE_RULES[1]];
-
-			//console.log(partner);
-
-			if (partners[partner] == null) {
-				partners[partner] = [];
-				partners[partner].push(activity);
-			} else {
-				partners[partner].push(activity);
-			}
-		});
+	console.log(col_ref);
+	
+	activities = getDocMap();
+	console.log(activities);
+	partners = groupBy("partner_name"); // queried
+	console.log(partners);
 
 		//populate ul with partners
 		Object.keys(partners).forEach((partner) => {
@@ -168,6 +158,11 @@ getDocs(col_ref)
 	.catch((error) => {
 		console.error('Error getting documents: ', error);
 	});
+
+
+
+
+	
 
 // Display partner modal by clicking partner entry (WIP: and on pin pop up click)
 export function showModal(partner) {

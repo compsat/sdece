@@ -2,10 +2,14 @@ import {
 	DB_RULES_AND_DATA,
 	getDocByID,
 	getDocIdByPartnerName,
-	getCollection,
+	//getCollection,
 } from '/firestore_UNIV.js';
 
-// Global Map Variable (the map shown)
+import {
+	getCollection,
+} from '/firestore_UNIV_v2_mirror.js';
+
+/// Will need to change how we do this if we ever restructure again
 export var map = L.map('map').setView([14.5995, 120.9842], 10);
 
 // Takes in a name to determine all field values which should be displayed
