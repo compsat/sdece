@@ -41,54 +41,97 @@ var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
-// Loads at the start
 
-getDocs(colRef)
-	.then((querySnapshot) => {
-		querySnapshot.forEach((entry) => {
-			var doc = entry.data();
+export function loadMapMarkers(partners){
+	Object.keys(partners).forEach((partner) => {
+		var marker;
 
-			var marker;
+		if (partners[partner][0]["partner_coordinates"] != null){
+			let partner_lat = partners[partner][0]["partner_coordinates"]._lat;
+			let partner_long = partners[partner][0]["partner_coordinates"]._long;
 
-			// Some coordinated are null, protective check
-			if (doc.partner_coordinates != null) {
-				marker = L.marker([
-					parseFloat(doc.partner_coordinates.latitude),
-					parseFloat(doc.partner_coordinates.longitude),
-				]);
-			}
+			marker = L.marker([
+				parseFloat(partner_lat),
+				parseFloat(partner_long),
+			]);
 
-			getDivContent(doc.partner_name).then((div) => {
-				results.addLayer(marker);
-				var popupContent = `
-					<div class="partner-popup font-montserrat text-darkbg !text-center	" id="`;
-				popupContent += doc.partner_name;
-				popupContent += `">`;
-				popupContent += doc.partner_name;
-				popupContent += `</div>`;
+		}
+		
+		results.addLayer(marker);
+		var popupContent = `
+			<div class="partner-popup font-montserrat text-darkbg !text-center	" id="`;
+		popupContent += partner;
+		popupContent += `">`;
+		popupContent += partner;
+		popupContent += `</div>`;
 
-				marker.bindPopup(popupContent);
-				results.addLayer(marker);
-			});
+		marker.bindPopup(popupContent);
+		results.addLayer(marker);
+		
 
-			marker.on('popupopen', function () {
-				console.log('Clicked on ' + doc.partner_name + ' pin!');
+		marker.on('popupopen', function () {
+			console.log('Clicked on ' + partner + ' pin!');
 
-				var test = document.getElementById(doc.partner_name);
-				test.addEventListener('click', function () {
-					console.log(
-						'Clicked on the pop-up content of ' +
-							doc.partner_name
-					);
-					showModal(doc)
-					// TODO: call showModal(partner) here! Not super sure what the partner object should be in this case
-				});
+			var test = document.getElementById(partner);
+			test.addEventListener('click', function () {
+				console.log(
+					'Clicked on the pop-up content of ' +
+					partner
+				);
+				showModal(doc);
+				// TODO: call showModal(partner) here! Not super sure what the partner object should be in this case
 			});
 		});
-	})
-	.catch((error) => {
-		console.error('Error getting documents: ', error);
 	});
+}
+// Loads at the start
+
+// getDocs(colRef)
+// 	.then((querySnapshot) => {
+// 		querySnapshot.forEach((entry) => {
+// 			var doc = entry.data();
+
+// 			var marker;
+
+// 			// Some coordinated are null, protective check
+// 			if (doc.partner_coordinates != null) {
+// 				marker = L.marker([
+// 					parseFloat(doc.partner_coordinates.latitude),
+// 					parseFloat(doc.partner_coordinates.longitude),
+// 				]);
+// 			}
+
+// 			getDivContent(doc.partner_name).then((div) => {
+// 				results.addLayer(marker);
+// 				var popupContent = `
+// 					<div class="partner-popup font-montserrat text-darkbg !text-center	" id="`;
+// 				popupContent += doc.partner_name;
+// 				popupContent += `">`;
+// 				popupContent += doc.partner_name;
+// 				popupContent += `</div>`;
+
+// 				marker.bindPopup(popupContent);
+// 				results.addLayer(marker);
+// 			});
+
+// 			marker.on('popupopen', function () {
+// 				console.log('Clicked on ' + doc.partner_name + ' pin!');
+
+// 				var test = document.getElementById(doc.partner_name);
+// 				test.addEventListener('click', function () {
+// 					console.log(
+// 						'Clicked on the pop-up content of ' +
+// 							doc.partner_name
+// 					);
+// 					showModal(doc)
+// 					// TODO: call showModal(partner) here! Not super sure what the partner object should be in this case
+// 				});
+// 			});
+// 		});
+// 	})
+// 	.catch((error) => {
+// 		console.error('Error getting documents: ', error);
+// 	});
 
 addListeners();
 

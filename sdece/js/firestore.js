@@ -11,15 +11,25 @@ import {
 	where,
 	getDoc,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+
+/*
 import {
 	getCollection,
 	setCollection,
 	SDECE_RULES,
 	getDocIdByPartnerName,
 } from '/firestore_UNIV.js';
+ */
 
 import {
-	testAdd,
+    setCollection,
+    getCollection,
+    getDocMap,
+    groupBy,
+	SDECE_RULES,
+    SDECE_RULES_TEST,
+    addEntry,
+    editEntry,
 } from '/firestore_UNIV_v2_mirror.js'
 // Your Firestore code here
 
@@ -31,7 +41,7 @@ import {
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-setCollection('sdece-official');
+setCollection('sdece-official',true,false);
 
 var col_ref = null;
 
@@ -39,8 +49,11 @@ col_ref = getCollection();
 
 console.log(col_ref);
 
-var partners = {}; // queried
-var activities = [];
+var activities = getDocMap();
+var partners = groupBy("partner_name"); // queried
+
+console.log(activities);
+console.log(partners);
 
 // get docs from firestore and place them in partner and activities
 

@@ -129,7 +129,6 @@ export async function setCollection(collection_name, include_doc_id, is_debug_mo
         collection_reference = collection(DB, collection_name);
         console.log("collection set to: " + collection_name + " now loading to docs");
 
-        // loadDocs(collection_name); // had to separate because this is async
         let collection_docs = await getDocs(collection_reference);
         collection_docs.forEach((entry) => {
             var doc = entry.data();
@@ -175,7 +174,7 @@ export function groupBy(custom_key_identifier){
 }
 
 export async function addEntry(obj_input, is_debug_mode = false){
-    collection_reference = collection(DB, "sdece-official-TEST"); // temporary. remove after testing
+    //collection_reference = collection(DB, "sdece-official-TEST"); // temporary. remove after testing
     console.log(collection_reference.id);
     let needed_fields = null;
 
@@ -202,7 +201,7 @@ export async function addEntry(obj_input, is_debug_mode = false){
 }
 
 export async function editEntry(obj_input, doc_id, is_debug_mode = false){
-    collection_reference = collection(DB, "sdece-official-TEST"); // temporary. remove after testing
+    //collection_reference = collection(DB, "sdece-official-TEST"); // temporary. remove after testing
     console.log(collection_reference.id, doc_id);
 
     let needed_fields = null;
