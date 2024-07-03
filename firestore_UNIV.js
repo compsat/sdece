@@ -185,7 +185,7 @@ const VALIDATION_RULES = { //Rules for Validating Data
 		'partner_email': {type: 'string', required: true, maxLength: 127},
 		'activity_name': {type: 'string', required: true},
 		'activity_nature': {type: 'string', required: true, maxLength:255},
-		'activity_date': {type: 'Date', required: true},
+		'activity_date': {type: 'date', required: true},
 		'additional_partnership': {type: 'string', required: true, maxLength: 255},
 		'organization_unit': {type: 'string', required: true,  maxLength: 127},
 		'ADMU_office': {type: 'string', required: true, maxLength: 127},
@@ -361,9 +361,29 @@ export function validateData(collectionName, data) {
 		}
 
 		// Check for type field
-		if (rule.type && typeof value !== rule.type) {
-			errors.push(`Field '${field}' must be of type ${rule.type}.`);
-			continue;
+		// if (rule.type && typeof value !== rule.type) {
+		// 	errors.push(`Field '${field}' must be of type ${rule.type}.`);
+		// 	continue;
+		// }
+		if (rule.type) {
+			if (rule.type === 'date') {
+
+				const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+				if (!dateRegex.test(value)) {
+					errors.push(`Field '${field}' must be a valid date in YYYY-MM-DD format.`);
+					continue;
+				}
+
+				const date = new Date(value);
+				if(isNaN(date.getTime())) {
+					errors.push(`Field '${field}' must be a valid date.`);
+					continue;
+				}
+
+			} else if (typeof value != rule.type) {
+				errors.push(`Field '${field}' must be of type ${rule.type}.`);
+				continue;
+			}
 		}
 
 
