@@ -310,7 +310,7 @@
 .modal-header {
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	justify-content: space-around;
 	padding: 24px 24px;
 	width: 100%;
 	height: auto;
@@ -348,6 +348,19 @@
 	z-index: 1;
 	border-bottom-left-radius: 5%;
 	border-bottom-right-radius: 5%;
+	/* flex justify-around py-4 text-center font-montserrat text-2xl font-bold */
+}
+
+.delete-button {
+	color: #b91c1c;
+	font-size: 28px;
+	font-family: Montserrat;
+}
+
+.edit-button {
+	color: rgb(61 151 175);
+	font-size: 28px;
+	font-family: Montserrat;
 }
 
 #modalContent > div {
@@ -365,7 +378,7 @@
 .modal-activities-header {
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;
+	justify-content: space-around;
 	color: #3d97af;
 	font-family: Montserrat;
 	font-size: 24px;
@@ -385,6 +398,7 @@
 	line-height: 110%;
 	letter-spacing: 0.48px;
 	margin-bottom: 2px;
+	float: left;
 }
 
 .modal-address {
@@ -397,15 +411,18 @@
 	letter-spacing: 0.32px;
 	margin-bottom: -16px;
 }
-.close {
+
+.close-btn {
 	color: #aaaaaa;
+	width: 5%;
 	font-size: 28px;
 	font-weight: bold;
+	float: right;
 }
 
-.close:hover,
-.close:focus {
-	color: #3d97af;
+.close-btn:hover,
+.close-btn:focus {
+	color: #3f3f3f;
 	text-decoration: none;
 	cursor: pointer;
 }
@@ -422,3 +439,4 @@
 .partner-label {
 	font-weight: bold;
 }
+
