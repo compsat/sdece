@@ -188,6 +188,12 @@ export function showModal(partner) {
 	const modalHeader = document.getElementById('modalHeader');
 	const modalContent = document.getElementById('modalContent');
 
+	modalHeader.style.width = '100%';
+	modalHeader.style.display = 'flex';
+	modalHeader.style.flexDirection = 'row';
+	modalHeader.style.justifyContent = 'space-between';
+	modalHeader.style.alignItems = 'center';
+
 	// Clear previous content
 	modalHeader.innerHTML = '';
 	modalContent.innerHTML = '';
@@ -241,13 +247,13 @@ export function showModal(partner) {
 
 	console.log(partner[0]);
 
-	//limit partner_name to 30 characters
-	if (partner[0].partner_name.length > 30) {
-		nameDiv.textContent =
-			partner[0].partner_name.substring(0, 30) + '...';
-	} else {
-		nameDiv.textContent = partner[0].partner_name;
-	}
+	// limit partner_name to 30 characters
+	// if (partner[0].partner_name.length > 30) {
+	// 	nameDiv.textContent =
+	// 		partner[0].partner_name.substring(0, 30) + '...';
+	// } else {
+	nameDiv.textContent = partner[0].partner_name;
+	// }
 
 	addressDiv.textContent =
 		'Latitude, Longitude: ' +
@@ -282,9 +288,11 @@ export function showModal(partner) {
 			activityButton.classList.add('modal-activities');
 
 			const activityName = document.createElement('div');
+
 			const arrow = document.createElement('div');
 
 			activityName.textContent = activity.activity_nature + '';
+
 			arrow.innerHTML =
 				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#a0a0a0" class="w-6 h-6"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="#a0a0a0"></path></g></svg>';
 			arrow.classList.add('arrow');
@@ -302,11 +310,12 @@ export function showModal(partner) {
 			const activityOfficeDiv = document.createElement('div');
 
 			activityNameDiv.innerHTML = activity.activity_nature + '';
-			activityNameDiv.classList.add(
-				'font-bold',
-				'text-2xl',
-				'text-lightbg'
-			);
+			activityNameDiv.classList
+				.add
+				// 'font-bold',
+				// 'text-2xl',
+				// 'text-lightbg'
+				();
 
 			activityAddressDiv.innerHTML = activity.partner_address;
 			activityAddressDiv.classList.add('modal-address');
@@ -351,7 +360,6 @@ export function showModal(partner) {
 			});
 
 			activityDiv.appendChild(activityButton);
-			activityDiv.appendChild(document.createElement('hr'));
 			activityDiv.appendChild(document.createElement('br'));
 		});
 	}
