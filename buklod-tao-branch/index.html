@@ -77,7 +77,7 @@
       <!-- Div for contact no. and address -->
       <br>
       <div>
-        <p class="modalText" id="entry_contact_number"></p>
+        <p class="modalText" id="entry_contact_number" style="margin-top: -5px;"></p>
         <p class="modalText" id="entry_address"></p>
       </div>
       <!-- Div for residency status and part of HOA/NOA labels -->
@@ -207,13 +207,21 @@
       </div>
       <br>
       <div class="inputContainer">
-          <label class="form" for="residency_status">Residency Status</label>
-          <input type="text" id="residency_status" name="residency_status" class="attribs"> 
+        <label class="form" for="residency_status">Residency Status</label>
+        <select id="residency_status" name="residency_status" class="attribs">
+            <option value="" disabled selected hidden></option>
+            <option value="May-ari">May-ari</option>
+            <option value="Umuupa">Umuupa</option>
+        </select>
       </div>
       <br>
-      <div class="inputContainer" style="justify-content: flex-start;">
-          <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
-          <input type="checkbox" id="HOA/NOA" name="HOA/NOA" class="attribs" style="height: 30px;">
+      <div class="input_container checkbox-container">
+        <div class="labelColumn">
+            <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
+        </div>
+        <div class="checkboxColumn">
+            <input type="checkbox" id="HOA/NOA" name="HOA/NOA" class="attribs" style="height: 30px;">
+        </div>
       </div>
       <br>
       <div class="inputContainer">
@@ -372,7 +380,7 @@
           <input type="text" id="edit_nearest_evacuation_area" name="nearest_evacuation_area" class="attribs">    
       </div>
       <br>
-      <h2 class="sub-header">RESIDENT INFORMATION</h2>
+      <h2 class="subHeader">RESIDENT INFORMATION</h2>
       <br>
       <div class="inputContainer">
           <label class="form" for="number_of_residents">Number of Residents</label>
@@ -404,7 +412,7 @@
           <input type="text" id="edit_number_of_pregnant_residents" name="number_of_pregnant_residents" class="attribs">
       </div>
       <br>
-      <h2 class="sub-header">RISK LEVELS</h2>
+      <h2 class="subHeader">RISK LEVELS</h2>
       <br>
       <div class="inputContainer">
           <label class="disasterForm" for="earthquake">Earthquake</label>

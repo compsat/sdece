@@ -197,6 +197,7 @@ function onMapClick(e) {
       window.onclick = function (event) {
         if (event.target == modal) {
           modal.classList.add('hidden');
+          modal.classList.remove('flex');
         }
       };
     });
@@ -233,3 +234,13 @@ openForm.onclick = function() {
 closeForm.onclick = function() {
   formModal.style.display = "none";
 }
+
+// Closing the modal if the user clicks outside of it 
+window.onclick = function(event) {
+  if (event.target == formModal) {
+    formModal.style.display = "none";
+  }
+  if (event.target == partnerModal) {
+    partnerModal.style.display = "none";
+  }
+};

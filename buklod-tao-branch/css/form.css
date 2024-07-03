@@ -8,10 +8,35 @@ div.container {
 /* container for each input field */
 div.inputContainer {
     margin-top: 2px;
-    margin-bottom: 2spx;
+    margin-bottom: 2px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
+}
+
+/* Specific to the checkbox container for the HOA / NOA option */
+div.inputContainer.checkboxContainer {
+    display: flex;
+}
+
+/* Specific to the select input for residency status */
+#residencyStatus {
+    width: 400px; 
+  }
+
+/* Styling for the label column specific for the HOA / NOA option */
+div.labelColumn {
+    flex: 1; 
+    display: flex;
+    justify-content: flex-start; 
+}
+
+/* Styling for the checkbox column specific for the HOA / NOA option */
+div.checkboxColumn {
+    display: flex;
+    justify-content: left; 
+    padding-right: 180px;
 }
 
 /* form header */
