@@ -61,7 +61,7 @@ getDocs(colRef)
 			getDivContent(doc.partner_name).then((div) => {
 				results.addLayer(marker);
 				var popupContent = `
-					<div class="partner-popup w-auto font-semibold text-sm font-montserrat text-darkbg !text-center	" id="`;
+					<div class="partner-popup font-montserrat text-darkbg !text-center	" id="`;
 				popupContent += doc.partner_name;
 				popupContent += `">`;
 				popupContent += doc.partner_name;
@@ -80,7 +80,7 @@ getDocs(colRef)
 						'Clicked on the pop-up content of ' +
 							doc.partner_name
 					);
-
+					showModal(doc)
 					// TODO: call showModal(partner) here! Not super sure what the partner object should be in this case
 				});
 			});

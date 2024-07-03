@@ -77,8 +77,8 @@
       <!-- Div for contact no. and address -->
       <br>
       <div>
-        <p class="modalText" id="entry_contact_number" style="margin-top: -5px;">This is the Household's contact number</p>
-        <p class="modalText" id="entry_address">This is the geolocation of the household that is not truncated. This is the geolocation of the partner that is not truncated. This is the geolocation of the partner that is not truncated.</p>
+        <p class="modalText" id="entry_contact_number" style="margin-top: -5px;"></p>
+        <p class="modalText" id="entry_address"></p>
       </div>
       <!-- Div for residency status and part of HOA/NOA labels -->
       <div class="modalLine">
@@ -87,13 +87,13 @@
       </div>
       <!-- Div for residency status and part of HOA/NOA content -->
       <div class="modalLine">
-        <p class="modalText" id="entry_residency_status" style="width: 220px;">Residency Status</p>
-        <p class="modalText" id="entry_HOA/NOA" style="width: 220px;">Part of HOA / NOA</label>
+        <p class="modalText" id="entry_residency_status" style="width: 220px;"></p>
+        <p class="modalText" id="entry_HOA/NOA" style="width: 220px;"></label>
       </div>
       <!-- Div for evacuation area -->
       <div>
         <label class="modalLabel">Nearest Evacuation Area</label>
-        <p class="modalText" id="entry_nearest_evacuation_area">Nearest Evacuation Area</p>
+        <p class="modalText" id="entry_nearest_evacuation_area"></p>
       </div>
       <!-- Risk Levels -->
       <button type="button" class="collapsible">Risk Levels</button>
@@ -103,35 +103,35 @@
           <label class="modalLabel" id="entry_earthquake_risk_level">RISK LEVEL</label>
         </div>
         <div>
-          <p class="modalText" id="entry_earthquake_desc">This is the description of the risk level that is not truncated. This is the description of the risk level that is not truncated. This is the description of the risk level that is not truncated.</p>
+          <p class="modalText" id="entry_earthquake_desc"></p>
         </div>
         <div class="modalLine">
           <label class="modalLabel">Fire</label>
           <label class="modalLabel" id="entry_fire_risk_level">RISK LEVEL</label>
         </div>
         <div>
-          <p class="modalText" id="entry_fire_desc">Sample text</p>
+          <p class="modalText" id="entry_fire_desc"></p>
         </div>
         <div class="modalLine">
           <label class="modalLabel">Flood</label>
           <label class="modalLabel" id="entry_flood_risk_level">RISK LEVEL</label>
         </div>
         <div>
-          <p class="modalText" id="entry_flood_desc">Sample text</p>
+          <p class="modalText" id="entry_flood_desc"></p>
         </div>
         <div class="modalLine">
           <label class="modalLabel">Landslide</label>
           <label class="modalLabel" id="entry_landslide_risk_level">RISK LEVEL</label>
         </div>
         <div>
-          <p class="modalText" id="entry_landslide_desc">Sample text</p>
+          <p class="modalText" id="entry_landslide_desc"></p>
         </div>
         <div class="modalLine">
           <label class="modalLabel">Storm</label>
           <label class="modalLabel" id="entry_storm_risk_level">RISK LEVEL</label>
         </div>
         <div>
-          <p class="modalText" id="entry_storm_desc">Sample text</p>
+          <p class="modalText" id="entry_storm_desc"></p>
         </div>
       </div>
       <!-- Residents -->
@@ -140,32 +140,32 @@
         <br>
         <div class="modalLine">
           <label class="modalLabel">Total</label>
-          <label class="modalLabel" id="entry_number_of_residents">0</label>
+          <label class="modalLabel" id="entry_number_of_residents"></label>
         </div>
         <hr style="border-top: 1px solid #CBD5E0;">
         <div class="modalLine">
           <label class="modalLabel">Minors</label>
-          <label class="modalLabel" id="entry_number_of_minor_residents">0</label>
+          <label class="modalLabel" id="entry_number_of_minor_residents"></label>
         </div>
         <br>
         <div class="modalLine">
           <label class="modalLabel">Seniors</label>
-          <label class="modalLabel" id="entry_number_of_senior_residents">0</label>
+          <label class="modalLabel" id="entry_number_of_senior_residents"></label>
         </div>
         <br>
         <div class="modalLine">
           <label class="modalLabel">PWD</label>
-          <label class="modalLabel" id="entry_number_of_pwd_residents">0</label>
+          <label class="modalLabel" id="entry_number_of_pwd_residents"></label>
         </div>
         <br>
         <div class="modalLine">
           <label class="modalLabel">Sick</label>
-          <label class="modalLabel" id="entry_number_of_sick_residents">0</label>
+          <label class="modalLabel" id="entry_number_of_sick_residents"></label>
         </div>
         <br>
         <div class="modalLine">
           <label class="modalLabel" >Pregnant</label>
-          <label class="modalLabel" id="entry_number_of_pregnant_residents">0</label>
+          <label class="modalLabel" id="entry_number_of_pregnant_residents"></label>
         </div>
         <br>
       </div>
@@ -180,7 +180,7 @@
   </div>
 
   <!-- Modal for add household form -->
-  <div id="form-modal" class="formModal" style="display: none;">
+  <div id="formModal" class="formModal" style="display: none;">
     <!-- Modal Header: includes title and address -->
     <div class="formModalHeader">
       <span class="closeForm">&times;</span>
@@ -266,7 +266,7 @@
           <input type="text" id="number_of_pregnant_residents" name="number_of_pregnant_residents" class="attribs">
       </div>
       <br>
-      <h2 class="sub-header">RISK LEVELS</h2>
+      <h2 class="subHeader">RISK LEVELS</h2>
       <br>
       <div class="inputContainer">
           <label class="disasterForm" for="earthquake">Earthquake</label>
@@ -334,7 +334,6 @@
         </div>
       </div>
     </div>
-
     <!-- Modal Footer: empty space (for design) -->
      <div class="formModalFooter"></div>
   </div>
@@ -346,7 +345,6 @@
       <span class="closeEditForm">&times;</span>
       <h1 class="formHeader">Edit Household</h1>
     </div>
-
     <!-- Modal Content: everything else -->
     <div class="formModalContent">
       <h2 class="subHeader">HOUSEHOLD INFORMATION</h2>
@@ -354,64 +352,64 @@
       <!-- Form Proper -->
       <div class="inputContainer">
           <label class="form" for="household_name">Household Name</label>
-          <input type="text" id="edit_household_name" name="household_name" class="attribs" placeholder="">
+          <input type="text" id="edit_household_name" name="household_name" class="attribs">
       </div>
       <br>
       <div class="inputContainer">
           <label class="form" for="address">Address</label>
-          <input type="text" id="edit_address" name="address" class="attribs" placeholder="">    
+          <input type="text" id="edit_address" name="address" class="attribs">    
       </div>
       <br>
       <div class="inputContainer">
           <label class="form" for="contact_number">Contact Number</label>
-          <input type="text" id="edit_contact_number" name="contact_number" class="attribs" placeholder="">    
+          <input type="text" id="edit_contact_number" name="contact_number" class="attribs">    
       </div>
       <br>
       <div class="inputContainer">
           <label class="form" for="residency_status">Residency Status</label>
-          <input type="text" id="edit_residency_status" name="residency_status" class="attribs" placeholder=""> 
+          <input type="text" id="edit_residency_status" name="residency_status" class="attribs"> 
       </div>
       <br>
       <div class="inputContainer">
           <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
-          <input type="text" id="edit_HOA/NOA" name="HOA/NOA" class="attribs" placeholder=""> 
+          <input type="text" id="edit_HOA/NOA" name="HOA/NOA" class="attribs"> 
       </div>
       <br>
       <div class="inputContainer">
           <label class="form" for="nearest_evacuation_area">Nearest Evacuation Area</label>
-          <input type="text" id="edit_nearest_evacuation_area" name="nearest_evacuation_area" class="attribs" placeholder="">    
+          <input type="text" id="edit_nearest_evacuation_area" name="nearest_evacuation_area" class="attribs">    
       </div>
       <br>
       <h2 class="subHeader">RESIDENT INFORMATION</h2>
       <br>
       <div class="inputContainer">
           <label class="form" for="number_of_residents">Number of Residents</label>
-          <input type="text" id="edit_number_of_residents" name="number_of_residents" class="attribs" placeholder="">    
+          <input type="text" id="edit_number_of_residents" name="number_of_residents" class="attribs">    
       </div>
       <br>
       <div class="inputContainer">
           <label class="form" for="number_of_minor_residents">Number of Minor Residents</label>
-          <input type="text" id="edit_number_of_minor_residents" name="number_of_minor_residents" class="attribs" placeholder="">
+          <input type="text" id="edit_number_of_minor_residents" name="number_of_minor_residents" class="attribs">
       </div>
       <br>
       <div class="inputContainer">
           <label class="form" for="number_of_senior_residents">Number of Senior Citizen Residents</label>
-          <input type="text" id="edit_number_of_senior_residents" name="number_of_senior_residents" class="attribs" placeholder="">
+          <input type="text" id="edit_number_of_senior_residents" name="number_of_senior_residents" class="attribs">
       </div>
       <br>
       <div class="inputContainer">
           <label class="form" for="number_of_pwd_residents">Number of PWD Residents</label>
-          <input type="text" id="edit_number_of_pwd_residents" name="number_of_pwd_residents" class="attribs" placeholder="">
+          <input type="text" id="edit_number_of_pwd_residents" name="number_of_pwd_residents" class="attribs">
       </div>
       <br>
       <div class="inputContainer">
           <label class="form" for="number_of_sick_residents">Number of Sick Residents</label>
-          <input type="text" id="edit_number_of_sick_residents" name="number_of_sick_residents" class="attribs" placeholder="">
+          <input type="text" id="edit_number_of_sick_residents" name="number_of_sick_residents" class="attribs">
       </div>
       <br>
       <div class="inputContainer">
           <label class="form" for="number_of_pregnant_residents">Number of Pregnant Residents</label>
-          <input type="text" id="edit_number_of_pregnant_residents" name="number_of_pregnant_residents" class="attribs" placeholder="">
+          <input type="text" id="edit_number_of_pregnant_residents" name="number_of_pregnant_residents" class="attribs">
       </div>
       <br>
       <h2 class="subHeader">RISK LEVELS</h2>
@@ -424,7 +422,7 @@
               <option value="medium">MEDIUM</option>
               <option value="low">LOW</option>
           </select>
-          <input type="text" id="edit_earthquake_desc" name="earthquake" class="attribs" placeholder="">
+          <input type="text" id="edit_earthquake_desc" name="earthquake" class="attribs">
       </div>
       <br>
       <div class="inputContainer">
@@ -435,7 +433,7 @@
               <option value="medium">MEDIUM</option>
               <option value="low">LOW</option>
           </select>
-          <input type="text" id="edit_fire_desc" name="fire" class="attribs" placeholder="">
+          <input type="text" id="edit_fire_desc" name="fire" class="attribs">
       </div>
       <br>
       <div class="inputContainer">
@@ -446,7 +444,7 @@
               <option value="medium">MEDIUM</option>
               <option value="low">LOW</option>
           </select>
-          <input type="email" id="edit_flood_desc" name="flood" class="attribs" placeholder="">
+          <input type="email" id="edit_flood_desc" name="flood" class="attribs">
       </div>
       <br>
       <div class="inputContainer">
@@ -457,7 +455,7 @@
               <option value="medium">MEDIUM</option>
               <option value="low">LOW</option>
           </select>
-          <input type="email" id="edit_landslide_desc" name="landslide" class="attribs" placeholder="">
+          <input type="email" id="edit_landslide_desc" name="landslide" class="attribs">
       </div>
       <br>
       <div class="inputContainer">
@@ -468,7 +466,7 @@
               <option value="medium">MEDIUM</option>
               <option value="low">LOW</option>
           </select>
-          <input type="email" id="edit_storm_desc" name="storm" class="attribs" placeholder="">
+          <input type="email" id="edit_storm_desc" name="storm" class="attribs">
       </div>
       <!-- save and Delete buttons -->
       <div class="buttonContainer">
@@ -482,7 +480,6 @@
         </div>
       </div>
     </div>
-
     <!-- modal Footer: empty space -->
      <div class="formModalFooter"></div>
   </div>
