@@ -1,0 +1,441 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reset default margin and spacing */
+* {
+	margin: 0px;
+	padding: 0px;
+	box-sizing: border-box;
+	border: none;
+	background: none;
+	text-decoration: none;
+	list-style: none;
+}
+
+/* Equivalent vanilla CSS */
+
+.main {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	height: 100vh;
+	position: relative;
+}
+
+/* Color Definition */
+:root {
+	--darkbg: #387181;
+	--lightbg: #3d97af;
+	--custom-black: #2f2f2f;
+	--custom-gray: #a0a0a0;
+	--custom-dark-gray: #979797;
+	--custom-medium-gray: #f6f6f6;
+	--custom-light-gray: #fcfcfc;
+}
+
+/* Main page styles */
+.side-nav {
+	background-color: var(--custom-light-gray);
+	width: 480px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	position: relative;
+}
+
+.side-nav-header {
+	position: sticky;
+	top: 0;
+	width: 100%;
+	background-color: var(--custom-medium-gray);
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+		0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	padding-bottom: 1.5rem;
+}
+
+.search-bar-container {
+	height: 5rem;
+	padding-left: 0.75rem;
+	padding-right: 0.75rem;
+	background-color: white;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.search-bar {
+	background-color: var(--custom-medium-gray);
+	font-size: 1.5rem;
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	border-radius: 1rem;
+	overflow: hidden;
+	padding-top: 0.75rem;
+	padding-bottom: 0.75rem;
+	padding-left: 2rem;
+	padding-right: 2rem;
+}
+
+.search-input-field {
+	background-color: var(--custom-medium-gray);
+	outline: none;
+	box-shadow: none;
+	width: 100%;
+	font-family: 'Hind', sans-serif;
+	font-size: 1.25rem;
+}
+
+.search-bar-btn-container {
+	background: none;
+	display: flex;
+	flex-direction: row;
+	justify-content: end;
+	align-items: center;
+}
+
+.search-btn {
+	width: 2rem;
+	height: 2rem;
+	stroke: var(--custom-dark-gray);
+}
+
+.main-btn {
+	font-size: 1.25rem;
+	line-height: 1.75rem;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding-left: 2rem;
+	padding-right: 2rem;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	background-color: var(--custom-medium-gray);
+	width: 100%;
+	color: var(--lightbg);
+	margin-top: 1.5rem;
+}
+
+.main-btn:hover {
+	color: var(--darkbg);
+}
+
+.main-btn-text {
+	margin-left: 1rem;
+	font-weight: 700;
+	font-family: Montserrat, sans-serif;
+}
+
+.entries {
+	background-color: var(--custom-light-gray);
+	width: 100%;
+}
+
+.accordion {
+	padding-top: 1.5rem;
+	padding-bottom: 1.5rem;
+	padding-left: 2rem;
+	padding-right: 2rem;
+	border-bottom: 1px solid #6b7280;
+	width: 100%;
+}
+.name {
+	font-family: 'Montserrat';
+	font-weight: bold;
+	font-size: 1.125rem;
+	line-height: 1.75rem;
+	color: var(--darkbg);
+	line-height: 110%;
+}
+
+.address {
+	font-family: 'Hind', sans-serif;
+	font-weight: normal;
+	font-size: 0.875rem;
+	color: #6b7280;
+	line-height: 120%;
+	margin-top: 0.5rem;
+}
+
+.activity {
+	font-family: 'Hind', sans-serif;
+	font-weight: normal;
+	font-size: 0.875rem;
+	color: #000;
+	line-height: 110%;
+	margin-top: 0.5rem;
+}
+
+.main-container {
+	width: 100%;
+	height: 100vh;
+	overflow-y: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+.main-header {
+	height: 5rem;
+	padding-left: 2.25rem;
+	padding-right: 2.25rem;
+	background-color: var(--darkbg);
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.layer-toggle-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: start;
+	align-items: center;
+}
+
+.layer-toggle {
+	display: block;
+	width: auto;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 1.125rem;
+	font-weight: bold;
+	border: none;
+	background-color: #387181;
+	color: #fcfcfc;
+	outline: none;
+	border: none;
+	box-shadow: none;
+	margin-left: 0.75rem;
+}
+
+.layers-icon {
+	fill: var(--custom-light-gray);
+}
+
+/* Vanilla CSS equivalent */
+.logout-btn {
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+	padding-top: 0.75rem;
+	padding-bottom: 0.75rem;
+	padding-left: 1.5rem;
+	padding-right: 1.5rem;
+	background-color: var(--lightbg);
+	font-family: 'Montserrat';
+	font-weight: bold;
+	font-size: 1.25rem;
+	color: white;
+	border-radius: 0.5rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.logout-icon {
+	width: 1.5rem;
+	height: 1.5rem;
+	margin-right: 0.5rem;
+}
+
+.modal-screen {
+	display: none;
+	width: 100vw;
+	height: 100vh;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.1); /* 10% opacity black */
+	z-index: 4500;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+}
+
+.form-modal {
+	height: 69%;
+	width: 45%;
+	z-index: 3500;
+	display: flex;
+	border-radius: 0.375rem; /* Assuming rounded-lg corresponds to 6px rounded corners */
+	overflow: hidden;
+}
+
+/* Equivalent vanilla CSS */
+.main-modal {
+	background-color: #f3f4f6; /* Assuming bg-customLightGray corresponds to a specific custom color */
+	height: auto; /* h-auto */
+	width: 480px; /* w-[480px] */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+}
+
+.map-container {
+	display: flex;
+	flex: 1 1 0%;
+}
+/* Aren's Styles */
+
+.partner-popup {
+	cursor: pointer;
+	width: 100%;
+	text-align: left;
+	font-size: medium;
+	border: none;
+	outline: none;
+	color: #387181;
+	align-items: center;
+}
+
+.leaflet-popup-close-button {
+	display: none !important;
+}
+
+.modal {
+	display: none;
+	position: absolute;
+	z-index: 2000;
+	top: 190px;
+	left: 400px;
+	width: auto; /* Adjust the width of the modal as needed */
+	min-width: 30%;
+	max-width: 35%;
+	height: auto; /* Adjust the height of the modal as needed */
+	justify-content: center;
+	box-sizing: border-box;
+}
+
+.modal-header {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	padding: 24px 24px;
+	width: 100%;
+	height: auto;
+	background-color: #fcfcfc;
+	transition: 0.4s;
+	position: relative;
+	box-shadow: 0px 2px 5px rgb(225, 225, 225);
+	z-index: 1;
+	border-top-left-radius: 5%;
+	border-top-right-radius: 5%;
+}
+
+.modal-content {
+	position: relative;
+	padding: 32px 32px;
+	width: 100%;
+	background-color: #fcfcfc;
+	font-family: Hind;
+	font-size: 16px;
+	font-style: normal;
+	/* height: calc(80% - 140px); */
+	overflow-y: auto;
+}
+
+.modal-button {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	padding: 24px 24px;
+	width: 100%;
+	height: auto;
+	background-color: #fcfcfc;
+	position: relative;
+	box-shadow: 0px -2px 50px rgb(235, 235, 235);
+	z-index: 1;
+	border-bottom-left-radius: 5%;
+	border-bottom-right-radius: 5%;
+	/* flex justify-around py-4 text-center font-montserrat text-2xl font-bold */
+}
+
+.delete-button {
+	color: #b91c1c;
+	font-size: 28px;
+	font-family: Montserrat;
+}
+
+.edit-button {
+	color: rgb(61 151 175);
+	font-size: 28px;
+	font-family: Montserrat;
+}
+
+#modalContent > div {
+	margin-bottom: 15px;
+}
+
+.modal-activities {
+	margin-left: 100;
+	position: relative;
+	width: 100%;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.modal-activities-header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	color: #3d97af;
+	font-family: Montserrat;
+	font-size: 24px;
+	font-style: normal;
+	font-weight: bolder;
+	line-height: 110%;
+	letter-spacing: 0.48px;
+	margin-bottom: 2px;
+}
+
+.modal-name {
+	color: #387181;
+	font-family: Montserrat;
+	font-size: 24px;
+	font-style: normal;
+	font-weight: bolder;
+	line-height: 110%;
+	letter-spacing: 0.48px;
+	margin-bottom: 2px;
+	float: left;
+}
+
+.modal-address {
+	color: #a0a0a0;
+	font-family: Montserrat;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 120%;
+	letter-spacing: 0.32px;
+	margin-bottom: -16px;
+}
+
+.close-btn {
+	color: #aaaaaa;
+	width: 5%;
+	font-size: 28px;
+	font-weight: bold;
+	float: right;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+	color: #3f3f3f;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.partner-geolocation {
+	display: flex;
+	align-items: center;
+}
+
+.partner-info {
+	line-height: 0.6;
+}
+
+.partner-label {
+	font-weight: bold;
+}
