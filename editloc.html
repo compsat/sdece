@@ -4,7 +4,7 @@
 		<title>Edit Location</title>
 
 		<!-- Import Tailwind CSS output file -->
-		<link href="./src/output.css" rel="stylesheet" />
+		<link href="./css/main.css" rel="stylesheet" />
 
 		<!-- Import Fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -67,13 +67,13 @@
 		<form
 			action=""
 			id="addLocForm"
-			class="flex flex-row justify-center items-center z-[4000] bg-customLightGray"
+			class="form-container"
 		>
-			<div class="p-8 overflow-y-scroll rounded-lg w-full">
+			<div class="form-body">
 				<!-- Header -->
-				<div class="flex flex-row justify-between items-center mb-8">
+				<div class="form-header">
 					<h1
-						class="font-montserrat text-3xl font-bold text-darkbg"
+						class="form-heading"
 					>
 						Edit Activity
 					</h1>
@@ -85,7 +85,7 @@
 						fill="none"
 						viewBox="0 0 24 24"
 						stroke-width="1.5"
-						class="size-8 stroke-customDarkGray"
+						class="form-icon"
 					>
 						<path
 							stroke-linecap="round"
@@ -97,12 +97,12 @@
 					</button>
 
 				<!-- General Information -->
-				<div class="">
+				<div class="form-section">
 					<div
-						class="flex flex-row justify-between mb-6 items-center"
+						class="form-field"
 					>
 						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							class="form-label"
 							for="activity_name"
 							>Activity Name</label
 						>
@@ -110,16 +110,16 @@
 							type="text"
 							id="activity_name"
 							name="activity_name"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
+							class="form-input"
 							placeholder=""
 						/>
 					</div>
 
 					<div
-						class="flex flex-row justify-between mb-6 items-center"
+						class="form-field"
 					>
 						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							class="form-label"
 							for="activity_nature"
 							>Nature of Activity</label
 						>
@@ -127,33 +127,44 @@
 							type="text"
 							id="activity_nature"
 							name="activity_nature"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
+							class="form-input"
 							placeholder=""
 						/>
 					</div>
 
-					<div class="flex flex-row justify-between w-full mb-6">
+					<div class="form-field">
 						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							class="form-label"
 							for="activity_date"
 							>Dates of Partnership</label
 						>
 
 						<div
-							class="flex flex-col items-start"
+							style="
+								display: flex;
+								flex-direction: column;
+								align-items: flex-start;
+							"
 							id="date-container"
 						>
 							<input
 								type="date"
 								id="activity_date"
 								name="activity_date"
-								class="py-4 px-8 w-96 rounded border font-montserrat"
+								class="form-input"
 								placeholder=""
 							/>
 							<a
 								href=""
-								class="text-base font-montserrat text-lightbg underline mt-4"
-								id="add-date"
+								id="addDate"
+								style="
+									font-size: 1rem;
+									line-height: 1.5rem;
+									font-family: 'Montserrat';
+									color: var(--lightbg);
+									text-decoration-line: underline;
+									margin-top: 1rem;
+								"
 								>Add another date</a
 							>
 						</div>
@@ -161,18 +172,18 @@
 				</div>
 
 				<!-- PARTNER INFORMATION -->
-				<div class="">
+				<div class="form-section">
 					<h2
-						class="w-full text-lightbg font-montserrat text-xl mt-10 font-bold mb-6"
+						class="form-subheading"
 					>
 						PARTNER INFORMATION
 					</h2>
 
 					<div
-						class="flex flex-row justify-between mb-6 items-center"
+						class="form-field"
 					>
 						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							class="form-label"
 							for="partner_name"
 							>Name of Host Partner</label
 						>
@@ -180,16 +191,16 @@
 							type="text"
 							id="partner_name"
 							name="partner_name"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
+							class="form-input"
 							placeholder=""
 						/>
 					</div>
 
 					<div
-						class="flex flex-row justify-between mb-6 items-center"
+						class="form-field"
 					>
 						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							class="form-label"
 							for="partner_contact"
 							>Address of Host Partner</label
 						>
@@ -197,15 +208,15 @@
 							type="text"
 							id="partner_contact"
 							name="partner_contact"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
+							class="form-input"
 							placeholder=""
 						/>
 					</div>
 					<div
-						class="flex flex-row justify-between mb-6 items-center"
+						class="form-field"
 					>
 						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							class="form-label"
 							for="partner_contact"
 							>Name of Contact Person</label
 						>
@@ -213,16 +224,16 @@
 							type="text"
 							id="partner_contact"
 							name="partner_contact"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
+							class="form-input"
 							placeholder=""
 						/>
 					</div>
 
 					<div
-						class="flex flex-row justify-between mb-6 items-center"
+						class="form-field"
 					>
 						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							class="form-label"
 							for="partner_number"
 							>Number of Contact Person
 						</label>
@@ -230,15 +241,15 @@
 							type="text"
 							id="partner_number"
 							name="partner_number"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
+							class="form-input"
 							placeholder=""
 						/>
 					</div>
 					<div
-						class="flex flex-row justify-between mb-6 items-center"
+						class="form-field"
 					>
 						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							class="form-label"
 							for="partner_email"
 							>Email of Contact Person / Partner</label
 						>
@@ -246,24 +257,24 @@
 							type="email"
 							id="partner_email"
 							name="partner_email"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
+							class="form-input"
 							placeholder=""
 						/>
 					</div>
 				</div>
 
-				<div class="">
+				<div class="form-section">
 					<h2
-						class="w-full text-lightbg font-montserrat text-xl mt-10 font-bold mb-6"
+						class="form-subheading"
 					>
 						ATENEO OFFICE OVERSIGHT
 					</h2>
 
 					<div
-						class="flex flex-row justify-between mb-6 items-center"
+						class="form-field"
 					>
 						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							class="form-label"
 							for="admu_office"
 							>Name of Office</label
 						>
@@ -271,15 +282,15 @@
 							type="text"
 							id="admu_office"
 							name="admu_office"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
+							class="form-input"
 							placeholder=""
 						/>
 					</div>
 					<div
-						class="flex flex-row justify-between mb-6 items-center"
+						class="form-field"
 					>
 						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							class="form-label"
 							for="admu_contact"
 							>Name of Ateneo Contact Person</label
 						>
@@ -287,16 +298,16 @@
 							type="text"
 							id="admu_contact"
 							name="admu_contact"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
+							class="form-input"
 							placeholder=""
 						/>
 					</div>
 
 					<div
-						class="flex flex-row justify-between items-center"
+						class="form-field"
 					>
 						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							class="form-label"
 							for="admu_email"
 							>Email of Ateneo Contact Person</label
 						>
@@ -304,17 +315,17 @@
 							type="email"
 							id="admu_email"
 							name="admu_email"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
+							class="form-input"
 							placeholder=""
 						/>
 					</div>
 				</div>
 
 				<!-- Buttons -->
-				<div class="button_div py-8 mt-8">
+				<div class="form-buttons-container">
 					<!-- Clears all contents of the form -->
 					<button
-						class="w-full py-4 text-center font-montserrat text-2xl bg-lightbg text-white font-bold rounded-lg"
+						class="form-button positive"
 						type="submit"
 						id="submit_form"
 						name="submit_form"
@@ -322,11 +333,10 @@
 						Save
 					</button>
 					<button
-						class="w-full py-4 text-center font-montserrat text-2xl text-red-700 font-bold border border-red-700 rounded-lg mt-4"
+						class="form-button negative" id="deleteActivityButton"
 					>
 						Delete
 					</button>
-					<!-- Submits contents of the form -->
 				</div>
 			</div>
 		</form>
@@ -349,7 +359,7 @@
 				});
 
 			document
-				.getElementById('add-date')
+				.getElementById('addDate')
 				.addEventListener('click', function (event) {
 					event.preventDefault();
 					var dateContainer =
@@ -357,8 +367,8 @@
 					var newDateInput = document.createElement('input');
 					newDateInput.type = 'date';
 					newDateInput.name = 'activity_date';
-					newDateInput.className =
-						'py-4 px-8 w-96 rounded border font-montserrat mt-2';
+					newDateInput.className = 'form-input';
+					newDateInput.style.marginTop = '1.5rem';
 					dateContainer.insertBefore(newDateInput, this);
 				});
 
