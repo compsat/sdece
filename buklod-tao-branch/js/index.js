@@ -1,7 +1,7 @@
 
 import {  } from "./firestore.js";
 import { getDocIdByPartnerName, getDocByID, setCollection, getCollection, DB, addEntry, BUKLOD_RULES_TEST } from "/firestore_UNIV.js";
-import { getDivContent, addListeners, map } from "/index_UNIV.js";
+import { addListeners, map } from "/index_UNIV.js";
 import {
   getFirestore,
   collection,

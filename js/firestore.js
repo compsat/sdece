@@ -29,13 +29,11 @@ import { showAddModal } from './index.js';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-setCollection('sdece-official');
 
 var col_ref = null;
 
 col_ref = getCollection();
 
-console.log(col_ref);
 
 var partners = {}; // queried
 var activities = [];
@@ -53,10 +51,6 @@ getDocs(col_ref)
 				activities.push(doc.data());
 			}
 		});
-
-		console.log('Activities:');
-		console.log(activities);
-
 		//populate with partners
 		activities.forEach((activity) => {
 			let partner = activity[SDECE_RULES[1]];
@@ -70,9 +64,6 @@ getDocs(col_ref)
 				partners[partner].push(activity);
 			}
 		});
-
-		console.log('Partners: ');
-		console.log(partners);
 
 		//populate ul with partners
 		Object.keys(partners).forEach((partner) => {
