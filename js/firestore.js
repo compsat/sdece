@@ -136,12 +136,13 @@ getDocs(col_ref)
 			nameDiv.textContent = partner;
 			addressDiv.textContent = partners[partner][0]['partner_address'];
 
-			let qq = '';
+			let activities_string = '';
 
-			for (let activityy of partners[partner]) {
-				qq += activityy['activity_nature'] + '\n';
+			for (let activity of partners[partner]) {
+				activities_string += activity['activity_nature'] + '<br>';
 			}
-			activityDiv.textContent = qq;
+
+			activityDiv.innerHTML = activities_string;
 
 			//   if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
 			//   {
