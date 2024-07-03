@@ -309,8 +309,8 @@
 
 .modal-header {
 	display: flex;
-	flex-direction: column;
-	justify-content: space-around;
+	flex-direction: row;
+	justify-content: space-between;
 	padding: 24px 24px;
 	width: 100%;
 	height: auto;
@@ -369,6 +369,8 @@
 
 .modal-activities {
 	margin-left: 100;
+	flex-direction: row;
+	justify-content: space-between;
 	position: relative;
 	width: 100%;
 	font-size: 20px;
@@ -395,6 +397,7 @@
 	font-size: 24px;
 	font-style: normal;
 	font-weight: bolder;
+	width: 90%;
 	line-height: 110%;
 	letter-spacing: 0.48px;
 	margin-bottom: 2px;
@@ -422,6 +425,18 @@
 
 .close-btn:hover,
 .close-btn:focus {
+	color: #3f3f3f;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.arrow{
+	width: 10%;
+
+}
+
+.arrow:hover,
+.arrow:focus {
 	color: #3f3f3f;
 	text-decoration: none;
 	cursor: pointer;

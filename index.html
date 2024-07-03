@@ -109,22 +109,22 @@
 						if (doc.data() != null) {
 							marker = L.marker([
 								parseFloat(
-									doc.data().location_coordinates
-										.latitude
+									doc.data().partner_coordinates
+										._lat
 								),
 								parseFloat(
-									doc.data().location_coordinates
-										.longitude
+									doc.data().partner_coordinates
+										._long
 								),
 							]);
 						}
 						// TODO HAVE THIS BE CONSISTENT ACROSS EVERYTHING
-						getDivContent(doc.data().household_name).then(
-							(div) => {
-								marker.bindPopup(div);
-								results.addLayer(marker);
-							}
-						);
+						// getDivContent(doc.data().household_name).then(
+						// 	(div) => {
+						// 		marker.bindPopup(div);
+						// 		results.addLayer(marker);
+						// 	}
+						// );
 					});
 				});
 				clearMarkers();
@@ -423,7 +423,7 @@
 		<div id="partnerModal" class="modal">
 			<!-- Modal Header -->
 			<div class="modal-header">
-				<div class="close"></div>
+				<!-- <div class="close"></div> -->
 				<p id="modalHeader"></p>
 			</div>
 
