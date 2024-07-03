@@ -42,7 +42,6 @@ export function getDocIdByPartnerName(partnerName) {
     )
   )
     .then((querySnapshot) => {
-      console.log(querySnapshot);
       if (!querySnapshot.empty) {
         // Assuming there is only one document with the given partner name
         const doc = querySnapshot.docs[0];
@@ -125,6 +124,8 @@ getDocs(colRef)
   .catch((error) => {
     console.error("Error getting documents: ", error);
   });
+
+
 
 function showModal(partner) {
   const modal = document.getElementById("partnerModal");

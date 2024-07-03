@@ -136,17 +136,17 @@ getDocs(colRef)
       var doc = entry.data();
       var marker = L.marker([0, 0]);
       //console.log(doc);
-      if(doc.location_coordinates != null){
-
-        marker = L.marker([
-          parseFloat(doc.location_coordinates._lat),
-          parseFloat(doc.location_coordinates._long),
-        ]);
-      }
-      // shows partner info on pin click
-      var popupContent = onPinClick(doc);
+      var marker = L.marker([
+        parseFloat(doc.location_coordinates.latitude),
+        parseFloat(doc.location_coordinates.longitude),
+      ]);
+      var popupContent = `
+      <div class="leaflet-popup-container">
+      <h2 class="partner-header">${doc.household_name}</h2>          
+        `;
       marker.bindPopup(popupContent);
       results.addLayer(marker);
+      console.log("loaded");
     });
   })
   .catch((error) => {

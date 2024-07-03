@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
-
 body {
   margin: 0;
   padding: 0;
@@ -28,10 +26,10 @@ body {
 
 .top-bar{
   background-color: #387181;
-  height: 63px;
+  height: 80px;
   width: 100%;
   display: flex;
-  position: fixed;
+  position: absolute;
   z-index: 2;
   justify-content: flex-end;
 }
@@ -41,7 +39,7 @@ body {
   position: fixed;
   width: 380px;
   height: 100%;
-  background-color: #FFFFFF;
+  background-color: #F6F6F6;
   flex-direction: column;
   align-items: flex-start;
   overflow-y: auto;
@@ -54,29 +52,23 @@ body {
   align-items: center;
 }
 
-/* search bar itself */
 .search-bar {
-  height: 45px;
-  margin: -15px -15px -15px -15px;
-  padding: 15px 32px;
-  width: 107%;
+  height: 40px;
+  padding: 8px 32px;
+  width: 100%;
   box-sizing: border-box;
   border-radius: 12px;
-  background-color: #F6F6F6;
+  background-color: #e4e4e4;
   border: transparent;
   background-position: calc(100% - 16px) center;
   font-family: 'Montserrat';
-  font-size: 18px;
-  letter-spacing: 0.5px;
+  font-size: 20px;
   background-image: url("../img/search-icon.png");
   background-repeat: no-repeat;
-  background-size: 25px 25px;
+  background-size: 24px 24px;
   justify-content: right;
 }
 
-.search-bar:hover {
-  background-color: #e4e3e3;
-}
 .search-bar:focus {
   background-image: none;
 }
@@ -131,39 +123,37 @@ li {
   color: #387181; /* Calypso */
 }
 
-/* logout icon */
-.logoutIcon {
-  height: 15px;
-  width: 15px;
-  margin: 2px 15px 0px 0px;
-}
+/*.logout {
+  display: flex;
+  padding: 10px 10px;
+  z-index: 5;
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  align-items: center;
+  gap: 8px;
+  background-color: white;
+  border-radius: 8px;
+}*/
 
-/* logout button */
 .button-logout {
   font-family: Montserrat;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
+  font-size: 20px;
+  font-weight: 500;
   color: #FFFFFF;
-  height: 35px;
-  width: 150px;
-  margin-right: 25px;
+  height: 56px;
+  width: 164px;
   background-color: #3D97AF ;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   display: block;
   position: relative;
   top: 50%;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
-  filter: drop-shadow(0 0 0.25rem #00000025);
+  margin-right: 50px;
+  filter: drop-shadow(0 0 0.75rem #2F2F2F);
   justify-content: space-between;
-}
-
-.logoutIcon {
-  height: 15px;
-  width: 15px;
-  margin: 2px 15px 0px 0px;
 }
 
 button.container {
@@ -184,11 +174,11 @@ button.label-font {
   padding-bottom: 30px;
   font-size: 20px;
   font-style: normal;
-  font-weight: 750;
+  font-weight: 600;
   line-height: normal;
   color: #3D97AF;
   letter-spacing: 0.8px;
-  background-color: #F6F6F6;
+  background-color: #e4e4e4;
 }
 
 button:hover {
@@ -197,17 +187,15 @@ button:hover {
 }
 
 div.buttons {
-  position: relative;
   display: flex;
   padding: 24px 20px;
   flex-direction: column;
   align-items: flex-start;
   gap: 18px;
   align-self: stretch;
-  border-bottom: 0px solid #cbd5e0; 
+  border-bottom: 0px solid #cbd5e0;
 }
 
-/* magnifying glass icon */
 .search-button {
   background-image: url("./img/search-icon.png");
   background-repeat: no-repeat;
@@ -219,7 +207,6 @@ div.buttons {
   height: 32px;
 }
 
-/* entries in household list */
 a.accordion {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -265,7 +252,7 @@ a.accordion {
   font-family: Montserrat;
   font-size: 18px;
   font-style: normal;
-  font-weight: 750;
+  font-weight: 900;
   line-height: 110%;
   letter-spacing: 0.36px;
 }
@@ -300,65 +287,51 @@ h1.entries {
   font-weight: 600;
   line-height: normal;
 }
-
-/* CSS for "Add Household" modal*/
+/* CSS for forms modal*/
 .form-modal {
-  background-color:rgb(107, 106, 106, 0.4);
-  align-items: center;
-  position: absolute;
+  display: none;
+  position: fixed;
   z-index: 9999;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  left: 5%;
+  width: 100%; /* Adjust the width of the modal as needed */
+  height: 100%; /* Adjust the height of the modal as needed */
   justify-content: center;
   padding: 20px;
   box-sizing: border-box;
 }
 
 .form-modal-header {
-  margin-left: 23%;
-  margin-top: 2%;
-  padding: 1px 32px;
-  max-width: 50%;
+  margin-left: 25%;
+  margin-top: 5%;
+  padding: 10px 24px;
+  width: 100%;
+  max-width: 600px;
   background-color: #fcfcfc;
-  border-radius: 8px 8px 0px 0px;
 }
 
 .form-modal-content {
-  margin-left: 23%;
-  padding: 1px 32px;
-  padding-bottom: 32px;
-  height: calc(97% - 140px);
-  max-width: 50%;
-  max-height: 73%;
+  margin-top: -10px;
+  margin-left: 25%;
+  padding: 24px 32px;
+  width: 100%;
+  max-width: 584px;
+  border-radius: 8px;
   background-color: #fcfcfc;
   font-family: Hind;
   font-size: 16px;
   font-style: normal;
+  height: calc(80% - 140px);
   overflow-y: auto;
 }
 
-/* form footer (empty) */
-.formModalFooter {
-  margin-left: 23%;
-  padding: 0px 32px;
-  height: 8px;
-  max-width: 50%;
-  background-color: #fcfcfc;
-  border-radius: 0px 0px 8px 8px;
-}
-
-/* CSS for the household entry modals */
 /* CSS for the entry modal */
-
-/* modal containers */
 .modal {
   display: none;
   position: fixed;
-  z-index: 9900;
-  top: 3%;
-  left: 20%;
+  z-index: 9999;
+  top: 10%;
+  left: 25%;
   width: 100%; /* Adjust the width of the modal as needed */
   max-width: 480px;
   height: 100%; /* Adjust the height of the modal as needed */
@@ -368,30 +341,23 @@ h1.entries {
 }
 
 .modal-header {
-  position: relative;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  display: flex;
-  justify-content: space-between;
   margin-left: 25%;
   margin-top: 5%;
-  padding: 7px 24px;
+  padding: 10px 24px;
   width: 100%;
   background-color: #fcfcfc;
-  z-index: 9901;
-  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2); 
 }
 
 .modal-content {
-  margin-top: 0px;
+  margin-top: -10px;
   margin-left: 25%;
-  padding: 10px 24px;
-  width: 100%;
+  padding: 24px 32px;
+  width: 96.3%;
   background-color: #fcfcfc;
   font-family: Hind;
   font-size: 16px;
   font-style: normal;
-  max-height: calc(80% - 140px);
+  height: calc(80% - 140px);
   overflow-y: auto;
   scrollbar-gutter: stable;
 }
@@ -424,11 +390,12 @@ h1.entries {
 }
 
 .modal-name {
-  color: #387181;
+  color: #3d97af;
   font-family: Montserrat;
-  font-size: 20px;
+  font-size: 24px;
   font-style: normal;
-  font-weight: 750;
+  font-weight: 900;
+  line-height: 110%;
   letter-spacing: 0.48px;
 }
 
@@ -450,76 +417,20 @@ h1.entries {
   background-color: #fcfcfc;
 }
 
-.modal-text {
+.modal-address {
   color: #a0a0a0;
   font-family: Hind;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
+  line-height: 120%;
   letter-spacing: 0.32px;
-  line-height: 100%;
-  position: relative;
-  top: -10px;
+  margin-bottom: -16px;
 }
-
-.close-form {
+.close {
   color: #aaaaaa;
   float: right;
-  padding-top: 15px;
-  font-size: 40px;
-  font-weight: bold;
-}
-
-.close-form:hover,
-.close-form:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-button.collapsible {
-  padding: 0px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  align-self: stretch;
-  border: 0;
-  background-color: #fcfcfc;
-  width: 100%;
-  height: 50px;
-  color: #3D97AF;
-  font-family: 'Montserrat';
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 750;
-}
-
-.collapsible:after {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  margin-right: 5px;
-  content: "";
-  background: url("../img/dropdown.png") no-repeat 0 0;
-  background-size: 100%;
-}
-
-.active:after {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  margin-right: 5px;
-  content: "";
-  background: url("../img/dropdown.png") no-repeat 0 0;
-  background-size: 100%;
-  transform: rotate(180deg);
-}
-
-/* closing modal */
-.close {
-  text-align: center;
-  color: #aaaaaa;
-  font-size: 40px;
+  font-size: 28px;
   font-weight: bold;
 }
 
