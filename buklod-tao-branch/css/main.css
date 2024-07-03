@@ -336,6 +336,7 @@ h1.entries {
   font-family: Hind;
   font-size: 16px;
   font-style: normal;
+  overflow-y: auto;
 }
 
 /* form footer (empty) */
