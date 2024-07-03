@@ -159,10 +159,7 @@ setCollection('sdece-official',true).then(() => {
 		console.error('Error getting documents: ', error);
 	});
 
-
-
-
-	
+var currently_viewed_activity = null;
 
 // Display partner modal by clicking partner entry (WIP: and on pin pop up click)
 export function showModal(partner) {
@@ -230,6 +227,7 @@ export function showModal(partner) {
 	closeDiv.addEventListener('click', () => {
 		console.log('modal closed');
 		modal.style.display = 'none';
+		currently_viewed_activity = null;
 	});
 
 	console.log(partner[0]);
@@ -331,6 +329,8 @@ export function showModal(partner) {
 
 			// View activity details in modal after clicking activity
 			activityButton.addEventListener('click', () => {
+				console.log("currently viewing activity with id: ", activity.identifier);
+				currently_viewed_activity = activity.identifier;
 				modalHeader.innerHTML = '';
 				modalContent.innerHTML = '';
 
@@ -379,6 +379,7 @@ export function showModal(partner) {
 	window.addEventListener('click', (event) => {
 		if (event.target == modal) {
 			modal.style.display = 'none';
+			currently_viewed_activity = null;
 		}
 	});
 
@@ -386,23 +387,23 @@ export function showModal(partner) {
 
 	for (var i = 0; i < editButtons.length; i++) {
 		editButtons[i].addEventListener('click', function () {
-			console.log('Clicked edit activity');
+			if(currently_viewed_activity != null){
+				console.log("currently editing activity with id: ", currently_viewed_activity);
+				//Close activity details modal
 
-			//Close activity details modal
+				// Select the modal and partnerName elements
+				var modal = document.getElementById('editModal');
 
-			// Select the modal and partnerName elements
-			var modal = document.getElementById('editModal');
+				var partnerModal = document.getElementById('partnerModal');
+				
 
-			var partnerModal = document.getElementById('partnerModal');
-			// TODO: Integrate this functionality into the modal instead
-			// var partnerName = this.getAttribute("data-loc");
-			//       window.open(
-			//         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
-			//         "_blank"
-			//       );
+				// Display the modal
+				modal.style.display = 'flex';
+			} else {
+				console.log("you're not looking at an activity");
+			}
 
-			// Display the modal
-			modal.style.display = 'flex';
+			
 			// partnerModal.classList.add('hidden'); // Not sure if this should be hidden nalang, or should be kept open with the editModal on top nalang
 
 			// Close the modal when the user clicks anywhere outside of it
