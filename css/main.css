@@ -356,6 +356,13 @@ iframe {
 	flex: 1 1 0%;
 }
 
+.partner-popup {
+	font-family: 'Montserrat';
+	color: var(--darkbg);
+	font-weight: 700;
+	text-align: center !important;
+}
+
 .main-modal-input,
 .main-modal-input::placeholder {
 	font-family: 'Hind';
