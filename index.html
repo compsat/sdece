@@ -462,12 +462,11 @@
 						)[0];
 					let name = nameElement.textContent.toLowerCase();
 
+					let current_container = partnerContainers[i];
 					if (name.includes(input)) {
-						partnerContainers[i].classList.add('flex');
-						partnerContainers[i].classList.remove('hidden');
+						partnerContainers[i].style.display = 'flex';
 					} else {
-						partnerContainers[i].classList.add('hidden');
-						partnerContainers[i].classList.remove('flex');
+						partnerContainers[i].style.display = 'none';
 					}
 				}
 			}
