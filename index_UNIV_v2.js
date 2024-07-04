@@ -135,4 +135,6 @@ export function loadJsCssFiles(file_path){
             }
         }
     }
+
+    console.log("appended js css files");
 }

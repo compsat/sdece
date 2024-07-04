@@ -1,25 +1,6 @@
 // FIRESTORE DATABASE
 
 import {
-	getFirestore,
-	collection,
-	getDocs,
-	addDoc,
-	updateDoc,
-	doc,
-	query,
-	where,
-	getDoc,
-} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-/*
-import {
-	getCollection,
-	setCollection,
-	SDECE_RULES,
-	getDocIdByPartnerName,
-} from '/firestore_UNIV.js';*/
-
-import {
     setCollection,
     getCollection,
     getDocMap,
@@ -30,94 +11,106 @@ import {
     editEntry,
 } from '/firestore_UNIV_v2_mirror.js'
 
-import { showAddModal, loadMapMarkers } from './index.js';
-// Your Firestore code here
+import { getCurrentBranchCookie } from '/cookies.js';
 
-// Import the functions you need from the SDKs you need
-//import { initializeApp } from "firebase/app";
-//import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { loadJsCssFiles } from '/index_UNIV_v2.js';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+import { showAddModal, loadMapMarkers } from './index.js'; // map stuff
+
+// DEBUG: set to true if you want to connect to the test dataset
+var debug = false;
+var col_name = "";
+
+if(debug){
+	col_name = 'sdece-official-TEST';
+} else {
+	col_name = 'sdece-official';
+}
+
+console.log(col_name);
+
 var col_ref = null;
 var activities = null;
 var partners = null;
 
-setCollection('sdece-official',true).then(() => {
-	col_ref = getCollection();
+export function sdece_setup(){
+	setCollection(col_name,true, debug).then(() => {
+		loadJsCssFiles(getCurrentBranchCookie());
+		col_ref = getCollection();
 
-	console.log(col_ref);
-	
-	activities = getDocMap();
-	console.log(activities);
-	partners = groupBy("partner_name"); // queried
-	console.log(partners);
+		console.log(col_ref);
+		
+		activities = getDocMap();
+		console.log(activities);
+		partners = groupBy("partner_name"); // queried
+		console.log(partners);
 
-	//populate map markers
-	loadMapMarkers(partners);
-	
-	// populate	
-	Object.keys(partners).forEach((partner) => {
-		const containerDiv = document.createElement('div');
-		const img = document.createElement('svg');
-		const listItem = document.createElement('li');
-		const anchor = document.createElement('a');
-		const nameDiv = document.createElement('div');
-		const addressDiv = document.createElement('div');
-		const activityDiv = document.createElement('div');
-	
-		// Set attributes
-		anchor.href = '#';
-	
-		anchor.addEventListener('click', function () {
-			showModal(partners[partner]);
-		});
-	
-		// Adding classes and setting text content
-	
-		containerDiv.classList.add('partnerDiv');
-	
-		//   var activities = getDocIdByPartnerName(partner.partner_name);
-		if (activities.length > 0) {
-			// check if list of activities is present, otherwise is skipped to avoid errors
-			activities.forEach((activity) => {
-				activityDiv.innerHTML +=
-					activity.activity_name + '<br/>'; // there might be a better way to display multiple activities
+		//populate map markers
+		loadMapMarkers(partners);
+		
+		// populate	
+		Object.keys(partners).forEach((partner) => {
+			const containerDiv = document.createElement('div');
+			const img = document.createElement('svg');
+			const listItem = document.createElement('li');
+			const anchor = document.createElement('a');
+			const nameDiv = document.createElement('div');
+			const addressDiv = document.createElement('div');
+			const activityDiv = document.createElement('div');
+		
+			// Set attributes
+			anchor.href = '#';
+		
+			anchor.addEventListener('click', function () {
+				showModal(partners[partner]);
 			});
-		} else {
-			console.log('No activities found');
-		}
-	
-		nameDiv.classList.add(	'name'	);
-		addressDiv.classList.add(	'address'	);
-		activityDiv.classList.add(	'activity'	);
-	
-		nameDiv.textContent = partner;
-		addressDiv.textContent = partners[partner][0]['partner_address'];
-	
-		let qq = '';
-	
-		for (let activityy of partners[partner]) {
-			qq += activityy['activity_nature'] + '\n';
-		}
-		activityDiv.textContent = qq;
-	
-		listItem.classList.add(	'accordion'	);
-		// anchor.classList.add('accordion', 'link');
-	
-		// Append elements to the DOM
-		anchor.appendChild(nameDiv);
-		anchor.appendChild(addressDiv);
-		anchor.appendChild(activityDiv);
-	
-		listItem.appendChild(anchor);
-		containerDiv.appendChild(img);
-		containerDiv.appendChild(listItem);
-		locationList.appendChild(containerDiv);
+		
+			// Adding classes and setting text content
+		
+			containerDiv.classList.add('partnerDiv');
+		
+			//   var activities = getDocIdByPartnerName(partner.partner_name);
+			if (activities.length > 0) {
+				// check if list of activities is present, otherwise is skipped to avoid errors
+				activities.forEach((activity) => {
+					activityDiv.innerHTML +=
+						activity.activity_name + '<br/>'; // there might be a better way to display multiple activities
+				});
+			} else {
+				console.log('No activities found');
+			}
+		
+			nameDiv.classList.add(	'name'	);
+			addressDiv.classList.add(	'address'	);
+			activityDiv.classList.add(	'activity'	);
+		
+			nameDiv.textContent = partner;
+			addressDiv.textContent = partners[partner][0]['partner_address'];
+		
+			let qq = '';
+		
+			for (let activityy of partners[partner]) {
+				qq += activityy['activity_nature'] + '\n';
+			}
+			activityDiv.textContent = qq;
+		
+			listItem.classList.add(	'accordion'	);
+			// anchor.classList.add('accordion', 'link');
+		
+			// Append elements to the DOM
+			anchor.appendChild(nameDiv);
+			anchor.appendChild(addressDiv);
+			anchor.appendChild(activityDiv);
+		
+			listItem.appendChild(anchor);
+			containerDiv.appendChild(img);
+			containerDiv.appendChild(listItem);
+			locationList.appendChild(containerDiv);
+		});
+
+		
 	});
-});
+}
 
 var currently_viewed_activity = null;
 

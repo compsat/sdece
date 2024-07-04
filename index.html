@@ -87,6 +87,10 @@
 				DB_RULES_AND_DATA_TEST,
 			} from '/firestore_UNIV_v2_mirror.js';
 
+			import {
+				sdece_setup,
+			} from '/js/firestore.js'
+
 			let collections = document.getElementById('collections');
 			//collections.innerHTML += "<option value='dasd'> huhuh </value>";
 			console.log(collections.innerHTML);
@@ -96,12 +100,7 @@
 			Object.keys(DB_RULES_AND_DATA).forEach((coll) => {
 				collections.innerHTML += `<option value="${ coll }"> ${coll}</option>`;
 			});
-
-			Object.keys(DB_RULES_AND_DATA_TEST).forEach((coll) => {
-				collections.innerHTML += `<option value="${ coll }"> ${coll}</option>`;
-			});
 			
-
 			collections.addEventListener("change", function(){
 				const SELECTED = collections.options[collections.selectedIndex].value;
 				//setCollection(SELECTED);
@@ -112,14 +111,26 @@
 			
 			if(getCurrentBranchCookie() === null){       
 				//setCollection(DB_RULES_AND_DATA[0][0]);
+
 				setCurrentBranchCookie("current_branch", "sdece-official-TEST");
+				//load firestore.js for sdece
+
 				console.log(getCollection());
-				loadJsCssFiles(getCurrentBranchCookie());
+				loadJsCssFiles(getCurrentBranchCookie()); //needs setCollection to run
 			}              
 			else{
 				//setCollection(getCurrentBranchCookie());
+				switch(getCurrentBranchCookie()){
+					case "sdece-official":
+						// load firestore.js for SDECE
+						sdece_setup();
+						break;
+					case "buklod-official":
+						// load firestore.js for buklod tao
+						break;
+				}
 				collections.value = getCurrentBranchCookie();
-				loadJsCssFiles(getCurrentBranchCookie());
+				//loadJsCssFiles(getCurrentBranchCookie());
 			}
 		</script>
 	
