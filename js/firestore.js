@@ -90,32 +90,9 @@ setCollection('sdece-official',true).then(() => {
 			console.log('No activities found');
 		}
 	
-		nameDiv.classList.add(
-			'name'
-			// 'font-montserrat',
-			// 'font-bold',
-			// 'text-lg',
-			// 'text-darkbg',
-			// 'leading-[110%]'
-		);
-		addressDiv.classList.add(
-			'address'
-			// 'text-sm',
-			// 'text-customGray',
-			// 'font-hind',
-			// 'font-regular',
-			// 'leading-[120%]',
-			// 'mt-2'
-		);
-		activityDiv.classList.add(
-			'activity'
-			// 'text-sm',
-			// 'text-customBlack',
-			// 'font-hind',
-			// 'font-regular',
-			// 'leading-[110%]',
-			// 'mt-2'
-		);
+		nameDiv.classList.add(	'name'	);
+		addressDiv.classList.add(	'address'	);
+		activityDiv.classList.add(	'activity'	);
 	
 		nameDiv.textContent = partner;
 		addressDiv.textContent = partners[partner][0]['partner_address'];
@@ -127,23 +104,7 @@ setCollection('sdece-official',true).then(() => {
 		}
 		activityDiv.textContent = qq;
 	
-		//   if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
-		//   {
-		//     partner.activities.forEach( (activity) => {
-		//       activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
-		//     });
-		//   }
-		//   else {
-		//     console.log("No activities found");
-		//   }
-	
-		listItem.classList.add(
-			'accordion'
-			// 'py-6',
-			// 'px-8',
-			// 'border-customGray',
-			// 'w-full'
-		);
+		listItem.classList.add(	'accordion'	);
 		// anchor.classList.add('accordion', 'link');
 	
 		// Append elements to the DOM
