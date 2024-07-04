@@ -64,6 +64,7 @@
 		<!--<script type="module" src="js/firestore.js"></script>-->
 
 		<!--  Module for the implementation of the Rules Engine for switching maps -->
+		<!--
 		<script type="module">
 			import {
 				setCollection,
@@ -95,6 +96,14 @@
 			//document.getElementById("test_adder").addEventListener('click', testAdd);
 			//document.getElementById("test_edit").addEventListener('click', testEdit);
 
+			import {
+				testAdd,
+				testEdit,
+			} from '/firestore_UNIV_v2_mirror.js';
+
+			document.getElementById("test_adder").addEventListener('click', testAdd);
+			document.getElementById("test_edit").addEventListener('click', testEdit);
+
 			var collections = document.getElementById('collections');
 
 			for (let rule of DB_RULES_AND_DATA) {
@@ -124,6 +133,7 @@
         loadJsCssFiles(getCurrentBranchCookie());
       }
 		</script>
+	-->
 	</head>
 
 	<body>
@@ -208,12 +218,16 @@
 								d="M8.235 1.559a.5.5 0 0 0-.47 0l-7.5 4a.5.5 0 0 0 0 .882L3.188 8 .264 9.559a.5.5 0 0 0 0 .882l7.5 4a.5.5 0 0 0 .47 0l7.5-4a.5.5 0 0 0 0-.882L12.813 8l2.922-1.559a.5.5 0 0 0 0-.882zm3.515 7.008L14.438 10 8 13.433 1.562 10 4.25 8.567l3.515 1.874a.5.5 0 0 0 .47 0zM8 9.433 1.562 6 8 2.567 14.438 6z"
 							/>
 						</svg>
+<<<<<<< HEAD
 						
+=======
+						<!--
+>>>>>>> 84378aa6357eccb4e4500ed8b201b9d2712cf478
 						<select
 							name="collections"
 							id="collections"
 							class="layer-toggle"
-						></select>
+						></select>-->
 					</div>
 
 					<!-- Logout Button -->
