@@ -17,6 +17,7 @@ import {
 	SDECE_RULES,
 	getDocIdByPartnerName,
 } from '/firestore_UNIV.js';
+import { addListeners, map, getDivContent } from '/index_UNIV.js';
 
 import { showAddModal } from './index.js';
 // Your Firestore code here
@@ -34,15 +35,33 @@ var col_ref = null;
 
 col_ref = getCollection();
 
-
 var partners = {}; // queried
 var activities = [];
+
+map.panTo(new L.LatLng(14.651, 121.052));
+
+// //list down all documents under the collection in console.log
+// const querySnapshot = await getDocs(colRef);
+// console.log(querySnapshot);
+// querySnapshot.forEach((doc) => {
+//   // doc.data() is never undefined for query doc snapshots
+//   console.log(doc.id, " => ", doc.data());
+// });
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	attribution:
+		'&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
+}).addTo(map);
+
+var searchControl = L.esri.Geocoding.geosearch().addTo(map);
+var results = L.layerGroup().addTo(map);
+var popup = L.popup();
 
 // get docs from firestore and place them in partner and activities
 
 getDocs(col_ref)
 	.then((querySnapshot) => {
-		//populate activities
+		// Populate activities
 		querySnapshot.forEach((doc) => {
 			if (
 				doc.data().name !== 'Test 2' ||
@@ -51,12 +70,10 @@ getDocs(col_ref)
 				activities.push(doc.data());
 			}
 		});
-		//populate with partners
+
+		//  Populate with partners
 		activities.forEach((activity) => {
 			let partner = activity[SDECE_RULES[1]];
-
-			//console.log(partner);
-
 			if (partners[partner] == null) {
 				partners[partner] = [];
 				partners[partner].push(activity);
@@ -65,8 +82,56 @@ getDocs(col_ref)
 			}
 		});
 
-		//populate ul with partners
+		// Populate side navigation <ul> with partners
 		Object.keys(partners).forEach((partner) => {
+			// Trying to add the pins here instead
+			var marker;
+
+			// Some coordinated are null, protective check
+			console.log(partners[partner][0]['partner_coordinates']);
+			if (partners[partner][0]['partner_coordinates'] != null) {
+				marker = L.marker([
+					parseFloat(
+						partners[partner][0]['partner_coordinates']
+							.latitude
+					),
+					parseFloat(
+						partners[partner][0]['partner_coordinates']
+							.longitude
+					),
+				]);
+			}
+
+			results.addLayer(marker);
+			var popupContent = `
+					<div class="partner-popup" id="`;
+			popupContent += partners[partner][0]['partner_name'];
+			popupContent += `">`;
+			popupContent += partners[partner][0]['partner_name'];
+			popupContent += `</div>`;
+
+			marker.bindPopup(popupContent);
+			results.addLayer(marker);
+
+			marker.on('popupopen', function () {
+				console.log(
+					'Clicked on ' +
+						partners[partner][0]['partner_name'] +
+						' pin!'
+				);
+
+				var test = document.getElementById(
+					partners[partner][0]['partner_name']
+				);
+				test.addEventListener('click', function () {
+					console.log(
+						'Clicked on the pop-up content of ' +
+							partners[partner][0]['partner_name']
+					);
+					showModal(partners[partner]);
+				});
+			});
+
 			const containerDiv = document.createElement('div');
 			const img = document.createElement('svg');
 			const listItem = document.createElement('li');
@@ -75,10 +140,19 @@ getDocs(col_ref)
 			const addressDiv = document.createElement('div');
 			const activityDiv = document.createElement('div');
 
-			// Set attributes
-			anchor.href = '#';
-
-			anchor.addEventListener('click', function () {
+			containerDiv.addEventListener('click', function () {
+				map.panTo(
+					new L.LatLng(
+						parseFloat(
+							partners[partner][0]['partner_coordinates']
+								.latitude
+						),
+						parseFloat(
+							partners[partner][0]['partner_coordinates']
+								.longitude
+						)
+					)
+				);
 				showModal(partners[partner]);
 			});
 
@@ -97,32 +171,9 @@ getDocs(col_ref)
 				console.log('No activities found');
 			}
 
-			nameDiv.classList.add(
-				'name'
-				// 'font-montserrat',
-				// 'font-bold',
-				// 'text-lg',
-				// 'text-darkbg',
-				// 'leading-[110%]'
-			);
-			addressDiv.classList.add(
-				'address'
-				// 'text-sm',
-				// 'text-customGray',
-				// 'font-hind',
-				// 'font-regular',
-				// 'leading-[120%]',
-				// 'mt-2'
-			);
-			activityDiv.classList.add(
-				'activity'
-				// 'text-sm',
-				// 'text-customBlack',
-				// 'font-hind',
-				// 'font-regular',
-				// 'leading-[110%]',
-				// 'mt-2'
-			);
+			nameDiv.classList.add('name');
+			addressDiv.classList.add('address');
+			activityDiv.classList.add('activity');
 
 			nameDiv.textContent = partner;
 			addressDiv.textContent = partners[partner][0]['partner_address'];
@@ -145,15 +196,7 @@ getDocs(col_ref)
 			//     console.log("No activities found");
 			//   }
 
-			listItem.classList.add(
-				'accordion'
-				// 'py-6',
-				// 'px-8',
-				// 'border-customGray',
-				// 'w-full'
-			);
-			// anchor.classList.add('accordion', 'link');
-
+			listItem.classList.add('accordion');
 			// Append elements to the DOM
 			anchor.appendChild(nameDiv);
 			anchor.appendChild(addressDiv);
@@ -171,12 +214,7 @@ getDocs(col_ref)
 
 // Display partner modal by clicking partner entry (WIP: and on pin pop up click)
 export function showModal(partner) {
-	console.log('SHOW THE MODAL');
-
-	console.log('Partner being shown as modal: ' + partner[0].partner_name);
-
 	const modal = document.getElementById('partnerModal');
-
 	const modalHeader = document.getElementById('modalHeader');
 	const modalContent = document.getElementById('modalContent');
 
@@ -189,22 +227,20 @@ export function showModal(partner) {
 	// Clear previous content
 	modalHeader.innerHTML = '';
 	modalContent.innerHTML = '';
-	//modal.innerHTML = '';
 
 	// Create div elements for each piece of information
 	const backarrowDiv = document.createElement('button');
 	const closeDiv = document.createElement('div');
 	const nameDiv = document.createElement('div');
 	const addressDiv = document.createElement('div');
-
 	const activityHeaderDiv = document.createElement('div');
-	const contactPersonDiv = document.createElement('div');
 	const activityDiv = document.createElement('div');
 	const admuContactDiv = document.createElement('div');
 	const admuEmailDiv = document.createElement('div');
 	const admuOfficeDiv = document.createElement('div');
 	const orgDiv = document.createElement('div');
-	const datesDiv = document.createElement('div');
+	// const datesDiv = document.createElement('div');
+	// const contactPersonDiv = document.createElement('div');
 
 	nameDiv.classList.add('modal-name');
 	nameDiv.style = 'float: left;';
@@ -237,16 +273,7 @@ export function showModal(partner) {
 		modal.style.display = 'none';
 	});
 
-	console.log(partner[0]);
-
-	// limit partner_name to 30 characters
-	// if (partner[0].partner_name.length > 30) {
-	// 	nameDiv.textContent =
-	// 		partner[0].partner_name.substring(0, 30) + '...';
-	// } else {
 	nameDiv.textContent = partner[0].partner_name;
-	// }
-
 	addressDiv.textContent =
 		'Latitude, Longitude: ' +
 		partner[0].partner_coordinates._lat +
@@ -262,7 +289,7 @@ export function showModal(partner) {
 	// Add button for adding activities
 	addActivity.addEventListener('click', () => {
 		console.log('Clicked add activity in the partner modal');
-		showAddModal();
+		showAddModal(); // TODO: Modify this so that the current partner's details are passed through the Add Activity form as input and then those fields are Disabled.
 	});
 
 	activityHeaderDiv.appendChild(addActivity);
@@ -302,13 +329,6 @@ export function showModal(partner) {
 			const activityOfficeDiv = document.createElement('div');
 
 			activityNameDiv.innerHTML = activity.activity_nature + '';
-			activityNameDiv.classList
-				.add
-				// 'font-bold',
-				// 'text-2xl',
-				// 'text-lightbg'
-				();
-
 			activityAddressDiv.innerHTML = activity.partner_address;
 			activityAddressDiv.classList.add('modal-address');
 
@@ -365,7 +385,6 @@ export function showModal(partner) {
 	// Append the div elements to the modal content
 	modalHeader.appendChild(nameDiv);
 	modalHeader.appendChild(closeDiv);
-
 	modalContent.appendChild(addressDiv);
 	modalContent.appendChild(activityHeaderDiv);
 	modalContent.appendChild(activityDiv);
