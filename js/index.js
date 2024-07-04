@@ -6,7 +6,7 @@ import {
 	getCollection,
 	DB,
 } from '/firestore_UNIV.js';
-import { getDivContent, addListeners, map } from '/index_UNIV.js';
+import { addListeners, map } from '/index_UNIV.js';
 import {
 	getFirestore,
 	collection,
@@ -57,19 +57,6 @@ getDocs(colRef)
 					parseFloat(doc.partner_coordinates.longitude),
 				]);
 			}
-
-			getDivContent(doc.partner_name).then((div) => {
-				results.addLayer(marker);
-				var popupContent = `
-					<div class="partner-popup" id="`;
-				popupContent += doc.partner_name;
-				popupContent += `">`;
-				popupContent += doc.partner_name;
-				popupContent += `</div>`;
-
-				marker.bindPopup(popupContent);
-				results.addLayer(marker);
-			});
 
 			marker.on('popupopen', function () {
 				console.log('Clicked on ' + doc.partner_name + ' pin!');

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -19,6 +20,9 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
 			href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap"
+
+<!DOCTYPE html> <html> <head> <meta charset="utf-8" /> <title>Geocoding Control</title> <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" /> <!-- Import Montserrat and Hind from Google Fonts --> <link rel="preconnect" href="https://fonts.googleapis.com" /> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /> <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" /> <link rel="preconnect" href="https://fonts.googleapis.com" /> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /> <link href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap"
+
 			rel="stylesheet"
 		/>
 
@@ -71,12 +75,17 @@
 				clearMarkers,
 				clearLocationList,
 				map,
-				getDivContent,
+        loadJsCssFiles,
+        createJsCssFiles,
 			} from '/index_UNIV.js';
 			import {
 				getDocs,
 				query,
 			} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+      import {
+        getCurrentBranchCookie,
+        setCurrentBranchCookie
+      } from "/cookies.js";
 
 			var collections = document.getElementById('collections');
 
@@ -86,51 +95,26 @@
 				}"> ${readyField(rule[0])}</option>`;
 			}
 
-			collections.addEventListener('change', function () {
-				const SELECTED =
-					collections.options[collections.selectedIndex].value;
-				setCollection(SELECTED);
-
-				// test getDocs for grabbing the data on change
-				getDocs(getCollection()).then((querySnapshot) => {
-					querySnapshot.forEach((doc) => {
-						console.log(doc.id, ' => ', doc.data());
-						var stuff = ``;
-						for (let rule of DB_RULES_AND_DATA) {
-							for (let index in rule) {
-								stuff += doc.get(rule[2][index]);
-							}
-						}
-						document.getElementById(
-							'locationList'
-						).innerHTML += stuff;
-
-						var results = L.layerGroup().addTo(map);
-						var marker;
-						// Some coordinated are null, protective check
-						if (doc.data() != null) {
-							marker = L.marker([
-								parseFloat(
-									doc.data().partner_coordinates._lat
-								),
-								parseFloat(
-									doc.data().partner_coordinates
-										._long
-								),
-							]);
-						}
-						// TODO HAVE THIS BE CONSISTENT ACROSS EVERYTHING
-						// getDivContent(doc.data().household_name).then(
-						// 	(div) => {
-						// 		marker.bindPopup(div);
-						// 		results.addLayer(marker);
-						// 	}
-						// );
-					});
-				});
-				clearMarkers();
-				clearLocationList();
-			});
+      collections.addEventListener("change", function(){
+        const SELECTED = collections.options[collections.selectedIndex].value;
+        setCollection(SELECTED);
+        setCurrentBranchCookie("current_branch", SELECTED);
+        console.log(getCurrentBranchCookie());
+        location.reload();
+      });        
+      
+      if(getCurrentBranchCookie() === null){       
+        console.log(DB_RULES_AND_DATA[0][0]);     
+        setCollection(DB_RULES_AND_DATA[0][0]);
+        setCurrentBranchCookie("current_branch", DB_RULES_AND_DATA[0][0]);
+        console.log(getCollection());
+        loadJsCssFiles(getCurrentBranchCookie());
+      }              
+      else{
+        setCollection(getCurrentBranchCookie());
+        collections.value = getCurrentBranchCookie();
+        loadJsCssFiles(getCurrentBranchCookie());
+      }
 		</script>
 	</head>
 
@@ -424,7 +408,6 @@
 		</div>
 
 		<!-- SCRIPTS -->
-		<script type="module" src="js/index.js"></script>
 		<script>
 			// This hides the Add Activity modal when the user submits the form
 			window.addEventListener('message', function (event) {
