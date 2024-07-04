@@ -229,8 +229,6 @@ export function showModal(partner) {
 		currently_viewed_activity = null;
 	});
 
-	console.log(partner[0]);
-
 	// limit partner_name to 30 characters
 	// if (partner[0].partner_name.length > 30) {
 	// 	nameDiv.textContent =
@@ -262,11 +260,9 @@ export function showModal(partner) {
 
 	// Add each activity to the modal content
 
-	console.log(partner.length);
 	if (partner.length > 0) {
 		// check if list of activities is present, otherwise is skipped to avoid errors
 		partner.forEach((activity) => {
-			console.log(activity);
 			// View activity details button
 			const activityButton = document.createElement('button');
 			activityButton.classList.add('modal-activities');

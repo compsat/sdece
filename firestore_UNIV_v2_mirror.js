@@ -40,7 +40,7 @@ var collection_reference = null;
 
 var document_map = {};
 
-const DB_RULES_AND_DATA = { // can only be changed in hardcode
+export const DB_RULES_AND_DATA = { // can only be changed in hardcode
 	"sdece-official": {
 		identifier: "identifier",
 		fields: 
@@ -107,7 +107,7 @@ const DB_RULES_AND_DATA = { // can only be changed in hardcode
 	},
 };
 
-const DB_RULES_AND_DATA_TEST = {
+export const DB_RULES_AND_DATA_TEST = {
     "sdece-official-TEST" : DB_RULES_AND_DATA["sdece-official"],
     "buklod-official-TEST" : DB_RULES_AND_DATA["buklod-official"],
 }
@@ -117,7 +117,7 @@ export const BUKLOD_RULES = DB_RULES_AND_DATA["buklod-official"];
 export const SDECE_RULES_TEST = DB_RULES_AND_DATA_TEST["sdece-official-TEST"];
 export const BUKLOD_RULES_TEST = DB_RULES_AND_DATA_TEST["buklod-official-TEST"];
 
-export function setCollection(collection_name, include_doc_id, is_debug_mode = false){
+export async function setCollection(collection_name, include_doc_id, is_debug_mode = false){
     let currentCollection = null;
     if (is_debug_mode){
         currentCollection = DB_RULES_AND_DATA_TEST[collection_name];
@@ -129,20 +129,17 @@ export function setCollection(collection_name, include_doc_id, is_debug_mode = f
         collection_reference = collection(DB, collection_name);
         console.log("collection set to: " + collection_name + " now loading to docs");
 
-        // loadDocs(collection_name); // had to separate because this is async
-        let getDocuments = async() => {
-            const results = await getDocs(collection_reference);
-            return results;
-        }       
-        getDocuments().then(result => {
-            result.forEach((entryentry) => {
-                var doc = entry.data();
-                var doc_id = entry.id;
-                document_map[doc_id] = doc;
-                if (include_doc_id){    document_map[doc_id]["identifier"] = doc_id;    }
-            })
+        let docs = await getDocs(collection_reference);
+        docs.forEach((entry) => {
+            let doc = entry.data();
+            let doc_id = entry.id;
+
+            document_map[doc_id] = doc;
+            if (include_doc_id) {   document_map[doc_id]["identifier"] = doc_id;    }
         });
+
         console.log(document_map);
+        
     } else {
         console.log("Collection does not exist");
     }
