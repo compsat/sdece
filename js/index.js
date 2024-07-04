@@ -105,7 +105,6 @@ searchControl.on('results', function (data) {
 function onMapClick(e) {
 	const lat = e.latlng.lat;
 	const lng = e.latlng.lng;
-	window.location.href = `addloc.html?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(lng)}`;
 
 	// This is the popup for when the user clicks on a spot on the map
 	var popupContent = `
@@ -143,6 +142,7 @@ function onMapClick(e) {
 
 		// Close the modal when the user clicks anywhere outside of it
 		window.onclick = function (event) {
+			window.location.href = `addloc.html?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(lng)}`;
 			if (event.target == modal) {
 				modal.classList.add('hidden');
 			}
