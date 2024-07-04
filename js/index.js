@@ -6,9 +6,7 @@ import {
 	getCollection,
 	DB,
 } from '/firestore_UNIV.js';
-import { addListeners, map,
-  getDivContent 
-} from '/index_UNIV.js';
+import { addListeners, map, getDivContent } from '/index_UNIV.js';
 import {
 	getFirestore,
 	collection,
@@ -44,54 +42,6 @@ var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
 // Loads at the start
-
-getDocs(colRef)
-	.then((querySnapshot) => {
-		querySnapshot.forEach((entry) => {
-			var doc = entry.data();
-
-			var marker;
-
-			// Some coordinated are null, protective check
-			if (doc.partner_coordinates != null) {
-				marker = L.marker([
-					parseFloat(doc.partner_coordinates.latitude),
-					parseFloat(doc.partner_coordinates.longitude),
-				]);
-			}
-        
-			getDivContent(doc.partner_name).then((div) => {
-				results.addLayer(marker);
-				var popupContent = `
-					<div class="partner-popup" id="`;
-				popupContent += doc.partner_name;
-				popupContent += `">`;
-				popupContent += doc.partner_name;
-				popupContent += `</div>`;
-
-				marker.bindPopup(popupContent);
-				results.addLayer(marker);
-			});
-
-			marker.on('popupopen', function () {
-				console.log('Clicked on ' + doc.partner_name + ' pin!');
-
-				var test = document.getElementById(doc.partner_name);
-				test.addEventListener('click', function () {
-					console.log(
-						'Clicked on the pop-up content of ' +
-							doc.partner_name
-					);
-					showModal(doc);
-					// TODO: call showModal(partner) here! Not super sure what the partner object should be in this case
-				});
-			});
-		});
-	})
-	.catch((error) => {
-		console.error('Error getting documents: ', error);
-	});
-
 addListeners();
 
 searchControl.on('results', function (data) {
