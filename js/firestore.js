@@ -35,7 +35,8 @@ var partners = null;
 
 export function sdece_setup(){
 	setCollection(col_name,true, debug).then(() => {
-		loadJsCssFiles(getCurrentBranchCookie());
+		loadJsCssFiles(getCurrentBranchCookie()); // this should happen only when setcollection is done
+		
 		col_ref = getCollection();
 
 		console.log(col_ref);

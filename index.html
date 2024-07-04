@@ -92,9 +92,6 @@
 			} from '/js/firestore.js'
 
 			let collections = document.getElementById('collections');
-			//collections.innerHTML += "<option value='dasd'> huhuh </value>";
-			console.log(collections.innerHTML);
-
 			
 			// due to the way the rule engine is structured, this is how we're gonna roll
 			Object.keys(DB_RULES_AND_DATA).forEach((coll) => {
@@ -103,23 +100,17 @@
 			
 			collections.addEventListener("change", function(){
 				const SELECTED = collections.options[collections.selectedIndex].value;
-				//setCollection(SELECTED);
 				setCurrentBranchCookie("current_branch", SELECTED);
 				console.log(getCurrentBranchCookie());
 				location.reload();
 			});        
 			
 			if(getCurrentBranchCookie() === null){       
-				//setCollection(DB_RULES_AND_DATA[0][0]);
-
 				setCurrentBranchCookie("current_branch", "sdece-official-TEST");
-				//load firestore.js for sdece
-
 				console.log(getCollection());
 				loadJsCssFiles(getCurrentBranchCookie()); //needs setCollection to run
 			}              
 			else{
-				//setCollection(getCurrentBranchCookie());
 				switch(getCurrentBranchCookie()){
 					case "sdece-official":
 						// load firestore.js for SDECE
@@ -130,7 +121,6 @@
 						break;
 				}
 				collections.value = getCurrentBranchCookie();
-				//loadJsCssFiles(getCurrentBranchCookie());
 			}
 		</script>
 	
