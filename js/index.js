@@ -90,7 +90,6 @@ function onMapClick(e) {
 
 		// Display the modal
 		modal.classList.remove('hidden');
-		modal.classList.add('flex');
 
 		// Close the modal when the user clicks anywhere outside of it
 		window.onclick = function (event) {
