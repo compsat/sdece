@@ -125,14 +125,14 @@ export function createJsCssFiles(file_path){
 
 // Loads the JS CSS Files
 export function loadJsCssFiles(file_path){
-// script if javascript, css if link or none;
-for(let rule of JS_CS_ENGINE){
-  if(rule[0] == getCollection().id){
-    for(let i = 0; i < rule[1].length; i++){
-      var new_element = createJsCssFiles(rule[1][i]);
-      new_element.setAttribute('id', 'jscss' + i);
-      document.getElementsByTagName('head')[0].appendChild(new_element);
+    // script if javascript, css if link or none;
+    for(let rule of JS_CS_ENGINE){
+        if(rule[0] == getCollection().id){
+            for(let i = 0; i < rule[1].length; i++){
+            var new_element = createJsCssFiles(rule[1][i]);
+            new_element.setAttribute('id', 'jscss' + i);
+            document.getElementsByTagName('head')[0].appendChild(new_element);
+            }
+        }
     }
-  }
-}
 }
