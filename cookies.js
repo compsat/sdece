@@ -1,5 +1,3 @@
-import { setCollection, getCollection } from "/firestore_UNIV.js";
-
 export function setCurrentBranchCookie(name, value){
     const DATE = new Date();
     DATE.setTime(DATE.getTime() + (DATE.getTime() * 24 * 60 * 60 * 1000));

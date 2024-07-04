@@ -64,76 +64,65 @@
 		<script type="module" src="js/firestore.js"></script>
 
 		<!--  Module for the implementation of the Rules Engine for switching maps -->
-		<!--
+		
 		<script type="module">
-			import {
-				setCollection,
-				getCollection,
-				DB_RULES_AND_DATA,
-			} from '/firestore_UNIV.js';
 			import {
 				readyField,
 				clearMarkers,
 				clearLocationList,
 				map,
-        loadJsCssFiles,
-        createJsCssFiles,
-			} from '/index_UNIV.js';
+        		loadJsCssFiles,
+        		createJsCssFiles,
+			} from '/index_UNIV_v2.js';
+
 			import {
-				getDocs,
-				query,
-			} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-      import {
-        getCurrentBranchCookie,
-        setCurrentBranchCookie
-      } from "/cookies.js";
+				getCurrentBranchCookie,
+				setCurrentBranchCookie
+			} from "/cookies.js";
 
 			import {
 				testAdd,
 				testEdit,
+				DB_RULES_AND_DATA,
+				DB_RULES_AND_DATA_TEST,
 			} from '/firestore_UNIV_v2_mirror.js';
 
-			//document.getElementById("test_adder").addEventListener('click', testAdd);
-			//document.getElementById("test_edit").addEventListener('click', testEdit);
+			let collections = document.getElementById('collections');
+			//collections.innerHTML += "<option value='dasd'> huhuh </value>";
+			console.log(collections.innerHTML);
 
-			import {
-				testAdd,
-				testEdit,
-			} from '/firestore_UNIV_v2_mirror.js';
+			
+			// due to the way the rule engine is structured, this is how we're gonna roll
+			Object.keys(DB_RULES_AND_DATA).forEach((coll) => {
+				collections.innerHTML += `<option value="${ coll }"> ${coll}</option>`;
+			});
 
-			document.getElementById("test_adder").addEventListener('click', testAdd);
-			document.getElementById("test_edit").addEventListener('click', testEdit);
+			Object.keys(DB_RULES_AND_DATA_TEST).forEach((coll) => {
+				collections.innerHTML += `<option value="${ coll }"> ${coll}</option>`;
+			});
+			
 
-			var collections = document.getElementById('collections');
-
-			for (let rule of DB_RULES_AND_DATA) {
-				collections.innerHTML += `<option value="${
-					rule[0]
-				}"> ${readyField(rule[0])}</option>`;
+			collections.addEventListener("change", function(){
+				const SELECTED = collections.options[collections.selectedIndex].value;
+				//setCollection(SELECTED);
+				setCurrentBranchCookie("current_branch", SELECTED);
+				console.log(getCurrentBranchCookie());
+				location.reload();
+			});        
+			
+			if(getCurrentBranchCookie() === null){       
+				//setCollection(DB_RULES_AND_DATA[0][0]);
+				setCurrentBranchCookie("current_branch", "sdece-official-TEST");
+				console.log(getCollection());
+				loadJsCssFiles(getCurrentBranchCookie());
+			}              
+			else{
+				//setCollection(getCurrentBranchCookie());
+				collections.value = getCurrentBranchCookie();
+				loadJsCssFiles(getCurrentBranchCookie());
 			}
-
-      collections.addEventListener("change", function(){
-        const SELECTED = collections.options[collections.selectedIndex].value;
-        setCollection(SELECTED);
-        setCurrentBranchCookie("current_branch", SELECTED);
-        console.log(getCurrentBranchCookie());
-        location.reload();
-      });        
-      
-      if(getCurrentBranchCookie() === null){       
-        console.log(DB_RULES_AND_DATA[0][0]);     
-        setCollection(DB_RULES_AND_DATA[0][0]);
-        setCurrentBranchCookie("current_branch", DB_RULES_AND_DATA[0][0]);
-        console.log(getCollection());
-        loadJsCssFiles(getCurrentBranchCookie());
-      }              
-      else{
-        setCollection(getCurrentBranchCookie());
-        collections.value = getCurrentBranchCookie();
-        loadJsCssFiles(getCurrentBranchCookie());
-      }
 		</script>
-	-->
+	
 	</head>
 
 	<body>
@@ -223,7 +212,7 @@
 							name="collections"
 							id="collections"
 							class="layer-toggle"
-						></select>
+						></select>							
 					</div>
 
 					<!-- Logout Button -->
