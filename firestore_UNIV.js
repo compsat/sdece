@@ -6,6 +6,7 @@ import {
 	query,
 	where,
 	getDoc,
+	GeoPoint,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 
 // Your web app's Firebase configuration
@@ -18,6 +19,50 @@ import {
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 
 console.log('UNIVERSAL JS LOADING ');
+
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+// Get lat and lng from URL parameters
+const lat = getUrlParameter('lat');
+const lng = getUrlParameter('lng');
+
+// Display the values on the page or use them as needed
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('location-info').innerText = `Latitude: ${lat}, Longitude: ${lng}`;
+});
+
+// export function getCoordinates() {
+// 	var roundLat = parseFloat(lat.toFixed(5));
+// 	var roundLon = parseFloat(lon.toFixed(5));
+//     var PARTNER_COORDINATES = `(${roundLat}, ${roundLon})`;
+//     return PARTNER_COORDINATES;
+// }
+
+export function getCoordinates() {
+    // Ensure lat and lng are numbers
+    const latNum = parseFloat(lat);
+    const lngNum = parseFloat(lng);
+
+    // Round the numbers to 5 decimal places
+    var roundLat = parseFloat(latNum.toFixed(5));
+    var roundLon = parseFloat(lngNum.toFixed(5));
+
+	const GEOPOINT = new GeoPoint(roundLat, roundLon);
+
+    // Create the coordinates string
+    var PARTNER_COORDINATES = GEOPOINT;
+
+    return PARTNER_COORDINATES;
+}
+
+
+// Now you can use lat and lng values as needed in this script
+console.log(`Latitude: ${lat}, Longitude: ${lng}`);
 
 // export const firebaseConfig = {
 //     apiKey: "AIzaSyAeo2wTJFotROMNPa4UHXo2MqPaW8k07us",
@@ -179,7 +224,7 @@ const VALIDATION_RULES = { //Rules for Validating Data
 	'sdece-official-TEST': {
 		'partner_name': {type: 'string', required: true, maxLength: 255},
 		'partner_address': {type: 'string', required: true, maxLength: 255},
-		'partner_coordinates': {type: 'number', required: true},
+		'partner_coordinates': {required: true},
 		'partner_contact_name': {type: 'string', required: true, maxLength: 255},
 		'partner_contact_number': {type: 'string', required: true, minLength: 11, maxLength: 11, regex: /^[0-9]+$/},
 		'partner_email': {type: 'string', required: true, maxLength: 127},
@@ -419,4 +464,36 @@ export function validateData(collectionName, data) {
 
 	
 }
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     var addButton = document.querySelector('.addButton');
+//     addButton.addEventListener('click', function () {
+//         const lat = this.getAttribute('data-lat');
+//         const lng = this.getAttribute('data-lng');
+
+//         // Create an input object with the required fields
+//         const inputObject = {
+//             partner_name: 'Partner Name', // Replace with actual value or get from user input
+//             partner_address: 'Partner Address', // Replace with actual value or get from user input
+//             partner_coordinates: parseFloat(`${lat},${lng}`), // Convert lat and lng to a float
+//             partner_contact_name: 'Contact Name', // Replace with actual value or get from user input
+//             partner_contact_number: '12345678901', // Replace with actual value or get from user input
+//             partner_email: 'email@example.com', // Replace with actual value or get from user input
+//             activity_name: 'Activity Name', // Replace with actual value or get from user input
+//             activity_nature: 'Activity Nature', // Replace with actual value or get from user input
+//             activity_date: '2023-07-04', // Replace with actual value or get from user input
+//             additional_partnership: 'Additional Partnership', // Replace with actual value or get from user input
+//             organization_unit: 'Organization Unit', // Replace with actual value or get from user input
+//             ADMU_office: 'ADMU Office', // Replace with actual value or get from user input
+//             ADMU_contact_name: 'ADMU Contact Name', // Replace with actual value or get from user input
+//             ADMU_email: 'admu@example.com' // Replace with actual value or get from user input
+//         };
+
+//         // Set the collection reference
+//         setCollection('sdece-official-TEST');
+
+//         // Add the entry to the Firestore collection
+//         addEntry(inputObject);
+//     });
+// });
 

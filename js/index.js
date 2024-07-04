@@ -105,6 +105,7 @@ searchControl.on('results', function (data) {
 function onMapClick(e) {
 	const lat = e.latlng.lat;
 	const lng = e.latlng.lng;
+	window.location.href = `addloc.html?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(lng)}`;
 
 	// This is the popup for when the user clicks on a spot on the map
 	var popupContent = `

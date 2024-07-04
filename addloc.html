@@ -32,7 +32,8 @@
 				addEntry,
 				SDECE_RULES_TEST,
 				setCollection,
-				validateData
+				validateData,
+				getCoordinates
 			} from '/firestore_UNIV.js';
 			
 
@@ -54,7 +55,7 @@
 					let inputValue = document.getElementById(fieldName).value;
 
 					if (fieldName == 'partner_coordinates') {
-                        collatedInput[fieldName] = Number(inputValue);
+                        collatedInput[fieldName] = getCoordinates();
 						
                     } else {
                         collatedInput[fieldName] = inputValue;
@@ -293,15 +294,16 @@
 							placeholder="Ex. ignatius@ateneo.edu"
 						/>
 					</div>
-
-					<div class="flex flex-row justify-between mb-6 items-center">
+					<!-- to see the currently clicked geopoint -->
+					<!-- <div id="location-info"></div> -->
+					<div class="flex flex-row justify-between mb-6 items-center" style="display: none">
 						<label
 							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
 							for="partner_coordinates"
 							>Partner Coordinates
 						</label>
 						<input
-							type="number"
+							type="text"
 							id="partner_coordinates"
 							name="partner_coordinates"
 							class="py-4 px-8 w-96 rounded border font-montserrat"
