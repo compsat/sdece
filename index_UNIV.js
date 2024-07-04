@@ -146,6 +146,7 @@ export const JS_CS_ENGINE =
           '/js/index.js',
           '/js/firestore.js',
           '/css/form.css',
+		  '/css/modal.css',
           '/css/login.css',
           '/css/main.css',
         ]    
