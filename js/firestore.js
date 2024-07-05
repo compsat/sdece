@@ -31,7 +31,7 @@ console.log(col_name);
 
 var col_ref = null;
 var activities = null;
-var partners = null;
+export var partners = null;
 
 export function sdece_setup(){
 	setCollection(col_name,true, debug).then(() => {
