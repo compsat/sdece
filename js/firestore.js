@@ -53,7 +53,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		'&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
-var searchControl = L.esri.Geocoding.geosearch().addTo(map);
+// var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
@@ -129,10 +129,7 @@ getDocs(col_ref)
 							partners[partner][0]['partner_name']
 					);
 					showModal(partners[partner]);
-
 				});
-
-
 			});
 
 			const containerDiv = document.createElement('div');
@@ -353,18 +350,15 @@ export function showModal(partner) {
 
 			activityOfficeDiv.innerHTML =
 				"<hr> <br> <b class='modal-name' >Ateneo Office Oversight</b>" +
-
 				"<p class='modal-activities-header'>" +
 				activity.ADMU_office +
-				"</p>" +
-				
-				"<p>" +
+				'</p>' +
+				'<p>' +
 				activity.ADMU_contact_name +
-				"</p>" +
-
-				"<p>" +
+				'</p>' +
+				'<p>' +
 				activity.ADMU_email +
-				"</p>";
+				'</p>';
 
 			// View activity details in modal after clicking activity
 			activityButton.addEventListener('click', () => {
@@ -404,7 +398,6 @@ export function showModal(partner) {
 	// Show the partner modal
 	modal.style.display = 'block';
 	modal.classList.add('open'); //transition in
-
 
 	// Close the modal when the user clicks outside of it
 	window.addEventListener('click', (event) => {

@@ -22,8 +22,6 @@ import {
 
 var colRef = getCollection();
 
-map.panTo(new L.LatLng(14.651, 121.052));
-
 // //list down all documents under the collection in console.log
 // const querySnapshot = await getDocs(colRef);
 // console.log(querySnapshot);
@@ -32,26 +30,26 @@ map.panTo(new L.LatLng(14.651, 121.052));
 //   console.log(doc.id, " => ", doc.data());
 // });
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	attribution:
-		'&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
-}).addTo(map);
+// L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+// 	attribution:
+// 		'&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
+// }).addTo(map);
 
-var searchControl = L.esri.Geocoding.geosearch().addTo(map);
-var results = L.layerGroup().addTo(map);
-var popup = L.popup();
+// var searchControl = L.esri.Geocoding.geosearch().addTo(map);
+// var results = L.layerGroup().addTo(map);
+// var popup = L.popup();
 
 // Loads at the start
-addListeners();
+// addListeners();
 
-searchControl.on('results', function (data) {
-	results.clearLayers();
-	for (var i = data.results.length - 1; i >= 0; i--) {
-		var marker = L.marker(data.results[i].latlng);
-		console.log(marker);
-		results.addLayer(marker);
-	}
-});
+// searchControl.on('results', function (data) {
+// 	results.clearLayers();
+// 	for (var i = data.results.length - 1; i >= 0; i--) {
+// 		var marker = L.marker(data.results[i].latlng);
+// 		console.log(marker);
+// 		results.addLayer(marker);
+// 	}
+// });
 
 // This function defines the event for when the user clicks anywhere on the map
 function onMapClick(e) {
@@ -144,3 +142,10 @@ export function showAddModal() {
 		}
 	};
 }
+
+function addMainButtonText() {
+	var mainButtonText = document.getElementById('mainButtonText');
+	mainButtonText.innerHTML = 'Add an activity';
+}
+
+addMainButtonText();
