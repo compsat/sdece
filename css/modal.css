@@ -131,13 +131,13 @@
 	border-radius: 0.5rem /* 8px */;
 }
 
-
+/* Partner modal */
 .modal {
 	display: none;
 	border-radius: 0.5rem;
 	position: absolute;
 	z-index: 2000;
-	top: 190px;
+	top: 100px;
 	left: 400px;
 	width: auto; /* Adjust the width of the modal as needed */
 	min-width: 30%;
@@ -211,8 +211,9 @@
 	font-style: normal;
 	/* height: calc(80% - 140px); */
     line-height: 32px;
-	overflow-y: auto;
     margin: 0;
+	overflow-y: scroll;
+	height: 50vh;
 }
 
 .modal-button {
@@ -263,7 +264,6 @@
 .modal-activities {
 	padding-top: 1rem;
 	padding-bottom: 1rem;
-
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
@@ -278,9 +278,11 @@
 }
 
 .modal-activities-header {
+	padding-top: 1rem;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
+	align-items: center;
 	color: #3d97af;
 	font-family: Montserrat;
 	font-size: 18px;

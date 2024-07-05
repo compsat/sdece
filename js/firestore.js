@@ -232,7 +232,7 @@ export function showModal(partner) {
 	modalContent.innerHTML = '';
 
 	// Create div elements for each piece of information
-	const backarrowDiv = document.createElement('button');
+	const backarrowDiv = document.createElement('div');
 	const closeDiv = document.createElement('div');
 	const nameDiv = document.createElement('div');
 	const addressDiv = document.createElement('div');
@@ -250,8 +250,8 @@ export function showModal(partner) {
 
 	// Set the content of each div
 	backarrowDiv.innerHTML =
-		'<svg viewBox="0 0 1024 1024" class="w-6 h-6" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#a0a0a0" stroke="#a0a0a0" stroke-width="50" transform="matrix(-1, 0, 0, -1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="#a0a0a0"></path></g></svg>';
-	
+		'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor" transform="matrix(-1, 0, 0, -1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
+
 	backarrowDiv.classList.add('close-btn');
 	backarrowDiv.addEventListener('click', () => {
 		modalHeader.innerHTML = '';
@@ -318,7 +318,7 @@ export function showModal(partner) {
 			activityName.textContent = activity.activity_nature + '';
 
 			arrow.innerHTML =
-				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#a0a0a0" class="w-6 h-6"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="#a0a0a0"></path></g></svg>';
+				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
 			arrow.classList.add('arrow');
 
 			activityButton.appendChild(activityName);
