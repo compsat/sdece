@@ -1,4 +1,4 @@
-import { showModal } from './firestore.js';
+import { showModal, partners } from './firestore.js';
 import { addListeners, map,
 } from '/index_UNIV_v2.js';
 import {
@@ -70,7 +70,7 @@ export function loadMapMarkers(partners){
 					'Clicked on the pop-up content of ' +
 					partner
 				);
-				showModal(doc);
+				showModal(partners[partner]);
 				// TODO: call showModal(partner) here! Not super sure what the partner object should be in this case
 			});
 		});
