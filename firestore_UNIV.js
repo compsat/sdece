@@ -199,7 +199,7 @@ export const DB_RULES_AND_DATA = [
 
 const VALIDATION_RULES = { //Rules for Validating Data
 	'buklod-official-TEST': {
-		'contact_number': {type: 'string', required: true, minLength: 11, maxLength: 11, regex: /^[0-9]+$/},
+		'contact_number': {type: 'string', required: true, minLength: 13, maxLength: 13, regex: /^[0-9 ]+$/},
 		'earthquake_risk': {type: 'string', required: true},
 		'fire_risk': {type: 'string', required: true},
 		'flood_risk': {type: 'string', required: true},
