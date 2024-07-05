@@ -226,7 +226,7 @@ const VALIDATION_RULES = { //Rules for Validating Data
 		'partner_address': {type: 'string', required: true, maxLength: 255},
 		'partner_coordinates': {required: true},
 		'partner_contact_name': {type: 'string', required: true, maxLength: 255},
-		'partner_contact_number': {type: 'string', required: true, minLength: 11, maxLength: 11, regex: /^[0-9]+$/},
+		'partner_contact_number': {type: 'string', required: true, minLength: 13, maxLength: 13, regex: /^[0-9 ]+$/},
 		'partner_email': {type: 'string', required: true, maxLength: 127},
 		'activity_name': {type: 'string', required: true},
 		'activity_nature': {type: 'string', required: true, maxLength:255},
@@ -429,6 +429,14 @@ export function validateData(collectionName, data) {
 				errors.push(`Field '${field}' must be of type ${rule.type}.`);
 				continue;
 			}
+
+			// if (rule.type === 'tel') {
+			// 	const numberRegex = /[0-9]{4} [0-9]{3} [0-9]{4}/;
+			// }
+			// if (!numberRegex.test(value)) {
+			// 	errors.push(`Field '${field}' must be a valid phone number in the format 09XX XXX XXXX.`);
+			// 	continue;
+			// }
 		}
 
 

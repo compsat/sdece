@@ -72,9 +72,11 @@
 
 				if (errors.length > 0) {
 					displayErrors(errors);
+					event.preventDefault();
 				} else {
 					addEntry(collatedInput);
 					console.log("Entry added!");
+					//continue;
 				}
 
 				function displayErrors(errors) {
