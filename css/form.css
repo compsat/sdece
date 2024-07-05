@@ -10,6 +10,27 @@
 	--custom-red: #d64747;
 }
 
+* {
+	margin: 0px;
+	padding: 0px;
+	box-sizing: border-box;
+	background: none;
+	text-decoration: none;
+	list-style: none;
+}
+
+button,
+input {
+	border: none;
+	outline: none;
+	width: auto;
+	height: auto;
+}
+
+button {
+	cursor: pointer;
+}
+
 .form-container {
 	display: flex;
 	flex-direction: row;
