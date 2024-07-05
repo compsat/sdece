@@ -90,7 +90,7 @@
 					integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
 					crossorigin=""
 				></script>
-				<link href="./css/main.css" rel="stylesheet" />
+				<link href="main.css" rel="stylesheet" />
 				<!-- <link href="./src/output.css" rel="stylesheet" /> -->
 
 				<!--<script type="module" src="js/firestore.js"></script>-->
@@ -376,9 +376,11 @@
 
 				<!-- Partner Modal: This is the modal that shows up when clicking on an SDECE entry in the side navigation panel OR the pop-up of a map marker pin. -->
 				<div id="partnerModal" class="modal">
+					HELLO THIS IS THE INDEX MODAL
 					<!-- Modal Header -->
 					<div class="modal-header">
 						<!-- <div class="close"></div> -->
+						<!-- NOTE: This is where the Entry modal Header should go -->
 						<p id="modalHeader"></p>
 					</div>
 
@@ -389,7 +391,8 @@
                     <b><span class="addActivity">&plus;</span></b>
                 </div> -->
 
-						<p id="modalContent"></p>
+						<!-- NOTE: This is where all Entry modal content shoul go (ie. Households for Buklod-Tao, Partners for SDECE) -->
+						<div id="modalContent"></div>
 					</div>
 
 					<!-- Buttons -->
@@ -451,7 +454,7 @@
 				<!-- Add Modal: This is the modal that shows up when clicking on the '+' sign that is nested inside the Main Modal. This allows the user to add a new activity to the SDECE collections. -->
 				<div class="modal-screen" id="addModal">
 					<iframe
-						src="./addloc.html"
+						src="./sdece/html/addloc.html"
 						class="form-modal"
 					></iframe>
 				</div>
@@ -459,7 +462,7 @@
 				<!-- Edit Modal: This is the modal that shows up when clicking on the Edit button that is nested within Partner Modal. This allows the user to edit an existing activity within the SDECE Collections. -->
 				<div class="modal-screen" id="editModal">
 					<iframe
-						src="./editloc.html"
+						src=".sdece/html/editloc.html"
 						class="form-modal"
 					></iframe>
 				</div>

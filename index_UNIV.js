@@ -144,12 +144,12 @@ export const JS_CS_ENGINE = [
 	[
 		'sdece-official',
 		[
-			'/js/index.js',
-			'/js/firestore.js',
-			'/css/form.css',
-			'/css/modal.css',
+			'sdece/js/index.js',
+			'sdece/js/firestore.js',
+			'sdece/css/form.css',
+			'sdece/css/modal.css',
 			// '/css/login.css',
-			'/css/main.css',
+			'sdece/css/main.css',
 		],
 	],
 ];

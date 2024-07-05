@@ -1,0 +1,360 @@
+* {
+	margin: 0px;
+	padding: 0px;
+	box-sizing: border-box;
+	background: none;
+	text-decoration: none;
+	list-style: none;
+}
+
+button,
+input {
+	border: none;
+	outline: none;
+	width: auto;
+	height: auto;
+}
+
+button {
+	cursor: pointer;
+}
+.modal-screen {
+	display: none;
+	width: 100vw;
+	height: 100vh;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.1); /* 10% opacity black */
+	z-index: 4500;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+}
+
+.form-modal {
+	height: 69%;
+	width: 45%;
+	z-index: 3500;
+	display: flex;
+	border-radius: 0.375rem; /* Assuming rounded-lg corresponds to 6px rounded corners */
+	overflow: hidden;
+}
+
+/* Main Modal */
+.main-modal {
+	border-radius: 0.5rem;
+	background-color: #f3f4f6; /* Assuming bg-customLightGray corresponds to a specific custom color */
+	height: auto; /* h-auto */
+	width: 480px; /* w-[480px] */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+}
+
+.main-modal-header {
+	display: flex;
+	flex-direction: row;
+	justify-content: end;
+	padding: 1rem;
+}
+
+.main-modal-icon {
+	width: 1.5rem /* 24px */;
+	height: 1.5rem /* 24px */;
+}
+
+.main-modal-pin {
+	color: var(--custom-gray);
+}
+
+.main-modal-content {
+	padding: 1.25rem /* 20px */;
+	font-family: 'Montserrat';
+}
+
+.main-modal-partner-name {
+	border-bottom: 2px solid var(--lightbg);
+
+	font-family: 'Montserrat';
+	font-weight: 500;
+	font-size: 1.5rem;
+	line-height: 2rem;
+	color: var(--custom-dark-gray);
+	padding-bottom: 0.5rem;
+}
+
+.main-modal-location-select {
+	display: flex;
+	flex-direction: row;
+	margin-top: 1.5rem /* 24px */;
+	width: 100%;
+	padding-bottom: 0.75rem;
+	border-style: solid;
+	align-items: center;
+	border: none;
+	border-bottom: 1px solid var(--custom-gray);
+}
+
+.main-modal-list-header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 3.5rem /* 56px */;
+}
+
+.main-modal-list-heading {
+	font-family: 'Montserrat';
+	font-weight: 700;
+	font-size: 1.5rem /* 24px */;
+	line-height: 2rem; /* 32px */
+	color: var(--custom-black);
+}
+.map-container {
+	display: flex;
+	flex: 1 1 0%;
+}
+
+.main-modal-input,
+.main-modal-input::placeholder {
+	font-family: 'Hind';
+	font-size: 1.125rem /* 18px */;
+	line-height: 120%;
+	width: 100%;
+	margin-left: 0.5rem /* 8px */;
+	color: var(--custom-gray);
+}
+
+.main-modal-list-heading {
+	font-family: 'Montserrat';
+	font-weight: 700;
+	font-size: 1.5rem /* 24px */;
+	line-height: 2rem /* 32px */;
+}
+.main-modal-save {
+	margin-top: 3.5rem /* 56px */;
+	width: 100%;
+	padding-top: 1rem /* 16px */;
+	padding-bottom: 1rem /* 16px */;
+	text-align: center;
+	font-family: 'Montserrat';
+	font-size: 1.5rem /* 24px */;
+	line-height: 2rem;
+	background-color: var(--lightbg);
+	color: white;
+	font-weight: 700;
+	border-radius: 0.5rem /* 8px */;
+}
+
+/* Partner modal */
+.modal {
+	display: none;
+	border-radius: 0.5rem;
+	position: absolute;
+	z-index: 2000;
+	top: 100px;
+	left: 400px;
+	width: auto; /* Adjust the width of the modal as needed */
+	min-width: 30%;
+	max-width: 35%;
+	height: auto; /* Adjust the height of the modal as needed */
+	justify-content: center;
+	box-sizing: border-box;
+	border-radius: 0.5rem;
+	overflow: hidden;
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
+	animation: slide-out 500ms forwards;
+}
+
+.open {
+	animation: slide-in 500ms forwards;
+	/* display: block; */
+}
+
+@keyframes fade-in {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes slide-in {
+	0% {
+		transform: translateX(-100%);
+		opacity: 0;
+	}
+	100% {
+		transform: translateX(0%);
+		opacity: 1;
+	}
+}
+
+@keyframes slide-out {
+	100% {
+		transform: translateX(-100%);
+		opacity: 0;
+	}
+	0% {
+		transform: translateX(0%);
+		opacity: 1;
+	}
+}
+
+.modal-header {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	padding: 24px 24px;
+	background-color: #fcfcfc;
+	position: relative;
+	box-shadow: 0px 2px 5px rgb(225, 225, 225);
+	z-index: 1;
+}
+
+.modal-content {
+	position: relative;
+	padding: 32px 32px;
+	width: 100%;
+	background-color: #fcfcfc;
+	font-family: Hind;
+	font-size: 16px;
+	font-style: normal;
+	/* height: calc(80% - 140px); */
+	line-height: 32px;
+	margin: 0;
+	overflow-y: scroll;
+	height: 50vh;
+}
+
+.modal-button {
+	display: flex;
+	flex-direction: row;
+	padding: 24px 24px;
+	width: 100%;
+	height: auto;
+	background-color: #fcfcfc;
+	position: relative;
+	box-shadow: 0px -2px 50px rgb(235, 235, 235);
+	z-index: 1;
+}
+
+.modal-button-icon {
+	margin-left: 0.75rem;
+}
+
+.delete-button {
+	color: #b91c1c;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	font-size: 1rem;
+	font-family: 'Montserrat';
+	align-items: center;
+	font-weight: 600;
+}
+
+.edit-button {
+	font-weight: 600;
+
+	color: rgb(61 151 175);
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	font-size: 1rem;
+	font-family: 'Montserrat';
+	align-items: center;
+}
+#modalContent > div {
+	margin-bottom: 15px;
+}
+
+.modal-activities-list {
+	padding: 0;
+}
+.modal-activities {
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	font-family: 'Hind';
+	font-size: 1.25rem;
+	font-weight: 600;
+	border-style: solid;
+	border-width: 0px;
+	border-bottom: 0.5px solid var(--custom-gray);
+}
+
+.modal-activities-header {
+	padding-top: 1rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	color: #3d97af;
+	font-family: Montserrat;
+	font-size: 18px;
+	font-style: normal;
+	font-weight: bolder;
+	line-height: 110%;
+	letter-spacing: 0.48px;
+	margin-bottom: 2px;
+}
+
+.modal-name {
+	font-family: 'Montserrat';
+	color: #387181;
+	font-size: 1.5rem;
+	font-weight: 700;
+	flex: 1 1 0%;
+	line-height: 110%;
+	letter-spacing: 0.48px;
+	margin-bottom: 2px;
+	padding-right: 1rem;
+}
+
+.modal-address {
+	color: #a0a0a0;
+	font-family: Montserrat;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 120%;
+	letter-spacing: 0.32px;
+	margin-bottom: -16px;
+}
+
+.close-btn {
+	color: #aaaaaa;
+	width: 5%;
+	font-size: 28px;
+	font-weight: bold;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+	color: #3f3f3f;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.arrow {
+	width: 1rem;
+	width: 1rem;
+}
+
+.arrow:hover,
+.arrow:focus {
+	color: #3f3f3f;
+	text-decoration: none;
+	cursor: pointer;
+}
