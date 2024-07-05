@@ -18,9 +18,52 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 }).addTo(map);
 
 var searchControl = L.esri.Geocoding.geosearch().addTo(map);
-
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
+
+
+export function loadMapMarkers(households){
+	Object.keys(households).forEach((household) => {
+		var marker;
+
+		if (households[household][0]["location_coordinates"] != null){
+			let household_lat = households[household][0]["location_coordinates"]._lat;
+			let household_long = households[household][0]["location_coordinates"]._long;
+
+			marker = L.marker([
+				parseFloat(household_lat),
+				parseFloat(household_long),
+			]);
+		}
+		
+		results.addLayer(marker);
+		var popupContent = `
+			<div class="partner-popup font-montserrat text-darkbg !text-center	" id="`;
+		popupContent += household;
+		popupContent += `">`;
+		popupContent += household;
+		popupContent += `</div>`;
+
+		marker.bindPopup(popupContent);
+		results.addLayer(marker);
+		
+
+		marker.on('popupopen', function () {
+			console.log('Clicked on ' + partner + ' pin!');
+
+			var test = document.getElementById(household);
+			test.addEventListener('click', function () {
+				console.log(
+					'Clicked on the pop-up content of ' +
+          household
+				);
+				showModal(household);
+				// TODO: call showModal(household) here! Not super sure what the partner object should be in this case
+			});
+		});
+	});
+}
+
 
 // function to store the html for info display on pin click
 function onPinClick(doc){
