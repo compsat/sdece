@@ -5,7 +5,7 @@ import {
     getCollection,
     getDocMap,
     groupBy,
-	SDECE_RULES,
+    SDECE_RULES,
     SDECE_RULES_TEST,
     addEntry,
     editEntry,

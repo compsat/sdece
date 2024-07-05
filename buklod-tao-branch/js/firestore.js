@@ -15,7 +15,6 @@ import { getCurrentBranchCookie } from '/cookies.js';
 
 import { loadJsCssFiles } from '/index_UNIV_v2.js';
 
-import { showAddModal, loadMapMarkers } from '/index.js';
 
 // DEBUG: ENABLE DEBUG MODE;
 var debug = false;
@@ -35,6 +34,8 @@ var partners = null;
 
 export function buklod_setup() {
     setCollection(col_name, false, debug).then(() => {
+
+    console.log("I was called IYAAAAH");
         loadJsCssFiles(getCurrentBranchCookie());
 
         col_ref = getCollection();
@@ -43,61 +44,61 @@ export function buklod_setup() {
         console.log(households);
 
         loadMapMarkers();
-        
+
     })
 }
 
-getDocs(colRef)
-  .then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-      if (doc.data().name !== "Test 2" || doc.data().name !== "Test2") {
-        partnersArray.push(doc.data());
-      }
-    });
-
-    // populate ul with partners
-    partnersArray.forEach((partner) => {
-
-      // Creating DOM elements
-      const containerDiv = document.createElement("div");
-      const img = document.createElement("svg");
-      const listItem = document.createElement("li");
-      const anchor = document.createElement("a");
-      const nameDiv = document.createElement("div");
-      const addressDiv = document.createElement("div");
-
-      // Set attributes
-      anchor.href = "#";
-
-      anchor.addEventListener("click", () => {
-        showModal(partner);
-      });
-
-      // Adding classes and setting text content
-      nameDiv.classList.add("name");
-      addressDiv.classList.add("address");
-
-      nameDiv.textContent = partner.household_name;
-      addressDiv.textContent = partner.household_address + " " + partner.household_phase;
-      
-      listItem.classList.add("accordion");
-      anchor.classList.add("accordion", "link");
-      containerDiv.classList.add("container-entry");
-
-      // Append elements to the DOM
-      anchor.appendChild(nameDiv);
-      anchor.appendChild(addressDiv);
-
-      listItem.appendChild(anchor);
-      containerDiv.appendChild(img);
-      containerDiv.appendChild(listItem);
-      locationList.appendChild(containerDiv);
-    });
-  })
-  .catch((error) => {
-    console.error("Error getting documents: ", error);
-  });
-
+// getDocs(colRef)
+//   .then((querySnapshot) => {
+//     querySnapshot.forEach((doc) => {
+//       if (doc.data().name !== "Test 2" || doc.data().name !== "Test2") {
+//         partnersArray.push(doc.data());
+//       }
+//     });
+//
+//     // populate ul with partners
+//     partnersArray.forEach((partner) => {
+//
+//       // Creating DOM elements
+//       const containerDiv = document.createElement("div");
+//       const img = document.createElement("svg");
+//       const listItem = document.createElement("li");
+//       const anchor = document.createElement("a");
+//       const nameDiv = document.createElement("div");
+//       const addressDiv = document.createElement("div");
+//
+//       // Set attributes
+//       anchor.href = "#";
+//
+//       anchor.addEventListener("click", () => {
+//         showModal(partner);
+//       });
+//
+//       // Adding classes and setting text content
+//       nameDiv.classList.add("name");
+//       addressDiv.classList.add("address");
+//
+//       nameDiv.textContent = partner.household_name;
+//       addressDiv.textContent = partner.household_address + " " + partner.household_phase;
+//
+//       listItem.classList.add("accordion");
+//       anchor.classList.add("accordion", "link");
+//       containerDiv.classList.add("container-entry");
+//
+//       // Append elements to the DOM
+//       anchor.appendChild(nameDiv);
+//       anchor.appendChild(addressDiv);
+//
+//       listItem.appendChild(anchor);
+//       containerDiv.appendChild(img);
+//       containerDiv.appendChild(listItem);
+//       locationList.appendChild(containerDiv);
+//     });
+//   })
+//   .catch((error) => {
+//     console.error("Error getting documents: ", error);
+//   });
+//
 export function showModal(household) {
   const modal = document.getElementById("partnerModal");
   const modalHeader = document.getElementById("modalHeader");

@@ -250,6 +250,7 @@ export async function setCollection(collection_name, include_doc_id, is_debug_mo
     
     if(currentCollection != null){
         collection_reference = collection(DB, collection_name);
+        console.log(collection_reference.id);
         console.log("collection set to: " + collection_name + " now loading to docs");
 
         let docs = await getDocs(collection_reference);
@@ -269,6 +270,7 @@ export async function setCollection(collection_name, include_doc_id, is_debug_mo
 }
 
 export function getCollection(){
+  console.log("I GOT CALLED BRO");
     if(collection_reference != null){
         return collection_reference;
     }

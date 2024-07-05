@@ -1,7 +1,7 @@
 
 import {  } from "./firestore.js";
 import { getDocIdByPartnerName, getDocByID, setCollection, getCollection, DB, addEntry, BUKLOD_RULES_TEST } from "/firestore_UNIV.js";
-import { addListeners, map } from "/index_UNIV.js";
+import { addListeners, map } from "/index_UNIV_v2.js";
 import {
   getFirestore,
   collection,
@@ -23,6 +23,7 @@ var popup = L.popup();
 
 
 export function loadMapMarkers(households){
+  console.log(households)
 	Object.keys(households).forEach((household) => {
 		var marker;
 
@@ -172,29 +173,29 @@ function onPinClick(doc){
   return leaflet_html;
 }
 
-// Loads art the start
-getDocs(colRef)
-  .then((querySnapshot) => {
-    querySnapshot.forEach((entry) => {
-      var doc = entry.data();
-      var marker = L.marker([0, 0]);
-      //console.log(doc);
-      if(doc.location_coordinates != null){
-
-        marker = L.marker([
-          parseFloat(doc.location_coordinates._lat),
-          parseFloat(doc.location_coordinates._long),
-        ]);
-      }
-      // shows partner info on pin click
-      var popupContent = onPinClick(doc);
-      marker.bindPopup(popupContent);
-      results.addLayer(marker);
-    });
-  })
-  .catch((error) => {
-    console.error("Error getting documents: ", error);
-  });
+// // Loads art the start
+// getDocs(colRef)
+//   .then((querySnapshot) => {
+//     querySnapshot.forEach((entry) => {
+//       var doc = entry.data();
+//       var marker = L.marker([0, 0]);
+//       //console.log(doc);
+//       if(doc.location_coordinates != null){
+//
+//         marker = L.marker([
+//           parseFloat(doc.location_coordinates._lat),
+//           parseFloat(doc.location_coordinates._long),
+//         ]);
+//       }
+//       // shows partner info on pin click
+//       var popupContent = onPinClick(doc);
+//       marker.bindPopup(popupContent);
+//       results.addLayer(marker);
+//     });
+//   })
+//   .catch((error) => {
+//     console.error("Error getting documents: ", error);
+//   });
 
 addListeners();
 
@@ -256,34 +257,34 @@ searchControl.on("results", function (data) {
     results.addLayer(marker);
   }
 });
-
-//script for add household modal
-
-// modal
-var formModal = document.getElementById("formModal");
-
-// open modal
-var openForm = document.getElementById("addHousehold");
-
-// Get the <span> element that closes the modal
-var closeForm = document.getElementsByClassName("closeForm")[0];
-
-// When the user clicks the button, open the modal 
-openForm.onclick = function() {
-  formModal.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal
-closeForm.onclick = function() {
-  formModal.style.display = "none";
-}
-
-// Closing the modal if the user clicks outside of it 
-window.onclick = function(event) {
-  if (event.target == formModal) {
-    formModal.style.display = "none";
-  }
-  if (event.target == partnerModal) {
-    partnerModal.style.display = "none";
-  }
-};
+//
+// //script for add household modal
+//
+// // modal
+// var formModal = document.getElementById("formModal");
+//
+// // open modal
+// var openForm = document.getElementById("addHousehold");
+//
+// // Get the <span> element that closes the modal
+// var closeForm = document.getElementsByClassName("closeForm")[0];
+//
+// // When the user clicks the button, open the modal 
+// openForm.onclick = function() {
+//   formModal.style.display = "block";
+// }
+//
+// // When the user clicks on <span> (x), close the modal
+// closeForm.onclick = function() {
+//   formModal.style.display = "none";
+// }
+//
+// // Closing the modal if the user clicks outside of it 
+// window.onclick = function(event) {
+//   if (event.target == formModal) {
+//     formModal.style.display = "none";
+//   }
+//   if (event.target == partnerModal) {
+//     partnerModal.style.display = "none";
+//   }
+// };

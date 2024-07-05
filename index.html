@@ -61,7 +61,6 @@
 		<link href="./css/main.css" rel="stylesheet" />
 		<!-- <link href="./src/output.css" rel="stylesheet" /> -->
 
-		<script type="module" src="js/firestore.js"></script>
 
 		<!--  Module for the implementation of the Rules Engine for switching maps -->
 		
@@ -87,9 +86,13 @@
 				DB_RULES_AND_DATA_TEST,
 			} from '/firestore_UNIV_v2_mirror.js';
 
-			import {
-				sdece_setup,
-			} from '/js/firestore.js'
+      import {
+        sdece_setup,
+      } from '/js/firestore.js';
+
+      import {
+        buklod_setup,
+      } from '/buklod-tao-branch/js/firestore.js';
 
 			let collections = document.getElementById('collections');
 			
@@ -111,12 +114,14 @@
 				loadJsCssFiles(getCurrentBranchCookie()); //needs setCollection to run
 			}              
 			else{
+        console.log("hi");
 				switch(getCurrentBranchCookie()){
 					case "sdece-official":
 						// load firestore.js for SDECE
 						sdece_setup();
 						break;
 					case "buklod-official":
+            buklod_setup();
 						// load firestore.js for buklod tao
 						break;
 				}
