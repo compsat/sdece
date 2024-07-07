@@ -6,7 +6,9 @@ import {
 	getCollection,
 	DB,
 } from '/firestore_UNIV.js';
-import { getDivContent, addListeners, map } from '/index_UNIV.js';
+import { addListeners, map,
+  getDivContent 
+} from '/index_UNIV.js';
 import {
 	getFirestore,
 	collection,
@@ -57,11 +59,11 @@ getDocs(colRef)
 					parseFloat(doc.partner_coordinates.longitude),
 				]);
 			}
-
+        
 			getDivContent(doc.partner_name).then((div) => {
 				results.addLayer(marker);
 				var popupContent = `
-					<div class="partner-popup w-auto font-semibold text-sm font-montserrat text-darkbg !text-center	" id="`;
+					<div class="partner-popup" id="`;
 				popupContent += doc.partner_name;
 				popupContent += `">`;
 				popupContent += doc.partner_name;
@@ -80,7 +82,7 @@ getDocs(colRef)
 						'Clicked on the pop-up content of ' +
 							doc.partner_name
 					);
-
+					showModal(doc);
 					// TODO: call showModal(partner) here! Not super sure what the partner object should be in this case
 				});
 			});
@@ -160,8 +162,13 @@ function showMainModal() {
 	console.log("'Add an activity' button was clicked!");
 
 	var mainModal = document.getElementById('mainModal');
-	mainModal.classList.remove('hidden');
-	mainModal.classList.add('flex');
+	mainModal.style.display = 'flex';
+
+	window.onclick = function (event) {
+		if (event.target == mainModal) {
+			mainModal.style.display = 'none';
+		}
+	};
 }
 
 // Close Main modal
@@ -170,18 +177,21 @@ elementCloseButton.addEventListener('click', closeModal);
 
 function closeModal() {
 	var mainModal = document.getElementById('mainModal');
-	mainModal.classList.remove('flex');
-	mainModal.classList.add('hidden');
+	mainModal.style.display = 'none';
 }
 
 // Fuction for filtering results upon searching partners
-const newButton = document.getElementById('otherButton');
+const newButton = document.getElementById('addModalButton');
 newButton.addEventListener('click', showAddModal);
 
 export function showAddModal() {
-	console.log('The button is working');
+	console.log("The user clicked the '+' button within the Main Modal");
+	var addModal = document.getElementById('addModal');
+	addModal.style.display = 'flex';
 
-	var m = document.getElementById('addModal');
-	m.classList.remove('hidden');
-	m.classList.add('flex');
+	window.onclick = function (event) {
+		if (event.target == addModal) {
+			addModal.style.display = 'none';
+		}
+	};
 }
