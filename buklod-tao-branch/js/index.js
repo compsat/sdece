@@ -1,7 +1,7 @@
 
 import {  } from "./firestore.js";
 import { getDocIdByPartnerName, getDocByID, setCollection, getCollection, DB, addEntry, BUKLOD_RULES_TEST } from "/firestore_UNIV.js";
-import { getDivContent, addListeners, map } from "/index_UNIV.js";
+import { addListeners, map } from "/index_UNIV.js";
 import {
   getFirestore,
   collection,
@@ -197,6 +197,7 @@ function onMapClick(e) {
       window.onclick = function (event) {
         if (event.target == modal) {
           modal.classList.add('hidden');
+          modal.classList.remove('flex');
         }
       };
     });
@@ -216,13 +217,13 @@ searchControl.on("results", function (data) {
 //script for add household modal
 
 // modal
-var formModal = document.getElementById("form-modal");
+var formModal = document.getElementById("formModal");
 
 // open modal
 var openForm = document.getElementById("addHousehold");
 
 // Get the <span> element that closes the modal
-var closeForm = document.getElementsByClassName("close-form")[0];
+var closeForm = document.getElementsByClassName("closeForm")[0];
 
 // When the user clicks the button, open the modal 
 openForm.onclick = function() {
@@ -233,3 +234,13 @@ openForm.onclick = function() {
 closeForm.onclick = function() {
   formModal.style.display = "none";
 }
+
+// Closing the modal if the user clicks outside of it 
+window.onclick = function(event) {
+  if (event.target == formModal) {
+    formModal.style.display = "none";
+  }
+  if (event.target == partnerModal) {
+    partnerModal.style.display = "none";
+  }
+};
