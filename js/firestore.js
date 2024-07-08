@@ -1,71 +1,55 @@
 // FIRESTORE DATABASE
 
 import {
-	getFirestore,
-	collection,
-	getDocs,
-	addDoc,
-	updateDoc,
-	doc,
-	query,
-	where,
-	getDoc,
-} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-import {
-	getCollection,
-	setCollection,
-	SDECE_RULES,
-	getDocIdByPartnerName,
-} from '/firestore_UNIV.js';
+    setCollection,
+    getCollection,
+    getDocMap,
+    groupBy,
+    SDECE_RULES,
+    SDECE_RULES_TEST,
+    addEntry,
+    editEntry,
+} from '/firestore_UNIV_v2_mirror.js'
 
-import { showAddModal } from './index.js';
-// Your Firestore code here
+import { getCurrentBranchCookie } from '/cookies.js';
 
-// Import the functions you need from the SDKs you need
-//import { initializeApp } from "firebase/app";
-//import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { loadJsCssFiles } from '/index_UNIV_v2.js';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+import { showAddModal, loadMapMarkers } from './index.js'; // map stuff
+
+// DEBUG: set to true if you want to connect to the test dataset
+var debug = false;
+var col_name = "";
+
+if(debug){
+	col_name = 'sdece-official-TEST';
+} else {
+	col_name = 'sdece-official';
+}
+
+console.log(col_name);
 
 var col_ref = null;
+var activities = null;
+export var partners = null;
 
-col_ref = getCollection();
+export function sdece_setup(){
+	setCollection(col_name,true, debug).then(() => {
+		loadJsCssFiles(getCurrentBranchCookie()); // this should happen only when setcollection is done
+		
+		col_ref = getCollection();
 
+		console.log(col_ref);
+		
+		activities = getDocMap();
+		console.log(activities);
+		partners = groupBy("partner_name"); // queried
+		console.log(partners);
 
-var partners = {}; // queried
-var activities = [];
-
-// get docs from firestore and place them in partner and activities
-
-getDocs(col_ref)
-	.then((querySnapshot) => {
-		//populate activities
-		querySnapshot.forEach((doc) => {
-			if (
-				doc.data().name !== 'Test 2' ||
-				doc.data().name !== 'Test2'
-			) {
-				activities.push(doc.data());
-			}
-		});
-		//populate with partners
-		activities.forEach((activity) => {
-			let partner = activity[SDECE_RULES[1]];
-
-			//console.log(partner);
-
-			if (partners[partner] == null) {
-				partners[partner] = [];
-				partners[partner].push(activity);
-			} else {
-				partners[partner].push(activity);
-			}
-		});
-
-		//populate ul with partners
+		//populate map markers
+		loadMapMarkers(partners);
+		
+		// populate	
 		Object.keys(partners).forEach((partner) => {
 			const containerDiv = document.createElement('div');
 			const img = document.createElement('svg');
@@ -74,18 +58,18 @@ getDocs(col_ref)
 			const nameDiv = document.createElement('div');
 			const addressDiv = document.createElement('div');
 			const activityDiv = document.createElement('div');
-
+		
 			// Set attributes
 			anchor.href = '#';
-
+		
 			anchor.addEventListener('click', function () {
 				showModal(partners[partner]);
 			});
-
+		
 			// Adding classes and setting text content
-
+		
 			containerDiv.classList.add('partnerDiv');
-
+		
 			//   var activities = getDocIdByPartnerName(partner.partner_name);
 			if (activities.length > 0) {
 				// check if list of activities is present, otherwise is skipped to avoid errors
@@ -96,78 +80,40 @@ getDocs(col_ref)
 			} else {
 				console.log('No activities found');
 			}
-
-			nameDiv.classList.add(
-				'name'
-				// 'font-montserrat',
-				// 'font-bold',
-				// 'text-lg',
-				// 'text-darkbg',
-				// 'leading-[110%]'
-			);
-			addressDiv.classList.add(
-				'address'
-				// 'text-sm',
-				// 'text-customGray',
-				// 'font-hind',
-				// 'font-regular',
-				// 'leading-[120%]',
-				// 'mt-2'
-			);
-			activityDiv.classList.add(
-				'activity'
-				// 'text-sm',
-				// 'text-customBlack',
-				// 'font-hind',
-				// 'font-regular',
-				// 'leading-[110%]',
-				// 'mt-2'
-			);
-
+		
+			nameDiv.classList.add(	'name'	);
+			addressDiv.classList.add(	'address'	);
+			activityDiv.classList.add(	'activity'	);
+		
 			nameDiv.textContent = partner;
 			addressDiv.textContent = partners[partner][0]['partner_address'];
-
-			let activities_string = '';
-
-			for (let activity of partners[partner]) {
-				activities_string += activity['activity_nature'] + '<br>';
+		
+			let qq = '';
+		
+			for (let activityy of partners[partner]) {
+				qq += activityy['activity_nature'] + '\n';
 			}
-
-			activityDiv.innerHTML = activities_string;
-
-			//   if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
-			//   {
-			//     partner.activities.forEach( (activity) => {
-			//       activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
-			//     });
-			//   }
-			//   else {
-			//     console.log("No activities found");
-			//   }
-
-			listItem.classList.add(
-				'accordion'
-				// 'py-6',
-				// 'px-8',
-				// 'border-customGray',
-				// 'w-full'
-			);
+			activityDiv.textContent = qq;
+		
+			listItem.classList.add(	'accordion'	);
 			// anchor.classList.add('accordion', 'link');
-
+		
 			// Append elements to the DOM
 			anchor.appendChild(nameDiv);
 			anchor.appendChild(addressDiv);
 			anchor.appendChild(activityDiv);
-
+		
 			listItem.appendChild(anchor);
 			containerDiv.appendChild(img);
 			containerDiv.appendChild(listItem);
 			locationList.appendChild(containerDiv);
 		});
-	})
-	.catch((error) => {
-		console.error('Error getting documents: ', error);
+
+		
 	});
+}
+
+var currently_viewed_activity = null;
 
 // Display partner modal by clicking partner entry (WIP: and on pin pop up click)
 export function showModal(partner) {
@@ -235,9 +181,8 @@ export function showModal(partner) {
 	closeDiv.addEventListener('click', () => {
 		console.log('modal closed');
 		modal.style.display = 'none';
+		currently_viewed_activity = null;
 	});
-
-	console.log(partner[0]);
 
 	// limit partner_name to 30 characters
 	// if (partner[0].partner_name.length > 30) {
@@ -270,11 +215,9 @@ export function showModal(partner) {
 
 	// Add each activity to the modal content
 
-	console.log(partner.length);
 	if (partner.length > 0) {
 		// check if list of activities is present, otherwise is skipped to avoid errors
 		partner.forEach((activity) => {
-			console.log(activity);
 			// View activity details button
 			const activityButton = document.createElement('button');
 			activityButton.classList.add('modal-activities');
@@ -336,6 +279,8 @@ export function showModal(partner) {
 
 			// View activity details in modal after clicking activity
 			activityButton.addEventListener('click', () => {
+				console.log("currently viewing activity with id: ", activity.identifier);
+				currently_viewed_activity = activity.identifier;
 				modalHeader.innerHTML = '';
 				modalContent.innerHTML = '';
 
@@ -384,6 +329,7 @@ export function showModal(partner) {
 	window.addEventListener('click', (event) => {
 		if (event.target == modal) {
 			modal.style.display = 'none';
+			currently_viewed_activity = null;
 		}
 	});
 
@@ -391,23 +337,23 @@ export function showModal(partner) {
 
 	for (var i = 0; i < editButtons.length; i++) {
 		editButtons[i].addEventListener('click', function () {
-			console.log('Clicked edit activity');
+			if(currently_viewed_activity != null){
+				console.log("currently editing activity with id: ", currently_viewed_activity);
+				//Close activity details modal
 
-			//Close activity details modal
+				// Select the modal and partnerName elements
+				var modal = document.getElementById('editModal');
 
-			// Select the modal and partnerName elements
-			var modal = document.getElementById('editModal');
+				var partnerModal = document.getElementById('partnerModal');
+				
 
-			var partnerModal = document.getElementById('partnerModal');
-			// TODO: Integrate this functionality into the modal instead
-			// var partnerName = this.getAttribute("data-loc");
-			//       window.open(
-			//         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
-			//         "_blank"
-			//       );
+				// Display the modal
+				modal.style.display = 'flex';
+			} else {
+				console.log("you're not looking at an activity");
+			}
 
-			// Display the modal
-			modal.style.display = 'flex';
+			
 			// partnerModal.classList.add('hidden'); // Not sure if this should be hidden nalang, or should be kept open with the editModal on top nalang
 
 			// Close the modal when the user clicks anywhere outside of it

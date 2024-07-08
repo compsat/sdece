@@ -2,14 +2,19 @@ import {
 	DB_RULES_AND_DATA,
 	getDocByID,
 	getDocIdByPartnerName,
-	getCollection,
+	//getCollection,
 } from '/firestore_UNIV.js';
 
-// Global Map Variable (the map shown)
+import {
+	getCollection,
+	getDocMap,
+	groupBy,
+} from '/firestore_UNIV_v2_mirror.js';
+
+/// Will need to change how we do this if we ever restructure again
 export var map = L.map('map').setView([14.5995, 120.9842], 10);
 
-// Takes in a name to determine all field values which should be displayed
-// Current Issue: it doesn't display all the added things, could be due to the async nature of these functions
+// Takes in a name to determine all field values which should be displayed Current Issue: it doesn't display all the added things, could be due to the async nature of these functions
 export function getDivContent(name) {
 	var div_content = ``; // This isn't affected, this is the one getting printed
 	return getDocIdByPartnerName(name).then((docId) => {

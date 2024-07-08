@@ -1,14 +1,6 @@
-import { showModal } from './firestore.js';
-import {
-	getDocIdByPartnerName,
-	getDocByID,
-	setCollection,
-	getCollection,
-	DB,
-} from '/firestore_UNIV.js';
+import { showModal, partners } from './firestore.js';
 import { addListeners, map,
-  getDivContent 
-} from '/index_UNIV.js';
+} from '/index_UNIV_v2.js';
 import {
 	getFirestore,
 	collection,
@@ -21,8 +13,6 @@ import {
 	getDoc,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 //import { getDocIdByPartnerName, getDocByID } from "firestore_UNIV.js";
-
-var colRef = getCollection();
 
 map.panTo(new L.LatLng(14.651, 121.052));
 
@@ -43,56 +33,52 @@ var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
-// Loads at the start
 
-getDocs(colRef)
-	.then((querySnapshot) => {
-		querySnapshot.forEach((entry) => {
-			var doc = entry.data();
+export function loadMapMarkers(partners){
+	Object.keys(partners).forEach((partner) => {
+		var marker;
 
-			var marker;
+		if (partners[partner][0]["partner_coordinates"] != null){
+			let partner_lat = partners[partner][0]["partner_coordinates"]._lat;
+			let partner_long = partners[partner][0]["partner_coordinates"]._long;
 
-			// Some coordinated are null, protective check
-			if (doc.partner_coordinates != null) {
-				marker = L.marker([
-					parseFloat(doc.partner_coordinates.latitude),
-					parseFloat(doc.partner_coordinates.longitude),
-				]);
-			}
-        
-			getDivContent(doc.partner_name).then((div) => {
-				results.addLayer(marker);
-				var popupContent = `
-					<div class="partner-popup" id="`;
-				popupContent += doc.partner_name;
-				popupContent += `">`;
-				popupContent += doc.partner_name;
-				popupContent += `</div>`;
+			marker = L.marker([
+				parseFloat(partner_lat),
+				parseFloat(partner_long),
+			]);
 
-				marker.bindPopup(popupContent);
-				results.addLayer(marker);
-			});
+		}
+		
+		results.addLayer(marker);
+		var popupContent = `
+			<div class="partner-popup font-montserrat text-darkbg !text-center	" id="`;
+		popupContent += partner;
+		popupContent += `">`;
+		popupContent += partner;
+		popupContent += `</div>`;
 
-			marker.on('popupopen', function () {
-				console.log('Clicked on ' + doc.partner_name + ' pin!');
+		marker.bindPopup(popupContent);
+		results.addLayer(marker);
+		
 
-				var test = document.getElementById(doc.partner_name);
-				test.addEventListener('click', function () {
-					console.log(
-						'Clicked on the pop-up content of ' +
-							doc.partner_name
-					);
-					showModal(doc);
-					// TODO: call showModal(partner) here! Not super sure what the partner object should be in this case
-				});
+		marker.on('popupopen', function () {
+			console.log('Clicked on ' + partner + ' pin!');
+
+			var test = document.getElementById(partner);
+			test.addEventListener('click', function () {
+				console.log(
+					'Clicked on the pop-up content of ' +
+					partner
+				);
+				showModal(partners[partner]);
+				// TODO: call showModal(partner) here! Not super sure what the partner object should be in this case
 			});
 		});
-	})
-	.catch((error) => {
-		console.error('Error getting documents: ', error);
 	});
+}
 
-addListeners();
+
+addListeners("partner_name", "partner_coordinates"); // yes it's hardcoded. blame the business rules
 
 searchControl.on('results', function (data) {
 	results.clearLayers();

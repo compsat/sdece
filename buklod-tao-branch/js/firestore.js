@@ -1,132 +1,105 @@
 // FIRESTORE DATABASE
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
 import {
-  getFirestore,
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  doc,
-  query,
-  where,
-  getDoc,
-} from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
-import { getCollection, setCollection } from "/firestore_UNIV.js";
-// Your Firestore code here
+  setCollection,
+  getCollection,
+  getDocMap,
+  groupBy,
+  BUKLOD_RULES, 
+  BUKLOD_RULES_TEST,
+  addEntry,
+  editEntry,
+} from '/firestore_UNIV_V2_mirror.js';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyA8QWgic_hjbDL-EYIkvSRRII_yfTRdtOQ",
-  authDomain: "discs-osci-prj.firebaseapp.com",
-  projectId: "discs-osci-prj",
-  storageBucket: "discs-osci-prj.appspot.com",
-  messagingSenderId: "601571823960",
-  appId: "1:601571823960:web:1f1278ecb86aa654e6152d",
-  measurementId: "G-9N9ELDEMX9",
-};
-initializeApp(firebaseConfig);
-const db = getFirestore();
-setCollection("buklod-official");
-const colRef = getCollection();
-let partnersArray = [];
+import { getCurrentBranchCookie } from '/cookies.js';
 
-export function getDocIdByPartnerName(partnerName) {
-  const endName = partnerName.replace(/\s/g, "\uf8ff");
-  return getDocs(
-    query(
-      colRef,
-      where("household_name", ">=", partnerName),
-      where("household_name", "<=", partnerName + endName)
-    )
-  )
-    .then((querySnapshot) => {
-      console.log(querySnapshot);
-      if (!querySnapshot.empty) {
-        // Assuming there is only one document with the given partner name
-        const doc = querySnapshot.docs[0];
-        return doc.id;
-      } else {
-        console.log("EMPTY: No matching document found.");
-        return null;
-      }
+import { loadJsCssFiles } from '/index_UNIV_v2.js';
+
+
+// DEBUG: ENABLE DEBUG MODE;
+var debug = false;
+var col_name = "";
+
+if(debug) {
+  col_name = 'buklod-official-TEST';
+} else {
+  col_name = 'buklod-official';
+}
+
+console.log(col_name);
+
+var col_ref = null;
+var activities = null;
+var partners = null;
+
+export function buklod_setup() {
+    setCollection(col_name, false, debug).then(() => {
+
+    console.log("I was called IYAAAAH");
+        loadJsCssFiles(getCurrentBranchCookie());
+
+        col_ref = getCollection();
+
+        households = getDocMap();
+        console.log(households);
+
+        loadMapMarkers();
+
     })
-    .catch((error) => {
-      console.error("Error getting documents: ", error);
-      return null;
-    });
 }
 
-export function getDocByID(docId) {
-  const docReference = doc(db, "nstp-3", docId);
-  let docObj = {};
-  return getDoc(docReference)
-    .then((doc) => {
-    docObj = doc.data();
-    return docObj;
-  });
-}
-
-// get docs from firestore
-
-export function getPartnersArray()
-{
-  return partnersArray;
-}
-
-getDocs(colRef)
-  .then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-      if (doc.data().name !== "Test 2" || doc.data().name !== "Test2") {
-        partnersArray.push(doc.data());
-      }
-    });
-
-    // populate ul with partners
-    partnersArray.forEach((partner) => {
-
-      // Creating DOM elements
-      const containerDiv = document.createElement("div");
-      const img = document.createElement("svg");
-      const listItem = document.createElement("li");
-      const anchor = document.createElement("a");
-      const nameDiv = document.createElement("div");
-      const addressDiv = document.createElement("div");
-
-      // Set attributes
-      anchor.href = "#";
-
-      anchor.addEventListener("click", () => {
-        showModal(partner);
-      });
-
-      // Adding classes and setting text content
-      nameDiv.classList.add("name");
-      addressDiv.classList.add("address");
-
-      nameDiv.textContent = partner.household_name;
-      addressDiv.textContent = partner.household_address + " " + partner.household_phase;
-      
-      listItem.classList.add("accordion");
-      anchor.classList.add("accordion", "link");
-      containerDiv.classList.add("container-entry");
-
-      // Append elements to the DOM
-      anchor.appendChild(nameDiv);
-      anchor.appendChild(addressDiv);
-
-      listItem.appendChild(anchor);
-      containerDiv.appendChild(img);
-      containerDiv.appendChild(listItem);
-      locationList.appendChild(containerDiv);
-    });
-  })
-  .catch((error) => {
-    console.error("Error getting documents: ", error);
-  });
-
-function showModal(partner) {
+// getDocs(colRef)
+//   .then((querySnapshot) => {
+//     querySnapshot.forEach((doc) => {
+//       if (doc.data().name !== "Test 2" || doc.data().name !== "Test2") {
+//         partnersArray.push(doc.data());
+//       }
+//     });
+//
+//     // populate ul with partners
+//     partnersArray.forEach((partner) => {
+//
+//       // Creating DOM elements
+//       const containerDiv = document.createElement("div");
+//       const img = document.createElement("svg");
+//       const listItem = document.createElement("li");
+//       const anchor = document.createElement("a");
+//       const nameDiv = document.createElement("div");
+//       const addressDiv = document.createElement("div");
+//
+//       // Set attributes
+//       anchor.href = "#";
+//
+//       anchor.addEventListener("click", () => {
+//         showModal(partner);
+//       });
+//
+//       // Adding classes and setting text content
+//       nameDiv.classList.add("name");
+//       addressDiv.classList.add("address");
+//
+//       nameDiv.textContent = partner.household_name;
+//       addressDiv.textContent = partner.household_address + " " + partner.household_phase;
+//
+//       listItem.classList.add("accordion");
+//       anchor.classList.add("accordion", "link");
+//       containerDiv.classList.add("container-entry");
+//
+//       // Append elements to the DOM
+//       anchor.appendChild(nameDiv);
+//       anchor.appendChild(addressDiv);
+//
+//       listItem.appendChild(anchor);
+//       containerDiv.appendChild(img);
+//       containerDiv.appendChild(listItem);
+//       locationList.appendChild(containerDiv);
+//     });
+//   })
+//   .catch((error) => {
+//     console.error("Error getting documents: ", error);
+//   });
+//
+export function showModal(household) {
   const modal = document.getElementById("partnerModal");
   const modalHeader = document.getElementById("modalHeader");
   const modalContactNumber = document.getElementById("entry_contact_number");
@@ -204,23 +177,23 @@ function showModal(partner) {
   const sickResidentsDiv = document.createElement("div");
   const pregnantResidentsDiv = document.createElement("div");
 
-  var earthquake = partner.earthquake_risk;
+  var earthquake = household.earthquake_risk;
   var earthquake_split = earthquake.split(' RISK: ');
   var earthquake1 = earthquake_split[0];
   var earthquake2 = earthquake_split[1];
-  var fire = partner.fire_risk;
+  var fire = household.fire_risk;
   var fire_split = fire.split(' RISK: ');
   var fire1 = fire_split[0];
   var fire2 = fire_split[1];
-  var flood = partner.flood_risk;
+  var flood = household.flood_risk;
   var flood_split = flood.split(' RISK: ');
   var flood1 = flood_split[0];
   var flood2 = flood_split[1];
-  var landslide = partner.landslide_risk;
+  var landslide = household.landslide_risk;
   var landslide_split = landslide.split(' RISK: ');
   var landslide1 = landslide_split[0];
   var landslide2 = landslide_split[1];
-  var storm = partner.storm_risk;
+  var storm = household.storm_risk;
   var storm_split = storm.split(' RISK: ');
   var storm1 = storm_split[0];
   var storm2 = storm_split[1];
@@ -231,8 +204,8 @@ function showModal(partner) {
   //riskDiv.classList.add("modal-activity");
 
   // Set the content of each div
-  nameDiv.textContent = partner.household_name;
-  contactNumberDiv.innerHTML = partner.contact_number;
+  nameDiv.textContent = household.household_name;
+  contactNumberDiv.innerHTML = household.contact_number;
   addressDiv.textContent = partner.household_address;
   residentsDiv.innerHTML = partner.residency_status;
   isHOANOADiv.innerHTML = partner.is_hoa_noa;
@@ -337,16 +310,4 @@ function showModal(partner) {
   closeEditForm.onclick = function() {
     editFormModal.style.display = "none";
   }
-}
-
-export function addEntry(data){
-  data.forEach( (entry) => {
-    addDoc(colRef, entry)
-    .then((docRef) => {
-      console.log("Document written with ID: ", docRef.id);
-    })
-    .catch((error) => {
-      console.error("Error adding document: ", error);
-    });
-  })   
 }
