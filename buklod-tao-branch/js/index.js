@@ -22,45 +22,48 @@ var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
 export function loadMapMarkers(households){
-  console.log(households)
 	Object.keys(households).forEach((household) => {
 		var marker;
-    console.log(household[2]);
-		if (households[household][0]["location_coordinates"] != null){
-			let household_lat = households[household][0]["location_coordinates"]._lat;
-			let household_long = households[household][0]["location_coordinates"]._long;
+    // Grabs the household of key household
+		if (households[household]["location_coordinates"] != null){
+      console.log(households[household]["location_coordinates"]);
+			let household_lat = households[household]["location_coordinates"]._lat;
+			let household_long = households[household]["location_coordinates"]._long;
 
 			marker = L.marker([
 				parseFloat(household_lat),
 				parseFloat(household_long),
 			]);
-		}
-		
-		results.addLayer(marker);
-		var popupContent = `
-			<div class="partner-popup font-montserrat text-darkbg !text-center	" id="`;
-		popupContent += household;
-		popupContent += `">`;
-		popupContent += household;
-		popupContent += `</div>`;
+      
+      results.addLayer(marker);
+      var popupContent = `
+        <div class="partner-popup font-montserrat text-darkbg !text-center	" id="`;
+      // makes the id of the partner-popup household (temporary, may change for security)
+      popupContent += household;
+      popupContent += `">`;
+      popupContent += households[household]["household_name"];
+      popupContent += `</div>`;
 
-		marker.bindPopup(popupContent);
-		results.addLayer(marker);
-		
+      marker.bindPopup(popupContent);
+      results.addLayer(marker);
+      
+      marker.on('popupopen', function () {
+        console.log('Clicked on ' + household.household_name + ' pin!');
 
-		marker.on('popupopen', function () {
-			console.log('Clicked on ' + partner + ' pin!');
+        var test = document.getElementById(household);
+        test.addEventListener('click', function () {
+          // Testing
+          console.log(
+            'Clicked on the pop-up content of ' +
+            household.household_name
+          );
+          showModal(household);
+          // TODO: call showModal(household) here! Not super sure what the partner object should be in this case
+        });
+      });
+      }
+      
 
-			var test = document.getElementById(household);
-			test.addEventListener('click', function () {
-				console.log(
-					'Clicked on the pop-up content of ' +
-          household
-				);
-				showModal(household);
-				// TODO: call showModal(household) here! Not super sure what the partner object should be in this case
-			});
-		});
 	});
 }
 
