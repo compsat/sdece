@@ -1,6 +1,6 @@
 
-import {  } from "./firestore.js";
-import { getDocIdByPartnerName, getDocByID, setCollection, getCollection, DB, addEntry, BUKLOD_RULES_TEST } from "/firestore_UNIV.js";
+// import { getDocIdByPartnerName, getDocByID, setCollection, getCollection, DB, addEntry, BUKLOD_RULES_TEST } from "/firestore_UNIV.js";
+import { getCollection } from "/firestore_UNIV_v2_mirror.js";
 import { addListeners, map } from "/index_UNIV_v2.js";
 import {
   getFirestore,
@@ -27,41 +27,43 @@ export function loadMapMarkers(households){
 	Object.keys(households).forEach((household) => {
 		var marker;
 
-		if (households[household][0]["location_coordinates"] != null){
-			let household_lat = households[household][0]["location_coordinates"]._lat;
-			let household_long = households[household][0]["location_coordinates"]._long;
+		if (households[household]["location_coordinates"] != null){
+			let household_lat = households[household]["location_coordinates"]._lat;
+			let household_long = households[household]["location_coordinates"]._long;
 
 			marker = L.marker([
 				parseFloat(household_lat),
 				parseFloat(household_long),
 			]);
-		}
+
+      results.addLayer(marker);
+      var popupContent = `
+        <div class="partner-popup font-montserrat text-darkbg !text-center	" id="`;
+      popupContent += household;
+      popupContent += `">`;
+      popupContent += household;
+      popupContent += `</div>`;
+
+      marker.bindPopup(popupContent);
+      results.addLayer(marker);
+      
+
+      marker.on('popupopen', function () {
+        console.log('Clicked on ' + partner + ' pin!');
+
+        var test = document.getElementById(household);
+        test.addEventListener('click', function () {
+          console.log(
+            'Clicked on the pop-up content of ' +
+            household
+          );
+          //showModal(household);
+          // TODO: call showModal(household) here! Not super sure what the partner object should be in this case
+        });
+      });
+		} 
 		
-		results.addLayer(marker);
-		var popupContent = `
-			<div class="partner-popup font-montserrat text-darkbg !text-center	" id="`;
-		popupContent += household;
-		popupContent += `">`;
-		popupContent += household;
-		popupContent += `</div>`;
-
-		marker.bindPopup(popupContent);
-		results.addLayer(marker);
 		
-
-		marker.on('popupopen', function () {
-			console.log('Clicked on ' + partner + ' pin!');
-
-			var test = document.getElementById(household);
-			test.addEventListener('click', function () {
-				console.log(
-					'Clicked on the pop-up content of ' +
-          household
-				);
-				showModal(household);
-				// TODO: call showModal(household) here! Not super sure what the partner object should be in this case
-			});
-		});
 	});
 }
 
@@ -197,7 +199,7 @@ function onPinClick(doc){
 //     console.error("Error getting documents: ", error);
 //   });
 
-addListeners();
+addListeners("household_name","location_coordinates");
 
 function onMapClick(e) {
   const lat = e.latlng.lat;

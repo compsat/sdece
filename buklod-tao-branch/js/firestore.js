@@ -15,6 +15,8 @@ import { getCurrentBranchCookie } from '/cookies.js';
 
 import { loadJsCssFiles } from '/index_UNIV_v2.js';
 
+import { loadMapMarkers } from '/buklod-tao-branch/js/index.js';
+
 
 // DEBUG: ENABLE DEBUG MODE;
 var debug = false;
@@ -29,23 +31,62 @@ if(debug) {
 console.log(col_name);
 
 var col_ref = null;
-var activities = null;
-var partners = null;
+var households = null;
 
 export function buklod_setup() {
     setCollection(col_name, false, debug).then(() => {
-
-    console.log("I was called IYAAAAH");
-        loadJsCssFiles(getCurrentBranchCookie());
-
+        console.log("I was called buklod hopefully");
+        console.log(getCollection().id);
         col_ref = getCollection();
 
         households = getDocMap();
-        console.log(households);
+        console.log("households", households);
+        
 
-        loadMapMarkers();
 
-    })
+        loadMapMarkers(households);
+        //loadJsCssFiles(getCurrentBranchCookie());
+
+      //populate ul with partners
+    Object.keys(households).forEach((partner) => {
+
+      // Creating DOM elements
+      const containerDiv = document.createElement("div");
+      const img = document.createElement("svg");
+      const listItem = document.createElement("li");
+      const anchor = document.createElement("a");
+      const nameDiv = document.createElement("div");
+      const addressDiv = document.createElement("div");
+
+      // Set attributes
+      anchor.href = "#";
+
+      anchor.addEventListener("click", () => {
+        //showModal(households[partner]);
+      });
+
+      // Adding classes and setting text content
+      nameDiv.classList.add("name");
+      addressDiv.classList.add("address");
+
+      nameDiv.textContent = households[partner].household_name;
+      addressDiv.textContent = households[partner].household_address + " " + partner.household_phase;
+
+      listItem.classList.add("accordion");
+      anchor.classList.add("accordion", "link");
+      containerDiv.classList.add("container-entry");
+
+      // Append elements to the DOM
+      anchor.appendChild(nameDiv);
+      anchor.appendChild(addressDiv);
+
+      listItem.appendChild(anchor);
+      containerDiv.appendChild(img);
+      containerDiv.appendChild(listItem);
+      locationList.appendChild(containerDiv);
+    });
+
+  });
 }
 
 // getDocs(colRef)
@@ -56,50 +97,15 @@ export function buklod_setup() {
 //       }
 //     });
 //
-//     // populate ul with partners
-//     partnersArray.forEach((partner) => {
-//
-//       // Creating DOM elements
-//       const containerDiv = document.createElement("div");
-//       const img = document.createElement("svg");
-//       const listItem = document.createElement("li");
-//       const anchor = document.createElement("a");
-//       const nameDiv = document.createElement("div");
-//       const addressDiv = document.createElement("div");
-//
-//       // Set attributes
-//       anchor.href = "#";
-//
-//       anchor.addEventListener("click", () => {
-//         showModal(partner);
-//       });
-//
-//       // Adding classes and setting text content
-//       nameDiv.classList.add("name");
-//       addressDiv.classList.add("address");
-//
-//       nameDiv.textContent = partner.household_name;
-//       addressDiv.textContent = partner.household_address + " " + partner.household_phase;
-//
-//       listItem.classList.add("accordion");
-//       anchor.classList.add("accordion", "link");
-//       containerDiv.classList.add("container-entry");
-//
-//       // Append elements to the DOM
-//       anchor.appendChild(nameDiv);
-//       anchor.appendChild(addressDiv);
-//
-//       listItem.appendChild(anchor);
-//       containerDiv.appendChild(img);
-//       containerDiv.appendChild(listItem);
-//       locationList.appendChild(containerDiv);
-//     });
 //   })
 //   .catch((error) => {
 //     console.error("Error getting documents: ", error);
 //   });
 //
+
+
 export function showModal(household) {
+  console.log("houselog clicked: ", household);
   const modal = document.getElementById("partnerModal");
   const modalHeader = document.getElementById("modalHeader");
   const modalContactNumber = document.getElementById("entry_contact_number");
@@ -206,10 +212,10 @@ export function showModal(household) {
   // Set the content of each div
   nameDiv.textContent = household.household_name;
   contactNumberDiv.innerHTML = household.contact_number;
-  addressDiv.textContent = partner.household_address;
-  residentsDiv.innerHTML = partner.residency_status;
-  isHOANOADiv.innerHTML = partner.is_hoa_noa;
-  evacAreaDiv.innerHTML = partner.nearest_evac;
+  addressDiv.textContent = household.household_address;
+  residentsDiv.innerHTML = household.residency_status;
+  isHOANOADiv.innerHTML = household.is_hoa_noa;
+  evacAreaDiv.innerHTML = household.nearest_evac;
   earthquakeRiskLevelDiv.innerHTML = earthquake1 + " RISK";
   earthquakeRiskDescDiv.innerHTML = earthquake2;
   fireRiskLevelDiv.innerHTML = fire1  + " RISK";
@@ -220,12 +226,12 @@ export function showModal(household) {
   landslideRiskDescDiv.innerHTML = landslide2;
   stormRiskLevelDiv.innerHTML = storm1  + " RISK";
   stormRiskDescDiv.innerHTML = storm2;
-  totalResidentsDiv.innerHTML = partner.number_residents;
-  minorResidentsDiv.innerHTML = partner.number_minors;
-  seniorResidentsDiv.innerHTML = partner.number_seniors;
-  pwdResidentsDiv.innerHTML = partner.number_pwd;
-  sickResidentsDiv.innerHTML = partner.number_sick;
-  pregnantResidentsDiv.innerHTML = partner.number_pregnant;
+  totalResidentsDiv.innerHTML = household.number_residents;
+  minorResidentsDiv.innerHTML = household.number_minors;
+  seniorResidentsDiv.innerHTML = household.number_seniors;
+  pwdResidentsDiv.innerHTML = household.number_pwd;
+  sickResidentsDiv.innerHTML = household.number_sick;
+  pregnantResidentsDiv.innerHTML = household.number_pregnant;
   
   // Append the div elements to the modal content
   modalHeader.appendChild(nameDiv);
@@ -282,18 +288,18 @@ export function showModal(household) {
   openEditForm.onclick = function() {
     editFormModal.style.display = "block";
     modal.style.display = "none";
-    document.getElementById("edit_household_name").value = partner.household_name;
-    document.getElementById("edit_address").value = partner.household_address;
-    document.getElementById("edit_contact_number").value = partner.contact_number;
-    document.getElementById("edit_residency_status").value = partner.residency_status;
-    document.getElementById("edit_HOA/NOA").value = partner.is_hoa_noa;
-    document.getElementById("edit_nearest_evacuation_area").value = partner.nearest_evac;
-    document.getElementById("edit_number_of_residents").value = partner.number_residents;
-    document.getElementById("edit_number_of_minor_residents").value = partner.number_minors;
-    document.getElementById("edit_number_of_senior_residents").value = partner.number_seniors;
-    document.getElementById("edit_number_of_pwd_residents").value = partner.number_pwd;
-    document.getElementById("edit_number_of_sick_residents").value = partner.number_sick;
-    document.getElementById("edit_number_of_pregnant_residents").value = partner.number_pregnant;
+    document.getElementById("edit_household_name").value = household.household_name;
+    document.getElementById("edit_address").value = household.household_address;
+    document.getElementById("edit_contact_number").value = household.contact_number;
+    document.getElementById("edit_residency_status").value = household.residency_status;
+    document.getElementById("edit_HOA/NOA").value = household.is_hoa_noa;
+    document.getElementById("edit_nearest_evacuation_area").value = household.nearest_evac;
+    document.getElementById("edit_number_of_residents").value = household.number_residents;
+    document.getElementById("edit_number_of_minor_residents").value = household.number_minors;
+    document.getElementById("edit_number_of_senior_residents").value = household.number_seniors;
+    document.getElementById("edit_number_of_pwd_residents").value = household.number_pwd;
+    document.getElementById("edit_number_of_sick_residents").value = household.number_sick;
+    document.getElementById("edit_number_of_pregnant_residents").value = household.number_pregnant;
     document.getElementById("default_earthquake").append(earthquake1);
     document.getElementById("edit_earthquake_desc").value = earthquake2;
     document.getElementById("default_fire").append(fire1);

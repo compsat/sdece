@@ -114,14 +114,13 @@
 				loadJsCssFiles(getCurrentBranchCookie()); //needs setCollection to run
 			}              
 			else{
-        console.log("hi");
 				switch(getCurrentBranchCookie()){
 					case "sdece-official":
 						// load firestore.js for SDECE
 						sdece_setup();
 						break;
 					case "buklod-official":
-            buklod_setup();
+            			buklod_setup();
 						// load firestore.js for buklod tao
 						break;
 				}

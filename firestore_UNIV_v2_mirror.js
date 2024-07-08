@@ -38,7 +38,7 @@ const DB = getFirestore();
 
 var collection_reference = null; 
 
-var document_map = {};
+export var document_map = {};
 
 export const DB_RULES_AND_DATA = { // can only be changed in hardcode
 	"sdece-official": {
@@ -241,6 +241,9 @@ export function validateData(collectionName, data) {
 }
 
 export async function setCollection(collection_name, include_doc_id, is_debug_mode = false){
+	//some proper resetting
+	document_map = {};
+	
     let currentCollection = null;
     if (is_debug_mode){
         currentCollection = DB_RULES_AND_DATA_TEST[collection_name];
@@ -262,7 +265,7 @@ export async function setCollection(collection_name, include_doc_id, is_debug_mo
             if (include_doc_id) {   document_map[doc_id]["identifier"] = doc_id;    }
         });
 
-        console.log(document_map);
+        console.log("docs from collection: ", document_map);
         
     } else {
         console.log("Collection does not exist");
@@ -280,7 +283,8 @@ export function getCollection(){
 }
 
 export function getDocMap(){
-    if(document_map != null){
+    console.log("get docced on ", document_map);
+    if(document_map != {}){
         return document_map;
     }
     else {
