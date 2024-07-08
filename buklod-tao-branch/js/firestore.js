@@ -4,7 +4,6 @@ import {
   setCollection,
   getCollection,
   getDocMap,
-  groupBy,
   BUKLOD_RULES, 
   BUKLOD_RULES_TEST,
   addEntry,
@@ -14,6 +13,8 @@ import {
 import { getCurrentBranchCookie } from '/cookies.js';
 
 import { loadJsCssFiles } from '/index_UNIV_v2.js';
+
+import { loadMapMarkers } from './index.js'
 
 
 // DEBUG: ENABLE DEBUG MODE;
@@ -29,23 +30,16 @@ if(debug) {
 console.log(col_name);
 
 var col_ref = null;
-var activities = null;
-var partners = null;
+var households = null;
 
 export function buklod_setup() {
     setCollection(col_name, false, debug).then(() => {
-
-    console.log("I was called IYAAAAH");
-        loadJsCssFiles(getCurrentBranchCookie());
-
         col_ref = getCollection();
 
         households = getDocMap();
-        console.log(households);
-
-        loadMapMarkers();
-
-    })
+        
+        loadMapMarkers(households);
+    });
 }
 
 // getDocs(colRef)

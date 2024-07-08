@@ -35,6 +35,7 @@ var popup = L.popup();
 
 
 export function loadMapMarkers(partners){
+	console.log(partners);
 	Object.keys(partners).forEach((partner) => {
 		var marker;
 
@@ -46,7 +47,6 @@ export function loadMapMarkers(partners){
 				parseFloat(partner_lat),
 				parseFloat(partner_long),
 			]);
-
 		}
 		
 		results.addLayer(marker);

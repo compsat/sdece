@@ -1,6 +1,6 @@
 
 import {  } from "./firestore.js";
-import { getDocIdByPartnerName, getDocByID, setCollection, getCollection, DB, addEntry, BUKLOD_RULES_TEST } from "/firestore_UNIV.js";
+import { getCollection, } from "/firestore_UNIV_v2_mirror.js";
 import { addListeners, map } from "/index_UNIV_v2.js";
 import {
   getFirestore,
@@ -21,12 +21,11 @@ var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
-
 export function loadMapMarkers(households){
   console.log(households)
 	Object.keys(households).forEach((household) => {
 		var marker;
-
+    console.log(household[2]);
 		if (households[household][0]["location_coordinates"] != null){
 			let household_lat = households[household][0]["location_coordinates"]._lat;
 			let household_long = households[household][0]["location_coordinates"]._long;
@@ -64,7 +63,6 @@ export function loadMapMarkers(households){
 		});
 	});
 }
-
 
 // function to store the html for info display on pin click
 function onPinClick(doc){
