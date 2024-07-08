@@ -74,101 +74,7 @@
     </div>
     <!-- Modal Content: content of the entries -->
     <div class="modalContent">
-      <!-- Div for contact no. and address -->
-      <br>
-      <div>
-        <p class="modalText" id="entry_contact_number" style="margin-top: -5px;"></p>
-        <p class="modalText" id="entry_address"></p>
-      </div>
-      <!-- Div for residency status and part of HOA/NOA labels -->
-      <div class="modalLine">
-        <label class="modalLabel" style="width: 220px;">Residency Status</label>
-        <label class="modalLabel" style="width: 220px;">Part of HOA / NOA</label>
-      </div>
-      <!-- Div for residency status and part of HOA/NOA content -->
-      <div class="modalLine">
-        <p class="modalText" id="entry_residency_status" style="width: 220px;"></p>
-        <p class="modalText" id="entry_HOA/NOA" style="width: 220px;"></label>
-      </div>
-      <!-- Div for evacuation area -->
-      <div>
-        <label class="modalLabel">Nearest Evacuation Area</label>
-        <p class="modalText" id="entry_nearest_evacuation_area"></p>
-      </div>
-      <!-- Risk Levels -->
-      <button type="button" class="collapsible">Risk Levels</button>
-      <div class="colContent" style="display: block;">
-        <div class="modalLine">
-          <label class="modalLabel">Earthquake</label>
-          <label class="modalLabel" id="entry_earthquake_risk_level">RISK LEVEL</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_earthquake_desc"></p>
-        </div>
-        <div class="modalLine">
-          <label class="modalLabel">Fire</label>
-          <label class="modalLabel" id="entry_fire_risk_level">RISK LEVEL</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_fire_desc"></p>
-        </div>
-        <div class="modalLine">
-          <label class="modalLabel">Flood</label>
-          <label class="modalLabel" id="entry_flood_risk_level">RISK LEVEL</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_flood_desc"></p>
-        </div>
-        <div class="modalLine">
-          <label class="modalLabel">Landslide</label>
-          <label class="modalLabel" id="entry_landslide_risk_level">RISK LEVEL</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_landslide_desc"></p>
-        </div>
-        <div class="modalLine">
-          <label class="modalLabel">Storm</label>
-          <label class="modalLabel" id="entry_storm_risk_level">RISK LEVEL</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_storm_desc"></p>
-        </div>
-      </div>
-      <!-- Residents -->
-      <button type="button" class="collapsible">Residents</button>
-      <div class="colContent" style="display: block;">
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">Total</label>
-          <label class="modalLabel" id="entry_number_of_residents"></label>
-        </div>
-        <hr style="border-top: 1px solid #CBD5E0;">
-        <div class="modalLine">
-          <label class="modalLabel">Minors</label>
-          <label class="modalLabel" id="entry_number_of_minor_residents"></label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">Seniors</label>
-          <label class="modalLabel" id="entry_number_of_senior_residents"></label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">PWD</label>
-          <label class="modalLabel" id="entry_number_of_pwd_residents"></label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">Sick</label>
-          <label class="modalLabel" id="entry_number_of_sick_residents"></label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel" >Pregnant</label>
-          <label class="modalLabel" id="entry_number_of_pregnant_residents"></label>
-        </div>
-        <br>
-      </div>
+      <iframe class="Iframe" src="./modal.html"></iframe>
     </div>
     <!-- Modal footer: contains edit and delete buttons -->
     <div class="modalFooter">
@@ -207,21 +113,13 @@
       </div>
       <br>
       <div class="inputContainer">
-        <label class="form" for="residency_status">Residency Status</label>
-        <select id="residency_status" name="residency_status" class="attribs">
-            <option value="" disabled selected hidden></option>
-            <option value="May-ari">May-ari</option>
-            <option value="Umuupa">Umuupa</option>
-        </select>
+          <label class="form" for="residency_status">Residency Status</label>
+          <input type="text" id="residency_status" name="residency_status" class="attribs"> 
       </div>
       <br>
-      <div class="input_container checkbox-container">
-        <div class="labelColumn">
-            <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
-        </div>
-        <div class="checkboxColumn">
-            <input type="checkbox" id="HOA/NOA" name="HOA/NOA" class="attribs" style="height: 30px;">
-        </div>
+      <div class="inputContainer" style="justify-content: flex-start;">
+          <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
+          <input type="checkbox" id="HOA/NOA" name="HOA/NOA" class="attribs" style="height: 30px;">
       </div>
       <br>
       <div class="inputContainer">
@@ -380,7 +278,7 @@
           <input type="text" id="edit_nearest_evacuation_area" name="nearest_evacuation_area" class="attribs">    
       </div>
       <br>
-      <h2 class="subHeader">RESIDENT INFORMATION</h2>
+      <h2 class="sub-header">RESIDENT INFORMATION</h2>
       <br>
       <div class="inputContainer">
           <label class="form" for="number_of_residents">Number of Residents</label>
@@ -412,7 +310,7 @@
           <input type="text" id="edit_number_of_pregnant_residents" name="number_of_pregnant_residents" class="attribs">
       </div>
       <br>
-      <h2 class="subHeader">RISK LEVELS</h2>
+      <h2 class="sub-header">RISK LEVELS</h2>
       <br>
       <div class="inputContainer">
           <label class="disasterForm" for="earthquake">Earthquake</label>
