@@ -39,6 +39,42 @@ export function buklod_setup() {
         households = getDocMap();
         
         loadMapMarkers(households);
+
+        Object.keys(households).forEach((household) => {
+            const containerDiv = document.createElement("div");
+            const img = document.createElement("svg");
+            const listItem = document.createElement("li");
+            const anchor = document.createElement("a");
+            const nameDiv = document.createElement("div");
+            const addressDiv = document.createElement("div");
+
+             // Set attributes
+            anchor.href = "#";
+      
+            anchor.addEventListener("click", () => {
+              showModal(household);
+            });
+      
+            // Adding classes and setting text content
+            nameDiv.classList.add("name");
+            addressDiv.classList.add("address");
+      
+            nameDiv.textContent = households[household].household_name;
+            addressDiv.textContent = households[household].household_address + " " + households[household].household_phase;
+      
+            listItem.classList.add("accordion");
+            anchor.classList.add("accordion", "link");
+            containerDiv.classList.add("container-entry");
+      
+            // Append elements to the DOM
+            anchor.appendChild(nameDiv);
+            anchor.appendChild(addressDiv);
+      
+            listItem.appendChild(anchor);
+            containerDiv.appendChild(img);
+            containerDiv.appendChild(listItem);
+            locationList.appendChild(containerDiv);
+        })
     });
 }
 
