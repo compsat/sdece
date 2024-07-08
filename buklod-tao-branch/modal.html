@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NSTP Hazard Mapping</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
+  
+    <!--Load Leaflet from CDN-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+      integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+      crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+      integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+      crossorigin=""></script>
+  
+    <!--Load Esri Leaflet from CDN-->
+    <script src="https://unpkg.com/esri-leaflet@2.4.1/dist/esri-leaflet.js"
+      integrity="sha512-xY2smLIHKirD03vHKDJ2u4pqeHA7OQZZ27EjtqmuhDguxiUvdsOuXMwkg16PQrm9cgTmXtoxA6kwr8KBy3cdcw=="
+      crossorigin=""></script>
+  
+    <!--Load Esri Leaflet Geocoder from CDN-->
+    <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.css"
+      integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+      crossorigin="">
+    <script src="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.js"
+      integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
+      crossorigin=""></script>
+  
+    <!--Load CSS sheets and Firestore Database-->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/form.css">
+    <script type="module" src="js/firestore.js"></script>
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<!-- Div for contact no. and address -->
+<br>
+<div>
+  <p class="modalText" id="entry_contact_number" style="margin-top: -5px;"></p>
+  <p class="modalText" id="entry_address"></p>
+</div>
+<!-- Div for residency status and part of HOA/NOA labels -->
+<div class="modalLine">
+  <label class="modalLabel" style="width: 220px;">Residency Status</label>
+  <label class="modalLabel" style="width: 220px;">Part of HOA / NOA</label>
+</div>
+<!-- Div for residency status and part of HOA/NOA content -->
+<div class="modalLine">
+  <p class="modalText" id="entry_residency_status" style="width: 220px;"></p>
+  <p class="modalText" id="entry_HOA/NOA" style="width: 220px;"></label>
+</div>
+<!-- Div for evacuation area -->
+<div>
+  <label class="modalLabel">Nearest Evacuation Area</label>
+  <p class="modalText" id="entry_nearest_evacuation_area"></p>
+</div>
+<!-- Risk Levels -->
+<button type="button" class="collapsible">Risk Levels</button>
+<div class="colContent" style="display: block;">
+  <div class="modalLine">
+    <label class="modalLabel">Earthquake</label>
+    <label class="modalLabel" id="entry_earthquake_risk_level">RISK LEVEL</label>
+  </div>
+  <div>
+    <p class="modalText" id="entry_earthquake_desc"></p>
+  </div>
+  <div class="modalLine">
+    <label class="modalLabel">Fire</label>
+    <label class="modalLabel" id="entry_fire_risk_level">RISK LEVEL</label>
+  </div>
+  <div>
+    <p class="modalText" id="entry_fire_desc"></p>
+  </div>
+  <div class="modalLine">
+    <label class="modalLabel">Flood</label>
+    <label class="modalLabel" id="entry_flood_risk_level">RISK LEVEL</label>
+  </div>
+  <div>
+    <p class="modalText" id="entry_flood_desc"></p>
+  </div>
+  <div class="modalLine">
+    <label class="modalLabel">Landslide</label>
+    <label class="modalLabel" id="entry_landslide_risk_level">RISK LEVEL</label>
+  </div>
+  <div>
+    <p class="modalText" id="entry_landslide_desc"></p>
+  </div>
+  <div class="modalLine">
+    <label class="modalLabel">Storm</label>
+    <label class="modalLabel" id="entry_storm_risk_level">RISK LEVEL</label>
+  </div>
+  <div>
+    <p class="modalText" id="entry_storm_desc"></p>
+  </div>
+</div>
+<!-- Residents -->
+<button type="button" class="collapsible">Residents</button>
+<div class="colContent" style="display: block;">
+  <br>
+  <div class="modalLine">
+    <label class="modalLabel">Total</label>
+    <label class="modalLabel" id="entry_number_of_residents"></label>
+  </div>
+  <hr style="border-top: 1px solid #CBD5E0;">
+  <div class="modalLine">
+    <label class="modalLabel">Minors</label>
+    <label class="modalLabel" id="entry_number_of_minor_residents"></label>
+  </div>
+  <br>
+  <div class="modalLine">
+    <label class="modalLabel">Seniors</label>
+    <label class="modalLabel" id="entry_number_of_senior_residents"></label>
+  </div>
+  <br>
+  <div class="modalLine">
+    <label class="modalLabel">PWD</label>
+    <label class="modalLabel" id="entry_number_of_pwd_residents"></label>
+  </div>
+  <br>
+  <div class="modalLine">
+    <label class="modalLabel">Sick</label>
+    <label class="modalLabel" id="entry_number_of_sick_residents"></label>
+  </div>
+  <br>
+  <div class="modalLine">
+    <label class="modalLabel" >Pregnant</label>
+    <label class="modalLabel" id="entry_number_of_pregnant_residents"></label>
+  </div>
+  <br>
+</div>
+</div>
+<!-- Modal footer: contains edit and delete buttons -->
+</body>
+</html>

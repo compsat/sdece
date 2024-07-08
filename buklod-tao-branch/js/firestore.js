@@ -129,56 +129,56 @@ getDocs(colRef)
 function showModal(partner) {
   const modal = document.getElementById("partnerModal");
   const modalHeader = document.getElementById("modalHeader");
-  const modalContactNumber = document.getElementById("entry_contact_number");
-  const modalAddress = document.getElementById("entry_address");
-  const modalResidencyStatus = document.getElementById("entry_residency_status");
-  const modalHOA = document.getElementById("entry_HOA/NOA");
-  const modalEvacArea = document.getElementById("entry_nearest_evacuation_area");
-  const modalEarthquakeRL = document.getElementById("entry_earthquake_risk_level");
-  const modalEarthquakeDesc = document.getElementById("entry_earthquake_desc");
-  const modalFireRL = document.getElementById("entry_fire_risk_level");
-  const modalFireDesc = document.getElementById("entry_fire_desc");
-  const modalFloodRL = document.getElementById("entry_flood_risk_level");
-  const modalFloodDesc = document.getElementById("entry_flood_desc");
-  const modalLandslideRL = document.getElementById("entry_landslide_risk_level");
-  const modalLandslideDesc = document.getElementById("entry_landslide_desc");
-  const modalStormRL = document.getElementById("entry_storm_risk_level");
-  const modalStormDesc = document.getElementById("entry_storm_desc");
-  const modalTotal = document.getElementById("entry_number_of_residents");
-  const modalMinor = document.getElementById("entry_number_of_minor_residents");
-  const modalSenior = document.getElementById("entry_number_of_senior_residents");
-  const modalPWD = document.getElementById("entry_number_of_pwd_residents");
-  const modalSick = document.getElementById("entry_number_of_sick_residents");
-  const modalPregnant = document.getElementById("entry_number_of_pregnant_residents");
+  //const modalContactNumber = document.getElementById("entry_contact_number");
+  //const modalAddress = document.getElementById("entry_address");
+  //const modalResidencyStatus = document.getElementById("entry_residency_status");
+  //const modalHOA = document.getElementById("entry_HOA/NOA");
+  //const modalEvacArea = document.getElementById("entry_nearest_evacuation_area");
+  //const modalEarthquakeRL = document.getElementById("entry_earthquake_risk_level");
+  //const modalEarthquakeDesc = document.getElementById("entry_earthquake_desc");
+  //const modalFireRL = document.getElementById("entry_fire_risk_level");
+  //const modalFireDesc = document.getElementById("entry_fire_desc");
+  //const modalFloodRL = document.getElementById("entry_flood_risk_level");
+  //const modalFloodDesc = document.getElementById("entry_flood_desc");
+  //const modalLandslideRL = document.getElementById("entry_landslide_risk_level");
+  //const modalLandslideDesc = document.getElementById("entry_landslide_desc");
+  //const modalStormRL = document.getElementById("entry_storm_risk_level");
+  //const modalStormDesc = document.getElementById("entry_storm_desc");
+  //const modalTotal = document.getElementById("entry_number_of_residents");
+  //const modalMinor = document.getElementById("entry_number_of_minor_residents");
+  //const modalSenior = document.getElementById("entry_number_of_senior_residents");
+  //const modalPWD = document.getElementById("entry_number_of_pwd_residents");
+  //const modalSick = document.getElementById("entry_number_of_sick_residents");
+  //sconst modalPregnant = document.getElementById("entry_number_of_pregnant_residents");
 
   // Clear previous content
   modalHeader.innerHTML = "";
-  modalContactNumber.innerHTML = "";
-  modalAddress.innerHTML = "";
-  modalResidencyStatus.innerHTML = "";
-  modalHOA.innerHTML = "";
-  modalEvacArea.innerHTML = "";
-  modalEarthquakeRL.innerHTML = "";
-  modalEarthquakeDesc.innerHTML = "";
-  modalFireRL.innerHTML = "";
-  modalFireDesc.innerHTML = "";
-  modalFloodRL.innerHTML = "";
-  modalFloodDesc.innerHTML = "";
-  modalLandslideRL.innerHTML = ""; 
-  modalLandslideDesc.innerHTML = "";
-  modalStormRL.innerHTML = "";
-  modalStormDesc.innerHTML = "";
-  modalTotal.innerHTML = "";
-  modalMinor.innerHTML = "";
-  modalSenior.innerHTML = "";
-  modalPWD.innerHTML = "";
-  modalSick.innerHTML = "";
-  modalPregnant.innerHTML = "";
-  document.getElementById("default_earthquake").innerHTML = "";
-  document.getElementById("default_fire").innerHTML = "";
-  document.getElementById("default_flood").innerHTML = "";
-  document.getElementById("default_landslide").innerHTML = "";
-  document.getElementById("default_storm").innerHTML = "";
+  //modalContactNumber.innerHTML = "";
+  //modalAddress.innerHTML = "";
+  //modalResidencyStatus.innerHTML = "";
+  //modalHOA.innerHTML = "";
+  //modalEvacArea.innerHTML = "";
+  //modalEarthquakeRL.innerHTML = "";
+  //modalEarthquakeDesc.innerHTML = "";
+  //modalFireRL.innerHTML = "";
+  //modalFireDesc.innerHTML = "";
+  //modalFloodRL.innerHTML = "";
+  //modalFloodDesc.innerHTML = "";
+  //modalLandslideRL.innerHTML = ""; 
+  //modalLandslideDesc.innerHTML = "";
+  //modalStormRL.innerHTML = "";
+  //modalStormDesc.innerHTML = "";
+  //modalTotal.innerHTML = "";
+  //modalMinor.innerHTML = "";
+  //modalSenior.innerHTML = "";
+  //modalPWD.innerHTML = "";
+  //modalSick.innerHTML = "";
+  //modalPregnant.innerHTML = "";
+  //document.getElementById("default_earthquake").innerHTML = "";
+  //document.getElementById("default_fire").innerHTML = "";
+  //document.getElementById("default_flood").innerHTML = "";
+  //document.getElementById("default_landslide").innerHTML = "";
+  //document.getElementById("default_storm").innerHTML = "";
 
   // Create div elements for each piece of information
   const nameDiv = document.createElement("div");
@@ -256,27 +256,27 @@ function showModal(partner) {
   
   // Append the div elements to the modal content
   modalHeader.appendChild(nameDiv);
-  modalContactNumber.appendChild(contactNumberDiv);
-  modalAddress.appendChild(addressDiv);
-  modalResidencyStatus.appendChild(residentsDiv);
-  modalHOA.appendChild(isHOANOADiv);
-  modalEvacArea.appendChild(evacAreaDiv);
-  modalEarthquakeRL.appendChild(earthquakeRiskLevelDiv);
-  modalEarthquakeDesc.appendChild(earthquakeRiskDescDiv);
-  modalFireRL.appendChild(fireRiskLevelDiv);
-  modalFireDesc.appendChild(fireRiskDescDiv);
-  modalFloodRL.appendChild(floodRiskLevelDiv);
-  modalFloodDesc.appendChild(floodRiskDescDiv);
-  modalLandslideRL.appendChild(landslideRiskLevelDiv);
-  modalLandslideDesc.appendChild(landslideRiskDescDiv);
-  modalStormRL.appendChild(stormRiskLevelDiv);
-  modalStormDesc.appendChild(stormRiskDescDiv);
-  modalTotal.appendChild(totalResidentsDiv);
-  modalMinor.appendChild(minorResidentsDiv);
-  modalSenior.appendChild(seniorResidentsDiv);
-  modalPWD.appendChild(pwdResidentsDiv);
-  modalSick.appendChild(sickResidentsDiv);
-  modalPregnant.appendChild(pregnantResidentsDiv);
+  //modalContactNumber.appendChild(contactNumberDiv);
+  //modalAddress.appendChild(addressDiv);
+  //modalResidencyStatus.appendChild(residentsDiv);
+  //modalHOA.appendChild(isHOANOADiv);
+  //modalEvacArea.appendChild(evacAreaDiv);
+  //modalEarthquakeRL.appendChild(earthquakeRiskLevelDiv);
+  //modalEarthquakeDesc.appendChild(earthquakeRiskDescDiv);
+  //modalFireRL.appendChild(fireRiskLevelDiv);
+  //modalFireDesc.appendChild(fireRiskDescDiv);
+  //modalFloodRL.appendChild(floodRiskLevelDiv);
+  //modalFloodDesc.appendChild(floodRiskDescDiv);
+  //modalLandslideRL.appendChild(landslideRiskLevelDiv);
+  //modalLandslideDesc.appendChild(landslideRiskDescDiv);
+  //modalStormRL.appendChild(stormRiskLevelDiv);
+  //modalStormDesc.appendChild(stormRiskDescDiv);
+  //modalTotal.appendChild(totalResidentsDiv);
+  //modalMinor.appendChild(minorResidentsDiv);
+  //modalSenior.appendChild(seniorResidentsDiv);
+  //modalPWD.appendChild(pwdResidentsDiv);
+  //modalSick.appendChild(sickResidentsDiv);
+  //modalPregnant.appendChild(pregnantResidentsDiv);
 
   // Show the modal
   modal.style.display = "block";
@@ -293,50 +293,6 @@ function showModal(partner) {
       modal.style.display = "none";
     }
   });
-
-  //script for edit household modal
-
-  // modal
-  var editFormModal = document.getElementById("editForm-modal");
-  
-  // open modal
-  var openEditForm = document.getElementById("editHousehold");
-  
-  // Get the <span> element that closes the modal
-  var closeEditForm = document.getElementsByClassName("closeEditForm")[0];
-  
-  // When the user clicks the button, open the modal 
-  openEditForm.onclick = function() {
-    editFormModal.style.display = "block";
-    modal.style.display = "none";
-    document.getElementById("edit_household_name").value = partner.household_name;
-    document.getElementById("edit_address").value = partner.household_address;
-    document.getElementById("edit_contact_number").value = partner.contact_number;
-    document.getElementById("edit_residency_status").value = partner.residency_status;
-    document.getElementById("edit_HOA/NOA").value = partner.is_hoa_noa;
-    document.getElementById("edit_nearest_evacuation_area").value = partner.nearest_evac;
-    document.getElementById("edit_number_of_residents").value = partner.number_residents;
-    document.getElementById("edit_number_of_minor_residents").value = partner.number_minors;
-    document.getElementById("edit_number_of_senior_residents").value = partner.number_seniors;
-    document.getElementById("edit_number_of_pwd_residents").value = partner.number_pwd;
-    document.getElementById("edit_number_of_sick_residents").value = partner.number_sick;
-    document.getElementById("edit_number_of_pregnant_residents").value = partner.number_pregnant;
-    document.getElementById("default_earthquake").append(earthquake1);
-    document.getElementById("edit_earthquake_desc").value = earthquake2;
-    document.getElementById("default_fire").append(fire1);
-    document.getElementById("edit_fire_desc").value = fire2;
-    document.getElementById("default_flood").append(flood1);
-    document.getElementById("edit_flood_desc").value = flood2;
-    document.getElementById("default_landslide").append(landslide1);
-    document.getElementById("edit_landslide_desc").value = landslide2;
-    document.getElementById("default_storm").append(storm1);
-    document.getElementById("edit_storm_desc").value = storm2;
-  }
-  
-  // When the user clicks on <span> (x), close the modal
-  closeEditForm.onclick = function() {
-    editFormModal.style.display = "none";
-  }
 }
 
 export function addEntry(data){
