@@ -1,12 +1,4 @@
-import {
-	getCollection,
-	getDocMap,
-} from '/firestore_UNIV_v2_mirror.js';
-
 export var map = L.map('map').setView([14.5995, 120.9842], 10);
-
-let document_map = getDocMap();
-console.log("Document map of index_UNIV_v2: ", document_map);
 
 export function panLocation(coordinates, map){ // just a geopoint object
     map.panTo(
@@ -17,14 +9,15 @@ export function panLocation(coordinates, map){ // just a geopoint object
     );
 }
 
-export function searchLocation(search_key, desired_value, location_key, map){ // take the geopoint out of a query
+export function searchLocation(all_doc_data, search_key, desired_value, location_key, map){ // take the geopoint out of a query
     // assume the coordinates can be narrowed down to a single key
     console.log("searching: ", search_key, desired_value, location_key);
+    console.log(all_doc_data);
     // iterates through all documents
-    Object.keys(document_map).every((entry) => {
-        if (desired_value == document_map[entry][search_key]){
-            panLocation(document_map[entry][location_key], map);
-            console.log("panning to: ", document_map[entry][location_key] );
+    Object.keys(all_doc_data).every((entry) => {
+        if (desired_value == all_doc_data[entry][search_key]){
+            panLocation(all_doc_data[entry][location_key], map);
+            console.log("panning to: ", all_doc_data[entry][location_key] );
             return false;
         }
 
@@ -57,11 +50,11 @@ export function readyField(field) {
 }
 
 // Listeners
-export function addListeners(search_key, location_key) {
+export function addListeners(all_doc_data, search_key, location_key) {
 	var locationList = document.getElementById(`locationList`);
 	locationList.addEventListener('click', (event) => {
         let name = event.target.textContent;
-		searchLocation(search_key, name, location_key, map);
+		searchLocation(all_doc_data, search_key, name, location_key, map);
 		console.log('Calling searchLocation()');
 	});
 	console.log('added');

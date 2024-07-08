@@ -15,7 +15,7 @@ import { getCurrentBranchCookie } from '/cookies.js';
 
 import { loadJsCssFiles } from '/index_UNIV_v2.js';
 
-import { showAddModal, loadMapMarkers } from './index.js'; // map stuff
+import { showAddModal, loadMapMarkers, makeThemPan } from './index.js'; // map stuff
 
 // DEBUG: set to true if you want to connect to the test dataset
 var debug = false;
@@ -35,7 +35,7 @@ export var partners = null;
 
 export function sdece_setup(){
 	setCollection(col_name,true, debug).then(() => {
-		loadJsCssFiles(getCurrentBranchCookie()); // this should happen only when setcollection is done
+		//loadJsCssFiles(getCurrentBranchCookie()); // this should happen only when setcollection is done
 		
 		col_ref = getCollection();
 
@@ -48,6 +48,7 @@ export function sdece_setup(){
 
 		//populate map markers
 		loadMapMarkers(partners);
+		makeThemPan(activities);
 		
 		// populate	
 		Object.keys(partners).forEach((partner) => {

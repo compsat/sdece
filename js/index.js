@@ -75,10 +75,15 @@ export function loadMapMarkers(partners){
 			});
 		});
 	});
+
+
+}
+
+export function makeThemPan(all_doc_data){
+	addListeners(all_doc_data, "partner_name", "partner_coordinates"); // yes it's hardcoded. blame the business rules
 }
 
 
-addListeners("partner_name", "partner_coordinates"); // yes it's hardcoded. blame the business rules
 
 searchControl.on('results', function (data) {
 	results.clearLayers();

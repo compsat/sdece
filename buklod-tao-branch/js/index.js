@@ -65,6 +65,9 @@ export function loadMapMarkers(households){
       
 
 	});
+
+  addListeners(households, "household_name","location_coordinates");
+
 }
 
 // function to store the html for info display on pin click
@@ -198,7 +201,6 @@ function onPinClick(doc){
 //     console.error("Error getting documents: ", error);
 //   });
 
-addListeners();
 
 function onMapClick(e) {
   const lat = e.latlng.lat;
