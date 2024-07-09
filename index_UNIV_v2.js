@@ -25,6 +25,7 @@ export function searchLocation(all_doc_data, search_key, desired_value, location
             console.log("panning to: ", all_doc_data[entry][location_key] );
             return false;
         }
+        return true
 
     });
 }
