@@ -32,32 +32,56 @@ import { showAddModal } from './index.js';
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 var col_ref = null;
-
 col_ref = getCollection();
-
-var partners = {}; // queried
+var partners = {};
 var activities = [];
 
 map.panTo(new L.LatLng(14.651, 121.052));
-
-// //list down all documents under the collection in console.log
-// const querySnapshot = await getDocs(colRef);
-// console.log(querySnapshot);
-// querySnapshot.forEach((doc) => {
-//   // doc.data() is never undefined for query doc snapshots
-//   console.log(doc.id, " => ", doc.data());
-// });
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution:
 		'&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
-// var searchControl = L.esri.Geocoding.geosearch().addTo(map);
+var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
-// get docs from firestore and place them in partner and activities
+function onMapClick(e) {
+	const lat = e.latlng.lat;
+	const lng = e.latlng.lng;
+
+	// This is the popup for when the user clicks on a random spot on the map
+	var popupContent = `
+     <div class="partner-geolocation">
+           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+           <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C11.337 11.5 10.7011 11.2366 10.2322 10.7678C9.76339 10.2989 9.5 9.66304 9.5 9C9.5 8.33696 9.76339 7.70107 10.2322 7.23223C10.7011 6.76339 11.337 6.5 12 6.5C12.663 6.5 13.2989 6.76339 13.7678 7.23223C14.2366 7.70107 14.5 8.33696 14.5 9C14.5 9.66304 14.2366 10.2989 13.7678 10.7678C13.2989 11.2366 12.663 11.5 12 11.5Z" fill="#91C9DB"/>
+           </svg>
+           ${lat} + ${lng}
+           <br>
+       </div>
+   <button class="addButton" data-lat="${lat}" data-lng="${lng}">Add Location</button>
+ `;
+
+	popup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
+
+	var addButton = document.querySelector('.addButton');
+	addButton.addEventListener('click', function () {
+		var modal = document.getElementById('addModal');
+
+		// Display the modal
+		modal.style.display = 'flex';
+
+		// Close the Add Activity modal when the user clicks anywhere outside of it
+		window.onclick = function (event) {
+			if (event.target == modal) {
+				modal.style.display = 'none';
+			}
+		};
+	});
+}
+
+map.on('click', onMapClick);
 
 getDocs(col_ref)
 	.then((querySnapshot) => {
@@ -104,7 +128,7 @@ getDocs(col_ref)
 
 			results.addLayer(marker);
 			var popupContent = `
-					<div class="partner-popup" id="`;
+                   <div class="partner-popup" id="`;
 			popupContent += partners[partner][0]['partner_name'];
 			popupContent += `">`;
 			popupContent += partners[partner][0]['partner_name'];
@@ -392,7 +416,7 @@ export function showModal(partner) {
 
 	// NOTE: This is where every partner modal content is added
 	modalHeader.appendChild(nameDiv);
-	modalHeader.appendChild(closeDiv);
+	// modalHeader.appendChild(closeDiv);
 	// TODO: Implement the close button in index.html lang.
 
 	modalContent.appendChild(addressDiv);
