@@ -6,12 +6,9 @@
             
         <script type="module">
             //import { addLocation } from "./js/firestore.js";
-            import { addEntry, BUKLOD_RULES_TEST, setCollection, validateData } from "/firestore_UNIV.js";
+            import { addEntry, BUKLOD_RULES_TEST, setCollection } from "/firestore_UNIV.js";
             setCollection("buklod-official-TEST");
-            document.addEventListener("DOMContentLoaded", function() {
-                document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
-            });
-            
+            document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
 
             function handleFormSubmit_v2(){
                 console.log("clicked");
@@ -20,453 +17,158 @@
                 for(let i = 0; i < BUKLOD_RULES_TEST[2].length; i++){
                     //BUKLOD_RULES_TEST[2] are just the field names of each document
                     console.log(BUKLOD_RULES_TEST[2][i]);
-                    // let q = document.getElementById(BUKLOD_RULES_TEST[2][i]).value;
-                    // collatedInput[BUKLOD_RULES_TEST[2][i]] = q;
-
-                    let fieldName = BUKLOD_RULES_TEST[2][i];
-                    let inputValue = document.getElementById(fieldName).value;
-
-                    if (fieldName == 'number_residents' || fieldName == 'location_coordinates' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick') {
-                        collatedInput[fieldName] = Number(inputValue);
-                    } else {
-                        collatedInput[fieldName] = inputValue;
-                    }
+                    let q = document.getElementById(BUKLOD_RULES_TEST[2][i]).value;
+                    collatedInput[BUKLOD_RULES_TEST[2][i]] = q;
 
                     // this is where data validation will happen
                     // add the if-else statements of edge cases here
                 }
 
                 console.log(collatedInput);
-
-                const errors = validateData("buklod-official-TEST", collatedInput);
-
-                if (errors.length > 0) {
-                    displayErrors(errors);
-                } else {
-                    addEntry(collatedInput);
-                }
-
-                function displayErrors(errors) {
-                let errorDiv = document.getElementById('error_messages');
-
-                if (errorDiv) {
-
-                    errorDiv.innerHTML = '';
-
-                    if (errors.length > 0) {
-                        for (let error of errors) {
-                            let errorParagraph = document.createElement('p');
-                            errorParagraph.textContent = error;
-                            errorDiv.appendChild(errorParagraph);
-                        }
-                    }
-                    } else {
-                        console.error("Error: Couldn't find element with ID 'error_messages'.");
-                    }
-                }
+                // This actually works but it needs some data validation
+                // uncomment at the db's risk
+                addEntry(collatedInput);
             }
         </script>
     </head>
     
     <body>
+        <h2 class="subHeader">HOUSEHOLD INFORMATION</h2>
         <br>
-        <div class="container"> 
-            <!-- Div for margin -->
-            <h1 class="form-header">Add Household</h1>
-            <br>
-            <h2 class="sub-header">HOUSEHOLD INFORMATION</h2>
-            <br>
-            <!-- Form -->
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="household_name"
-                    >Household Name
-                </label>
-                <input 
-                    type="text"
-                    id="household_name"
-                    name="household_name"
-                    class="attribs"
-                    placeholder="Ex. de Loyola, Íñigo López"
-                />
-            </div>
-            <br>
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="household_address"
-                    >Address
-                </label>
-                <input
-                    type="text"
-                    id="household_address"
-                    name="household_address"
-                    class="attribs"
-                    placeholder="Ex. Katipunan, Quezon City"
-                />    
-            </div>
-            <br>
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="household_phase"
-                    >Phase
-                </label>
-                <input
-                    type="text"
-                    id="household_phase"
-                    name="household_phase"
-                    class="attribs"
-                    placeholder="Ex. Phase 2"
-                />    
-            </div>
-            <br>
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="contact_number"
-                    >Contact Number
-                </label>
-                <input
-                    type="text"
-                    id="contact_number"
-                    name="contact_number"
-                    class="attribs"
-                    placeholder="09XX XXX XXXX"
-                />    
-            </div>
-            <br>
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="residency_status"
-                    >Residency Status
-                </label>
-                <input
-                    type="text"
-                    id="residency_status"
-                    name="residency_status"
-                    class="attribs"
-                    placeholder="Umuupa or May-Ari"
-                /> 
-            </div>
-            <br>
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="HOA/NOA"
-                    >Part of HOA/NOA
-                </label>
-                <input
-                    type="text"
-                    id="is_hoa_noa"
-                    name="HOA/NOA"
-                    class="attribs"
-                    value="yes"
-                /> 
-            </div>
-
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="location_link"
-                    >Location link
-                </label>
-                <input 
-                    type="text"
-                    id="location_link"
-                    name="location_link"
-                    class="attribs"
-                    placeholder="Place link here."> 
-            </div>
-            
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="location_coordinates"
-                    >Location Coordinates
-                </label>
-                <input
-                    type="text"
-                    id="location_coordinates"
-                    name="location_coordinates"
-                    class="attribs"
-                    placeholder="Ex. 14.6895421, 121.0818291"
-                /> 
-            </div>
-            <br>
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="household_material"
-                    >Materials Used for House
-                </label>
-                <input
-                    type="text"
-                    id="household_material"
-                    name="household_material"
-                    class="attribs"
-                    placeholder="Ex. Semi-Concrete"
-                /> 
-            </div>
-            <br>
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="nearest_evac"
-                    >Nearest Evactuation Area
-                </label>
-                <input
-                    type="text"
-                    id="nearest_evac"
-                    name="nearest_evac"
-                    class="attribs"
-                    placeholder="Ex. Banaba Elementary School"
-                />    
-            </div>
-
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="status"
-                    >Status
-                </label>
-                <input
-                    type="text"
-                    id="status"
-                    name="status"
-                    class="attribs"
-                    placeholder="Add to Clean or Insufficient"
-                />    
-            </div>
-            <br>
-            <h2 class="sub-header">RESIDENT INFORMATION</h2>
-            <br>
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="number_residents"
-                    >Number of Residents
-                </label>
-                <input
-                    type="number"
-                    id="number_residents"
-                    name="number_residents"
-                    class="attribs"
-                    placeholder="Ex. 6"
-                />    
-            </div>
-            <br>
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="number_minors"
-                    >Number of Minor Residents
-                </label>
-                <input
-                    type="text"
-                    id="number_minors"
-                    name="number_minors"
-                    class="attribs"
-                    placeholder="Ex. 3"
-                />
-            </div>
-            <br>
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="number_seniors"
-                    >Number of Senior Citizen Residents
-                </label>
-                <input
-                    type="text"
-                    id="number_seniors"
-                    name="number_seniors"
-                    class="attribs"
-                    placeholder="Ex. 2"
-                />
-            </div>
-            <br>
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="number_pwd"
-                    >Number of PWD Residents
-                </label>
-                <input
-                    type="text"
-                    id="number_pwd"
-                    name="number_pwd"
-                    class="attribs"
-                    placeholder="Ex. 1"
-                />
-            </div>
-            <br>
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="number_sick"
-                    >Number of Sick Residents
-                </label>
-                <input
-                    type="text"
-                    id="number_sick"
-                    name="number_sick"
-                    class="attribs"
-                    placeholder="Ex. 0"
-                />
-            </div>
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="sickness_present"
-                    >Sickness Present
-                </label>
-                <input
-                    type="text"
-                    id="sickness_present"
-                    name="sickness_present"
-                    class="attribs"
-                    placeholder="Ex. Diabetes"
-                />
-            </div>
-            <br>
-            <div class="input_container">
-                <label
-                    class="form"
-                    for="number_pregnant"
-                    >Number of Pregnant Residents
-                </label>
-                <input
-                    type="text"
-                    id="number_pregnant"
-                    name="number_pregnant"
-                    class="attribs"
-                    placeholder="Ex. 0"
-                />
-            </div>
-            <br>
-            <h2 class="sub-header">RISK LEVELS</h2>
-            <br>
-            <div class="input_container">
-                <label
-                    class="disaster-form"
-                    for="earthquake"
-                    >Earthquake
-                </label>
-                <select name="earthquake_level" id="earthquake" class="attribs">
-                    <option value="" disabled selected hidden></option>
-                    <option value="high">HIGH</option>
-                    <option value="medium">MEDIUM</option>
-                    <option value="low">LOW</option>
-                </select>
-                <input
-                    type="text"
-                    id="earthquake_risk"
-                    name="earthquake_risk"
-                    class="attribs"
-                    placeholder="Description of Earthquake Risk here."
-                />
-            </div>
-            <br>
-            <div class="input_container">
-                <label
-                    class="disaster-form"
-                    for="fire"
-                    >Fire
-                </label>
-                <select name="fire_level" id="fire" class="attribs">
-                    <option value="" disabled selected hidden></option>
-                    <option value="high">HIGH</option>
-                    <option value="medium">MEDIUM</option>
-                    <option value="low">LOW</option>
-                </select>
-                <input
-                    type="text"
-                    id="fire_risk"
-                    name="fire_risk"
-                    class="attribs"
-                    placeholder="Description of Fire Risk here."
-                />
-            </div>
-            <br>  
-            <div class="input_container">
-                <label
-                    class="disaster-form"
-                    for="flood"
-                    >Flood
-                </label>
-                <select name="flood_level" id="flood" class="attribs">
-                    <option value="" disabled selected hidden></option>
-                    <option value="high">HIGH</option>
-                    <option value="medium">MEDIUM</option>
-                    <option value="low">LOW</option>
-                </select>
-                <input
-                    type="email"
-                    id="flood_risk"
-                    name="flood"
-                    class="attribs"
-                    placeholder="Description of Flood Risk here."
-                />
-            </div>
-            <br>
-            <div class="input_container">
-                <label
-                    class="disaster-form"
-                    for="landslide"
-                    >Landslide
-                </label>
-                <select name="landslide_level" id="landslide" class="attribs">
-                    <option value="" disabled selected hidden></option>
-                    <option value="high">HIGH</option>
-                    <option value="medium">MEDIUM</option>
-                    <option value="low">LOW</option>
-                </select>
-                <input
-                    type="email"
-                    id="landslide_risk"
-                    name="landslide"
-                    class="attribs"
-                    placeholder="Description of Landslide Risk here."
-                />
-            </div>
-            <br>
-            <div class="input_container">
-                <label
-                    class="disaster-form"
-                    for="storm">Storm
-                </label>
-                <select name="storm_level" id="storm" class="attribs">
-                    <option value="" disabled selected hidden></option>
-                    <option value="high">HIGH</option>
-                    <option value="medium">MEDIUM</option>
-                    <option value="low">LOW</option>
-                </select>
-                <input
-                    type="email"
-                    id="storm_risk"
-                    name="storm_risk"
-                    class="attribs"
-                    placeholder="Description of Storm Risk here."
-                />
-            </div>
-            <br>
-            <br><br>
-            <!-- Error Messages -->
-            <div id="error_messages"></div>   
-            <br><br>
-            <!-- Buttons -->
-            <div>
-                <!-- Submits contents of the form -->                                               
-                <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save</button>   
-            </div>
-            <br>
-            <div>
-                <!-- Clears all contents of the form -->
-                <button class="clear form">Delete</button>
-            </div>
+        <!-- Form Proper -->
+        <div class="inputContainer">
+            <label class="form" for="household_name">Household Name</label>
+            <input type="text" id="household_name" name="household_name" class="attribs">
+        </div>
+        <br>
+        <div class="inputContainer">
+            <label class="form" for="address">Address</label>
+            <input type="text" id="address" name="address" class="attribs">    
+        </div>
+        <br>
+        <div class="inputContainer">
+            <label class="form" for="contact_number">Contact Number</label>
+            <input type="text" id="contact_number" name="contact_number" class="attribs">    
+        </div>
+        <br>
+        <div class="inputContainer">
+            <label class="form" for="residency_status">Residency Status</label>
+            <input type="text" id="residency_status" name="residency_status" class="attribs"> 
+        </div>
+        <br>
+        <div class="inputContainer" style="justify-content: flex-start;">
+            <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
+            <input type="checkbox" id="HOA/NOA" name="HOA/NOA" class="attribs" style="height: 30px;">
+        </div>
+        <br>
+        <div class="inputContainer">
+            <label class="form" for="materials_used_for_house">Materials Used for House</label>
+            <input type="text" id="materials_used_for_house" name="materials_used_for_house" class="attribs"> 
+        </div>
+        <br>
+        <div class="inputContainer">
+            <label class="form" for="nearest_evacuation_area">Nearest Evacuation Area</label>
+            <input type="text" id="nearest_evacuation_area" name="nearest_evacuation_area" class="attribs">    
+        </div>
+        <br>
+        <h2 class="subHeader">RESIDENT INFORMATION</h2>
+        <br>
+        <div class="inputContainer">
+            <label class="form" for="number_of_residents">Number of Residents</label>
+            <input type="text" id="number_of_residents" name="number_of_residents" class="attribs">    
+        </div>
+        <br>
+        <div class="inputContainer">
+            <label class="form" for="number_of_minor_residents">Number of Minor Residents</label>
+            <input type="text" id="number_of_minor_residents" name="number_of_minor_residents" class="attribs">
+        </div>
+        <br>
+        <div class="inputContainer">
+            <label class="form" for="number_of_senior_residents">Number of Senior Citizen Residents</label>
+            <input type="text" id="number_of_senior_residents" name="number_of_senior_residents" class="attribs">
+        </div>
+        <br>
+        <div class="inputContainer">
+            <label class="form" for="number_of_pwd_residents">Number of PWD Residents</label>
+            <input type="text" id="number_of_pwd_residents" name="number_of_pwd_residents" class="attribs">
+        </div>
+        <br>
+        <div class="inputContainer">
+            <label class="form" for="number_of_sick_residents">Number of Sick Residents</label>
+            <input type="text" id="number_of_sick_residents" name="number_of_sick_residents" class="attribs">
+        </div>
+        <br>
+        <div class="inputContainer">
+            <label class="form" for="number_of_pregnant_residents">Number of Pregnant Residents</label>
+            <input type="text" id="number_of_pregnant_residents" name="number_of_pregnant_residents" class="attribs">
+        </div>
+        <br>
+        <h2 class="subHeader">RISK LEVELS</h2>
+        <br>
+        <div class="inputContainer">
+            <label class="disasterForm" for="earthquake">Earthquake</label>
+            <select name="earthquake_level" id="earthquake" class="attribs">
+                <option value="" disabled selected hidden></option>
+                <option value="high">HIGH</option>
+                <option value="medium">MEDIUM</option>
+                <option value="low">LOW</option>
+            </select>
+            <input type="text" id="earthquake" name="earthquake" class="attribs">
+        </div>
+        <br>
+        <div class="inputContainer">
+            <label class="disasterForm" for="fire">Fire</label>
+            <select name="fire_level" id="fire" class="attribs">
+                <option value="" disabled selected hidden></option>
+                <option value="high">HIGH</option>
+                <option value="medium">MEDIUM</option>
+                <option value="low">LOW</option>
+            </select>
+            <input type="text" id="fire" name="fire" class="attribs">
+        </div>
+        <br>
+        <div class="inputContainer">
+            <label class="disasterForm" for="flood">Flood</label>
+            <select name="flood_level" id="flood" class="attribs">
+                <option value="" disabled selected hidden></option>
+                <option value="high">HIGH</option>
+                <option value="medium">MEDIUM</option>
+                <option value="low">LOW</option>
+            </select>
+            <input type="email" id="flood" name="flood" class="attribs">
+        </div>
+        <br>
+        <div class="inputContainer">
+            <label class="disasterForm" for="landslide">Landslide</label>
+            <select name="landslide_level" id="landslide" class="attribs">
+                <option value="" disabled selected hidden></option>
+                <option value="high">HIGH</option>
+                <option value="medium">MEDIUM</option>
+                <option value="low">LOW</option>
+            </select>
+            <input type="email" id="landslide" name="landslide" class="attribs">
+        </div>
+        <br>
+        <div class="inputContainer">
+            <label class="disasterForm" for="storm">Storm</label>
+            <select name="storm_level" id="storm" class="attribs">
+                <option value="" disabled selected hidden></option>
+                <option value="high">HIGH</option>
+                <option value="medium">MEDIUM</option>
+                <option value="low">LOW</option>
+            </select>
+            <input type="email" id="storm" name="storm" class="attribs">
+        </div>
+        <!-- Save and Delete buttons -->
+        <div class="buttonContainer">
+          <div>
+            <!-- Submits contents of the form -->                                               
+            <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save</button>   
+          </div>
+          <div>
+            <!-- Clears all contents of the form -->
+            <button class="clear form">Delete</button>
+          </div>
         </div>
     </body>  
 </html>

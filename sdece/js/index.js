@@ -91,9 +91,6 @@ function onMapClick(e) {
 
 		// Close the modal when the user clicks anywhere outside of it
 		window.onclick = function (event) {
-			// var thing = getDocumentById("addloc_html");
-			// thing.name = 'addloc.html?lat=${encodeURIComponent(lat)&lang=${encodeURIComponent(lng)}';
-			window.location.href = `addloc.html?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(lng)}`;
 			if (event.target == modal) {
 				modal.classList.add('hidden');
 			}
