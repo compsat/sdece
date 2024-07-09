@@ -32,13 +32,17 @@
 				addEntry,
 				SDECE_RULES_TEST,
 				setCollection,
+				validateData,
+				getCoordinates
 			} from '/firestore_UNIV.js';
+			
 
 			setCollection('sdece-official-TEST');
 
-			document
-				.getElementById('submit_form')
-				.addEventListener('click', handleFormSubmit_v2);
+			document.addEventListener("DOMContentLoaded", function() {
+                document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
+            });
+				// .addEventListener('click', handleFormSubmit_v3);
 
 			function handleFormSubmit_v2() {
 				console.log('clicked');
@@ -47,20 +51,56 @@
 				for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
 					//SDECE_RULES_TEST[2] are just the fi eld names of each document
 					console.log(SDECE_RULES_TEST[2][i]);
-					let q = document.getElementById(
-						SDECE_RULES_TEST[2][i]
-					).value;
-					collatedInput[SDECE_RULES_TEST[2][i]] = q;
 
-					// this is where data validation will happen
-					// add the if-else statements of edge cases here
+					let fieldName = SDECE_RULES_TEST[2][i];
+					let inputValue = document.getElementById(fieldName).value;
+
+					if (fieldName == 'partner_coordinates') {
+                        collatedInput[fieldName] = getCoordinates();
+						
+                    } else {
+                        collatedInput[fieldName] = inputValue;
+                    }
+
 				}
 
 				console.log(collatedInput);
 				// This actually works but it needs some data validation
 				// uncomment at the db's risk
-				addEntry(collatedInput);
+				// addEntry(collatedInput);
+
+				const errors = validateData("sdece-official-TEST", collatedInput);
+
+				if (errors.length > 0) {
+					displayErrors(errors);
+					event.preventDefault();
+				} else {
+					addEntry(collatedInput);
+					console.log("Entry added!");
+					//continue;
+				}
+
+				function displayErrors(errors) {
+					let errorDiv = document.getElementById('error_messages');
+
+					if (errorDiv) {
+						errorDiv.innerHTML = '';
+
+						if (errors.length > 0) {
+							for (let error of errors) {
+								let errorParagraph = document.createElement('p');
+								errorParagraph.textContent = error;
+								errorDiv.appendChild(errorParagraph);
+							}
+						} else {
+							console.error("Error: Couldn't find element with ID 'error_messages'.");
+						}
+					}
+					
+				}
+
 			}
+			
 		</script>
 	</head>
 	<body>
@@ -99,7 +139,7 @@
 							id="activity_name"
 							name="activity_name"
 							class="form-input"
-							placeholder=""
+							placeholder="Ex. CSIP Session Week 3"
 						/>
 					</div>
 
@@ -112,23 +152,19 @@
 							id="activity_nature"
 							name="activity_nature"
 							class="form-input"
-							placeholder=""
+							placeholder="Ex. Tutorial Classes"
 						/>
 					</div>
 
 					<div class="form-field">
 						<label class="form-label" for="activity_date"
-							>Dates of Partnership</label
-						>
-
-						<div
-							style="
+							>Dates of Partnership
+						</label>
+						<div style="
 								display: flex;
 								flex-direction: column;
 								align-items: flex-start;
-							"
-							id="date-container"
-						>
+							" id="date-container">
 							<input
 								type="date"
 								id="activity_date"
@@ -147,8 +183,8 @@
 									text-decoration-line: underline;
 									margin-top: 1rem;
 								"
-								>Add another date</a
-							>
+								>Add another date
+						</a>	
 						</div>
 					</div>
 				</div>
@@ -166,7 +202,7 @@
 							id="partner_name"
 							name="partner_name"
 							class="form-input"
-							placeholder=""
+							placeholder="Ex. Íñigo López de Loyola"
 						/>
 					</div>
 
@@ -176,21 +212,21 @@
 						>
 						<input
 							type="text"
-							id="partner_contact"
-							name="partner_contact"
+							id="partner_address"
+							name="partner_address"
 							class="form-input"
-							placeholder=""
+							placeholder="Ex. Katipunan, Quezon City"
 						/>
 					</div>
 					<div class="form-field">
-						<label class="form-label" for="partner_contact"
+						<label class="form-label" for="partner_contact_name"
 							>Name of Contact Person</label
 						>
 						<input
 							type="text"
-							id="partner_contact"
-							name="partner_contact"
-							class="form-input"
+							id="partner_contact_name"
+							name="partner_contact_name"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
 							placeholder=""
 						/>
 					</div>
@@ -201,10 +237,10 @@
 						</label>
 						<input
 							type="text"
-							id="partner_number"
-							name="partner_number"
+							id="partner_contact_number"
+							name="partner_contact_number"
 							class="form-input"
-							placeholder=""
+							placeholder="09XX XXX XXXX"
 						/>
 					</div>
 					<div class="form-field">
@@ -216,7 +252,23 @@
 							id="partner_email"
 							name="partner_email"
 							class="form-input"
-							placeholder=""
+							placeholder="Ex. ignatius@ateneo.edu"
+						/>
+					</div>
+					<!-- to see the currently clicked geopoint -->
+					<!-- <div id="location-info"></div> -->
+					<div class="flex flex-row justify-between mb-6 items-center" style="display: none">
+						<label
+							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							for="partner_coordinates"
+							>Partner Coordinates
+						</label>
+						<input
+							type="text"
+							id="partner_coordinates"
+							name="partner_coordinates"
+							class="py-4 px-8 w-96 rounded border font-montserrat"
+							placeholder="Ex. 14.6895421, 121.0818291"
 						/>
 					</div>
 				</div>
@@ -244,10 +296,10 @@
 						>
 						<input
 							type="text"
-							id="admu_contact"
-							name="admu_contact"
+							id="ADMU_contact_name"
+							name="ADMU_contact_name"
 							class="form-input"
-							placeholder=""
+							placeholder="Ex. Íñigo López de Loyola"
 						/>
 					</div>
 
@@ -257,10 +309,10 @@
 						>
 						<input
 							type="email"
-							id="admu_email"
-							name="admu_email"
+							id="ADMU_email"
+							name="ADMU_email"
 							class="form-input"
-							placeholder=""
+							placeholder="Ex. ignatius@ateneo.edu"
 						/>
 					</div>
 				</div>
@@ -273,12 +325,18 @@
 						type="submit"
 						id="submit_form"
 						name="submit_form"
-					>
-						Save
+					>Save
 					</button>
 					<button class="form-button negative">Delete</button>
 					<!-- Submits contents of the form -->
+					<button
+						class="w-full py-4 text-center font-montserrat text-2xl text-red-700 font-bold border border-red-700 rounded-lg mt-4"
+					>Delete
+					</button>
 				</div>
+				<div id="error_messages"></div>
+    
+            <br><br>
 			</div>
 		</form>
 
@@ -322,6 +380,8 @@
 					);
 					window.parent.postMessage('closeAddModal', '*');
 				});
+				
 		</script>
+
 	</body>
 </html>
