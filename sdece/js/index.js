@@ -37,7 +37,7 @@ var colRef = getCollection();
 
 // var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 // var results = L.layerGroup().addTo(map);
-// var popup = L.popup();
+var popup = L.popup();
 
 // Loads at the start
 // addListeners();
@@ -91,8 +91,8 @@ function onMapClick(e) {
 
 		// Close the modal when the user clicks anywhere outside of it
 		window.onclick = function (event) {
-			// var thing = getDocumentById("addloc_html");
-			// thing.name = 'addloc.html?lat=${encodeURIComponent(lat)&lang=${encodeURIComponent(lng)}';
+			var thing = getDocumentById("addloc_html");
+			thing.name = 'addloc.html?lat=${encodeURIComponent(lat)&lang=${encodeURIComponent(lng)}';
 			window.location.href = `addloc.html?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(lng)}`;
 			if (event.target == modal) {
 				modal.classList.add('hidden');
