@@ -33,16 +33,17 @@
 				SDECE_RULES_TEST,
 				setCollection,
 				validateData,
-				getCoordinates
+				getCoordinates,
 			} from '/firestore_UNIV.js';
-			
 
 			setCollection('sdece-official-TEST');
 
-			document.addEventListener("DOMContentLoaded", function() {
-                document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
-            });
-				// .addEventListener('click', handleFormSubmit_v3);
+			document.addEventListener('DOMContentLoaded', function () {
+				document
+					.getElementById('submit_form')
+					.addEventListener('click', handleFormSubmit_v2);
+			});
+			// .addEventListener('click', handleFormSubmit_v3);
 
 			function handleFormSubmit_v2() {
 				console.log('clicked');
@@ -53,15 +54,14 @@
 					console.log(SDECE_RULES_TEST[2][i]);
 
 					let fieldName = SDECE_RULES_TEST[2][i];
-					let inputValue = document.getElementById(fieldName).value;
+					let inputValue =
+						document.getElementById(fieldName).value;
 
 					if (fieldName == 'partner_coordinates') {
-                        collatedInput[fieldName] = getCoordinates();
-						
-                    } else {
-                        collatedInput[fieldName] = inputValue;
-                    }
-
+						collatedInput[fieldName] = getCoordinates();
+					} else {
+						collatedInput[fieldName] = inputValue;
+					}
 				}
 
 				console.log(collatedInput);
@@ -69,38 +69,42 @@
 				// uncomment at the db's risk
 				// addEntry(collatedInput);
 
-				const errors = validateData("sdece-official", collatedInput);
+				const errors = validateData(
+					'sdece-official',
+					collatedInput
+				);
 
 				if (errors.length > 0) {
 					displayErrors(errors);
 					event.preventDefault();
 				} else {
 					addEntry(collatedInput);
-					console.log("Entry added!");
+					console.log('Entry added!');
 					//continue;
 				}
 
 				function displayErrors(errors) {
-					let errorDiv = document.getElementById('error_messages');
+					let errorDiv =
+						document.getElementById('error_messages');
 
 					if (errorDiv) {
 						errorDiv.innerHTML = '';
 
 						if (errors.length > 0) {
 							for (let error of errors) {
-								let errorParagraph = document.createElement('p');
+								let errorParagraph =
+									document.createElement('p');
 								errorParagraph.textContent = error;
 								errorDiv.appendChild(errorParagraph);
 							}
 						} else {
-							console.error("Error: Couldn't find element with ID 'error_messages'.");
+							console.error(
+								"Error: Couldn't find element with ID 'error_messages'."
+							);
 						}
 					}
-					
 				}
-
 			}
-			
 		</script>
 	</head>
 	<body>
@@ -160,11 +164,14 @@
 						<label class="form-label" for="activity_date"
 							>Dates of Partnership
 						</label>
-						<div style="
+						<div
+							style="
 								display: flex;
 								flex-direction: column;
 								align-items: flex-start;
-							" id="date-container">
+							"
+							id="date-container"
+						>
 							<input
 								type="date"
 								id="activity_date"
@@ -184,7 +191,7 @@
 									margin-top: 1rem;
 								"
 								>Add another date
-						</a>	
+							</a>
 						</div>
 					</div>
 				</div>
@@ -209,9 +216,7 @@
 					</div>
 
 					<div class="form-field">
-						<label
-							class="form-label"
-							for="organization_unit"
+						<label class="form-label" for="organization_unit"
 							>Organization Unit
 						</label>
 						<input
@@ -248,7 +253,9 @@
 						/>
 					</div>
 					<div class="form-field">
-						<label class="form-label" for="partner_contact_name"
+						<label
+							class="form-label"
+							for="partner_contact_name"
 							>Name of Contact Person</label
 						>
 						<input
@@ -261,7 +268,9 @@
 					</div>
 
 					<div class="form-field">
-						<label class="form-label" for="partner_contact_number"
+						<label
+							class="form-label"
+							for="partner_contact_number"
 							>Number of Contact Person
 						</label>
 						<input
@@ -285,10 +294,11 @@
 						/>
 					</div>
 					<!-- to see the currently clicked geopoint -->
-					<div id="location-info"></div>
-					<div class="flex flex-row justify-between mb-6 items-center" style="display: none">
+					<div id="location-info" class="form-label"></div>
+
+					<div class="form-field" style="display: none">
 						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
+							class="form-label"
 							for="partner_coordinates"
 							>Partner Coordinates
 						</label>
@@ -296,7 +306,7 @@
 							type="text"
 							id="partner_coordinates"
 							name="partner_coordinates"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
+							class="form-input"
 							placeholder="Ex. 14.6895421, 121.0818291"
 						/>
 					</div>
@@ -354,18 +364,14 @@
 						type="submit"
 						id="submit_form"
 						name="submit_form"
-					>Save
+					>
+						Save
 					</button>
 					<button class="form-button negative">Delete</button>
-					<!-- Submits contents of the form -->
-					<button
-						class="w-full py-4 text-center font-montserrat text-2xl text-red-700 font-bold border border-red-700 rounded-lg mt-4"
-					>Delete
-					</button>
 				</div>
 				<div id="error_messages"></div>
-    
-            <br><br>
+
+				<br /><br />
 			</div>
 		</form>
 
@@ -409,8 +415,6 @@
 					);
 					window.parent.postMessage('closeAddModal', '*');
 				});
-				
 		</script>
-
 	</body>
 </html>

@@ -36,6 +36,7 @@ col_ref = getCollection();
 var partners = {};
 var activities = [];
 
+// This pans to the Philippines
 map.panTo(new L.LatLng(14.651, 121.052));
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -67,9 +68,17 @@ function onMapClick(e) {
 
 	var addButton = document.querySelector('.addButton');
 	addButton.addEventListener('click', function () {
+		const lat = this.getAttribute('data-lat');
+		const lng = this.getAttribute('data-lng');
 		var modal = document.getElementById('addModal');
 
 		// Display the modal
+		document.getElementById(
+			'addModalHTML'
+		).src = `./sdece/html/addloc.html?lat=${encodeURIComponent(
+			lat
+		)}&lng=${encodeURIComponent(lng)}`;
+
 		modal.style.display = 'flex';
 
 		// Close the Add Activity modal when the user clicks anywhere outside of it

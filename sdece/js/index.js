@@ -1,7 +1,5 @@
 import { map } from '/index_UNIV.js';
 
-map.panTo(new L.LatLng(14.652538, 121.077818));
-
 // Show Main modal
 const element = document.getElementById('mainButton');
 element.addEventListener('click', showMainModal);
@@ -48,5 +46,4 @@ function addMainButtonText() {
 	var mainButtonText = document.getElementById('mainButtonText');
 	mainButtonText.innerHTML = 'Add an activity';
 }
-
 addMainButtonText();
