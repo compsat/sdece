@@ -425,7 +425,7 @@ export function showModal(partner) {
 
 	// NOTE: This is where every partner modal content is added
 	modalHeader.appendChild(nameDiv);
-	// modalHeader.appendChild(closeDiv);
+	modalHeader.appendChild(closeDiv);
 	// TODO: Implement the close button in index.html lang.
 
 	modalContent.appendChild(addressDiv);

@@ -108,7 +108,7 @@
 		</script>
 	</head>
 	<body>
-		<form action="" id="addLocForm" class="form-container">
+		<form action="" id="addLocForm" class="form-container" onsubmit="this.reset(); closeModal()">
 			<div class="form-body">
 				<!-- Header -->
 				<div class="form-header">
@@ -405,6 +405,10 @@
 					newDateInput.style.marginTop = '1.5rem';
 					dateContainer.insertBefore(newDateInput, this);
 				});
+			
+			function closeModal(){
+					window.parent.postMessage('closeAddModal', '*');
+			}
 
 			document
 				.getElementById('close-btn')
@@ -413,7 +417,7 @@
 					console.log(
 						'The user has closed the Add Activity modal.'
 					);
-					window.parent.postMessage('closeAddModal', '*');
+					closeModal();
 				});
 		</script>
 	</body>
