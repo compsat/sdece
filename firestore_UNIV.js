@@ -18,6 +18,7 @@ import {
 	collection,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 
+console.log('UNIVERSAL JS LOADING ');
 
 function getUrlParameter(name) {
     name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -244,12 +245,23 @@ export const BUKLOD_RULES_TEST = DB_RULES_AND_DATA[1];
 export const SDECE_RULES = DB_RULES_AND_DATA[2];
 export const SDECE_RULES_TEST = DB_RULES_AND_DATA[3];
 
+// export function setCollection(collection_name){
+//     for(let rule of DB_RULES_AND_DATA ){
+//         if (rule[0] === collection_name){
+//             collection_reference = collection( DB, collection_name );
+//         }
+//     }
+// }
+
 export function setCollection(collection_name){
     for(let rule of DB_RULES_AND_DATA ){
+        console.log("rule[0]: " + rule[0]);
         if (rule[0] === collection_name){
+            console.log("IS EQUAL");
             collection_reference = collection( DB, collection_name );
         }
     }
+	console.log(collection_reference);
 }
 
 export function getCollection() {
@@ -392,6 +404,7 @@ export function validateData(collectionName, data) {
 		// Check for required field
 		if (rule.required && (value == undefined || value == null || value == '')) {
 			errors.push(`Field '${field}' is required.`);
+			console.log("TESTINGGGG");
 			continue;
 		}
 

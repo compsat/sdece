@@ -69,7 +69,7 @@
 				// uncomment at the db's risk
 				// addEntry(collatedInput);
 
-				const errors = validateData("sdece-official-TEST", collatedInput);
+				const errors = validateData("sdece-official", collatedInput);
 
 				if (errors.length > 0) {
 					displayErrors(errors);
@@ -194,6 +194,35 @@
 					<h2 class="form-subheading">PARTNER INFORMATION</h2>
 
 					<div class="form-field">
+						<label
+							class="form-label"
+							for="additional_partnership"
+							>Additional Partnership
+						</label>
+						<input
+							type="text"
+							id="additional_partnership"
+							name="additional_partnership"
+							class="form-input"
+							placeholder="Ex. Couples for Christ North B Sector"
+						/>
+					</div>
+
+					<div class="form-field">
+						<label
+							class="form-label"
+							for="organization_unit"
+							>Organization Unit
+						</label>
+						<input
+							type="text"
+							id="organization_unit"
+							name="organization_unit"
+							class="form-input"
+							placeholder="Ex. ACIL"
+						/>
+					</div>
+					<div class="form-field">
 						<label class="form-label" for="partner_name"
 							>Name of Host Partner</label
 						>
@@ -256,7 +285,7 @@
 						/>
 					</div>
 					<!-- to see the currently clicked geopoint -->
-					<!-- <div id="location-info"></div> -->
+					<div id="location-info"></div>
 					<div class="flex flex-row justify-between mb-6 items-center" style="display: none">
 						<label
 							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
@@ -287,7 +316,7 @@
 							id="ADMU_office"
 							name="ADMU_office"
 							class="form-input"
-							placeholder=""
+							placeholder="Ex. OSCI"
 						/>
 					</div>
 					<div class="form-field">

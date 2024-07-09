@@ -22,6 +22,8 @@ import {
 
 var colRef = getCollection();
 
+map.panTo(new L.LatLng(14.651, 121.052));
+
 // //list down all documents under the collection in console.log
 // const querySnapshot = await getDocs(colRef);
 // console.log(querySnapshot);
@@ -30,16 +32,75 @@ var colRef = getCollection();
 //   console.log(doc.id, " => ", doc.data());
 // });
 
-// L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-// 	attribution:
-// 		'&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
-// }).addTo(map);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	attribution:
+		'&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
+}).addTo(map);
 
-// var searchControl = L.esri.Geocoding.geosearch().addTo(map);
-// var results = L.layerGroup().addTo(map);
+var searchControl = L.esri.Geocoding.geosearch().addTo(map);
+var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
 // Loads at the start
+// addListeners();
+
+// searchControl.on('results', function (data) {
+// 	results.clearLayers();
+// 	for (var i = data.results.length - 1; i >= 0; i--) {
+// 		var marker = L.marker(data.results[i].latlng);
+// 		console.log(marker);
+// 		results.addLayer(marker);
+// 	}
+// });
+
+//not part of sprint06
+// getDocs(colRef)
+// 	.then((querySnapshot) => {
+// 		querySnapshot.forEach((entry) => {
+// 			var doc = entry.data();
+
+// 			var marker;
+
+// 			// Some coordinated are null, protective check
+// 			if (doc.partner_coordinates != null) {
+// 				marker = L.marker([
+// 					parseFloat(doc.partner_coordinates.latitude),
+// 					parseFloat(doc.partner_coordinates.longitude),
+// 				]);
+// 			}
+
+// 			getDivContent(doc.partner_name).then((div) => {
+// 				results.addLayer(marker);
+// 				var popupContent = `
+// 					<div class="partner-popup w-auto font-semibold text-sm font-montserrat text-darkbg !text-center	" id="`;
+// 				popupContent += doc.partner_name;
+// 				popupContent += `">`;
+// 				popupContent += doc.partner_name;
+// 				popupContent += `</div>`;
+
+// 				marker.bindPopup(popupContent);
+// 				results.addLayer(marker);
+// 			});
+
+// 			marker.on('popupopen', function () {
+// 				console.log('Clicked on ' + doc.partner_name + ' pin!');
+
+// 				var test = document.getElementById(doc.partner_name);
+// 				test.addEventListener('click', function () {
+// 					console.log(
+// 						'Clicked on the pop-up content of ' +
+// 							doc.partner_name
+// 					);
+
+// 					// TODO: call showModal(partner) here! Not super sure what the partner object should be in this case
+// 				});
+// 			});
+// 		});
+// 	})
+// 	.catch((error) => {
+// 		console.error('Error getting documents: ', error);
+// 	});
+
 // addListeners();
 
 // searchControl.on('results', function (data) {
