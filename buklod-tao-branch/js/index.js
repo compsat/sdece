@@ -26,7 +26,6 @@ export function loadMapMarkers(households){
 		var marker;
     // Grabs the household of key household
 		if (households[household]["location_coordinates"] != null){
-      console.log(households[household]["location_coordinates"]);
 			let household_lat = households[household]["location_coordinates"]._lat;
 			let household_long = households[household]["location_coordinates"]._long;
 
@@ -69,6 +68,8 @@ export function loadMapMarkers(households){
   addListeners(households, "household_name","location_coordinates");
 
 }
+
+
 
 // function to store the html for info display on pin click
 function onPinClick(doc){

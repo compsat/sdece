@@ -11,5 +11,6 @@ export function getCurrentBranchCookie(){
         var cookie = matched[0].split('=');
         return cookie[1];
     }
+    console.log(document.cookie);
     return null;
 }
