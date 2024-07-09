@@ -48,9 +48,10 @@ button {
 .main-modal {
 	border-radius: 0.5rem;
 	background-color: #f3f4f6; /* Assuming bg-customLightGray corresponds to a specific custom color */
-	height: auto; /* h-auto */
+	height: 420px; /* h-auto */
 	width: 480px; /* w-[480px] */
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+	overflow: visible;
 }
 
 .main-modal-header {
