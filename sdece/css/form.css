@@ -8,6 +8,7 @@
 	--custom-medium-gray: #f6f6f6;
 	--custom-light-gray: #fcfcfc;
 	--custom-red: #d64747;
+	--custom-green: #49C70A;
 }
 
 * {
@@ -131,8 +132,25 @@ button {
 	border-radius: 0.5rem /* 8px */;
 }
 
-.form-button:hover{
-	opacity: 0.75;
+[data-id="Save Button"] {
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+[data-id="Save Button"]:hover {
+    transform: scale(1.01);
+    background-color: var(--custom-green);
+}
+
+[data-id="Delete Button"] {
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+[data-id="Delete Button"]:hover {
+    transform: scale(1.01);
+    color: var(--custom-light-gray);
+    background-color: var(--custom-red);
 }
 
 .positive {
