@@ -17,17 +17,10 @@ function showMainModal() {
 	};
 }
 
-// Close Main modal
-const elementCloseButton = document.getElementById('closeButton');
-elementCloseButton.addEventListener('click', closeModal);
-
-function closeModal() {
-	var mainModal = document.getElementById('mainModal');
-	mainModal.style.display = 'none';
-}
-
 // Fuction for filtering results upon searching partners
-const newButton = document.getElementById('addModalButton');
+const mainModalDocument = document.getElementById('mainModalIframe').contentDocument;
+console.log(document.getElementById('mainModalIframe'));
+const newButton = mainModalDocument.getElementById('addModalButton');
 newButton.addEventListener('click', showAddModal);
 
 export function showAddModal() {
