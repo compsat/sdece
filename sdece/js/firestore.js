@@ -345,7 +345,21 @@ export function showModal(partner) {
 	// Add button for adding activities
 	addActivity.addEventListener('click', () => {
 		console.log('Clicked add activity in the partner modal');
-		//showAddModal(); // TODO: Modify this so that the current partner's details are passed through the Add Activity form as input and then those fields are Disabled.
+		// show the addLoc.html with some autofilled values
+		var modal = document.getElementById('addModal');
+
+		// Display the modal
+		modal.style.display = 'flex';
+		// populate the field with current partner values
+		document.getElementById("addModalHTML").contentWindow.document.getElementById("partner_name").value = partner[0].partner_name;
+		document.getElementById("addModalHTML").contentWindow.document.getElementById("partner_address").value = partner[0].partner_address;
+
+		// Close the Add Activity modal when the user clicks anywhere outside of it
+		window.onclick = function (event) {
+			if (event.target == modal) {
+				modal.style.display = 'none';
+			}
+		};
 	});
 
 	activityHeaderDiv.appendChild(addActivity);

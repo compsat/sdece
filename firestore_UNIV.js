@@ -34,11 +34,11 @@ const lat = getUrlParameter('lat');
 const lng = getUrlParameter('lng');
 
 // Display the values on the page or use them as needed
-document.addEventListener('DOMContentLoaded', function () {
-	document.getElementById(
-		'location-info'
-	).innerText = `Latitude: ${lat}, Longitude: ${lng}`;
-});
+// document.addEventListener('DOMContentLoaded', function () {
+// 	document.getElementById(
+// 		'location-info'
+// 	).innerText = `Latitude: ${lat}, Longitude: ${lng}`;
+// });
 
 // export function getCoordinates() {
 // 	var roundLat = parseFloat(lat.toFixed(5));
