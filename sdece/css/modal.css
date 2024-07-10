@@ -359,3 +359,36 @@ button {
 	text-decoration: none;
 	cursor: pointer;
 }
+
+/* Message modal */
+.message-modal {
+	border-radius: 0.5rem;
+	background-color: #f3f6f4; /* Assuming bg-customLightGray corresponds to a specific custom color */
+	height: 240px; /* h-auto */
+	width: fit-content; /* w-[480px] */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+	overflow: visible;
+	padding: 32px 32px;
+	flex-direction: column;
+	align-items: flex-start;
+
+	animation: slide-in 500ms forwards;
+}
+
+.message-modal-header {
+	align-self: flex-end;
+	justify-content: center; 
+	width: fit-content;
+	margin-left: 270px;
+}
+
+.message-modal-content {
+	width: fit-content;
+	font-family: 'Montserrat';
+	font-weight: 700;
+	font-size: 1.5rem /* 24px */;
+	line-height: 2rem; /* 32px */
+	color: var(--custom-black);
+	font-style: normal;
+	overflow: visible;
+}

@@ -131,6 +131,10 @@ button {
 	border-radius: 0.5rem /* 8px */;
 }
 
+.form-button:hover{
+	opacity: 0.75;
+}
+
 .positive {
 	background-color: var(--lightbg);
 	color: var(--custom-light-gray);

@@ -85,6 +85,10 @@
 					/>
 				</svg>
 			</button>
+			<!-- TEST -->
+			<button id="test-btn" style="color: #45c600;">
+				Test submit
+			</button>
 		</div>
 
 		<div class="main-modal-content">
@@ -161,7 +165,14 @@
 						'The user has closed the Add Activity modal.'
 					);
 					window.parent.postMessage('closeMainModal', '*');
-				});			
+				});	
+			
+			// TEST: remove later
+			document
+				.getElementById('test-btn')
+				.addEventListener('click', function(event) {
+					window.parent.postMessage('testMessageModal', '*');
+				});
 		</script>
 	</body>
 </html>

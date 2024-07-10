@@ -367,7 +367,6 @@
 					></iframe>
 				</div>
 
-
 				<!-- Add Modal: This is the modal that shows up when clicking on the '+' sign that is nested inside the Main Modal. This allows the user to add a new activity to the SDECE collections. -->
 				<div class="modal-screen" id="addModal">
 					<iframe class="form-modal" id="addModalHTML"></iframe>
@@ -378,6 +377,14 @@
 					<iframe
 						src="./sdece/html/editloc.html"
 						class="form-modal"
+					></iframe>
+				</div>
+				
+				<!-- Message Modal: This is the modal that displays a message. Used to indicate form submission/deletion success -->
+				<div class="modal-screen" id="messageModal">
+					<iframe
+						src="./sdece/html/message_modal.html"
+						class="message-modal"
 					></iframe>
 				</div>
 
@@ -393,6 +400,10 @@
 							const addModal =
 								document.getElementById('addModal');
 							addModal.classList.add('hidden'); // Hide the iframe
+
+							const messageModal = 
+								document.getElementById('messageModal');
+							messageModal.style.display ='flex'; //display success message
 						}
 					});
 
@@ -451,25 +462,9 @@
 					}
 
 					// Function to hide the div containing the iframe
-					function hideAddModalContainer() {
-						var iframeContainer =
-							document.getElementById('addModal');
-						if (iframeContainer) {
-							iframeContainer.style.display = 'none';
-						}
-					}
-
-					function hideEditModalContainer() {
-						var iframeContainer =
-							document.getElementById('editModal');
-						if (iframeContainer) {
-							iframeContainer.style.display = 'none';
-						}
-					}
-
-					function hideMainModalContainer() {
+					function hideModalContainer(modal) {
 						var iframe =
-							document.getElementById('mainModal');
+							document.getElementById(modal);
 						if (iframe) {
 							iframe.style.display = 'none';
 						}
@@ -478,13 +473,23 @@
 					// Add an event listener to handle messages from the iframe
 					window.addEventListener('message', function (event) {
 						if (event.data === 'closeAddModal') {
-							hideAddModalContainer();
+							hideModalContainer('addModal');
 						}
 						if (event.data === 'closeEditModal') {
-							hideEditModalContainer();
+							hideModalContainer('editModal');
 						}
 						if (event.data === 'closeMainModal') {
-							hideMainModalContainer();
+							hideModalContainer('mainModal');
+						}
+						if (event.data === 'closeMessageModal') {
+							hideModalContainer('messageModal');
+						}
+						// TEST: remove later
+						if (event.data === 'testMessageModal') {
+							console.log('testing message modal');
+							const messageModal = 
+								document.getElementById('messageModal');
+							messageModal.style.display = 'flex'; 
 						}
 					});
 				</script>
