@@ -35,9 +35,9 @@ var colRef = getCollection();
 // 		'&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
 // }).addTo(map);
 
-// var searchControl = L.esri.Geocoding.geosearch().addTo(map);
-// var results = L.layerGroup().addTo(map);
-// var popup = L.popup();
+var searchControl = L.esri.Geocoding.geosearch().addTo(map);
+var results = L.layerGroup().addTo(map);
+var popup = L.popup();
 
 // Loads at the start
 // addListeners();
@@ -65,13 +65,20 @@ function onMapClick(e) {
             ${lat} + ${lng}
             <br>
         </div>
-    <button class="addButton p-5" data-lat="${lat}" data-lng="${lng}">Add Location</button>
+    <button id="addPartnerWithCoords" class="addButton p-5" data-lat="${lat}" data-lng="${lng}">Add Location</button>
   `;
 
 	popup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
 
+	var add_partner_button_in_pin = document.getElementById("addPartnerWithCoords");
+	add_partner_button_in_pin.addEventListener('click',function(){
+		console.log("Coords supplied to the add partner");
+	});
+
 	var addButton = document.querySelector('.addButton');
 	addButton.addEventListener('click', function () {
+		console.log("Coords supplied to the add partner");
+
 		const lat = this.getAttribute('data-lat');
 		const lng = this.getAttribute('data-lng');
 
@@ -96,6 +103,8 @@ function onMapClick(e) {
 			}
 		};
 	});
+
+	
 }
 
 map.on('click', onMapClick);

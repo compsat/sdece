@@ -36,7 +36,7 @@ var col_ref = null;
 col_ref = getCollection();
 
 var partners = {}; // queried
-var activities = [];
+var activities = {};
 
 map.panTo(new L.LatLng(14.651, 121.052));
 
@@ -67,20 +67,26 @@ getDocs(col_ref)
 				doc.data().name !== 'Test 2' ||
 				doc.data().name !== 'Test2'
 			) {
-				activities.push(doc.data());
+				let activity = doc.data();
+				activity["identifier"] = doc.id;
+				activities[doc.id] = activity;
 			}
 		});
 
 		//  Populate with partners
-		activities.forEach((activity) => {
-			let partner = activity[SDECE_RULES[1]];
+		Object.keys(activities).forEach((activity) => {
+			let partner = activities[activity][SDECE_RULES[1]];
+			console.log(activities[activity]["partner_name"]);
 			if (partners[partner] == null) {
 				partners[partner] = [];
-				partners[partner].push(activity);
+				partners[partner].push(activities[activity]);
 			} else {
-				partners[partner].push(activity);
+				partners[partner].push(activities[activity]);
 			}
 		});
+
+		console.log("Activities: ", activities);
+		console.log("Partners: ", partners);
 
 		// Populate side navigation <ul> with partners
 		Object.keys(partners).forEach((partner) => {
@@ -88,7 +94,7 @@ getDocs(col_ref)
 			var marker;
 
 			// Some coordinated are null, protective check
-			console.log(partners[partner][0]['partner_coordinates']);
+			//console.log(partners[partner][0]['partner_coordinates']);
 			if (partners[partner][0]['partner_coordinates'] != null) {
 				marker = L.marker([
 					parseFloat(
@@ -161,11 +167,11 @@ getDocs(col_ref)
 			containerDiv.classList.add('partnerDiv');
 
 			//   var activities = getDocIdByPartnerName(partner.partner_name);
-			if (activities.length > 0) {
+			if (Object.keys(activities).length > 0) {
 				// check if list of activities is present, otherwise is skipped to avoid errors
-				activities.forEach((activity) => {
+				Object.keys(activities).forEach((activity) => {
 					activityDiv.innerHTML +=
-						activity.activity_name + '<br/>'; // there might be a better way to display multiple activities
+						activities[activity].activity_name + '<br/>'; // there might be a better way to display multiple activities
 				});
 			} else {
 				console.log('No activities found');
@@ -212,6 +218,8 @@ getDocs(col_ref)
 		console.error('Error getting documents: ', error);
 	});
 
+var current_viewed_activity = null;
+
 // Display partner modal by clicking partner entry (WIP: and on pin pop up click)
 export function showModal(partner) {
 	const modal = document.getElementById('partnerModal');
@@ -251,6 +259,7 @@ export function showModal(partner) {
 
 	backarrowDiv.classList.add('close-btn');
 	backarrowDiv.addEventListener('click', () => {
+		current_viewed_activity = null;
 		modalHeader.innerHTML = '';
 		modalContent.innerHTML = '';
 
@@ -268,6 +277,7 @@ export function showModal(partner) {
 	closeDiv.classList.add('close-btn');
 	// Close the modal when the close button is clicked
 	closeDiv.addEventListener('click', () => {
+		current_viewed_activity = null;
 		console.log('modal closed');
 
 		//might be better to put this in its own function
@@ -362,6 +372,8 @@ export function showModal(partner) {
 
 			// View activity details in modal after clicking activity
 			activityButton.addEventListener('click', () => {
+				current_viewed_activity = activity;
+				console.log("currently looking at activity with ID: ", activity["identifier"]);
 				modalHeader.innerHTML = '';
 				modalContent.innerHTML = '';
 
@@ -408,6 +420,7 @@ export function showModal(partner) {
 		if (event.target == modal) {
 			modal.classList.remove('open'); //transition out
 			modal.style.display = 'none';
+			current_viewed_activity = null;
 		}
 	});
 
@@ -415,31 +428,40 @@ export function showModal(partner) {
 
 	for (var i = 0; i < editButtons.length; i++) {
 		editButtons[i].addEventListener('click', function () {
-			console.log('Clicked edit activity');
+			if(current_viewed_activity != null){
+				console.log('Clicked edit currently editing activity with ID: ', current_viewed_activity["identifier"], current_viewed_activity);
 
-			//Close activity details modal
+				//Close activity details modal
+	
+				// Select the modal and partnerName elements
+				var modal = document.getElementById('editModal');
+	
+				var partnerModal = document.getElementById('partnerModal');
+	
+				// Display the modal
+				modal.style.display = 'flex';
+				// partnerModal.classList.add('hidden'); // Not sure if this should be hidden nalang, or should be kept open with the editModal on top nalang
 
-			// Select the modal and partnerName elements
-			var modal = document.getElementById('editModal');
-
-			var partnerModal = document.getElementById('partnerModal');
-			// TODO: Integrate this functionality into the modal instead
-			// var partnerName = this.getAttribute("data-loc");
-			//       window.open(
-			//         `editloc.html?partnerName=${encodeURIComponent(partnerName)}`,
-			//         "_blank"
-			//       );
-
-			// Display the modal
-			modal.style.display = 'flex';
-			// partnerModal.classList.add('hidden'); // Not sure if this should be hidden nalang, or should be kept open with the editModal on top nalang
-
-			// Close the modal when the user clicks anywhere outside of it
-			window.onclick = function (event) {
-				if (event.target == modal) {
-					modal.style.display = 'none';
-				}
-			};
+				//autofill existing values inside the modal
+				SDECE_RULES[2].forEach((field) => {
+					//console.log(field);
+					let current_inp = document.getElementById("editModal_iframe").contentWindow.document.getElementById(field);
+					if (current_inp != null){
+						//console.log(current_inp);
+						current_inp.value = current_viewed_activity[field];
+					}
+					
+				});
+				// Close the modal when the user clicks anywhere outside of it
+				window.onclick = function (event) {
+					if (event.target == modal) {
+						modal.style.display = 'none';
+					}
+				};
+			} else {
+				console.log("Not looking at an activity");
+			}
+			
 		});
 	}
 }
