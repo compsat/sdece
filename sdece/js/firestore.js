@@ -18,6 +18,7 @@ import {
 	getDocIdByPartnerName,
 } from '/firestore_UNIV.js';
 import { addListeners, map, getDivContent } from '/index_UNIV.js';
+import { showMainModal } from './index.js';
 
 //import { showAddModal } from './index.js';
 // Your Firestore code here
@@ -44,7 +45,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		'&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
-var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
@@ -69,25 +69,26 @@ function onMapClick(e) {
 	// This addButton is from the mini popup
 	var addButton = document.querySelector('.addButton');
 	addButton.addEventListener('click', function () {
-		const lat = this.getAttribute('data-lat');
-		const lng = this.getAttribute('data-lng');
-		var modal = document.getElementById('addModal');
+		showMainModal();
+		// const lat = this.getAttribute('data-lat');
+		// const lng = this.getAttribute('data-lng');
+		// var modal = document.getElementById('addModal');
 
-		// Display the modal
-		document.getElementById(
-			'addModalHTML'
-		).src = `./sdece/html/addloc.html?lat=${encodeURIComponent(
-			lat
-		)}&lng=${encodeURIComponent(lng)}`;
+		// // Display the modal
+		// document.getElementById(
+		// 	'addModalHTML'
+		// ).src = `./sdece/html/addloc.html?lat=${encodeURIComponent(
+		// 	lat
+		// )}&lng=${encodeURIComponent(lng)}`;
 
-		modal.style.display = 'flex';
+		// modal.style.display = 'flex';
 
-		// Close the Add Activity modal when the user clicks anywhere outside of it
-		window.onclick = function (event) {
-			if (event.target == modal) {
-				modal.style.display = 'none';
-			}
-		};
+		// // Close the Add Activity modal when the user clicks anywhere outside of it
+		// window.onclick = function (event) {
+		// 	if (event.target == modal) {
+		// 		modal.style.display = 'none';
+		// 	}
+		// };
 	});
 }
 
@@ -142,7 +143,7 @@ getDocs(col_ref)
 			var marker;
 
 			// Some coordinated are null, protective check
-			console.log(partners[partner][0]['partner_coordinates']);
+			//console.log(partners[partner][0]['partner_coordinates']);
 			if (partners[partner][0]['partner_coordinates'] != null) {
 				marker = L.marker([
 					parseFloat(
@@ -352,7 +353,10 @@ export function showModal(partner) {
 		modal.style.display = 'flex';
 		// populate the field with current partner values
 		document.getElementById("addModalHTML").contentWindow.document.getElementById("partner_name").value = partner[0].partner_name;
+		document.getElementById("addModalHTML").contentWindow.document.getElementById("partner_name").readOnly = true;
+		
 		document.getElementById("addModalHTML").contentWindow.document.getElementById("partner_address").value = partner[0].partner_address;
+		document.getElementById("addModalHTML").contentWindow.document.getElementById("partner_address").readOnly = true;
 
 		// Close the Add Activity modal when the user clicks anywhere outside of it
 		window.onclick = function (event) {

@@ -1,10 +1,12 @@
 import { map } from '/index_UNIV.js';
 
+var searchControl = L.esri.Geocoding.geosearch().addTo(map);
+
 // Show Main modal
 const element = document.getElementById('mainButton');
 element.addEventListener('click', showMainModal);
 
-function showMainModal() {
+export function showMainModal() {
 	console.log("'Add an activity' button was clicked!");
 
 	var mainModal = document.getElementById('mainModal');
