@@ -524,6 +524,30 @@
       }
     }
   </script>
+
+<!--script for add a location on map click-->
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    document.body.addEventListener('click', function(event) {
+      if (event.target.matches('.addButton')) {
+        // Prevent default behavior if necessary
+        event.preventDefault();
+
+        // Get the modal
+        var modal = document.getElementById("formModal");
+
+        // Show the modal
+        modal.style.display = "block";
+      }
+
+      // Close the modal when the close button is clicked
+      if (event.target.matches('.close')) {
+        var modal = document.getElementById("formModal");
+        modal.style.display = "none";
+      }
+    });
+  });
+</script>
 </body>
 
 </html>
