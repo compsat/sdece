@@ -70,7 +70,7 @@
 				// addEntry(collatedInput);
 
 				const errors = validateData(
-					'sdece-official',
+					'sdece-official-TEST',
 					collatedInput
 				);
 
@@ -294,8 +294,7 @@
 						/>
 					</div>
 					<!-- to see the currently clicked geopoint -->
-					<div id="location-info" class="form-label"></div>
-
+					<!-- <div id="location-info" class="form-label"></div> -->
 					<div class="form-field" style="display: none">
 						<label
 							class="form-label"
@@ -369,7 +368,7 @@
 					</button>
 					<button class="form-button negative">Delete</button>
 				</div>
-				<div id="error_messages"></div>
+				<div class id="error_messages"></div>
 
 				<br /><br />
 			</div>
@@ -379,6 +378,7 @@
 			document
 				.getElementById('addLocForm')
 				.addEventListener('submit', function (event) {
+					console.log("SCRIPT BEING READ");
 					event.preventDefault(); // Prevent the default form submission
 
 					// Simulate successful submission (replace with actual form submission code)

@@ -436,6 +436,8 @@ export function editEntry(inp_array, docId) {
 }
 
 export function validateData(collectionName, data) {
+	//this is seen
+	console.log("VALIDATINGGGGGGG");
 	const rules = VALIDATION_RULES[collectionName];
 	const errors = [];
 
@@ -449,6 +451,7 @@ export function validateData(collectionName, data) {
 			(value == undefined || value == null || value == '')
 		) {
 			errors.push(`Field '${field}' is required.`);
+			//this is not
 			console.log('TESTINGGGG');
 			continue;
 		}
@@ -461,11 +464,6 @@ export function validateData(collectionName, data) {
 			continue;
 		}
 
-		// Check for type field
-		// if (rule.type && typeof value !== rule.type) {
-		// 	errors.push(`Field '${field}' must be of type ${rule.type}.`);
-		// 	continue;
-		// }
 		if (rule.type) {
 			if (rule.type === 'date') {
 				const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
@@ -487,14 +485,6 @@ export function validateData(collectionName, data) {
 				);
 				continue;
 			}
-
-			// if (rule.type === 'tel') {
-			// 	const numberRegex = /[0-9]{4} [0-9]{3} [0-9]{4}/;
-			// }
-			// if (!numberRegex.test(value)) {
-			// 	errors.push(`Field '${field}' must be a valid phone number in the format 09XX XXX XXXX.`);
-			// 	continue;
-			// }
 		}
 
 		// Check for minimum length
@@ -503,6 +493,11 @@ export function validateData(collectionName, data) {
 			typeof value == 'string' &&
 			value.length < rule.minLength
 		) {
+			if (field === 'partner_contact_number') {
+				errors.push(
+					`Field '${field}' must be at least ${rule.minLength} characters long and in the form 09XX XXX XXXX.`
+				);
+			}
 			errors.push(
 				`Field '${field}' must be at least ${rule.minLength} characters long.`
 			);
