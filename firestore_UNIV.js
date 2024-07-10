@@ -497,10 +497,13 @@ export function validateData(collectionName, data) {
 				errors.push(
 					`Field '${field}' must be at least ${rule.minLength} characters long and in the form 09XX XXX XXXX.`
 				);
+				
+			} else {
+				errors.push(
+					`Field '${field}' must be at least ${rule.minLength} characters long.`
+				);
 			}
-			errors.push(
-				`Field '${field}' must be at least ${rule.minLength} characters long.`
-			);
+			
 			continue;
 		}
 
