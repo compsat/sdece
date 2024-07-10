@@ -23,6 +23,7 @@ console.log(document.getElementById('mainModalIframe'));
 const newButton = mainModalDocument.getElementById('addModalButton');
 newButton.addEventListener('click', showAddModal);
 
+/*
 export function showAddModal() {
 	console.log("The user clicked the '+' button within the Main Modal");
 	var addModal = document.getElementById('addModal');
@@ -33,7 +34,7 @@ export function showAddModal() {
 			addModal.style.display = 'none';
 		}
 	};
-}
+}*/
 
 function addMainButtonText() {
 	var mainButtonText = document.getElementById('mainButtonText');

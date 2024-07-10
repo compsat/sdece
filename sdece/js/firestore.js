@@ -19,7 +19,7 @@ import {
 } from '/firestore_UNIV.js';
 import { addListeners, map, getDivContent } from '/index_UNIV.js';
 
-import { showAddModal } from './index.js';
+//import { showAddModal } from './index.js';
 // Your Firestore code here
 
 // Import the functions you need from the SDKs you need
@@ -66,6 +66,7 @@ function onMapClick(e) {
 
 	popup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
 
+	// This addButton is from the mini popup
 	var addButton = document.querySelector('.addButton');
 	addButton.addEventListener('click', function () {
 		const lat = this.getAttribute('data-lat');
@@ -91,6 +92,26 @@ function onMapClick(e) {
 }
 
 map.on('click', onMapClick);
+
+// make add activity in the sidenav work
+var addButton = document.getElementById('addButton_v2');
+	addButton.addEventListener('click', function () {
+		var modal = document.getElementById('addModal');
+
+		// Display the modal
+		document.getElementById(
+			'addModalHTML'
+		).src = `./sdece/html/addloc.html`;
+
+		modal.style.display = 'flex';
+
+		// Close the Add Activity modal when the user clicks anywhere outside of it
+		window.onclick = function (event) {
+			if (event.target == modal) {
+				modal.style.display = 'none';
+			}
+		};
+	});
 
 getDocs(col_ref)
 	.then((querySnapshot) => {
@@ -324,7 +345,7 @@ export function showModal(partner) {
 	// Add button for adding activities
 	addActivity.addEventListener('click', () => {
 		console.log('Clicked add activity in the partner modal');
-		showAddModal(); // TODO: Modify this so that the current partner's details are passed through the Add Activity form as input and then those fields are Disabled.
+		//showAddModal(); // TODO: Modify this so that the current partner's details are passed through the Add Activity form as input and then those fields are Disabled.
 	});
 
 	activityHeaderDiv.appendChild(addActivity);
