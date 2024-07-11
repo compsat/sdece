@@ -283,7 +283,6 @@
 
 				<!-- Partner Modal: This is the modal that shows up when clicking on an SDECE entry in the side navigation panel OR the pop-up of a map marker pin. -->
 				<div id="partnerModal" class="modal">
-					HELLO THIS IS THE INDEX MODAL
 					<!-- Modal Header -->
 					<div class="modal-header">
 						<!-- <div class="close"></div> -->
@@ -369,7 +368,11 @@
 
 				<!-- Add Modal: This is the modal that shows up when clicking on the '+' sign that is nested inside the Main Modal. This allows the user to add a new activity to the SDECE collections. -->
 				<div class="modal-screen" id="addModal">
-					<iframe class="form-modal" id="addModalHTML" src= "./sdece/html/addloc.html"></iframe>
+					<iframe
+						class="form-modal"
+						id="addModalHTML"
+						src="./sdece/html/addloc.html"
+					></iframe>
 				</div>
 
 				<!-- Edit Modal: This is the modal that shows up when clicking on the Edit button that is nested within Partner Modal. This allows the user to edit an existing activity within the SDECE Collections. -->
@@ -379,7 +382,7 @@
 						class="form-modal"
 					></iframe>
 				</div>
-				
+
 				<!-- Message Modal: This is the modal that displays a message. Used to indicate form submission/deletion success -->
 				<div class="modal-screen" id="messageModal">
 					<iframe
@@ -401,9 +404,9 @@
 								document.getElementById('addModal');
 							addModal.classList.add('hidden'); // Hide the iframe
 
-							const messageModal = 
+							const messageModal =
 								document.getElementById('messageModal');
-							messageModal.style.display ='flex'; //display success message
+							messageModal.style.display = 'flex'; //display success message
 						}
 					});
 
@@ -463,8 +466,7 @@
 
 					// Function to hide the div containing the iframe
 					function hideModalContainer(modal) {
-						var iframe =
-							document.getElementById(modal);
+						var iframe = document.getElementById(modal);
 						if (iframe) {
 							iframe.style.display = 'none';
 						}
@@ -487,9 +489,9 @@
 						// TEST: remove later
 						if (event.data === 'testMessageModal') {
 							console.log('testing message modal');
-							const messageModal = 
+							const messageModal =
 								document.getElementById('messageModal');
-							messageModal.style.display = 'flex'; 
+							messageModal.style.display = 'flex';
 						}
 					});
 				</script>

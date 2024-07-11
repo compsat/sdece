@@ -1,7 +1,3 @@
-import { map } from '/index_UNIV.js';
-
-var searchControl = L.esri.Geocoding.geosearch().addTo(map);
-
 export function showMainModal() {
 	var mainModal = document.getElementById('mainModal');
 	mainModal.style.display = 'flex';
@@ -14,11 +10,11 @@ export function showMainModal() {
 }
 
 // Fuction for filtering results upon searching partners
-const mainModalDocument = document.getElementById('mainModalIframe').contentDocument;
+const mainModalDocument =
+	document.getElementById('mainModalIframe').contentDocument;
 console.log(document.getElementById('mainModalIframe'));
 const newButton = mainModalDocument.getElementById('addModalButton');
 newButton.addEventListener('click', showAddModal);
-
 
 export function showAddModal() {
 	console.log("The user clicked the '+' button within the Main Modal");

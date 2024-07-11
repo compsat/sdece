@@ -48,6 +48,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		'&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
+var searchControl = L.esri.Geocoding.geosearch().addTo(map);
+
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
@@ -71,10 +73,11 @@ function onMapClick(e) {
 
 	// This addButton is from the mini popup
 	var addButton = document.querySelector('.addButton');
-	addButton.addEventListener('click', function () { // show mainmodal from pop up "add location"
-		console.log("main modal called from popup");
+	addButton.addEventListener('click', function () {
+		// show mainmodal from pop up "add location"
+		console.log('main modal called from popup');
 		addForm_geopoint = new GeoPoint(lat, lng);
-		console.log("currently adding coords: ", addForm_geopoint);
+		console.log('currently adding coords: ', addForm_geopoint);
 		showMainModal();
 	});
 }
@@ -82,7 +85,7 @@ function onMapClick(e) {
 // Show Main modal from the sideNav
 const element = document.getElementById('addButton_v2');
 element.addEventListener('click', () => {
-	console.log("main modal called from sideNav");
+	console.log('main modal called from sideNav');
 	addForm_geopoint = null;
 	showMainModal();
 });
@@ -327,11 +330,25 @@ export function showModal(partner) {
 		// Display the modal
 		modal.style.display = 'flex';
 		// populate the field with current partner values
-		document.getElementById("addModalHTML").contentWindow.document.getElementById("partner_name").value = partner[0].partner_name;
-		document.getElementById("addModalHTML").contentWindow.document.getElementById("partner_name").readOnly = true;
-		
-		document.getElementById("addModalHTML").contentWindow.document.getElementById("partner_address").value = partner[0].partner_address;
-		document.getElementById("addModalHTML").contentWindow.document.getElementById("partner_address").readOnly = true;
+		document
+			.getElementById('addModalHTML')
+			.contentWindow.document.getElementById('partner_name').value =
+			partner[0].partner_name;
+		document
+			.getElementById('addModalHTML')
+			.contentWindow.document.getElementById(
+				'partner_name'
+			).readOnly = true;
+
+		document
+			.getElementById('addModalHTML')
+			.contentWindow.document.getElementById('partner_address').value =
+			partner[0].partner_address;
+		document
+			.getElementById('addModalHTML')
+			.contentWindow.document.getElementById(
+				'partner_address'
+			).readOnly = true;
 
 		// Close the Add Activity modal when the user clicks anywhere outside of it
 		window.onclick = function (event) {
@@ -491,46 +508,55 @@ export function showModal(partner) {
 	}
 }
 
-
-export async function getCoordsFromAddress(address = "161 Daan Tubo, Diliman, Quezon City"){
-	console.log("ENTER PRESSED IN MAIN MODAL: ", address);
+export async function getCoordsFromAddress(
+	address = '161 Daan Tubo, Diliman, Quezon City'
+) {
+	console.log('ENTER PRESSED IN MAIN MODAL: ', address);
 
 	var parsed_loc = encodeURIComponent(
-		address.toLowerCase().replace(/[^a-z0-9 _-]+/gi, "-")
-	  );
-	var api_search = "https://nominatim.openstreetmap.org/search?q=";
-	var link = api_search.concat(parsed_loc).concat("&format=json");
+		address.toLowerCase().replace(/[^a-z0-9 _-]+/gi, '-')
+	);
+	var api_search = 'https://nominatim.openstreetmap.org/search?q=';
+	var link = api_search.concat(parsed_loc).concat('&format=json');
 	console.log(link);
 
 	var response = await fetch(link);
 	var jsonified = await response.json();
 
 	console.log(jsonified);
-	console.log(jsonified[0]["lat"], jsonified[0]["lon"]);
+	console.log(jsonified[0]['lat'], jsonified[0]['lon']);
 
-	if (addForm_geopoint == null){
-		addForm_geopoint = new GeoPoint(jsonified[0]["lat"],jsonified[0]["lon"]);
-		console.log("coords have been set from the address.", addForm_geopoint);
+	if (addForm_geopoint == null) {
+		addForm_geopoint = new GeoPoint(
+			jsonified[0]['lat'],
+			jsonified[0]['lon']
+		);
+		console.log(
+			'coords have been set from the address.',
+			addForm_geopoint
+		);
 	} else {
-		console.log("No need, you already set it in the popup");
+		console.log('No need, you already set it in the popup');
 	}
 }
 
 //main modal enter the location
-let addInp = document.getElementById("mainModalIframe").contentWindow.document.getElementById("address-input");
+let addInp = document
+	.getElementById('mainModalIframe')
+	.contentWindow.document.getElementById('address-input');
 
-addInp.addEventListener('keyup', ({key}) => {
-		if (key ==="Enter"){
-			let inp = addInp.value;
-			getCoordsFromAddress(inp);
-		}
-	});
+addInp.addEventListener('keyup', ({ key }) => {
+	if (key === 'Enter') {
+		let inp = addInp.value;
+		getCoordsFromAddress(inp);
+	}
+});
 
 //values stored in local before uploading them in batches
 temp_activities = {};
 
 // handle the temporary variables when adding a new entry
-function handleSaveEntry(){
-	let addForm_modal = document.getElementById("addModalHTML").contentWindow.document;
-
+function handleSaveEntry() {
+	let addForm_modal =
+		document.getElementById('addModalHTML').contentWindow.document;
 }
