@@ -3,7 +3,7 @@ import { map } from '/index_UNIV.js';
 var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 
 // Show Main modal
-const element = document.getElementById('mainButton');
+const element = document.getElementById('addButton_v2');
 element.addEventListener('click', showMainModal);
 
 export function showMainModal() {
@@ -25,7 +25,7 @@ console.log(document.getElementById('mainModalIframe'));
 const newButton = mainModalDocument.getElementById('addModalButton');
 newButton.addEventListener('click', showAddModal);
 
-/*
+
 export function showAddModal() {
 	console.log("The user clicked the '+' button within the Main Modal");
 	var addModal = document.getElementById('addModal');
@@ -36,7 +36,7 @@ export function showAddModal() {
 			addModal.style.display = 'none';
 		}
 	};
-}*/
+}
 
 function addMainButtonText() {
 	var mainButtonText = document.getElementById('mainButtonText');

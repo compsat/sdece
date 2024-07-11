@@ -95,24 +95,24 @@ function onMapClick(e) {
 map.on('click', onMapClick);
 
 // make add activity in the sidenav work
-var addButton = document.getElementById('addButton_v2');
-	addButton.addEventListener('click', function () {
-		var modal = document.getElementById('addModal');
+// var addButton = document.getElementById('addButton_v2');
+// 	addButton.addEventListener('click', function () {
+// 		var modal = document.getElementById('addModal');
 
-		// Display the modal
-		document.getElementById(
-			'addModalHTML'
-		).src = `./sdece/html/addloc.html`;
+// 		// Display the modal
+// 		document.getElementById(
+// 			'addModalHTML'
+// 		).src = `./sdece/html/addloc.html`;
 
-		modal.style.display = 'flex';
+// 		modal.style.display = 'flex';
 
-		// Close the Add Activity modal when the user clicks anywhere outside of it
-		window.onclick = function (event) {
-			if (event.target == modal) {
-				modal.style.display = 'none';
-			}
-		};
-	});
+// 		// Close the Add Activity modal when the user clicks anywhere outside of it
+// 		window.onclick = function (event) {
+// 			if (event.target == modal) {
+// 				modal.style.display = 'none';
+// 			}
+// 		};
+// 	});
 
 getDocs(col_ref)
 	.then((querySnapshot) => {
