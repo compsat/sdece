@@ -108,7 +108,12 @@
 		</script>
 	</head>
 	<body>
-		<form action="" id="addLocForm" class="form-container" onsubmit="this.reset(); closeModal()">
+		<form
+			action=""
+			id="addLocForm"
+			class="form-container"
+			onsubmit="this.reset(); closeModal()"
+		>
 			<div class="form-body">
 				<!-- Header -->
 				<div class="form-header">
@@ -367,7 +372,12 @@
 					>
 						Save
 					</button>
-					<button class="form-button negative" data-id="Delete Button">Delete</button>
+					<button
+						class="form-button negative"
+						data-id="Delete Button"
+					>
+						Delete
+					</button>
 				</div>
 				<div class id="error_messages"></div>
 
@@ -379,7 +389,7 @@
 			document
 				.getElementById('addLocForm')
 				.addEventListener('submit', function (event) {
-					console.log("SCRIPT BEING READ");
+					console.log('SCRIPT BEING READ');
 					event.preventDefault(); // Prevent the default form submission
 
 					// Simulate successful submission (replace with actual form submission code)
@@ -406,8 +416,8 @@
 					newDateInput.style.marginTop = '1.5rem';
 					dateContainer.insertBefore(newDateInput, this);
 				});
-			
-			function closeModal(){
+
+			function closeModal() {
 				window.parent.postMessage('closeAddModal', '*');
 			}
 
