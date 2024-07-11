@@ -64,42 +64,32 @@
 		</script>
 	</head>
 	<body>
-		<form
-			action=""
-			id="addLocForm"
-			class="form-container"
-		>
+		<form action="" id="addLocForm" class="form-container">
+			<div class="form-header">
+				<h1 class="form-heading">Edit Activity</h1>
+				<button id="close-btn">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						class="form-icon"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M6 18 18 6M6 6l12 12"
+						/>
+					</svg>
+				</button>
+			</div>
 			<div class="form-body">
 				<!-- Header -->
-				<div class="form-header">
-					<h1
-						class="form-heading"
-					>
-						Edit Activity
-					</h1>
-					<button id="close-btn">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke-width="1.5"
-							class="form-icon"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								d="M6 18 18 6M6 6l12 12"
-							/>
-						</svg>
-					</button>
-				</div>
 
 				<!-- General Information -->
 				<div class="form-section">
 					<div class="form-field">
-						<label
-							class="form-label"
-							for="activity_name"
+						<label class="form-label" for="activity_name"
 							>Activity Name
 						</label>
 						<input
@@ -112,9 +102,7 @@
 					</div>
 
 					<div class="form-field">
-						<label
-							class="form-label"
-							for="activity_nature"
+						<label class="form-label" for="activity_nature"
 							>Nature of Activity
 						</label>
 						<input
@@ -127,16 +115,17 @@
 					</div>
 
 					<div class="form-field">
-						<label
-							class="form-label"
-							for="activity_date"
+						<label class="form-label" for="activity_date"
 							>Dates of Partnership
 						</label>
-						<div style="
+						<div
+							style="
 								display: flex;
 								flex-direction: column;
 								align-items: flex-start;
-							" id="date-container">
+							"
+							id="date-container"
+						>
 							<input
 								type="Date"
 								id="activity_date"
@@ -156,23 +145,17 @@
 									margin-top: 1rem;
 								"
 								>Add another date
-						</a>	
+							</a>
 						</div>
 					</div>
 				</div>
 
 				<!-- PARTNER INFORMATION -->
 				<div class="form-section">
-					<h2 class="form-subheading">
-						PARTNER INFORMATION
-					</h2>
+					<h2 class="form-subheading">PARTNER INFORMATION</h2>
 
-					<div
-						class="form-field"
-					>
-						<label
-							class="form-label"
-							for="partner_name"
+					<div class="form-field">
+						<label class="form-label" for="partner_name"
 							>Name of Host Partner
 						</label>
 						<input
@@ -185,9 +168,7 @@
 					</div>
 
 					<div class="form-field">
-						<label
-							class="form-label"
-							for="partner_address"
+						<label class="form-label" for="partner_address"
 							>Address of Host Partner
 						</label>
 						<input
@@ -230,9 +211,7 @@
 					</div>
 
 					<div class="form-field">
-						<label
-							class="form-label"
-							for="partner_email"
+						<label class="form-label" for="partner_email"
 							>Email of Contact Person / Partner
 						</label>
 						<input
@@ -244,7 +223,9 @@
 						/>
 					</div>
 
-					<div class="flex flex-row justify-between mb-6 items-center">
+					<div
+						class="flex flex-row justify-between mb-6 items-center"
+					>
 						<label
 							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
 							for="partner_coordinates"
@@ -266,9 +247,7 @@
 					</h2>
 
 					<div class="form-field">
-						<label
-							class="form-label"
-							for="ADMU_office"
+						<label class="form-label" for="ADMU_office"
 							>Name of Office</label
 						>
 						<input
@@ -281,9 +260,7 @@
 					</div>
 
 					<div class="form-field">
-						<label
-							class="form-label"
-							for="ADMU_contact_name"
+						<label class="form-label" for="ADMU_contact_name"
 							>Name of Ateneo Contact Person
 						</label>
 						<input
@@ -296,9 +273,7 @@
 					</div>
 
 					<div class="form-field">
-						<label
-							class="form-label"
-							for="ADMU_email"
+						<label class="form-label" for="ADMU_email"
 							>Email of Ateneo Contact Person
 						</label>
 						<input
@@ -319,16 +294,19 @@
 						type="submit"
 						id="submit_form"
 						name="submit_form"
-					>Save
+					>
+						Save
 					</button>
 					<button
-						class="form-button negative" id="deleteActivityButton"
-					>Delete
+						class="form-button negative"
+						id="deleteActivityButton"
+					>
+						Delete
 					</button>
 				</div>
 				<div id="error_messages"></div>
-    
-            <br><br>
+
+				<br /><br />
 			</div>
 		</form>
 
@@ -373,6 +351,5 @@
 					window.parent.postMessage('closeAddModal', '*');
 				});
 		</script>
-
 	</body>
 </html>
