@@ -341,14 +341,16 @@
 					dateContainer.insertBefore(newDateInput, this);
 				});
 
+			function closeModal() {
+				window.parent.postMessage('closeEditModal', '*');
+			}
+
 			document
 				.getElementById('close-btn')
 				.addEventListener('click', function (event) {
 					event.preventDefault();
-					console.log(
-						'The user has closed the Add Activity modal.'
-					);
-					window.parent.postMessage('closeAddModal', '*');
+					console.log('The user has closed the Add Edit modal.');
+					closeModal();
 				});
 		</script>
 	</body>
