@@ -22,7 +22,6 @@
 			href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap"
 
 <!DOCTYPE html> <html> <head> <meta charset="utf-8" /> <title>Geocoding Control</title> <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" /> <!-- Import Montserrat and Hind from Google Fonts --> <link rel="preconnect" href="https://fonts.googleapis.com" /> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /> <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" /> <link rel="preconnect" href="https://fonts.googleapis.com" /> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /> <link href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap"
-
 			rel="stylesheet"
 		/>
 
@@ -67,7 +66,6 @@
 
 	<body>
 		<!-- MAIN CONTENT -->
-
 		<div class="main">
 			<div class="side-nav">
 				<div class="side-nav-header">
@@ -156,7 +154,9 @@
 					</div>
 
 					<!-- Logout Button -->
-					<button class="logout-btn">
+
+					
+					<button class="logout-btn" id="logout-btn">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -171,7 +171,6 @@
 								d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
 							/>
 						</svg>
-
 						Logout
 					</button>
 				</div>
@@ -356,7 +355,16 @@
 		</div>
 
 		<!-- SCRIPTS -->
+
+    <script type="module">
+        import { signOutUser } from "/auth.js";
+        const LOGOUT_BTN = document.getElementById("logout-btn");
+
+        LOGOUT_BTN.addEventListener("click", signOutUser)
+    </script>
+
 		<script>
+			
 			// This hides the Add Activity modal when the user submits the form
 			window.addEventListener('message', function (event) {
 				if (event.data && event.data.type === 'addlocFormSuccess') {
