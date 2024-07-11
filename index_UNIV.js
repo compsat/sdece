@@ -148,8 +148,6 @@ export const JS_CS_ENGINE = [
 			'sdece/js/firestore.js',
 			'sdece/css/form.css',
 			'sdece/css/modal.css',
-			// '/css/login.css',
-			'sdece/css/main.css',
 		],
 	],
 ];

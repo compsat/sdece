@@ -4,7 +4,6 @@
 		<title>Message</title>
 
 		<!-- Import CSS file -->
-		<link href="../main.css" rel="stylesheet" />
 		<link href="../css/form.css" rel="stylesheet" />
 		<link href="../css/modal.css" rel="stylesheet" />
 
@@ -51,15 +50,49 @@
 		</div>
 
 		<div class="message-modal-content">
-			<svg fill="#45c600" width="64px" height="64px" viewBox="0 0 24 24" id="check-mark-circle-2" data-name="Flat Line" xmlns="http://www.w3.org/2000/svg" class="icon flat-line">
+			<svg
+				fill="#45c600"
+				width="64px"
+				height="64px"
+				viewBox="0 0 24 24"
+				id="check-mark-circle-2"
+				data-name="Flat Line"
+				xmlns="http://www.w3.org/2000/svg"
+				class="icon flat-line"
+			>
 				<g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-				<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+				<g
+					id="SVGRepo_tracerCarrier"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				></g>
 				<g id="SVGRepo_iconCarrier">
-					<polyline id="primary" points="21 5 12 14 8 10" style="fill: none; stroke: #45c600; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></polyline>
-					<path id="primary-2" data-name="primary" d="M20.94,11A8.26,8.26,0,0,1,21,12a9,9,0,1,1-9-9,8.83,8.83,0,0,1,4,1" style="fill: none; stroke: #45c600; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;">
-				</path></g>
+					<polyline
+						id="primary"
+						points="21 5 12 14 8 10"
+						style="
+							fill: none;
+							stroke: #45c600;
+							stroke-linecap: round;
+							stroke-linejoin: round;
+							stroke-width: 2;
+						"
+					></polyline>
+					<path
+						id="primary-2"
+						data-name="primary"
+						d="M20.94,11A8.26,8.26,0,0,1,21,12a9,9,0,1,1-9-9,8.83,8.83,0,0,1,4,1"
+						style="
+							fill: none;
+							stroke: #45c600;
+							stroke-linecap: round;
+							stroke-linejoin: round;
+							stroke-width: 2;
+						"
+					></path>
+				</g>
 			</svg>
-			<p> Form successfully submitted </p>
+			<p>Form successfully submitted</p>
 			<!-- change this to dynamically load messages -->
 		</div>
 
@@ -68,11 +101,9 @@
 				.getElementById('close-btn')
 				.addEventListener('click', function (event) {
 					event.preventDefault();
-					console.log(
-						'The user has closed the message modal.'
-					);
+					console.log('The user has closed the message modal.');
 					window.parent.postMessage('closeMessageModal', '*');
-				});			
+				});
 		</script>
 	</body>
 </html>
