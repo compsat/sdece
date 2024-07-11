@@ -490,19 +490,9 @@ export async function getCoordsFromAddress(address = "161 Daan Tubo, Diliman, Qu
 
 	var response = await fetch(link);
 	var jsonified = await response.json();
-	// fetch(link)
-	// 	.then((response) => response.json())
-	// 	.then((json) => {
-	// 	json.forEach(function (entry, index) {
-	// 		// var marker = L.marker([
-	// 		// parseFloat(entry["lat"]),
-	// 		// parseFloat(entry["lon"]),
-	// 		// ]);
-	// 		console.log("lat",entry["lat"]);
-	// 		console.log("long",entry["lon"]);
-	// 	});
-	// });
+
 	console.log(jsonified);
+	console.log(jsonified[0]["lat"], jsonified[0]["lon"]);
 }
 
 //main modal enter the location
