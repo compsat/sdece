@@ -10,6 +10,7 @@ import {
 	query,
 	where,
 	getDoc,
+	GeoPoint,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import {
 	getCollection,
@@ -36,6 +37,8 @@ var col_ref = null;
 col_ref = getCollection();
 var partners = {};
 var activities = [];
+
+var addForm_geopoint;
 
 // This pans to the Philippines
 map.panTo(new L.LatLng(14.651, 121.052));
@@ -68,10 +71,21 @@ function onMapClick(e) {
 
 	// This addButton is from the mini popup
 	var addButton = document.querySelector('.addButton');
-	addButton.addEventListener('click', function () {
+	addButton.addEventListener('click', function () { // show mainmodal from pop up "add location"
+		console.log("main modal called from popup");
+		addForm_geopoint = new GeoPoint(lat, lng);
+		console.log("currently adding coords: ", addForm_geopoint);
 		showMainModal();
 	});
 }
+
+// Show Main modal from the sideNav
+const element = document.getElementById('addButton_v2');
+element.addEventListener('click', () => {
+	console.log("main modal called from sideNav");
+	addForm_geopoint = null;
+	showMainModal();
+});
 
 map.on('click', onMapClick);
 
@@ -493,6 +507,13 @@ export async function getCoordsFromAddress(address = "161 Daan Tubo, Diliman, Qu
 
 	console.log(jsonified);
 	console.log(jsonified[0]["lat"], jsonified[0]["lon"]);
+
+	if (addForm_geopoint == null){
+		addForm_geopoint = new GeoPoint(jsonified[0]["lat"],jsonified[0]["lon"]);
+		console.log("coords have been set from the address.", addForm_geopoint);
+	} else {
+		console.log("No need, you already set it in the popup");
+	}
 }
 
 //main modal enter the location
@@ -501,6 +522,15 @@ let addInp = document.getElementById("mainModalIframe").contentWindow.document.g
 addInp.addEventListener('keyup', ({key}) => {
 		if (key ==="Enter"){
 			let inp = addInp.value;
-			getCoordsFromAddress();
+			getCoordsFromAddress(inp);
 		}
 	});
+
+//values stored in local before uploading them in batches
+temp_activities = {};
+
+// handle the temporary variables when adding a new entry
+function handleSaveEntry(){
+	let addForm_modal = document.getElementById("addModalHTML").contentWindow.document;
+
+}
