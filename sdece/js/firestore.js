@@ -476,3 +476,41 @@ export function showModal(partner) {
 		});
 	}
 }
+
+
+export async function getCoordsFromAddress(address = "161 Daan Tubo, Diliman, Quezon City"){
+	console.log("ENTER PRESSED IN MAIN MODAL: ", address);
+
+	var parsed_loc = encodeURIComponent(
+		address.toLowerCase().replace(/[^a-z0-9 _-]+/gi, "-")
+	  );
+	var api_search = "https://nominatim.openstreetmap.org/search?q=";
+	var link = api_search.concat(parsed_loc).concat("&format=json");
+	console.log(link);
+
+	var response = await fetch(link);
+	var jsonified = await response.json();
+	// fetch(link)
+	// 	.then((response) => response.json())
+	// 	.then((json) => {
+	// 	json.forEach(function (entry, index) {
+	// 		// var marker = L.marker([
+	// 		// parseFloat(entry["lat"]),
+	// 		// parseFloat(entry["lon"]),
+	// 		// ]);
+	// 		console.log("lat",entry["lat"]);
+	// 		console.log("long",entry["lon"]);
+	// 	});
+	// });
+	console.log(jsonified);
+}
+
+//main modal enter the location
+let addInp = document.getElementById("mainModalIframe").contentWindow.document.getElementById("address-input");
+
+addInp.addEventListener('keyup', ({key}) => {
+		if (key ==="Enter"){
+			let inp = addInp.value;
+			getCoordsFromAddress();
+		}
+	});
