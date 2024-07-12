@@ -401,8 +401,8 @@ button {
 }
 
 .addButton {
-	background-color: var(--lightbg);
-	color: var(--custom-light-gray);
+	background-color: var(--custom-translucent-teal);
+	color: var(--lightbg);
 	width: 100%;
 	font-family: 'Montserrat';
 	padding: 0.5rem;
