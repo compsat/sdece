@@ -246,7 +246,9 @@ button {
 }
 
 .modal-button-icon {
-	margin-left: 0.75rem;
+	margin-left: 0.5rem;
+	width: 24px;
+	height: 24px;
 }
 
 .delete-button {
