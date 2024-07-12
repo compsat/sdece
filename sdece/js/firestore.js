@@ -232,6 +232,9 @@ getDocs(col_ref)
 
 // Display partner modal by clicking partner entry (WIP: and on pin pop up click)
 export function showModal(partner) {
+	document.querySelector('.edit-button').style.display = 'none';
+	document.querySelector('.edit-button').style.padding = '0px';
+
 	const modal = document.getElementById('partnerModal');
 	const modalHeader = document.getElementById('modalHeader');
 	const modalContent = document.getElementById('modalContent');
@@ -269,6 +272,9 @@ export function showModal(partner) {
 
 	backarrowDiv.classList.add('close-btn');
 	backarrowDiv.addEventListener('click', () => {
+		document.querySelector('.edit-button').style.display = 'none';
+		document.querySelector('.edit-button').style.padding = '0px';
+
 		modalHeader.innerHTML = '';
 		modalContent.innerHTML = '';
 
@@ -437,6 +443,8 @@ export function showModal(partner) {
 
 			// View activity details in modal after clicking activity
 			activityButton.addEventListener('click', () => {
+				document.querySelector('.edit-button').style.display =
+					'flex';
 				modalHeader.innerHTML = '';
 				modalContent.innerHTML = '';
 
