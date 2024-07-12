@@ -156,7 +156,7 @@ button {
 	position: absolute;
 	z-index: 2000;
 	top: 100px;
-	left: 400px;
+	left: 26rem;
 	width: auto; /* Adjust the width of the modal as needed */
 	min-width: 30%;
 	max-width: 35%;
@@ -164,7 +164,7 @@ button {
 	justify-content: center;
 	box-sizing: border-box;
 	border-radius: 0.5rem;
-	overflow: hidden;
+	overflow: scroll;
 	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 
 	animation: slide-out 500ms forwards;
@@ -231,7 +231,7 @@ button {
 	line-height: 32px;
 	margin: 0;
 	overflow-y: scroll;
-	height: 50vh;
+	height: auto;
 }
 
 .modal-button {
