@@ -3,6 +3,9 @@
     <head>
         <title>Add Location</title>
         <link rel="stylesheet" href="./css/form.css">
+        <link rel="stylesheet" href="./css/main.css">
+        <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
+    
             
         <script type="module">
             //import { addLocation } from "./js/firestore.js";
@@ -81,15 +84,16 @@
     </head>
     
     <body>
-        <br>
-        <div class="container"> 
+          <div class="formModalHeader">
             <!-- Div for margin -->
-            <h1 class="form-header">Add Household</h1>
-            <br>
-            <h2 class="sub-header">HOUSEHOLD INFORMATION</h2>
+            <button type="button" class="closeForm" id="close-btn"></button>
+            <h1 class="formHeader">Add Household</h1>
+          </div>
+          <div class="formModalContent">
+            <h2 class="subHeader">HOUSEHOLD INFORMATION</h2>
             <br>
             <!-- Form -->
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="household_name"
@@ -100,11 +104,10 @@
                     id="household_name"
                     name="household_name"
                     class="attribs"
-                    placeholder="Ex. de Loyola, Íñigo López"
                 />
             </div>
             <br>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="household_address"
@@ -115,11 +118,10 @@
                     id="household_address"
                     name="household_address"
                     class="attribs"
-                    placeholder="Ex. Katipunan, Quezon City"
                 />    
             </div>
             <br>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="household_phase"
@@ -130,11 +132,10 @@
                     id="household_phase"
                     name="household_phase"
                     class="attribs"
-                    placeholder="Ex. Phase 2"
                 />    
             </div>
             <br>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="contact_number"
@@ -145,11 +146,10 @@
                     id="contact_number"
                     name="contact_number"
                     class="attribs"
-                    placeholder="09XX XXX XXXX"
                 />    
             </div>
             <br>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="residency_status"
@@ -160,11 +160,10 @@
                     id="residency_status"
                     name="residency_status"
                     class="attribs"
-                    placeholder="Umuupa or May-Ari"
                 /> 
             </div>
             <br>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="HOA/NOA"
@@ -179,7 +178,7 @@
                 /> 
             </div>
 
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="location_link"
@@ -189,11 +188,10 @@
                     type="text"
                     id="location_link"
                     name="location_link"
-                    class="attribs"
-                    placeholder="Place link here."> 
+                    class="attribs"> 
             </div>
             
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="location_coordinates"
@@ -204,12 +202,11 @@
                     id="location_coordinates"
                     name="location_coordinates"
                     class="attribs"
-                    placeholder="Ex. 14.6895421, 121.0818291"
                 /> 
             </div>
 
             <br>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="household_material"
@@ -220,11 +217,10 @@
                     id="household_material"
                     name="household_material"
                     class="attribs"
-                    placeholder="Ex. Semi-Concrete"
                 /> 
             </div>
             <br>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="nearest_evac"
@@ -235,11 +231,10 @@
                     id="nearest_evac"
                     name="nearest_evac"
                     class="attribs"
-                    placeholder="Ex. Banaba Elementary School"
                 />    
             </div>
 
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="status"
@@ -250,13 +245,12 @@
                     id="status"
                     name="status"
                     class="attribs"
-                    placeholder="Add to Clean or Insufficient"
                 />    
             </div>
             <br>
-            <h2 class="sub-header">RESIDENT INFORMATION</h2>
+            <h2 class="subHeader">RESIDENT INFORMATION</h2>
             <br>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="number_residents"
@@ -267,11 +261,10 @@
                     id="number_residents"
                     name="number_residents"
                     class="attribs"
-                    placeholder="Ex. 6"
                 />    
             </div>
             <br>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="number_minors"
@@ -282,11 +275,10 @@
                     id="number_minors"
                     name="number_minors"
                     class="attribs"
-                    placeholder="Ex. 3"
                 />
             </div>
             <br>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="number_seniors"
@@ -297,11 +289,10 @@
                     id="number_seniors"
                     name="number_seniors"
                     class="attribs"
-                    placeholder="Ex. 2"
                 />
             </div>
             <br>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="number_pwd"
@@ -312,11 +303,10 @@
                     id="number_pwd"
                     name="number_pwd"
                     class="attribs"
-                    placeholder="Ex. 1"
                 />
             </div>
             <br>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="number_sick"
@@ -327,10 +317,9 @@
                     id="number_sick"
                     name="number_sick"
                     class="attribs"
-                    placeholder="Ex. 0"
                 />
             </div>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="sickness_present"
@@ -341,11 +330,10 @@
                     id="sickness_present"
                     name="sickness_present"
                     class="attribs"
-                    placeholder="Ex. Diabetes"
                 />
             </div>
             <br>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
                     class="form"
                     for="number_pregnant"
@@ -356,15 +344,14 @@
                     id="number_pregnant"
                     name="number_pregnant"
                     class="attribs"
-                    placeholder="Ex. 0"
                 />
             </div>
             <br>
-            <h2 class="sub-header">RISK LEVELS</h2>
+            <h2 class="subHeader">RISK LEVELS</h2>
             <br>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
-                    class="disaster-form"
+                    class="disasterForm"
                     for="earthquake"
                     >Earthquake
                 </label>
@@ -379,13 +366,12 @@
                     id="earthquake_risk"
                     name="earthquake_risk"
                     class="attribs"
-                    placeholder="Description of Earthquake Risk here."
                 />
             </div>
             <br>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
-                    class="disaster-form"
+                    class="disasterForm"
                     for="fire"
                     >Fire
                 </label>
@@ -400,13 +386,12 @@
                     id="fire_risk"
                     name="fire_risk"
                     class="attribs"
-                    placeholder="Description of Fire Risk here."
                 />
             </div>
             <br>  
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
-                    class="disaster-form"
+                    class="disasterForm"
                     for="flood"
                     >Flood
                 </label>
@@ -421,13 +406,12 @@
                     id="flood_risk"
                     name="flood"
                     class="attribs"
-                    placeholder="Description of Flood Risk here."
                 />
             </div>
             <br>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
-                    class="disaster-form"
+                    class="disasterForm"
                     for="landslide"
                     >Landslide
                 </label>
@@ -442,13 +426,12 @@
                     id="landslide_risk"
                     name="landslide"
                     class="attribs"
-                    placeholder="Description of Landslide Risk here."
                 />
             </div>
             <br>
-            <div class="input_container">
+            <div class="inputContainer">
                 <label
-                    class="disaster-form"
+                    class="disasterForm"
                     for="storm">Storm
                 </label>
                 <select name="storm_level" id="storm" class="attribs">
@@ -462,7 +445,6 @@
                     id="storm_risk"
                     name="storm_risk"
                     class="attribs"
-                    placeholder="Description of Storm Risk here."
                 />
             </div>
             <br>
@@ -480,7 +462,36 @@
                 <!-- Clears all contents of the form -->
                 <button class="clear form">Delete</button>
             </div>
-        </div>
+          </div>
+          <div class="formModalFooter"></div>
 
+        <script>
+			function closeModal() {
+				window.parent.postMessage('closeAddModal', '*');
+			}
+
+			document
+				.getElementsByClassName('closeForm')[0]
+				.addEventListener('click', function (event) {
+					event.preventDefault();
+					console.log(
+						'The user has closed the Add Activity modal.'
+					);
+					closeModal();
+				});
+
+
+			function closeModal() {
+				window.parent.postMessage('closeAddModal', '*');
+			}
+
+			document.getElementsByClassName('close-btn').addEventListener('click', function (event) {
+					event.preventDefault();
+					console.log(
+						'The user has closed the Add Activity modal.'
+					);
+					closeModal();
+				});
+        </script>
     </body>  
 </html>

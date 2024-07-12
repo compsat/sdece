@@ -65,7 +65,7 @@ div.checkboxColumn {
 }
   
 .formModalContent {
-    padding: 1px 32px;
+    padding: 10px 32px;
     padding-bottom: 32px;
     height: calc(97% - 140px);
     max-width: 100%;
