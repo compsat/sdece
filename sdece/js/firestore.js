@@ -383,11 +383,11 @@ export function showModal(partner) {
 		partner.forEach((activity) => {
 			console.log(activity);
 			// View activity details button
-			const activityEntry = document.createElement('div');
-			const activityButton = document.createElement('button');
+			const activityButton = document.createElement('div');
+			const activityTitle = document.createElement('button');
 
+			activityTitle.classList.add('modal-activity-title');
 			activityButton.classList.add('modal-activity-button');
-			activityEntry.classList.add('modal-activity');
 
 			const activityName = document.createElement('div');
 			const arrow = document.createElement('div');
@@ -401,10 +401,10 @@ export function showModal(partner) {
 			office.innerHTML = activity.ADMU_office;
 
 
-			activityButton.appendChild(activityName);
-			activityButton.appendChild(arrow);
-			activityEntry.appendChild(activityButton);
-			activityEntry.appendChild(office);
+			activityTitle.appendChild(activityName);
+			activityTitle.appendChild(arrow);
+			activityButton.appendChild(activityTitle);
+			activityButton.appendChild(office);
 
 			
 
@@ -466,7 +466,7 @@ export function showModal(partner) {
 				modalContent.appendChild(activityOfficeDiv);
 			});
 
-			activityDiv.appendChild(activityEntry);
+			activityDiv.appendChild(activityButton);
 		});
 	}
 
