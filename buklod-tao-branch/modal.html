@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Partner Modal</title>
+        <link rel="stylesheet" href="./css/main.css">
+        <script type="module" src="js/firestore.js"></script>
+    </head>
+    
+    <body style="padding-right: 10px;">
+      <br>
+      <div>
+        <p class="modalText" id="entry_contact_number" style="margin-top: -5px;"></p>
+        <p class="modalText" id="entry_address"></p>
+      </div>
+      <div class="modalLine">
+        <label class="modalLabel" style="width: 220px;">Residency Status</label>
+        <label class="modalLabel" style="width: 220px;">Part of HOA / NOA</label>
+      </div>
+      <div class="modalLine">
+        <p class="modalText" id="entry_residency_status" style="width: 220px;"></p>
+        <p class="modalText" id="entry_HOA/NOA" style="width: 220px;"></label>
+      </div>
+      <div>
+        <label class="modalLabel">Nearest Evacuation Area</label>
+        <p class="modalText" id="entry_nearest_evacuation_area"></p>
+      </div>
+      <button type="button" class="collapsible">Risk Levels</button>
+      <div class="colContent" style="display: block;">
+        <div class="modalLine">
+          <label class="modalLabel">Earthquake</label>
+          <label class="modalLabel" id="entry_earthquake_risk_level">RISK LEVEL</label>
+        </div>
+        <div>
+          <p class="modalText" id="entry_earthquake_desc"></p>
+        </div>
+        <div class="modalLine">
+          <label class="modalLabel">Fire</label>
+          <label class="modalLabel" id="entry_fire_risk_level">RISK LEVEL</label>
+        </div>
+        <div>
+          <p class="modalText" id="entry_fire_desc"></p>
+        </div>
+        <div class="modalLine">
+          <label class="modalLabel">Flood</label>
+          <label class="modalLabel" id="entry_flood_risk_level">RISK LEVEL</label>
+        </div>
+        <div>
+          <p class="modalText" id="entry_flood_desc"></p>
+        </div>
+        <div class="modalLine">
+          <label class="modalLabel">Landslide</label>
+          <label class="modalLabel" id="entry_landslide_risk_level">RISK LEVEL</label>
+        </div>
+        <div>
+          <p class="modalText" id="entry_landslide_desc"></p>
+        </div>
+        <div class="modalLine">
+          <label class="modalLabel">Storm</label>
+          <label class="modalLabel" id="entry_storm_risk_level">RISK LEVEL</label>
+        </div>
+        <div>
+          <p class="modalText" id="entry_storm_desc"></p>
+        </div>
+      </div>
+      <button type="button" class="collapsible">Residents</button>
+      <div class="colContent" style="display: block;">
+        <br>
+        <div class="modalLine">
+          <label class="modalLabel">Total</label>
+          <label class="modalLabel" id="entry_number_of_residents"></label>
+        </div>
+        <hr style="border-top: 1px solid #CBD5E0;">
+        <div class="modalLine">
+          <label class="modalLabel">Minors</label>
+          <label class="modalLabel" id="entry_number_of_minor_residents"></label>
+        </div>
+        <br>
+        <div class="modalLine">
+          <label class="modalLabel">Seniors</label>
+          <label class="modalLabel" id="entry_number_of_senior_residents"></label>
+        </div>
+        <br>
+        <div class="modalLine">
+          <label class="modalLabel">PWD</label>
+          <label class="modalLabel" id="entry_number_of_pwd_residents"></label>
+        </div>
+        <br>
+        <div class="modalLine">
+          <label class="modalLabel">Sick</label>
+          <label class="modalLabel" id="entry_number_of_sick_residents"></label>
+        </div>
+        <br>
+        <div class="modalLine">
+          <label class="modalLabel" >Pregnant</label>
+          <label class="modalLabel" id="entry_number_of_pregnant_residents"></label>
+        </div>
+        <br>
+      </div>
+    </body>  
+</html>

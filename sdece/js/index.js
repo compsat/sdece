@@ -6,7 +6,7 @@ import {
 	getCollection,
 	DB,
 } from '/firestore_UNIV.js';
-import { getDivContent, addListeners, map } from '/index_UNIV.js';
+import { addListeners, map, getDivContent } from '/index_UNIV.js';
 import {
 	getFirestore,
 	collection,
@@ -22,8 +22,6 @@ import {
 
 var colRef = getCollection();
 
-map.panTo(new L.LatLng(14.651, 121.052));
-
 // //list down all documents under the collection in console.log
 // const querySnapshot = await getDocs(colRef);
 // console.log(querySnapshot);
@@ -32,74 +30,26 @@ map.panTo(new L.LatLng(14.651, 121.052));
 //   console.log(doc.id, " => ", doc.data());
 // });
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	attribution:
-		'&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
-}).addTo(map);
+// L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+// 	attribution:
+// 		'&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
+// }).addTo(map);
 
-var searchControl = L.esri.Geocoding.geosearch().addTo(map);
-var results = L.layerGroup().addTo(map);
-var popup = L.popup();
+// var searchControl = L.esri.Geocoding.geosearch().addTo(map);
+// var results = L.layerGroup().addTo(map);
+// var popup = L.popup();
 
 // Loads at the start
+// addListeners();
 
-getDocs(colRef)
-	.then((querySnapshot) => {
-		querySnapshot.forEach((entry) => {
-			var doc = entry.data();
-
-			var marker;
-
-			// Some coordinated are null, protective check
-			if (doc.partner_coordinates != null) {
-				marker = L.marker([
-					parseFloat(doc.partner_coordinates.latitude),
-					parseFloat(doc.partner_coordinates.longitude),
-				]);
-			}
-
-			getDivContent(doc.partner_name).then((div) => {
-				results.addLayer(marker);
-				var popupContent = `
-					<div class="partner-popup w-auto font-semibold text-sm font-montserrat text-darkbg !text-center	" id="`;
-				popupContent += doc.partner_name;
-				popupContent += `">`;
-				popupContent += doc.partner_name;
-				popupContent += `</div>`;
-
-				marker.bindPopup(popupContent);
-				results.addLayer(marker);
-			});
-
-			marker.on('popupopen', function () {
-				console.log('Clicked on ' + doc.partner_name + ' pin!');
-
-				var test = document.getElementById(doc.partner_name);
-				test.addEventListener('click', function () {
-					console.log(
-						'Clicked on the pop-up content of ' +
-							doc.partner_name
-					);
-
-					// TODO: call showModal(partner) here! Not super sure what the partner object should be in this case
-				});
-			});
-		});
-	})
-	.catch((error) => {
-		console.error('Error getting documents: ', error);
-	});
-
-addListeners();
-
-searchControl.on('results', function (data) {
-	results.clearLayers();
-	for (var i = data.results.length - 1; i >= 0; i--) {
-		var marker = L.marker(data.results[i].latlng);
-		console.log(marker);
-		results.addLayer(marker);
-	}
-});
+// searchControl.on('results', function (data) {
+// 	results.clearLayers();
+// 	for (var i = data.results.length - 1; i >= 0; i--) {
+// 		var marker = L.marker(data.results[i].latlng);
+// 		console.log(marker);
+// 		results.addLayer(marker);
+// 	}
+// });
 
 // This function defines the event for when the user clicks anywhere on the map
 function onMapClick(e) {
@@ -138,7 +88,6 @@ function onMapClick(e) {
 
 		// Display the modal
 		modal.classList.remove('hidden');
-		modal.classList.add('flex');
 
 		// Close the modal when the user clicks anywhere outside of it
 		window.onclick = function (event) {
@@ -163,8 +112,13 @@ function showMainModal() {
 	console.log("'Add an activity' button was clicked!");
 
 	var mainModal = document.getElementById('mainModal');
-	mainModal.classList.remove('hidden');
-	mainModal.classList.add('flex');
+	mainModal.style.display = 'flex';
+
+	window.onclick = function (event) {
+		if (event.target == mainModal) {
+			mainModal.style.display = 'none';
+		}
+	};
 }
 
 // Close Main modal
@@ -173,18 +127,28 @@ elementCloseButton.addEventListener('click', closeModal);
 
 function closeModal() {
 	var mainModal = document.getElementById('mainModal');
-	mainModal.classList.remove('flex');
-	mainModal.classList.add('hidden');
+	mainModal.style.display = 'none';
 }
 
 // Fuction for filtering results upon searching partners
-const newButton = document.getElementById('otherButton');
+const newButton = document.getElementById('addModalButton');
 newButton.addEventListener('click', showAddModal);
 
 export function showAddModal() {
-	console.log('The button is working');
+	console.log("The user clicked the '+' button within the Main Modal");
+	var addModal = document.getElementById('addModal');
+	addModal.style.display = 'flex';
 
-	var m = document.getElementById('addModal');
-	m.classList.remove('hidden');
-	m.classList.add('flex');
+	window.onclick = function (event) {
+		if (event.target == addModal) {
+			addModal.style.display = 'none';
+		}
+	};
 }
+
+function addMainButtonText() {
+	var mainButtonText = document.getElementById('mainButtonText');
+	mainButtonText.innerHTML = 'Add an activity';
+}
+
+addMainButtonText();
