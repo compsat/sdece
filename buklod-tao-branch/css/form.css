@@ -23,7 +23,7 @@ div.inputContainer.checkboxContainer {
 /* Specific to the select input for residency status */
 #residencyStatus {
     width: 400px; 
-  }
+}
 
 /* Styling for the label column specific for the HOA / NOA option */
 div.labelColumn {
@@ -39,9 +39,9 @@ div.checkboxColumn {
     padding-right: 180px;
 }
 
-/* CSS for "Add Household" modal*/
+/* CSS for "Add Household" modal */
 .formModal {
-    background-color:rgb(107, 106, 106, 0.4);
+    background-color: rgb(107, 106, 106, 0.4);
     align-items: center;
     position: fixed;
     z-index: 9990;
@@ -62,6 +62,7 @@ div.checkboxColumn {
     background-color: #fcfcfc;
     border-radius: 8px 8px 0px 0px;
     overflow-y: auto;
+    position: relative; 
 }
   
 .formModalContent {
@@ -224,19 +225,33 @@ button.confirm:hover {
     transform: translateY(-2px);
 }
 
+/* for close button */
 .closeForm {
-    color: #aaaaaa;
-    float: right;
-    padding-top: 15px;
-    font-size: 40px;
-    font-weight: bold;
-}
-  
-.closeForm:hover,
-.closeForm:focus {
-    color: #000;
-    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute; 
+    top: 10px; 
+    right: 20px; 
+    z-index: 9992; 
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.closeForm svg {
+    width: 40px; 
+    height: 40px; 
+    fill: #aaaaaa;
+    transition: fill 0.2s;
+}
+
+.closeForm:hover svg,
+.closeForm:focus svg {
+    fill: #000000;
 }
 
 .closeEditForm {
@@ -245,11 +260,11 @@ button.confirm:hover {
     padding-top: 15px;
     font-size: 40px;
     font-weight: bold;
-  }
-  
+}
+
 .closeEditForm:hover,
 .closeEditForm:focus {
     color: #000;
     text-decoration: none;
     cursor: pointer;
- }
+}
