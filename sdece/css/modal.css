@@ -336,10 +336,14 @@ button {
 }
 
 .close-btn {
+	margin-right: 0.5rem;
 	color: #aaaaaa;
 	width: 5%;
 	font-size: 28px;
 	font-weight: bold;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 }
 
 .close-btn:hover,
