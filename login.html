@@ -34,7 +34,7 @@
 			class="header flex flex-row bg-darkbg p-10 justify-center items-center w-full h-auto"
 		>
 			<img
-				src="img/logo-osci.png"
+				src="sdece/img/logo-osci.png"
 				alt="OSCI Logo"
 				class="img w-14 h-auto mr-8"
 			/>
@@ -80,6 +80,8 @@
 					const password =
 						document.getElementById('password').value;
 					signIn(email, password);
+					var errMsg = document.getElementById("error");
+					errMsg.textContent = "Error Logging In";
 				});
 		</script>
 	</body>

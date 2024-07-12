@@ -28,6 +28,7 @@ export function signIn(email, password) {
         .catch((error) => {
             // Handle errors
             console.error("Error signing in:", error);
+            console.log("SIGN IN ERROR. TRY AGAIN");
         });
 }
 
