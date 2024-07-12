@@ -23,14 +23,19 @@ import {
 
 console.log('UNIVERSAL JS v2 LOADING ');
 
+const SECRETS_PATH = "/secrets.json";
+const SECRETS_REQ = new Request(SECRETS_PATH);
+const SECRETS_RES = await fetch(SECRETS_REQ);
+const SECRETS = await SECRETS_RES.json();
+
 export const firebaseConfig = {
-	apiKey: 'AIzaSyA8QWgic_hjbDL-EYIkvSRRII_yfTRdtOQ',
-	authDomain: 'discs-osci-prj.firebaseapp.com',
-	projectId: 'discs-osci-prj',
-	storageBucket: 'discs-osci-prj.appspot.com',
-	messagingSenderId: '601571823960',
-	appId: '1:601571823960:web:1f1278ecb86aa654e6152d',
-	measurementId: 'G-9N9ELDEMX9',
+	apiKey: SECRETS.apiKey,
+	authDomain: SECRETS.authDomain,
+	projectId: SECRETS.projectId,
+	storageBucket: SECRETS.storageBucket,
+	messagingSenderId: SECRETS.messagingSenderId,
+	appId: SECRETS.appId,
+	measurementId: SECRETS.measurementId,
 };
 
 initializeApp(firebaseConfig);
