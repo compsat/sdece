@@ -342,7 +342,7 @@ export function showModal(partner) {
 			.getElementById('addModalHTML')
 			.contentWindow.document.getElementById(
 				'partner_name'
-			).disabled = true;
+			).readOnly = true;
 
 		document
 			.getElementById('addModalHTML')
@@ -359,7 +359,7 @@ export function showModal(partner) {
 			.getElementById('addModalHTML')
 			.contentWindow.document.getElementById(
 				'partner_address'
-			).disabled = true;
+			).readOnly = true;
 
 		document
 			.getElementById('addModalHTML')
