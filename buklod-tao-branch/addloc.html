@@ -6,7 +6,7 @@
             
         <script type="module">
             //import { addLocation } from "./js/firestore.js";
-            import { addEntry, BUKLOD_RULES_TEST, setCollection, validateData } from "/firestore_UNIV.js";
+            import { addEntry, BUKLOD_RULES_TEST, setCollection, validateData, getCoordinates } from "/firestore_UNIV.js";
             setCollection("buklod-official-TEST");
             document.addEventListener("DOMContentLoaded", function() {
                 document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
@@ -27,8 +27,13 @@
                     let inputValue = document.getElementById(fieldName).value;
 
                     if (fieldName == 'number_residents' || fieldName == 'location_coordinates' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick') {
-                        collatedInput[fieldName] = Number(inputValue);
-                    } else {
+                        if (fieldName == 'location_coordinates') {
+                            collatedInput[fieldName] = getCoordinates();
+                        } else {
+                            collatedInput[fieldName] = Number(inputValue);
+                        }
+                    } 
+                    else {
                         collatedInput[fieldName] = inputValue;
                     }
 
@@ -37,6 +42,12 @@
                 }
 
                 console.log(collatedInput);
+
+                // if (isLoggedIn == true) {
+                //     const errors = validateData("buklod-official-TEST", collatedInput);
+                // } else {
+                //     const errors = `You do not have permissions to perform this action. Please login to proceed.`;
+                // }
 
                 const errors = validateData("buklod-official-TEST", collatedInput);
 
@@ -163,7 +174,7 @@
                     id="is_hoa_noa"
                     name="HOA/NOA"
                     class="attribs"
-                    value="yes"
+                    value="HOA"
                 /> 
             </div>
 
@@ -195,6 +206,7 @@
                     placeholder="Ex. 14.6895421, 121.0818291"
                 /> 
             </div>
+
             <br>
             <div class="input_container">
                 <label

@@ -209,7 +209,7 @@ const VALIDATION_RULES = { //Rules for Validating Data
 		'household_phase': {type: 'string', required: true},
 		'is_hoa_noa': {type: 'string', required: true, minLength: 3, maxLength: 3, enum: ['HOA', 'N/A'] },
 		'landslide_risk': {type: 'string', required: true},
-		'location_coordinates': {type: 'number', required: true},
+		'location_coordinates': {required: true},
 		'location_link': {type: 'string', required: true},
 		'nearest_evac': {type: 'string', required: true, maxLength: 255},
 		'number_minors': {type: 'number'},
