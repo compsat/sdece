@@ -230,17 +230,17 @@ var openForm = document.getElementById('addHousehold');
 var closeForm = document.getElementsByClassName('closeForm')[0];
 
 // When the user clicks the button, open the modal
-// openForm.onclick = function() {
-//   formModal.style.display = "block";
-// }
+openForm.onclick = function() {
+   formModal.style.display = "block";
+}
 
-// openForm.addEventListener('click', function () {
-// 	formModal.style.display = 'block';
-// });
+openForm.addEventListener('click', function () {
+	formModal.style.display = 'block';
+});
 
-// closeForm.addEventListener('click', function () {
-// 	formModal.style.display = 'none';
-// });
+closeForm.addEventListener('click', function () {
+  formModal.style.display = 'none';
+});
 
 // Closing the modal if the user clicks outside of it
 window.onclick = function (event) {

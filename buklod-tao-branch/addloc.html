@@ -3,6 +3,7 @@
     <head>
         <title>Add Location</title>
         <link rel="stylesheet" href="./css/form.css">
+        <link rel="stylesheet" href="./css/main.css">
             
         <script type="module">
             //import { addLocation } from "./js/firestore.js";
@@ -33,6 +34,13 @@
     </head>
     
     <body>
+      <!-- Modal Header: includes title and address -->
+      <div class="formModalHeader">
+        <span class="closeForm">&times;</span>
+        <h1 class="formHeader">Add Household</h1>
+      </div>
+      <!-- Modal Content: everything else -->
+      <div class="formModalContent">
         <h2 class="subHeader">HOUSEHOLD INFORMATION</h2>
         <br>
         <!-- Form Proper -->
@@ -170,5 +178,8 @@
             <button class="clear form">Delete</button>
           </div>
         </div>
+      </div>
+      <!-- Modal Footer: empty space (for design) -->
+      <div class="formModalFooter"></div>
     </body>  
 </html>
