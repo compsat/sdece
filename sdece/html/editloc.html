@@ -298,12 +298,16 @@
 					>
 						Save
 					</button>
-					<button
+					<input
 						class="form-button negative"
-						id="deleteActivityButton"
+						data-id="Delete Button"
+						id="delete-btn"
+						onclick="resetForm()"
+						type="button"
+						value="Clear"
 					>
-						Delete
-					</button>
+						
+					</input>
 				</div>
 				<div id="error_messages"></div>
 
@@ -312,6 +316,15 @@
 		</form>
 
 		<script>
+			function resetForm() {
+				var inputFields = document.getElementsByTagName('input');
+				for (var i = 0; i < inputFields.length; i++) {
+					var field = inputFields[i];
+					if (!field.readOnly && field.type !== 'button') {
+						field.value = '';
+					}
+				}
+			}
 			document
 				.getElementById('addLocForm')
 				.addEventListener('submit', function (event) {
