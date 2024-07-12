@@ -8,29 +8,25 @@ import {
     setPersistence,
 } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
 
-import { } from "/firestore_UNIV_v2_mirror.js"; 
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 
+const SECRETS_PATH = "/secrets.json";
+const SECRETS_REQ = new Request(SECRETS_PATH);
+const SECRETS_RES = await fetch(SECRETS_REQ);
+const SECRETS = await SECRETS_RES.json();
+
+export const firebaseConfig = SECRETS.firebaseConfig; 
+
+initializeApp(firebaseConfig);
 const AUTH = getAuth();
 
-export function getCurrentUser(){
-    return AUTH.currentUser;
-}
 // Sign in function
 export function signIn(email, password) {
     signInWithEmailAndPassword(AUTH, email, password)
         .then((userCredential) => {
             // Signed in successfully
             const USER = userCredential.user;
-                
-            onAuthStateChanged(AUTH, (user) => {
-                if(user) {
-                    console.log("User signed in:", USER);
-                    window.location.replace("index.html");
-                }
-                else {
-                    console.log("User not signed in");
-                }
-            })
+            window.location.replace("")
         })
         .catch((error) => {
             // Handle errors
@@ -51,3 +47,17 @@ export function signOutUser() {
             console.error("Error signing out:", error);
         });
 }   
+
+export function getCurrentUser() {
+    const AUTH = getAuth();
+    onAuthStateChanged(AUTH, (user) => {
+        if(user) {
+            console.log("User signed in:", user);
+            return user;
+        }
+        else {
+            console.log("User not signed in");
+            return null;
+        }
+    })
+}

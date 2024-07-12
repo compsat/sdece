@@ -28,15 +28,7 @@ const SECRETS_REQ = new Request(SECRETS_PATH);
 const SECRETS_RES = await fetch(SECRETS_REQ);
 const SECRETS = await SECRETS_RES.json();
 
-export const firebaseConfig = {
-	apiKey: SECRETS.apiKey,
-	authDomain: SECRETS.authDomain,
-	projectId: SECRETS.projectId,
-	storageBucket: SECRETS.storageBucket,
-	messagingSenderId: SECRETS.messagingSenderId,
-	appId: SECRETS.appId,
-	measurementId: SECRETS.measurementId,
-};
+export const firebaseConfig = SECRETS.firebaseConfig; 
 
 initializeApp(firebaseConfig);
 const DB = getFirestore();
