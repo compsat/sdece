@@ -487,7 +487,7 @@ export function handleEdit(){
 		} 
 	}
 
-	//validate there the collated input
+	//validate the collated input here
 
 	console.log("Edits made to file with ID: ",current_viewed_activity);
 	console.log("Here's the edited file: ", collated_inp);
