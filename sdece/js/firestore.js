@@ -41,7 +41,7 @@ var activities = [];
 var addForm_geopoint;
 
 // This pans to the Philippines
-map.panTo(new L.LatLng(14.651, 121.052));
+map.setView(new L.LatLng(14.651, 121.052), 14);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution:
