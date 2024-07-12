@@ -146,7 +146,9 @@ getDocs(col_ref)
 			marker.bindPopup(popupContent);
 			results.addLayer(marker);
 
-			marker.on('popupopen', function () {
+			marker.on('mouseover', function () {
+				marker.openPopup();
+
 				console.log(
 					'Clicked on ' +
 						partners[partner][0]['partner_name'] +
@@ -174,6 +176,7 @@ getDocs(col_ref)
 			const activityDiv = document.createElement('div');
 
 			containerDiv.addEventListener('click', function () {
+				marker.openPopup();
 				map.panTo(
 					new L.LatLng(
 						parseFloat(
