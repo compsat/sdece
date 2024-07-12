@@ -82,14 +82,6 @@ function onMapClick(e) {
 	});
 }
 
-// Show Main modal from the sideNav
-const element = document.getElementById('addButton_v2');
-element.addEventListener('click', () => {
-	console.log('main modal called from sideNav');
-	addForm_geopoint = null;
-	showMainModal();
-});
-
 map.on('click', onMapClick);
 
 getDocs(col_ref)
@@ -221,16 +213,6 @@ getDocs(col_ref)
 			}
 
 			activityDiv.innerHTML = activities_string;
-
-			//   if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
-			//   {
-			//     partner.activities.forEach( (activity) => {
-			//       activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
-			//     });
-			//   }
-			//   else {
-			//     console.log("No activities found");
-			//   }
 
 			listItem.classList.add('accordion');
 			// Append elements to the DOM
