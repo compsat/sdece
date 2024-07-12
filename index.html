@@ -133,6 +133,7 @@
 							collections.options[
 								collections.selectedIndex
 							].value;
+						console.log("selected this for collection ", SELECTED);
 						setCollection(SELECTED);
 						setCurrentBranchCookie(
 							'current_branch',
@@ -152,6 +153,7 @@
 						console.log(getCollection());
 						loadJsCssFiles(getCurrentBranchCookie());
 					} else {
+						console.log(getCurrentBranchCookie());
 						setCollection(getCurrentBranchCookie());
 						collections.value = getCurrentBranchCookie();
 						loadJsCssFiles(getCurrentBranchCookie());
