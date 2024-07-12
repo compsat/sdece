@@ -8,6 +8,7 @@
 	--custom-medium-gray: #f6f6f6;
 	--custom-light-gray: #fcfcfc;
 	--custom-red: #d64747;
+	--custom-green: #53c257;
 }
 
 * {
@@ -143,6 +144,73 @@ button {
 	font-weight: 700;
 	border-radius: 0.5rem /* 8px */;
 }
+
+[data-id="Save Button"] {
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+[data-id="Save Button"]:hover {
+    transform: scale(1.01);
+    background-color: var(--custom-green);
+	/* border-color: var(--custom-green); */
+}
+
+[data-id="Delete Button"] {
+    transition: background-color -.3s ease, color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+[data-id="Delete Button"]:hover {
+    transform: scale(1.01);
+    color: var(--custom-light-gray);
+    background-color: var(--custom-red);
+}
+
+/* [data-id="Delete Button"] {
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    transition: .2s transform ease-in-out;
+    will-change: transform;
+    z-index: 0;
+    border: 3px solid currentColor;
+    overflow: hidden;
+    padding: 1rem 2rem;
+    position: relative;
+    text-decoration: none;
+    transition: .2s transform ease-in-out;
+    will-change: transform;
+    z-index: 0;
+	margin-bottom: 1rem;
+}
+
+[data-id="Delete Button"]::after {
+    background-color: var(--custom-red);
+	color: var(--custom-light-gray);
+    content: '';
+    display: block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate(-100%, 0) rotate(10deg);
+    transform-origin: top left;
+    transition: .3s transform ease-out;
+    will-change: transform;
+    z-index: -1;
+}
+
+[data-id="Delete Button"]:hover::after {
+    transform: translate(0, 0);
+}
+
+[data-id="Delete Button"]:hover {
+    color: var(--custom-light-gray);
+	border: transparent;
+    transform: scale(1.01);
+    will-change: transform;
+} */
 
 .positive {
 	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
