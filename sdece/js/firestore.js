@@ -20,6 +20,7 @@ import {
 import { addListeners, map, getDivContent } from '/index_UNIV.js';
 
 import { showAddModal } from './index.js';
+import { editEntry } from '../../firestore_UNIV.js';
 // Your Firestore code here
 
 // Import the functions you need from the SDKs you need
@@ -218,7 +219,7 @@ getDocs(col_ref)
 		console.error('Error getting documents: ', error);
 	});
 
-var current_viewed_activity = null;
+var current_viewed_activity = null; //docId of the currently viewed activity
 
 // Display partner modal by clicking partner entry (WIP: and on pin pop up click)
 export function showModal(partner) {
@@ -464,4 +465,32 @@ export function showModal(partner) {
 			
 		});
 	}
+}
+
+let edit_modal = document.getElementById("editModal_iframe").contentWindow.document;
+edit_modal.getElementById("submit_form").addEventListener('click', handleEdit);
+
+export function handleEdit(){
+	var collated_inp = {};
+	for( let field of SDECE_RULES[2]){
+		if (field != "partner_coordinates"){
+			let inp_field = edit_modal.getElementById(field);
+			if(inp_field != null){
+				if(inp_field.value == ""){
+					collated_inp[field] = null;
+				} else {
+					collated_inp[field] = inp_field.value;
+				}
+			}
+		} else {
+			collated_inp[field] = current_viewed_activity["partner_coordinates"];
+		} 
+	}
+
+	//validate there the collated input
+
+	console.log("Edits made to file with ID: ",current_viewed_activity);
+	console.log("Here's the edited file: ", collated_inp);
+
+	editEntry(collated_inp, current_viewed_activity["identifier"]);
 }

@@ -269,20 +269,15 @@ export function addEntry(inp_obj){
     }
 }
 
-export function editEntry(inp_array, docId) {
+export function editEntry(inp_obj, docId) {
 	console.log('edit entry with id ' + docId);
 
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_reference.id) {
 			const DOC_REFERENCE = doc(DB, rule[0], docId);
-
-			let input = {}; // contents depend on the rule engine
-			for (let i = 0; i < inp_array.length; i++) {
-				input[rule[2][i]] = inp_array[i];
-			}
-			updateDoc(DOC_REFERENCE, input)
-				.then((docRef) => {
-					console.log('Document written with ID: ', docRef.id);
+			updateDoc(DOC_REFERENCE, inp_obj)
+				.then(() => {
+					console.log("edited yipee", docId);
 				})
 				.catch((error) => {
 					console.error('Error adding document: ', error);
