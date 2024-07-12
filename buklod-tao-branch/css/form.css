@@ -6,16 +6,87 @@ div.container {
 }
 
 /* container for each input field */
-div.input_container {
+div.inputContainer {
     margin-top: 2px;
-    margin-bottom: 2spx;
+    margin-bottom: 2px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
+}
+
+/* Specific to the checkbox container for the HOA / NOA option */
+div.inputContainer.checkboxContainer {
+    display: flex;
+}
+
+/* Specific to the select input for residency status */
+#residencyStatus {
+    width: 400px; 
+  }
+
+/* Styling for the label column specific for the HOA / NOA option */
+div.labelColumn {
+    flex: 1; 
+    display: flex;
+    justify-content: flex-start; 
+}
+
+/* Styling for the checkbox column specific for the HOA / NOA option */
+div.checkboxColumn {
+    display: flex;
+    justify-content: left; 
+    padding-right: 180px;
+}
+
+/* CSS for "Add Household" modal*/
+.formModal {
+    background-color:rgb(107, 106, 106, 0.4);
+    align-items: center;
+    position: fixed;
+    z-index: 9990;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+  
+.formModalHeader {
+    position: fixed;
+    z-index: 9991;
+    padding: 1px 32px;
+    width: 95%;
+    background-color: #fcfcfc;
+    border-radius: 8px 8px 0px 0px;
+    overflow-y: auto;
+}
+  
+.formModalContent {
+    padding: 1px 32px;
+    padding-bottom: 32px;
+    height: calc(97% - 140px);
+    max-width: 100%;
+    max-height: 73%;
+    background-color: #fcfcfc;
+    font-family: Hind;
+    font-size: 16px;
+    font-style: normal;
+    overflow-y: auto;
+}
+  
+/* form footer (empty) */
+.formModalFooter {
+    height: 8px;
+    max-width: 100%;
+    background-color: #fcfcfc;
+    border-radius: 0px 0px 8px 8px;
 }
 
 /* form header */
-.form-header {
+.formHeader {
     font-family: "Montserrat";
     font-weight: 700;
     font-size: 32px;
@@ -24,7 +95,7 @@ div.input_container {
 }
 
 /* form sub-headers */
-.sub-header {
+.subHeader {
     font-family: "Montserrat";
     font-weight: 700;
     font-size: 20px;
@@ -42,7 +113,7 @@ label.form {
 }
 
 /* specific to disaster risk level (uses both selects and inputs) labels */
-label.disaster-form {
+label.disasterForm {
     font-family: "Montserrat", sans-serif;
     font-weight: 400;
     font-size: 18px;
@@ -102,7 +173,7 @@ input.attribs::placeholder {
 }
 
 /* container for Save and Delete buttons */
-.button-container {
+.buttonContainer {
     margin-top: 20px;
     width: 100%;
     text-align: center;
@@ -152,3 +223,33 @@ button.confirm:hover {
     background-color: #2d839b;
     transform: translateY(-2px);
 }
+
+.closeForm {
+    color: #aaaaaa;
+    float: right;
+    padding-top: 15px;
+    font-size: 40px;
+    font-weight: bold;
+}
+  
+.closeForm:hover,
+.closeForm:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.closeEditForm {
+    color: #aaaaaa;
+    float: right;
+    padding-top: 15px;
+    font-size: 40px;
+    font-weight: bold;
+  }
+  
+.closeEditForm:hover,
+.closeEditForm:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+ }

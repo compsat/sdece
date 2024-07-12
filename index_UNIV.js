@@ -5,7 +5,7 @@ import {
 	getCollection,
 } from '/firestore_UNIV.js';
 
-/// Will need to change how we do this if we ever restructure again
+// Global Map Variable (the map shown)
 export var map = L.map('map').setView([14.5995, 120.9842], 10);
 
 // Takes in a name to determine all field values which should be displayed
@@ -127,4 +127,63 @@ export function clearLocationList() {
 	console.log('test2');
 	var locationList = document.getElementById(`locationList`);
 	locationList.innerHTML = '';
+}
+
+// code for the switching of maps
+export const JS_CS_ENGINE = [
+	[
+		'buklod-official',
+		[
+			'buklod-tao-branch/js/index.js',
+			'buklod-tao-branch/js/firestore.js',
+			'buklod-tao-branch/css/form.css',
+			//   'buklod-tao-branch/css/login.css',
+			'buklod-tao-branch/css/main.css',
+		],
+	],
+	[
+		'sdece-official',
+		[
+			'sdece/js/index.js',
+			'sdece/js/firestore.js',
+			'sdece/css/form.css',
+			'sdece/css/modal.css',
+			// '/css/login.css',
+			'sdece/css/main.css',
+		],
+	],
+];
+
+// creates the JS CSS Files
+export function createJsCssFiles(file_path) {
+	// Essentially makes a script object with a src of the file provided by the Rules Engine
+	if (file_path.includes('.js')) {
+		var fileref = document.createElement('script');
+		fileref.setAttribute('type', 'module');
+		fileref.setAttribute('src', file_path + '?');
+	}
+	if (file_path.includes('.css')) {
+		var fileref = document.createElement('link');
+		fileref.setAttribute('rel', 'stylesheet');
+		fileref.setAttribute('type', 'text/css');
+		fileref.setAttribute('href', file_path + '?');
+	}
+
+	return fileref;
+}
+
+// Loads the JS CSS Files
+export function loadJsCssFiles(file_path) {
+	// script if javascript, css if link or none;
+	for (let rule of JS_CS_ENGINE) {
+		if (rule[0] == getCollection().id) {
+			for (let i = 0; i < rule[1].length; i++) {
+				var new_element = createJsCssFiles(rule[1][i]);
+				new_element.setAttribute('id', 'jscss' + i);
+				document
+					.getElementsByTagName('head')[0]
+					.appendChild(new_element);
+			}
+		}
+	}
 }
