@@ -184,7 +184,8 @@
 								class="form-input"
 								placeholder=""
 							/>
-							<a
+							<!-- Commenting out the additional dates functionality first! -->
+							<!-- <a
 								href=""
 								id="addDate"
 								style="
@@ -196,7 +197,7 @@
 									margin-top: 1rem;
 								"
 								>Add another date
-							</a>
+							</a> -->
 						</div>
 					</div>
 				</div>
@@ -407,19 +408,19 @@
 					);
 				});
 
-			document
-				.getElementById('addDate')
-				.addEventListener('click', function (event) {
-					event.preventDefault();
-					var dateContainer =
-						document.getElementById('date-container');
-					var newDateInput = document.createElement('input');
-					newDateInput.type = 'date';
-					newDateInput.name = 'activity_date';
-					newDateInput.className = 'form-input';
-					newDateInput.style.marginTop = '1.5rem';
-					dateContainer.insertBefore(newDateInput, this);
-				});
+			// document
+			// 	.getElementById('addDate')
+			// 	.addEventListener('click', function (event) {
+			// 		event.preventDefault();
+			// 		var dateContainer =
+			// 			document.getElementById('date-container');
+			// 		var newDateInput = document.createElement('input');
+			// 		newDateInput.type = 'date';
+			// 		newDateInput.name = 'activity_date';
+			// 		newDateInput.className = 'form-input';
+			// 		newDateInput.style.marginTop = '1.5rem';
+			// 		dateContainer.insertBefore(newDateInput, this);
+			// 	});
 
 			function closeModal() {
 				window.parent.postMessage('closeAddModal', '*');
