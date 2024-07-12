@@ -28,7 +28,8 @@
 
                     if (fieldName == 'number_residents' || fieldName == 'location_coordinates' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick') {
                         if (fieldName == 'location_coordinates') {
-                            collatedInput[fieldName] = getCoordinates();
+                            //collatedInput[fieldName] = getCoordinates();
+                            collatedInput[fieldName] = inputValue;
                         } else {
                             collatedInput[fieldName] = Number(inputValue);
                         }
