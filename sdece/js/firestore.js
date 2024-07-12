@@ -334,21 +334,47 @@ export function showModal(partner) {
 			.getElementById('addModalHTML')
 			.contentWindow.document.getElementById('partner_name').value =
 			partner[0].partner_name;
+
 		document
 			.getElementById('addModalHTML')
 			.contentWindow.document.getElementById(
 				'partner_name'
-			).readOnly = true;
+			).disabled = true;
+
+		document
+			.getElementById('addModalHTML')
+			.contentWindow.document.getElementById(
+				'partner_name'
+			).style.backgroundColor = 'var(--custom-medium-gray';
 
 		document
 			.getElementById('addModalHTML')
 			.contentWindow.document.getElementById('partner_address').value =
 			partner[0].partner_address;
+
 		document
 			.getElementById('addModalHTML')
 			.contentWindow.document.getElementById(
 				'partner_address'
-			).readOnly = true;
+			).disabled = true;
+
+		document
+			.getElementById('addModalHTML')
+			.contentWindow.document.getElementById(
+				'partner_address'
+			).style.backgroundColor = 'var(--custom-medium-gray';
+
+		document
+			.getElementById('addModalHTML')
+			.contentWindow.document.getElementById(
+				'partner_address'
+			).style.color = 'var(--custom-dark-gray';
+
+		document
+			.getElementById('addModalHTML')
+			.contentWindow.document.getElementById(
+				'partner_name'
+			).style.color = 'var(--custom-dark-gray';
 
 		// Close the Add Activity modal when the user clicks anywhere outside of it
 		window.onclick = function (event) {
