@@ -2,10 +2,7 @@ import {
     getAuth, 
     signInWithEmailAndPassword, 
     signOut,
-    onAuthStateChanged,
-    inMemoryPersistence,
-    browserSessionPersistence,
-    setPersistence,
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
@@ -26,7 +23,7 @@ export function signIn(email, password) {
         .then((userCredential) => {
             // Signed in successfully
             const USER = userCredential.user;
-            window.location.replace("")
+            window.location.replace("index.html");
         })
         .catch((error) => {
             // Handle errors
@@ -48,16 +45,15 @@ export function signOutUser() {
         });
 }   
 
-export function getCurrentUser() {
-    const AUTH = getAuth();
-    onAuthStateChanged(AUTH, (user) => {
+export function getCurrentUser(thing) {
+    return AUTH.user;
+}
+
+onAuthStateChanged(AUTH, (user) => {
         if(user) {
-            console.log("User signed in:", user);
-            return user;
+            console.log("User signed in:", user.email);           
         }
         else {
-            console.log("User not signed in");
-            return null;
+            console.log("User not signed in");  
         }
-    })
-}
+   })
