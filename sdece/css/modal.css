@@ -388,6 +388,28 @@ button {
 	animation: slide-in 500ms forwards;
 }
 
+.leaflet-popup-content {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.partner-geolocation {
+	color: var(--custom-gray);
+	padding-bottom: 0.5rem;
+}
+
+.addButton {
+	background-color: var(--lightbg);
+	color: var(--custom-light-gray);
+	width: 100%;
+	font-family: 'Montserrat';
+	padding: 0.5rem;
+	border-radius: 0.375rem; /* Assuming rounded-lg corresponds to 6px rounded corners */
+	font-weight: 500;
+	font-size: 1rem;
+}
 .message-modal-header {
 	align-self: flex-end;
 	justify-content: center;
