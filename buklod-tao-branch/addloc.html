@@ -36,7 +36,7 @@
     <body>
       <!-- Modal Header: includes title and address -->
       <div class="formModalHeader">
-        <span class="closeForm">&times;</span>
+        <button type="button" class="closeForm" id="close-btn"></button>
         <h1 class="formHeader">Add Household</h1>
       </div>
       <!-- Modal Content: everything else -->
@@ -181,5 +181,34 @@
       </div>
       <!-- Modal Footer: empty space (for design) -->
       <div class="formModalFooter"></div>
+
+      <script>
+			function closeModal() {
+				window.parent.postMessage('closeAddModal', '*');
+			}
+
+			document
+				.getElementsByClassName('closeForm')[0]
+				.addEventListener('click', function (event) {
+					event.preventDefault();
+					console.log(
+						'The user has closed the Add Activity modal.'
+					);
+					closeModal();
+				});
+
+
+			function closeModal() {
+				window.parent.postMessage('closeAddModal', '*');
+			}
+
+			document.getElementsByClassName('close-btn').addEventListener('click', function (event) {
+					event.preventDefault();
+					console.log(
+						'The user has closed the Add Activity modal.'
+					);
+					closeModal();
+				});
+      </script>
     </body>  
 </html>

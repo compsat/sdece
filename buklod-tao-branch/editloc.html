@@ -4,6 +4,8 @@
 <head>
     <title>Edit Location</title>
     <link rel="stylesheet" href="./css/form.css">
+    <link rel="stylesheet" href="./css/main.css">
+    <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
 
     <script type="module">
         import { editLocation, getDocIdByPartnerName, getDocByID } from "./js/firestore.js";
@@ -71,7 +73,7 @@
 <body>
         <!-- Modal Header: includes title and address -->
         <div class="formModalHeader">
-          <span class="closeEditForm">&times;</span>
+            <button type="button" class="closeForm" id="close-btn"></button>
           <h1 class="formHeader">Edit Household</h1>
         </div>
         <!-- Modal Content: everything else -->
@@ -211,6 +213,20 @@
         </div>
         <!-- modal Footer: empty space -->
          <div class="formModalFooter"></div>
+
+    <script>
+        	function closeModal() {
+				window.parent.postMessage('closeEditModal', '*');
+			}
+
+			document
+				.getElementById('close-btn')
+				.addEventListener('click', function (event) {
+					event.preventDefault();
+					console.log('The user has closed the Add Edit modal.');
+					closeModal();
+				});
+    </script>
 </body>  
 
 </html>

@@ -301,7 +301,7 @@ function showModal(partner) {
 	//script for edit household modal
 
 	// modal
-	var editFormModal = document.getElementById('editForm-modal');
+	var editFormModal = document.getElementById('editModal');
 
 	// open modal
 	var openEditForm = document.getElementById('editHousehold');
