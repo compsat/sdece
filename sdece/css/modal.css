@@ -398,6 +398,7 @@ button {
 .partner-geolocation {
 	color: var(--custom-gray);
 	padding-bottom: 0.5rem;
+	text-align: center;
 }
 
 .addButton {
