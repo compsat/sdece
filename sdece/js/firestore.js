@@ -386,21 +386,30 @@ export function showModal(partner) {
 		partner.forEach((activity) => {
 			console.log(activity);
 			// View activity details button
+			const activityEntry = document.createElement('div');
 			const activityButton = document.createElement('button');
-			activityButton.classList.add('modal-activities');
+
+			activityButton.classList.add('modal-activity-button');
+			activityEntry.classList.add('modal-activity');
 
 			const activityName = document.createElement('div');
-
 			const arrow = document.createElement('div');
+			arrow.classList.add('arrow');
+			const office = document.createElement('div');
+			office.classList.add('modal-address');
 
 			activityName.textContent = activity.activity_nature + '';
-
 			arrow.innerHTML =
 				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
-			arrow.classList.add('arrow');
+			office.innerHTML = activity.ADMU_office;
+
 
 			activityButton.appendChild(activityName);
 			activityButton.appendChild(arrow);
+			activityEntry.appendChild(activityButton);
+			activityEntry.appendChild(office);
+
+			
 
 			// Set div content for activity details
 
@@ -460,7 +469,7 @@ export function showModal(partner) {
 				modalContent.appendChild(activityOfficeDiv);
 			});
 
-			activityDiv.appendChild(activityButton);
+			activityDiv.appendChild(activityEntry);
 		});
 	}
 

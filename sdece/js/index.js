@@ -40,62 +40,6 @@ export function showMainModal() {
 	arrow.classList.add('arrow');
 
 	activityButton.appendChild(activityName);
-	// activityButton.appendChild(arrow);
-
-	// Set div content for activity details
-
-	const activityNameDiv = document.createElement('div');
-	const activityAddressDiv = document.createElement('div');
-	const activityContactDiv = document.createElement('div');
-	const activityOrganizationDiv = document.createElement('div');
-	const activityDatesDiv = document.createElement('div');
-	const activityOfficeDiv = document.createElement('div');
-
-	activityNameDiv.classList.add('modal-activities-header');
-	activityAddressDiv.innerHTML = activity.partner_address;
-	activityAddressDiv.classList.add('modal-address');
-
-	activityContactDiv.innerHTML =
-		'<b>Contact</b> <br> ' +
-		activity.partner_contact_name +
-		'<br>' +
-		activity.partner_email +
-		'<br>';
-	activityOrganizationDiv.innerHTML =
-		'<b>Organization/Unit</b> <br>' +
-		activity.organization_unit;
-	activityDatesDiv.innerHTML =
-		'<b>Date/s of Partnership</b> <br>' +
-		activity.activity_date; //this field might become an array in the future
-
-	activityOfficeDiv.innerHTML =
-		"<hr> <br> <b class='modal-name' >Ateneo Office Oversight</b>" +
-		"<p class='modal-activities-header'>" +
-		activity.ADMU_office +
-		'</p>' +
-		'<p>' +
-		activity.ADMU_contact_name +
-		'</p>' +
-		'<p>' +
-		activity.ADMU_email +
-		'</p>';
-
-	// BUTTON: View activity details in modal after clicking activity
-	// activityButton.addEventListener('click', () => {
-	// // 	// modalHeader.innerHTML = '';
-	// // 	// modalContent.innerHTML = '';
-
-	// // 	// modalHeader.appendChild(backarrowDiv);
-	// // 	// modalHeader.appendChild(nameDiv);
-	// // 	// modalHeader.appendChild(closeDiv);
-
-	// 	main-modal-content.appendChild(activityNameDiv);
-	// 	main-modal-content.appendChild(activityAddressDiv);
-	// 	main-modal-content.appendChild(activityContactDiv);
-	// 	main-modal-content.appendChild(activityOrganizationDiv);
-	// 	main-modal-content.appendChild(activityDatesDiv);
-	// 	main-modal-content.appendChild(activityOfficeDiv);
-	// });
 
 	// To do: have list of activities and iterate-add
 	mainModalActivityList.appendChild(activityButton);
