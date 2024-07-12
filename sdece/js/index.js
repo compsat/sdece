@@ -22,6 +22,8 @@ export function showMainModal() {
 	}
 
 	const mainModalActivityList = mainModalDocument.getElementById('mainModalActivityList');
+	mainModalActivityList.innerHTML = '';
+	
 	var activity = test_entry; //Set what 
 
 	// View activity details button
