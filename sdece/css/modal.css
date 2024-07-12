@@ -237,7 +237,6 @@ button {
 .modal-button {
 	display: flex;
 	flex-direction: row;
-	padding: 24px 24px;
 	width: 100%;
 	height: auto;
 	background-color: #fcfcfc;
@@ -259,10 +258,12 @@ button {
 	font-family: 'Montserrat';
 	align-items: center;
 	font-weight: 600;
+	padding: 24px 24px;
 }
 
 .edit-button {
 	font-weight: 600;
+	padding: 24px 24px;
 
 	color: rgb(61 151 175);
 	display: flex;
@@ -377,7 +378,7 @@ button {
 
 .message-modal-header {
 	align-self: flex-end;
-	justify-content: center; 
+	justify-content: center;
 	width: fit-content;
 	margin-left: 270px;
 }
@@ -391,4 +392,8 @@ button {
 	color: var(--custom-black);
 	font-style: normal;
 	overflow: visible;
+}
+
+.partner-hover:hover {
+	background-color: var(--custom-medium-gray);
 }
