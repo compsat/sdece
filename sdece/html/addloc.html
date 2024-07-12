@@ -376,7 +376,7 @@
 						class="form-button negative"
 						data-id="Delete Button"
 						id="delete-btn"
-						type="reset"
+						onclick="resetForm()"
 					>
 						Clear
 					</button>
@@ -432,6 +432,17 @@
 					);
 					closeModal();
 				});
+
+			function resetForm() {
+				var inputFields = document.getElementsByTagName('input');
+
+				for (var i = 0; i < inputFields.length; i++) {
+					var field = inputFields[i];
+					if (!field.readOnly) {
+						field.value = '';
+					}
+				}
+			}
 		</script>
 	</body>
 </html>
