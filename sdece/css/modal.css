@@ -1,14 +1,5 @@
-/* Color Definition */
-:root {
-	--darkbg: #387181;
-	--lightbg: #3d97af;
-	--custom-black: #2f2f2f;
-	--custom-gray: #a0a0a0;
-	--custom-dark-gray: #979797;
-	--custom-medium-gray: #f6f6f6;
-	--custom-light-gray: #fcfcfc;
-	--custom-red: #d64747;
-}
+
+@import "../../main.css";
 
 * {
 	margin: 0px;
@@ -367,7 +358,8 @@ button {
 
 .close-btn {
 	float: right;
-	color: var(--custom-gray);
+	color: var(--custom-dark-gray);
+	stroke: var(--custom-dark-gray);
 	width: 10%;
 	font-size: 28px;
 	font-weight: bold;
@@ -384,6 +376,7 @@ button {
 }
 
 .plus-btn {
+	transition: color 0.1s ease, transform 0.1s ease;
 	float: right;
 	color: var(--darkbg);
 	width: 10%;
@@ -396,6 +389,7 @@ button {
 
 .plus-btn:hover,
 .plus-btn:focus {
+	transform: scale(1.5);
 	color: var(--lightbg);
 	text-decoration: none;
 	cursor: pointer;
@@ -442,6 +436,8 @@ button {
 }
 
 .addButton {
+	transition: background-color 0.3s ease, color 0.3s ease,
+		transform 0.3s ease;
 	background-color: var(--custom-translucent-teal);
 	color: var(--lightbg);
 	width: 100%;
@@ -453,6 +449,7 @@ button {
 }
 
 .addButton:hover {
+	transform: scale(1.01);
 	background-color: var(--lightbg);
 	color: white;
 }
