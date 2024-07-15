@@ -151,17 +151,113 @@ export const DB_RULES_AND_DATA = [
 	],
 ];
 
+//validation here
+const VALIDATION_RULES = {
+	//Rules for Validating Data
+	'buklod-official-TEST': {
+		contact_number: {
+			type: 'string',
+			required: true,
+			minLength: 13,
+			maxLength: 13,
+			regex: /^[0-9 ]+$/,
+		},
+		earthquake_risk: { type: 'string', required: true },
+		fire_risk: { type: 'string', required: true },
+		flood_risk: { type: 'string', required: true },
+		household_address: { type: 'string', required: true, maxLength: 255 },
+		household_material: {
+			type: 'string',
+			required: true,
+			enum: [
+				'Concrete',
+				'Semi-Concrete',
+				'Light materials',
+				'Makeshift',
+				'Natural',
+			],
+		},
+		household_name: { type: 'string', required: true, maxLength: 127 },
+		household_phase: { type: 'string', required: true },
+		is_hoa_noa: {
+			type: 'string',
+			required: true,
+			minLength: 3,
+			maxLength: 3,
+			enum: ['HOA', 'N/A'],
+		},
+		landslide_risk: { type: 'string', required: true },
+		location_coordinates: { type: 'number', required: true },
+		location_link: { type: 'string', required: true },
+		nearest_evac: { type: 'string', required: true, maxLength: 255 },
+		number_minors: { type: 'number' },
+		number_pregnant: { type: 'number' },
+		number_pwd: { type: 'number' },
+		number_residents: { type: 'number', required: true },
+		number_sick: { type: 'number' },
+		residency_status: {
+			type: 'string',
+			required: true,
+			enum: ['May-Ari', 'Umuupa'],
+		},
+		status: { type: 'string' },
+		storm_risk: { type: 'string', required: true },
+	},
+	'sdece-official-TEST': {
+		partner_name: { type: 'string', required: true, maxLength: 255 },
+		partner_address: { type: 'string', required: true, maxLength: 255 },
+		partner_coordinates: { required: true },
+		partner_contact_name: {
+			type: 'string',
+			required: true,
+			maxLength: 255,
+		},
+		partner_contact_number: {
+			type: 'string',
+			required: true,
+			minLength: 13,
+			maxLength: 13,
+			regex: /^[0-9 ]+$/,
+		},
+		partner_email: { type: 'string', required: true, maxLength: 127 },
+		activity_name: { type: 'string', required: true },
+		activity_nature: { type: 'string', required: true, maxLength: 255 },
+		activity_date: { type: 'date', required: true },
+		additional_partnership: { type: 'string', maxLength: 255 },
+		organization_unit: { type: 'string', maxLength: 127 },
+		ADMU_office: { type: 'string', required: true, maxLength: 127 },
+		ADMU_contact_name: { type: 'string', required: true, maxLength: 255 },
+		ADMU_email: {
+			type: 'string',
+			required: true,
+			required: true,
+			maxLength: 127,
+		},
+	},
+};
+
 export const BUKLOD_RULES = DB_RULES_AND_DATA[0];
 export const BUKLOD_RULES_TEST = DB_RULES_AND_DATA[1];
 export const SDECE_RULES = DB_RULES_AND_DATA[2];
 export const SDECE_RULES_TEST = DB_RULES_AND_DATA[3];
 
-export function setCollection(collection_name){
-    for(let rule of DB_RULES_AND_DATA ){
-        if (rule[0] === collection_name){
-            collection_reference = collection( DB, collection_name );
-        }
-    }
+// export function setCollection(collection_name){
+//     for(let rule of DB_RULES_AND_DATA ){
+//         if (rule[0] === collection_name){
+//             collection_reference = collection( DB, collection_name );
+//         }
+//     }
+// }
+
+export function setCollection(collection_name) {
+	for (let rule of DB_RULES_AND_DATA) {
+		console.log('rule[0]: ' + rule[0]);
+		if (rule[0] === collection_name) {
+			console.log('IS EQUAL');
+			collection_reference = collection(DB, collection_name);
+		}
+	}
+	console.log(collection_reference);
 }
 
 export function getCollection() {
@@ -235,18 +331,16 @@ export function getDocsByPartnerName(partner_name) {
 }
 
 export function getDocByID(docId) {
-    for (let rule of DB_RULES_AND_DATA){
-        if (collection_reference.id === rule[0]){
-            const DOC_REFERENCE = doc(DB, rule[0], docId);
-            let docObj = {};
-            return getDoc(DOC_REFERENCE).then(
-                (doc) => {
-                    docObj = doc;
-                    return docObj;
-                }
-            );
-        }
-    }    
+	for (let rule of DB_RULES_AND_DATA) {
+		if (collection_reference.id === rule[0]) {
+			const DOC_REFERENCE = doc(DB, rule[0], docId);
+			let docObj = {};
+			return getDoc(DOC_REFERENCE).then((doc) => {
+				docObj = doc;
+				return docObj;
+			});
+		}
+	}
 }
 
 export function addEntry(inp_obj){
@@ -285,4 +379,108 @@ export function editEntry(inp_obj, docId) {
 			break;
 		}
 	}
+}
+
+export function validateData(collectionName, data) {
+	//this is seen
+	console.log("VALIDATINGGGGGGG");
+	const rules = VALIDATION_RULES[collectionName];
+	const errors = [];
+
+	for (const field in rules) {
+		const rule = rules[field];
+		const value = data[field];
+
+		// Check for required field
+		if (
+			rule.required &&
+			(value == undefined || value == null || value == '')
+		) {
+			errors.push(`Field '${field}' is required.`);
+			//this is not
+			console.log('TESTINGGGG');
+			continue;
+		}
+
+		// Skip type validation if not required
+		if (
+			!rule.required &&
+			(value == undefined || value == null || value == '')
+		) {
+			continue;
+		}
+
+		if (rule.type) {
+			if (rule.type === 'date') {
+				const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+				if (!dateRegex.test(value)) {
+					errors.push(
+						`Field '${field}' must be a valid date in YYYY-MM-DD format.`
+					);
+					continue;
+				}
+
+				const date = new Date(value);
+				if (isNaN(date.getTime())) {
+					errors.push(`Field '${field}' must be a valid date.`);
+					continue;
+				}
+			} else if (typeof value != rule.type) {
+				errors.push(
+					`Field '${field}' must be of type ${rule.type}.`
+				);
+				continue;
+			}
+		}
+
+		// Check for minimum length
+		if (
+			rule.minLength &&
+			typeof value == 'string' &&
+			value.length < rule.minLength
+		) {
+			if (field === 'partner_contact_number') {
+				errors.push(
+					`Field '${field}' must be at least ${rule.minLength} characters long and in the form 09XX XXX XXXX.`
+				);
+				
+			} else {
+				errors.push(
+					`Field '${field}' must be at least ${rule.minLength} characters long.`
+				);
+			}
+			
+			continue;
+		}
+
+		// Check for maximum length
+		if (
+			rule.maxLength &&
+			typeof value == 'string' &&
+			value.length > rule.maxLength
+		) {
+			errors.push(
+				`Field '${field}' cannot exceed ${rule.maxLength} characters.`
+			);
+			continue;
+		}
+
+		// Check for regular expression pattern
+		if (rule.regex && !rule.regex.test(value)) {
+			errors.push(`Field '${field}' is invalid.`);
+			continue;
+		}
+
+		// Check for enumerated values
+		if (rule.enum && !rule.enum.includes(value)) {
+			errors.push(
+				`Field '${field}' must be one of ${rule.enum.join(',')}.`
+			);
+			continue;
+		}
+
+		//no validation for geolocation, url yet
+	}
+
+	return errors;
 }

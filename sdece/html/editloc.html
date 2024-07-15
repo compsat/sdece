@@ -142,7 +142,33 @@
 					>
 						PARTNER INFORMATION
 					</h2>
+					<div class="form-field">
+						<label
+							class="form-label"
+							for="additional_partnership"
+							>Additional Partnership
+						</label>
+						<input
+							type="text"
+							id="additional_partnership"
+							name="additional_partnership"
+							class="form-input"
+							placeholder="Ex. Couples for Christ North B Sector"
+						/>
+					</div>
 
+					<div class="form-field">
+						<label class="form-label" for="organization_unit"
+							>Organization Unit
+						</label>
+						<input
+							type="text"
+							id="organization_unit"
+							name="organization_unit"
+							class="form-input"
+							placeholder="Ex. ACIL"
+						/>
+					</div>
 					<div
 						class="form-field"
 					>
@@ -206,7 +232,7 @@
 							id="partner_contact_number"
 							name="partner_contact_number"
 							class="form-input"
-							placeholder=""
+							placeholder="09XX XXX XXXX"
 						/>
 					</div>
 					<div
@@ -302,7 +328,9 @@
 						Delete
 					</button>
 				</div>
+				<div class id="error_messages"></div>
 			</div>
+			
 		</form>
 
 		<script>

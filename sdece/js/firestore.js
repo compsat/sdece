@@ -15,7 +15,9 @@ import {
 	getCollection,
 	setCollection,
 	SDECE_RULES,
+	SDECE_RULES_TEST,
 	getDocIdByPartnerName,
+	validateData,
 } from '/firestore_UNIV.js';
 import { addListeners, map, getDivContent } from '/index_UNIV.js';
 
@@ -488,6 +490,60 @@ export function handleEdit(){
 	}
 
 	//validate the collated input here
+	setCollection('sdece-official-TEST');
+
+	console.log("EDITING VALIDATION IS HAPPENING?");
+	for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
+		//SDECE_RULES_TEST[2] are just the field names of each document
+		console.log(SDECE_RULES_TEST[2][i]);
+
+		let fieldName = SDECE_RULES_TEST[2][i];
+
+		if (fieldName == 'partner_coordinates') {
+			collated_inp[fieldName] = current_viewed_activity["partner_coordinates"];
+		} else {
+			let inputValue = edit_modal.getElementById(fieldName).value;
+			collated_inp[fieldName] = inputValue;
+		}
+	}
+	console.log(collated_inp);
+	console.log("Hello World");
+
+	const errors = validateData('sdece-official-TEST', collated_inp);
+
+	if (errors.length > 0) {
+		displayErrors(errors);
+		event.preventDefault();
+	} else {
+		editEntry(collated_inp, current_viewed_activity["identifier"]);
+		console.log('Entry EDITED!');
+	}
+
+	function displayErrors(errors) {
+		let errorDiv =
+			edit_modal.getElementById('error_messages');
+
+		if (errorDiv) {
+			errorDiv.innerHTML = '';
+
+			if (errors.length > 0) {
+				for (let error of errors) {
+					let errorParagraph =
+						edit_modal.createElement('p');
+					errorParagraph.textContent = error;
+					errorDiv.appendChild(errorParagraph);
+				}
+			} else {
+				console.error(
+					"Error: Couldn't find element with ID 'error_messages'."
+				);
+			}
+		}
+
+	}
+	console.log(collated_inp);
+
+	
 
 	console.log("Edits made to file with ID: ",current_viewed_activity);
 	console.log("Here's the edited file: ", collated_inp);
