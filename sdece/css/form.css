@@ -31,6 +31,24 @@ button {
 	cursor: pointer;
 }
 
+.close-btn {
+	float: right;
+	color: #aaaaaa;
+	width: 10%;
+	font-size: 28px;
+	font-weight: bold;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+	color: #3f3f3f;
+	text-decoration: none;
+	cursor: pointer;
+}
+
 .form-container {
 	display: flex;
 	flex-direction: column;

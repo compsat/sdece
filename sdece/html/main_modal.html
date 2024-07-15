@@ -76,7 +76,7 @@
 					viewBox="0 0 24 24"
 					stroke-width="1.5"
 					stroke="currentColor"
-					class="main-modal-icon"
+					class="close-btn"
 				>
 					<path
 						stroke-linecap="round"
@@ -84,10 +84,6 @@
 						d="M6 18 18 6M6 6l12 12"
 					/>
 				</svg>
-			</button>
-			<!-- TEST -->
-			<button id="test-btn" style="color: #45c600;">
-				Test submit
 			</button>
 		</div>
 
@@ -168,15 +164,6 @@
 					);
 					window.parent.postMessage('closeMainModal', '*');
 				});	
-			
-			// TEST: remove later
-			document
-				.getElementById('test-btn')
-				.addEventListener('click', function(event) {
-					window.parent.postMessage('testMessageModal', '*');
-				});
-
-			
 		</script>
 	</body>
 </html>
