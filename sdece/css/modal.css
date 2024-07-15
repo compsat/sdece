@@ -48,9 +48,10 @@ button {
 .main-modal {
 	border-radius: 0.5rem;
 	background-color: #f3f4f6; /* Assuming bg-customLightGray corresponds to a specific custom color */
-	height: auto; /* h-auto */
+	height: 420px; /* h-auto */
 	width: 480px; /* w-[480px] */
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+	overflow: visible;
 }
 
 .main-modal-header {
@@ -76,7 +77,7 @@ button {
 
 .main-modal-partner-name {
 	border-bottom: 2px solid var(--lightbg);
-
+	width: 100%;
 	font-family: 'Montserrat';
 	font-weight: 500;
 	font-size: 1.5rem;
@@ -151,19 +152,18 @@ button {
 /* Partner modal */
 .modal {
 	display: none;
+	width: 25%;
+	height: 100%;
 	border-radius: 0.5rem;
 	position: absolute;
 	z-index: 2000;
 	top: 100px;
-	left: 400px;
-	width: auto; /* Adjust the width of the modal as needed */
-	min-width: 30%;
-	max-width: 35%;
-	height: auto; /* Adjust the height of the modal as needed */
+	left: 26rem;
 	justify-content: center;
 	box-sizing: border-box;
 	border-radius: 0.5rem;
-	overflow: hidden;
+	/* overflow-y: scroll;
+	overflow-x: hidden; */
 	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 
 	animation: slide-out 500ms forwards;
@@ -206,9 +206,12 @@ button {
 }
 
 .modal-header {
+	/* align-self: flex-end;
+	justify-content: center;
+	float: right; */
 	width: 100%;
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
 	padding: 24px 24px;
@@ -220,23 +223,21 @@ button {
 
 .modal-content {
 	position: relative;
+	height: 50%;
 	padding: 32px 32px;
-	width: 100%;
 	background-color: #fcfcfc;
 	font-family: Hind;
 	font-size: 16px;
 	font-style: normal;
-	/* height: calc(80% - 140px); */
 	line-height: 32px;
 	margin: 0;
 	overflow-y: scroll;
-	height: 50vh;
 }
 
 .modal-button {
 	display: flex;
 	flex-direction: row;
-	padding: 24px 24px;
+	justify-content: center;
 	width: 100%;
 	height: auto;
 	background-color: #fcfcfc;
@@ -246,7 +247,9 @@ button {
 }
 
 .modal-button-icon {
-	margin-left: 0.75rem;
+	margin-left: 0.5rem;
+	width: 24px;
+	height: 24px;
 }
 
 .delete-button {
@@ -258,11 +261,14 @@ button {
 	font-family: 'Montserrat';
 	align-items: center;
 	font-weight: 600;
+	padding: 24px 24px;
+	flex: 1 1 0%;
 }
 
 .edit-button {
 	font-weight: 600;
-
+	padding: 24px 24px;
+	display: none;
 	color: rgb(61 151 175);
 	display: flex;
 	flex-direction: row;
@@ -270,6 +276,7 @@ button {
 	font-size: 1rem;
 	font-family: 'Montserrat';
 	align-items: center;
+	width: 50%;
 }
 #modalContent > div {
 	margin-bottom: 15px;
@@ -278,20 +285,35 @@ button {
 .modal-activities-list {
 	padding: 0;
 }
-.modal-activities {
-	padding-top: 1rem;
-	padding-bottom: 1rem;
+
+.modal-activity-title{
+	font-size: 1.25rem;
+	font-weight: 600;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
+	margin-bottom: 12px;
+}
+
+.modal-activity-button {
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: left;
 	width: 100%;
-	font-family: 'Hind';
-	font-size: 1.25rem;
-	font-weight: 600;
+	font-family: 'Montserrat';
+	text-align: left;
 	border-style: solid;
 	border-width: 0px;
 	border-bottom: 0.5px solid var(--custom-gray);
+}
+.modal-activity-button:hover{
+	background-color: #efefef;
+	text-decoration: none;
+	cursor: pointer;
 }
 
 .modal-activities-header {
@@ -334,10 +356,14 @@ button {
 }
 
 .close-btn {
+	float: right;
 	color: #aaaaaa;
 	width: 5%;
 	font-size: 28px;
 	font-weight: bold;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 }
 
 .close-btn:hover,
@@ -357,4 +383,68 @@ button {
 	color: #3f3f3f;
 	text-decoration: none;
 	cursor: pointer;
+}
+
+/* Message modal */
+.message-modal {
+	border-radius: 0.5rem;
+	background-color: #f3f6f4; /* Assuming bg-customLightGray corresponds to a specific custom color */
+	height: fit-content; /* h-auto */
+	width: fit-content; /* w-[480px] */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+	overflow: visible;
+	padding: 32px 32px;
+	flex-direction: column;
+	align-items: flex-start;
+
+	animation: slide-in 500ms forwards;
+}
+
+.leaflet-popup-content {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.partner-geolocation {
+	color: var(--custom-gray);
+	padding-bottom: 0.5rem;
+	text-align: center;
+}
+
+.addButton {
+	background-color: var(--custom-translucent-teal);
+	color: var(--lightbg);
+	width: 100%;
+	font-family: 'Montserrat';
+	padding: 0.5rem;
+	border-radius: 0.375rem; /* Assuming rounded-lg corresponds to 6px rounded corners */
+	font-weight: 500;
+	font-size: 1rem;
+}
+.message-modal-header {
+	align-self: flex-end;
+	justify-content: center;
+	width: fit-content;
+	float: right;
+}
+
+.message-modal-content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	width: fit-content;
+	font-family: 'Montserrat';
+	font-weight: 700;
+	font-size: 1.5rem /* 24px */;
+	line-height: 2rem; /* 32px */
+	color: var(--custom-black);
+	font-style: normal;
+	overflow: visible;
+}
+
+.partner-hover:hover {
+	background-color: var(--custom-medium-gray);
 }
