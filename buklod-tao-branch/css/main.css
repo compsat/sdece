@@ -251,8 +251,6 @@ ul.accordion {
 
 li.accordion {
   display: flex;
-  padding: 24px 32px;
-  border-bottom: 0.5px solid #bdbdbd;
 }
 
 a.accordion {
@@ -293,7 +291,6 @@ a.accordion {
   letter-spacing: 0.28px;
 }
 h1.entries {
-  color: #000;
   font-family: Montserrat;
   font-size: 20px;
   font-style: normal;
@@ -607,4 +604,8 @@ button.collapsible {
   justify-content: center;
   left: 10%;
   border-radius: 8px 8px 8px 8px;
+}
+
+.modal-screen {
+	display: none;
 }
