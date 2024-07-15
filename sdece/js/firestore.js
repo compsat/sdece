@@ -93,9 +93,14 @@ newButton.addEventListener('click', () => {
 	//reset the values and format of addLoc.html
 	for (let field of SDECE_RULES[2]){
 		if (field != "partner_coordinates"){
-			addFormiframeDocument.getElementById(field).value = null;
-			addFormiframeDocument.getElementById(field).readOnly = false;
-			//palagay dito yung default format ty. Yung style.color
+			if (field == "partner_name" || field == "partner_address"){
+				addFormiframeDocument.getElementById(field).value = null;
+				addFormiframeDocument.getElementById(field).readOnly = true;
+			} else {
+				addFormiframeDocument.getElementById(field).value = null;
+				addFormiframeDocument.getElementById(field).readOnly = false;
+				//palagay dito yung default format ty. Yung style.color
+			}
 		} else {
 		}
 	}
@@ -668,6 +673,17 @@ function getDataFromAddForm(){
 
 // mainmodal save button for batch uploading
 const MAIN_MODAL_SAVE_BUTTON = mainModalDocument.getElementsByClassName("main-modal-save")[0];
-MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
-	console.log("Here are the activities to be uploaded: ",temp_activities);
+MAIN_MODAL_SAVE_BUTTON.addEventListener('click', async function () {
+	console.log("Here are the activities to be uploaded in this batch: ",temp_activities);
+
+	Object.keys(temp_activities).forEach((temp_id) => {
+		let current_temp_activity = temp_activities[temp_id];
+		let new_partner_name = mainModalDocument.getElementsByClassName("main-modal-partner-name")[0].value;
+		let new_partner_address = mainModalDocument.getElementById("address-input").value;
+		current_temp_activity["partner_name"] = new_partner_name;
+		current_temp_activity["partner_address"] = new_partner_address;
+
+		console.log("toUpload:", current_temp_activity);
+		addEntry(current_temp_activity);
+	});
 });
