@@ -139,6 +139,7 @@ export const JS_CS_ENGINE = [
 			'buklod-tao-branch/css/form.css',
 			//   'buklod-tao-branch/css/login.css',
 			'buklod-tao-branch/css/main.css',
+			'sdece/css/modal.css',
 		],
 	],
 	[
