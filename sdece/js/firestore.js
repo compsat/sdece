@@ -74,6 +74,7 @@ function onMapClick(e) {
 
 	// This addButton is from the mini popup
 	var addButton = document.querySelector('.addButton');
+	console.log(addButton);
 	addButton.addEventListener('click', function () {
 		// show mainmodal from pop up "add location"
 		console.log('main modal called from popup');
@@ -189,7 +190,7 @@ getDocs(col_ref)
 					});
 				});
 			}
-			
+
 			const containerDiv = document.createElement('div');
 			const img = document.createElement('svg');
 			const listItem = document.createElement('li');
@@ -586,6 +587,80 @@ export function showModal(partner) {
 	}
 }
 
+// This is unreliable but will probably be useful in the future
+// export async function getCoordsFromAddress(address = '161 Daan Tubo, Diliman, Quezon City') {
+// 	console.log('ENTER PRESSED IN MAIN MODAL: ', address);
+
+// 	var parsed_loc = encodeURIComponent(
+// 		address.toLowerCase().replace(/[^a-z0-9 _-]+/gi, '-')
+// 	);
+// 	var api_search = 'https://nominatim.openstreetmap.org/search?q=';
+// 	var link = api_search.concat(parsed_loc).concat('&format=json');
+// 	console.log(link);
+
+// 	var response = await fetch(link);
+// 	var jsonified = await response.json();
+
+// 	console.log(jsonified);
+// 	console.log(jsonified[0]['lat'], jsonified[0]['lon']);
+
+// 	if (addForm_geopoint == null) {
+// 		addForm_geopoint = new GeoPoint(
+// 			jsonified[0]['lat'],
+// 			jsonified[0]['lon']
+// 		);
+// 		console.log(
+// 			'coords have been set from the address.',
+// 			addForm_geopoint
+// 		);
+// 	} else {
+// 		console.log('No need, you already set it in the popup');}
+// 	}
+
+//values stored in local before uploading them in batches
+var temp_activities = {};
+var temp_activities_id = 0;
+
+// Addloc.html Save button click listener
+var addFormiframe = document.getElementById('addModalHTML');
+var addFormiframeDocument = addFormiframe.contentWindow.document;
+var addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
+addFormSubmitButton.addEventListener('click', function () { //handleAdd
+	console.log('The Save button in addloc.html has been pressed.');
+	//get data from addloc.html
+	var info_from_forms = {};
+	for( let field of SDECE_RULES[2]){
+		if (field != "partner_coordinates"){
+			let inp_field = addFormiframeDocument.getElementById(field);
+			if(inp_field != null){
+				if(inp_field.value == ""){
+					info_from_forms[field] = null;
+				} else {
+					info_from_forms[field] = inp_field.value;
+				}
+			}
+		} else {
+			info_from_forms[field] = addForm_geopoint;
+		} 
+	}
+
+	console.log("data from addloc: ", info_from_forms);
+	if(has_existing_partner){
+		//upload it straight to the firebase db
+		addEntry(info_from_forms);
+	} else {
+		//locally store it
+		temp_activities[temp_activities_id+''] = info_from_forms;
+		console.log("locally stored activities: ", temp_activities);
+		temp_activities_id += 1;
+
+		// add it to the ul
+		mainModalDocument.getElementById("mainModalActivityList").innerHTML += 
+		"<li> " + info_from_forms['activity_nature'];
+	}
+});
+
+// Editloc.html Save button click listener
 let edit_modal = document.getElementById("editModal_iframe").contentWindow.document;
 edit_modal.getElementById("submit_form").addEventListener('click', handleEdit);
 
@@ -667,3 +742,18 @@ export function handleEdit(){
 
 	editEntry(collated_inp, current_viewed_activity["identifier"]);
 }
+
+// mainmodal save button for batch uploading
+const MAIN_MODAL_SAVE_BUTTON = mainModalDocument.getElementsByClassName("main-modal-save")[0];
+MAIN_MODAL_SAVE_BUTTON.addEventListener('click', async function () {
+	console.log("Here are the activities to be uploaded in this batch: ",temp_activities);
+	Object.keys(temp_activities).forEach((temp_id) => {
+		let current_temp_activity = temp_activities[temp_id];
+		let new_partner_name = mainModalDocument.getElementsByClassName("main-modal-partner-name")[0].value;
+		let new_partner_address = mainModalDocument.getElementById("address-input").value;
+		current_temp_activity["partner_name"] = new_partner_name;
+		current_temp_activity["partner_address"] = new_partner_address;
+		console.log("toUpload:", current_temp_activity);
+		addEntry(current_temp_activity);
+	});
+});
