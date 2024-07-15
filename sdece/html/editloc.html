@@ -25,44 +25,6 @@
 			href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap"
 			rel="stylesheet"
 		/>
-
-		<script type="module">
-			//import { addLocation } from "./js/firestore.js";
-			import {
-				addEntry,
-				SDECE_RULES_TEST,
-				setCollection,
-			} from '/firestore_UNIV.js';
-
-			setCollection('sdece-official-TEST');
-
-			document
-				.getElementById('submit_form')
-				.addEventListener('click', handleFormSubmit_v2);
-
-			function handleFormSubmit_v2() {
-				console.log('clicked');
-				var collatedInput = {};
-
-				// Nep i commented this out muna cos it was causing errors!
-				// for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
-				// 	//SDECE_RULES_TEST[2] are just the field names of each document
-				// 	console.log(SDECE_RULES_TEST[2][i]);
-				// 	let q = document.getElementById(
-				// 		SDECE_RULES_TEST[2][i]
-				// 	).value;
-				// 	collatedInput[SDECE_RULES_TEST[2][i]] = q;
-
-				// 	// this is where data validation will happen
-				// 	// add the if-else statements of edge cases here
-				// }
-
-				console.log(collatedInput);
-				// This actually works but it needs some data validation
-				// uncomment at the db's risk
-				addEntry(collatedInput);
-			}
-		</script>
 	</head>
 	<body>
 		<form action="" id="addLocForm" class="form-container">
@@ -116,9 +78,12 @@
 					</div>
 
 					<div class="form-field">
-						<label class="form-label" for="activity_date"
-							>Date of Partnership
-						</label>
+						<label
+							class="form-label"
+							for="activity_date"
+							>Date of Partnership</label
+						>
+
 						<div
 							style="
 								display: flex;
@@ -134,8 +99,8 @@
 								class="form-input"
 								placeholder=""
 							/>
-							<!-- Commenting out the additional date functionality! -->
-							<!-- <a
+							<!--
+							<a
 								href=""
 								id="addDate"
 								style="
@@ -146,20 +111,54 @@
 									text-decoration-line: underline;
 									margin-top: 1rem;
 								"
-								>Add another date
-							</a> -->
+								>Add another date</a
+							>-->
 						</div>
 					</div>
 				</div>
 
 				<!-- PARTNER INFORMATION -->
 				<div class="form-section">
-					<h2 class="form-subheading">PARTNER INFORMATION</h2>
+					<h2
+						class="form-subheading"
+					>
+						PARTNER INFORMATION
+					</h2>
+					<div class="form-field">
+						<label
+							class="form-label"
+							for="additional_partnership"
+							>Additional Partnership
+						</label>
+						<input
+							type="text"
+							id="additional_partnership"
+							name="additional_partnership"
+							class="form-input"
+							placeholder="Ex. Couples for Christ North B Sector"
+						/>
+					</div>
 
 					<div class="form-field">
-						<label class="form-label" for="partner_name"
-							>Name of Host Partner
+						<label class="form-label" for="organization_unit"
+							>Organization Unit
 						</label>
+						<input
+							type="text"
+							id="organization_unit"
+							name="organization_unit"
+							class="form-input"
+							placeholder="Ex. ACIL"
+						/>
+					</div>
+					<div
+						class="form-field"
+					>
+						<label
+							class="form-label"
+							for="partner_name"
+							>Name of Host Partner</label
+						>
 						<input
 							type="text"
 							id="partner_name"
@@ -169,10 +168,14 @@
 						/>
 					</div>
 
-					<div class="form-field">
-						<label class="form-label" for="partner_address"
-							>Address of Host Partner
-						</label>
+					<div
+						class="form-field"
+					>
+						<label
+							class="form-label"
+							for="partner_address"
+							>Address of Host Partner</label
+						>
 						<input
 							type="text"
 							id="partner_address"
@@ -186,8 +189,8 @@
 						<label
 							class="form-label"
 							for="partner_contact_name"
-							>Name of Contact Person
-						</label>
+							>Name of Contact Person</label
+						>
 						<input
 							type="text"
 							id="partner_contact_name"
@@ -201,7 +204,7 @@
 						<label
 							class="form-label"
 							for="partner_contact_number"
-							>Contact Number of Contact Person
+							>Number of Contact Person
 						</label>
 						<input
 							type="text"
@@ -224,23 +227,6 @@
 							placeholder="Ex. ignatius@ateneo.edu"
 						/>
 					</div>
-
-					<div
-						class="flex flex-row justify-between mb-6 items-center"
-					>
-						<label
-							class="form font-montserrat text-xl text-customGray flex-1 pr-12"
-							for="partner_coordinates"
-							>Partner Coordinates</label
-						>
-						<input
-							type="text"
-							id="partner_coordinates"
-							name="partner_coordinates"
-							class="py-4 px-8 w-96 rounded border font-montserrat"
-							placeholder="Ex. 14.6895421, 121.0818291"
-						/>
-					</div>
 				</div>
 
 				<div class="form-section">
@@ -248,8 +234,12 @@
 						ATENEO OFFICE OVERSIGHT
 					</h2>
 
-					<div class="form-field">
-						<label class="form-label" for="ADMU_office"
+					<div
+						class="form-field"
+					>
+						<label
+							class="form-label"
+							for="ADMU_office"
 							>Name of Office</label
 						>
 						<input
@@ -260,11 +250,14 @@
 							placeholder="Ex. OSA"
 						/>
 					</div>
-
-					<div class="form-field">
-						<label class="form-label" for="ADMU_contact_name"
-							>Name of Ateneo Contact Person
-						</label>
+					<div
+						class="form-field"
+					>
+						<label
+							class="form-label"
+							for="ADMU_contact_name"
+							>Name of Ateneo Contact Person</label
+						>
 						<input
 							type="text"
 							id="ADMU_contact_name"
@@ -274,10 +267,14 @@
 						/>
 					</div>
 
-					<div class="form-field">
-						<label class="form-label" for="ADMU_email"
-							>Email of Ateneo Contact Person
-						</label>
+					<div
+						class="form-field"
+					>
+						<label
+							class="form-label"
+							for="ADMU_email"
+							>Email of Ateneo Contact Person</label
+						>
 						<input
 							type="email"
 							id="ADMU_email"
@@ -310,10 +307,9 @@
 						
 					</input>
 				</div>
-				<div id="error_messages"></div>
-
-				<br /><br />
+				<div class id="error_messages"></div>
 			</div>
+			
 		</form>
 
 		<script>
@@ -341,24 +337,20 @@
 						'*'
 					);
 				});
-
-			// document
-			// 	.getElementById('addDate')
-			// 	.addEventListener('click', function (event) {
-			// 		event.preventDefault();
-			// 		var dateContainer =
-			// 			document.getElementById('date-container');
-			// 		var newDateInput = document.createElement('input');
-			// 		newDateInput.type = 'date';
-			// 		newDateInput.name = 'activity_date';
-			// 		newDateInput.className = 'form-input';
-			// 		newDateInput.style.marginTop = '1.5rem';
-			// 		dateContainer.insertBefore(newDateInput, this);
-			// 	});
-
-			function closeModal() {
-				window.parent.postMessage('closeEditModal', '*');
-			}
+				/*
+			document
+				.getElementById('addDate')
+				.addEventListener('click', function (event) {
+					event.preventDefault();
+					var dateContainer =
+						document.getElementById('date-container');
+					var newDateInput = document.createElement('input');
+					newDateInput.type = 'date';
+					newDateInput.name = 'activity_date';
+					newDateInput.className = 'form-input';
+					newDateInput.style.marginTop = '1.5rem';
+					dateContainer.insertBefore(newDateInput, this);
+				});*/
 
 			document
 				.getElementById('close-btn')

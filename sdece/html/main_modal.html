@@ -25,43 +25,6 @@
 			href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap"
 			rel="stylesheet"
 		/>
-
-		<script type="module">
-			//import { addLocation } from "./js/firestore.js";
-			import {
-				addEntry,
-				SDECE_RULES_TEST,
-				setCollection,
-			} from '/firestore_UNIV.js';
-
-			setCollection('sdece-official-TEST');
-
-			// document
-			// 	.getElementById('submit_form')
-			// 	.addEventListener('click', handleFormSubmit_v2);
-
-			function handleFormSubmit_v2() {
-				console.log('clicked');
-				var collatedInput = {};
-
-				for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
-					//SDECE_RULES_TEST[2] are just the fi eld names of each document
-					console.log(SDECE_RULES_TEST[2][i]);
-					let q = document.getElementById(
-						SDECE_RULES_TEST[2][i]
-					).value;
-					collatedInput[SDECE_RULES_TEST[2][i]] = q;
-
-					// this is where data validation will happen
-					// add the if-else statements of edge cases here
-				}
-
-				console.log(collatedInput);
-				// This actually works but it needs some data validation
-				// uncomment at the db's risk
-				addEntry(collatedInput);
-			}
-		</script>
 	</head>
 	<body>
 		<!--  content -->
@@ -145,8 +108,7 @@
 				</button>
 			</div>
 
-			<!-- TODO: Populate this with the chosen partner's list of activities -->
-			<ul id="mainModalActivityList">
+			<ul id="mainModalActivityList" class="modal-activity-button">
 			</ul>
 
 			<button class="main-modal-save">Save</button>

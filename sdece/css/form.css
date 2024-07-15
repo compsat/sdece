@@ -145,6 +145,29 @@ button {
 	border-radius: 0.5rem /* 8px */;
 }
 
+[data-id="Save Button"] {
+    transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+[data-id="Save Button"]:hover {
+    transform: scale(1.01);
+    background-color: var(--custom-green);
+	box-shadow: 0px 4px 15px var(--custom-green);
+}
+
+[data-id="Delete Button"] {
+    transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+[data-id="Delete Button"]:hover {
+    transform: scale(1.01);
+    color: var(--custom-light-gray);
+    background-color: var(--custom-red);
+	box-shadow: 0px 4px 15px var(--custom-red);
+}
+
 .positive {
 	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 	background-color: var(--lightbg);

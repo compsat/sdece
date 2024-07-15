@@ -200,6 +200,7 @@ export const DB_RULES_AND_DATA = [
 	],
 ];
 
+//validation here
 const VALIDATION_RULES = {
 	//Rules for Validating Data
 	'buklod-official-TEST': {
@@ -251,7 +252,87 @@ const VALIDATION_RULES = {
 		status: { type: 'string' },
 		storm_risk: { type: 'string', required: true },
 	},
+	'buklod-official': {
+		contact_number: {
+			type: 'string',
+			required: true,
+			minLength: 13,
+			maxLength: 13,
+			regex: /^[0-9 ]+$/,
+		},
+		earthquake_risk: { type: 'string', required: true },
+		fire_risk: { type: 'string', required: true },
+		flood_risk: { type: 'string', required: true },
+		household_address: { type: 'string', required: true, maxLength: 255 },
+		household_material: {
+			type: 'string',
+			required: true,
+			enum: [
+				'Concrete',
+				'Semi-Concrete',
+				'Light materials',
+				'Makeshift',
+				'Natural',
+			],
+		},
+		household_name: { type: 'string', required: true, maxLength: 127 },
+		household_phase: { type: 'string', required: true },
+		is_hoa_noa: {
+			type: 'string',
+			required: true,
+			minLength: 3,
+			maxLength: 3,
+			enum: ['HOA', 'N/A'],
+		},
+		landslide_risk: { type: 'string', required: true },
+		location_coordinates: { type: 'number', required: true },
+		location_link: { type: 'string', required: true },
+		nearest_evac: { type: 'string', required: true, maxLength: 255 },
+		number_minors: { type: 'number' },
+		number_pregnant: { type: 'number' },
+		number_pwd: { type: 'number' },
+		number_residents: { type: 'number', required: true },
+		number_sick: { type: 'number' },
+		residency_status: {
+			type: 'string',
+			required: true,
+			enum: ['May-Ari', 'Umuupa'],
+		},
+		status: { type: 'string' },
+		storm_risk: { type: 'string', required: true },
+	},
 	'sdece-official-TEST': {
+		partner_name: { type: 'string', required: true, maxLength: 255 },
+		partner_address: { type: 'string', required: true, maxLength: 255 },
+		partner_coordinates: { required: true },
+		partner_contact_name: {
+			type: 'string',
+			required: true,
+			maxLength: 255,
+		},
+		partner_contact_number: {
+			type: 'string',
+			required: true,
+			minLength: 13,
+			maxLength: 13,
+			regex: /^[0-9 ]+$/,
+		},
+		partner_email: { type: 'string', required: true, maxLength: 127 },
+		activity_name: { type: 'string', required: true },
+		activity_nature: { type: 'string', required: true, maxLength: 255 },
+		activity_date: { type: 'date', required: true },
+		additional_partnership: { type: 'string', maxLength: 255 },
+		organization_unit: { type: 'string', maxLength: 127 },
+		ADMU_office: { type: 'string', required: true, maxLength: 127 },
+		ADMU_contact_name: { type: 'string', required: true, maxLength: 255 },
+		ADMU_email: {
+			type: 'string',
+			required: true,
+			required: true,
+			maxLength: 127,
+		},
+	},
+	'sdece-official': {
 		partner_name: { type: 'string', required: true, maxLength: 255 },
 		partner_address: { type: 'string', required: true, maxLength: 255 },
 		partner_coordinates: { required: true },
@@ -412,20 +493,15 @@ export function addEntry(inp_obj) {
 	}
 }
 
-export function editEntry(inp_array, docId) {
+export function editEntry(inp_obj, docId) {
 	console.log('edit entry with id ' + docId);
 
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_reference.id) {
 			const DOC_REFERENCE = doc(DB, rule[0], docId);
-
-			let input = {}; // contents depend on the rule engine
-			for (let i = 0; i < inp_array.length; i++) {
-				input[rule[2][i]] = inp_array[i];
-			}
-			updateDoc(DOC_REFERENCE, input)
-				.then((docRef) => {
-					console.log('Document written with ID: ', docRef.id);
+			updateDoc(DOC_REFERENCE, inp_obj)
+				.then(() => {
+					console.log("edited yipee", docId);
 				})
 				.catch((error) => {
 					console.error('Error adding document: ', error);
@@ -439,7 +515,7 @@ export function validateData(collectionName, data) {
 	//this is seen
 	console.log("VALIDATINGGGGGGG");
 	const rules = VALIDATION_RULES[collectionName];
-	const errors = [];
+	var errors = [];
 
 	for (const field in rules) {
 		const rule = rules[field];
@@ -538,35 +614,3 @@ export function validateData(collectionName, data) {
 
 	return errors;
 }
-
-// document.addEventListener('DOMContentLoaded', function() {
-//     var addButton = document.querySelector('.addButton');
-//     addButton.addEventListener('click', function () {
-//         const lat = this.getAttribute('data-lat');
-//         const lng = this.getAttribute('data-lng');
-
-//         // Create an input object with the required fields
-//         const inputObject = {
-//             partner_name: 'Partner Name', // Replace with actual value or get from user input
-//             partner_address: 'Partner Address', // Replace with actual value or get from user input
-//             partner_coordinates: parseFloat(`${lat},${lng}`), // Convert lat and lng to a float
-//             partner_contact_name: 'Contact Name', // Replace with actual value or get from user input
-//             partner_contact_number: '12345678901', // Replace with actual value or get from user input
-//             partner_email: 'email@example.com', // Replace with actual value or get from user input
-//             activity_name: 'Activity Name', // Replace with actual value or get from user input
-//             activity_nature: 'Activity Nature', // Replace with actual value or get from user input
-//             activity_date: '2023-07-04', // Replace with actual value or get from user input
-//             additional_partnership: 'Additional Partnership', // Replace with actual value or get from user input
-//             organization_unit: 'Organization Unit', // Replace with actual value or get from user input
-//             ADMU_office: 'ADMU Office', // Replace with actual value or get from user input
-//             ADMU_contact_name: 'ADMU Contact Name', // Replace with actual value or get from user input
-//             ADMU_email: 'admu@example.com' // Replace with actual value or get from user input
-//         };
-
-//         // Set the collection reference
-//         setCollection('sdece-official-TEST');
-
-//         // Add the entry to the Firestore collection
-//         addEntry(inputObject);
-//     });
-// });
