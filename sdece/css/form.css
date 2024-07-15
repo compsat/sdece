@@ -1,15 +1,4 @@
-/* Color Definition */
-:root {
-	--darkbg: #387181;
-	--lightbg: #3d97af;
-	--custom-black: #2f2f2f;
-	--custom-gray: #a0a0a0;
-	--custom-dark-gray: #979797;
-	--custom-medium-gray: #f6f6f6;
-	--custom-light-gray: #fcfcfc;
-	--custom-red: #d64747;
-	--custom-green: #53c257;
-}
+@import url('variables.css');
 
 * {
 	margin: 0px;
@@ -33,21 +22,14 @@ button {
 }
 
 .close-btn {
-	float: right;
-	color: #aaaaaa;
-	width: 10%;
-	font-size: 28px;
-	font-weight: bold;
-	display: flex;
-	flex-direction: row;
-	align-items: center;
+	width: 2rem /* 32px */;
+	height: 2rem /* 32px */;
+	stroke: var(--custom-dark-gray);
 }
 
 .close-btn:hover,
 .close-btn:focus {
-	color: #3f3f3f;
-	text-decoration: none;
-	cursor: pointer;
+	stroke: var(--custom-black);
 }
 
 .form-container {
@@ -136,7 +118,7 @@ button {
 	padding-right: 2rem;
 	width: 24rem /* 384px */;
 	border-radius: 0.25rem /* 4px */;
-	font-family: Montserrat, sans-serif;
+	font-family: 'Montserrat';
 	border-style: solid;
 	border-width: 1px;
 	background-color: white;
