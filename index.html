@@ -131,6 +131,7 @@
 							collections.options[
 								collections.selectedIndex
 							].value;
+						console.log("selected this for collection ", SELECTED);
 						setCollection(SELECTED);
 						setCurrentBranchCookie(
 							'current_branch',
@@ -150,6 +151,7 @@
 						console.log(getCollection());
 						loadJsCssFiles(getCurrentBranchCookie());
 					} else {
+						console.log(getCurrentBranchCookie());
 						setCollection(getCurrentBranchCookie());
 						collections.value = getCurrentBranchCookie();
 						loadJsCssFiles(getCurrentBranchCookie());
@@ -290,8 +292,9 @@
 
 					<!-- Buttons -->
 					<span class="modal-button">
+
 						<!-- Delete -->
-						<button class="delete-button partner-hover">
+						<!-- <button class="delete-button partner-hover">
 							Delete
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -309,7 +312,7 @@
 									stroke-linejoin="round"
 								></path>
 							</svg>
-						</button>
+						</button> -->
 						<!-- Edit -->
 						<button class="edit-button partner-hover">
 							Edit
@@ -363,6 +366,7 @@
 				<!-- Edit Modal: This is the modal that shows up when clicking on the Edit button that is nested within Partner Modal. This allows the user to edit an existing activity within the SDECE Collections. -->
 				<div class="modal-screen" id="editModal">
 					<iframe
+						id="editModal_iframe"
 						src="./sdece/html/editloc.html"
 						class="form-modal"
 						id="editModalHTML"
@@ -471,13 +475,6 @@
 						}
 						if (event.data === 'closeMessageModal') {
 							hideModalContainer('messageModal');
-						}
-						// TEST: remove later
-						if (event.data === 'testMessageModal') {
-							console.log('testing message modal');
-							const messageModal =
-								document.getElementById('messageModal');
-							messageModal.style.display = 'flex';
 						}
 					});
 				</script>

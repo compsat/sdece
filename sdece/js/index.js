@@ -21,8 +21,4 @@ export function showAddModal() {
 	};
 }
 
-// function addMainButtonText() {
-// 	var mainButtonText = document.getElementById('mainButtonText');
-// 	mainButtonText.innerHTML = 'Add an activity';
-// }
-// addMainButtonText();
+
