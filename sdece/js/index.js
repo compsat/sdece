@@ -54,13 +54,6 @@ export function showMainModal() {
 	};
 }
 
-// Fuction for filtering results upon searching partners
-const mainModalDocument =
-	document.getElementById('mainModalIframe').contentDocument;
-console.log(document.getElementById('mainModalIframe'));
-const newButton = mainModalDocument.getElementById('addModalButton');
-newButton.addEventListener('click', showAddModal);
-
 export function showAddModal() {
 	console.log("The user clicked the '+' button within the Main Modal");
 	var addModal = document.getElementById('addModal');

@@ -19,7 +19,8 @@ import {
 	getDocIdByPartnerName,
 } from '/firestore_UNIV.js';
 import { addListeners, map, getDivContent } from '/index_UNIV.js';
-import { showMainModal } from './index.js';
+import { showMainModal, showAddModal } from './index.js';
+import { addEntry } from '../../firestore_UNIV.js';
 
 //import { showAddModal } from './index.js';
 // Your Firestore code here
@@ -39,6 +40,7 @@ var partners = {};
 var activities = [];
 
 var addForm_geopoint;
+var has_existing_partner = false;
 
 // This pans to the Philippines
 map.setView(new L.LatLng(14.651, 121.052), 14);
@@ -80,6 +82,16 @@ function onMapClick(e) {
 }
 
 map.on('click', onMapClick);
+
+// add activity from the main modal
+const mainModalDocument =
+	document.getElementById('mainModalIframe').contentDocument;
+console.log(document.getElementById('mainModalIframe'));
+const newButton = mainModalDocument.getElementById('addModalButton');
+newButton.addEventListener('click', () => {
+	has_existing_partner = false;
+	showAddModal();
+});
 
 getDocs(col_ref)
 	.then((querySnapshot) => {
@@ -312,6 +324,8 @@ export function showModal(partner) {
 	// Add button for adding activities
 	addActivity.addEventListener('click', () => {
 		console.log('Clicked add activity in the partner modal');
+		has_existing_partner = true;
+		addForm_geopoint = new GeoPoint(partner[0].partner_coordinates._lat, partner[0].partner_coordinates._long);
 		// show the addLoc.html with some autofilled values
 		var modal = document.getElementById('addModal');
 
@@ -565,20 +579,22 @@ export async function getCoordsFromAddress(
 	}
 }
 
+//Commented out for now because this is unreliable
 //main modal enter the location
-let addInp = document
-	.getElementById('mainModalIframe')
-	.contentWindow.document.getElementById('address-input');
+// let addInp = document
+// 	.getElementById('mainModalIframe')
+// 	.contentWindow.document.getElementById('address-input');
 
-addInp.addEventListener('keyup', ({ key }) => {
-	if (key === 'Enter') {
-		let inp = addInp.value;
-		getCoordsFromAddress(inp);
-	}
-});
+// addInp.addEventListener('keyup', ({ key }) => {
+// 	if (key === 'Enter') {
+// 		let inp = addInp.value;
+// 		getCoordsFromAddress(inp);
+// 	}
+// });
 
 //values stored in local before uploading them in batches
 var temp_activities = {};
+var temp_activities_id = 0;
 
 // handle the temporary variables when adding a new entry
 // function handleSaveEntry() {
@@ -586,12 +602,31 @@ var temp_activities = {};
 // 		document.getElementById('addModalHTML').contentWindow.document;
 // }
 
+//access main modal iframe
+
 // Neptune's requested addloc.html Save button click listener
 var addFormiframe = document.getElementById('addModalHTML');
 var addFormiframeDocument = addFormiframe.contentWindow.document;
 var addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
 addFormSubmitButton.addEventListener('click', function () {
 	console.log('The Save button in addloc.html has been pressed.');
+	//get data from addloc.html
+	let info_from_forms = getDataFromAddForm();
+	console.log("data from addloc: ", info_from_forms);
+	if(has_existing_partner){
+		//upload it straight to the firebase db
+		addEntry(info_from_forms);
+	} else {
+		//locally store it
+		temp_activities[temp_activities_id+''] = info_from_forms;
+		console.log("locally stored activities: ", temp_activities);
+		temp_activities_id += 1;
+
+		// add it to the ul
+		mainModalDocument.getElementById("mainModalActivityList").innerHTML += 
+		"<li> " + info_from_forms['activity_nature'];
+	}
+
 });
 
 // Neptune's requested editloc.html Save button click listener
@@ -600,4 +635,32 @@ var editFormiframeDocument = editFormiframe.contentWindow.document;
 var editFormSubmitButton = editFormiframeDocument.getElementById('submit_form');
 editFormSubmitButton.addEventListener('click', function () {
 	console.log('The Save button in editloc.html has been pressed.');
+});
+
+function getDataFromAddForm(){
+	var collatedInput = {};
+
+	for (let i = 0; i < SDECE_RULES[2].length; i++) {
+		//SDECE_RULES_TEST[2] are just the fi eld names of each document
+		let fieldName = SDECE_RULES[2][i];
+		let inputValue =
+			addFormiframeDocument.getElementById(fieldName).value;
+
+		if (fieldName == 'partner_coordinates') {
+			collatedInput[fieldName] = addForm_geopoint;
+		} else {
+			if(inputValue == ""){
+				collatedInput[fieldName] = null;
+			} else {
+				collatedInput[fieldName] = inputValue;
+			}
+		}
+	}
+	return collatedInput;
+}
+
+// mainmodal save button for batch uploading
+const MAIN_MODAL_SAVE_BUTTON = mainModalDocument.getElementsByClassName("main-modal-save")[0];
+MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
+	console.log("Here are the activities to be uploaded: ",temp_activities);
 });
