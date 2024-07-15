@@ -23,8 +23,6 @@ import {
 import { addListeners, map, getDivContent } from '/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
 import { addEntry } from '../../firestore_UNIV.js';
-
-import { showAddModal } from './index.js';
 import { editEntry } from '../../firestore_UNIV.js';
 // Your Firestore code here
 
@@ -158,40 +156,40 @@ getDocs(col_ref)
 							.longitude
 					),
 				]);
-			}
 
-			results.addLayer(marker);
-			var popupContent = `
-                   <div class="partner-popup" id="`;
-			popupContent += partners[partner][0]['partner_name'];
-			popupContent += `">`;
-			popupContent += partners[partner][0]['partner_name'];
-			popupContent += `</div>`;
+				results.addLayer(marker);
+				var popupContent = `
+					<div class="partner-popup" id="`;
+				popupContent += partners[partner][0]['partner_name'];
+				popupContent += `">`;
+				popupContent += partners[partner][0]['partner_name'];
+				popupContent += `</div>`;
 
-			marker.bindPopup(popupContent);
-			results.addLayer(marker);
+				marker.bindPopup(popupContent);
+				results.addLayer(marker);
 
-			marker.on('mouseover', function () {
-				marker.openPopup();
+				marker.on('mouseover', function () {
+					marker.openPopup();
 
-				console.log(
-					'Clicked on ' +
-						partners[partner][0]['partner_name'] +
-						' pin!'
-				);
-
-				var test = document.getElementById(
-					partners[partner][0]['partner_name']
-				);
-				test.addEventListener('click', function () {
 					console.log(
-						'Clicked on the pop-up content of ' +
-							partners[partner][0]['partner_name']
+						'Clicked on ' +
+							partners[partner][0]['partner_name'] +
+							' pin!'
 					);
-					showModal(partners[partner]);
-				});
-			});
 
+					var test = document.getElementById(
+						partners[partner][0]['partner_name']
+					);
+					test.addEventListener('click', function () {
+						console.log(
+							'Clicked on the pop-up content of ' +
+								partners[partner][0]['partner_name']
+						);
+						showModal(partners[partner]);
+					});
+				});
+			}
+			
 			const containerDiv = document.createElement('div');
 			const img = document.createElement('svg');
 			const listItem = document.createElement('li');
@@ -257,7 +255,7 @@ getDocs(col_ref)
 			containerDiv.appendChild(img);
 			containerDiv.appendChild(listItem);
 			locationList.appendChild(containerDiv);
-		});
+		});	
 	})
 	.catch((error) => {
 		console.error('Error getting documents: ', error);

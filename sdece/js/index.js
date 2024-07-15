@@ -111,10 +111,10 @@ map.on('click', onMapClick);
 map.panTo(new L.LatLng(14.652538, 121.077818));
 
 // Show Main modal
-const element = document.getElementById('mainButton');
-element.addEventListener('click', showMainModal);
+// const element = document.getElementById('mainButton');
+// element.addEventListener('click', showMainModal);
 
-function showMainModal() {
+export function showMainModal() {
 	console.log("'Add an activity' button was clicked!");
 
 	var mainModal = document.getElementById('mainModal');
