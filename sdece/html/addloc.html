@@ -432,17 +432,6 @@
 				window.parent.postMessage('closeAddModal', '*');
 			}
 
-			document
-				.getElementById('close-btn')
-				.addEventListener('click', function (event) {
-					event.preventDefault();
-					console.log(
-						'The user has closed the Add Activity modal.'
-					);
-					closeModal();
-				});
-
-			// This function is for clearing all input that is not readOnly
 			function resetForm() {
 				var inputFields = document.getElementsByTagName('input');
 				for (var i = 0; i < inputFields.length; i++) {
@@ -452,6 +441,19 @@
 					}
 				}
 			}
+			
+			document
+				.getElementById('close-btn')
+				.addEventListener('click', function (event) {
+					event.preventDefault();
+					console.log(
+						'The user has closed the Add Activity modal.'
+					);
+					closeModal();
+					resetForm();
+				});
+
+			// This function is for clearing all input that is not readOnly
 
 		</script>
 	</body>
