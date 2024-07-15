@@ -265,8 +265,8 @@ button {
 
 .modal-button-icon {
 	margin-left: 0.5rem;
-	width: 24px;
-	height: 24px;
+	width: 1rem;
+	width: 1rem;
 }
 
 .delete-button {
@@ -307,11 +307,13 @@ button {
 	font-size: 1.25rem;
 	font-weight: 600;
 	display: flex;
+	gap: 1rem;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
 	text-align: left;
 	font-family: 'Hind';
+	color: var(--custom-black);
 }
 
 .modal-activity-button {
@@ -410,7 +412,8 @@ button {
 .plus-btn {
 	float: right;
 	color: var(--darkbg);
-	width: 10%;
+	width: 1rem;
+	width: 1rem;
 	font-size: 28px;
 	font-weight: bold;
 	display: flex;
