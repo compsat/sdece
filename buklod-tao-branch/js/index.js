@@ -31,6 +31,28 @@ var popup = L.popup();
 
 // function to store the html for info display on pin click
 function onPinClick(doc) {
+  // Variables for risk levels
+	var earthquake = doc.earthquake_risk;
+	var earthquake_split = earthquake.split(' RISK: ');
+	var earthquake1 = earthquake_split[0];
+	var earthquake2 = earthquake_split[1];
+	var fire = doc.fire_risk;
+	var fire_split = fire.split(' RISK: ');
+	var fire1 = fire_split[0];
+	var fire2 = fire_split[1];
+	var flood = doc.flood_risk;
+	var flood_split = flood.split(' RISK: ');
+	var flood1 = flood_split[0];
+	var flood2 = flood_split[1];
+	var landslide = doc.landslide_risk;
+	var landslide_split = landslide.split(' RISK: ');
+	var landslide1 = landslide_split[0];
+	var landslide2 = landslide_split[1];
+	var storm = doc.storm_risk;
+	var storm_split = storm.split(' RISK: ');
+	var storm1 = storm_split[0];
+	var storm2 = storm_split[1];
+
 	let leaflet_html = `
   <div class="leafletPopupContainer" id="leafletModal">
     <div class="leafletHeader">
@@ -60,38 +82,38 @@ function onPinClick(doc) {
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Earthquake</label>
-        <label class="leafletLabel">RISK LEVEL</label>
+        <label class="leafletLabel">${earthquake1}</label>
       </div>
       <div>
-        <p class="leafletDetails">${doc.earthquake_risk}</p>
+        <p class="leafletDetails">${earthquake2}</p>
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Fire</label>
-        <label class="leafletLabel">RISK LEVEL</label>
+        <label class="leafletLabel">${fire1}</label>
       </div>
       <div>
-        <p class="leafletDetails">${doc.fire_risk}</p>
+        <p class="leafletDetails">${fire2}</p>
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Flood</label>
-        <label class="leafletLabel">RISK LEVEL</label>
+        <label class="leafletLabel">${flood1}</label>
       </div>
       <div>
-        <p class="leafletDetails">${doc.flood_risk}</p>
+        <p class="leafletDetails">${flood2}</p>
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Landslide</label>
-        <label class="leafletLabel">RISK LEVEL</label>
+        <label class="leafletLabel">${landslide1}</label>
       </div>
       <div>
-        <p class="leafletDetails">${doc.landslide_risk}</p>
+        <p class="leafletDetails">${landslide2}</p>
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Storm</label>
-        <label class="leafletLabel">RISK LEVEL</label>
+        <label class="leafletLabel">${storm1}</label>
       </div>
       <div>
-        <p class="leafletDetails">${doc.storm_risk}</p>
+        <p class="leafletDetails">${storm2}</p>
       </div>
     </div>
     <div>
@@ -172,7 +194,7 @@ function onMapClick(e) {
             ${lat} + ${lng}
             <br>
       </div>
-    <button class="addButton p-5" data-lat="${lat}" data-lng="${lng}">Add Household</button>
+    <button id="mainButton" class="addButton p-5" data-lat="${lat}" data-lng="${lng}">Add Household</button>
     `;
 
 	popup.setLatLng(e.latlng).setContent(popupContent).openOn(map);

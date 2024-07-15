@@ -372,12 +372,14 @@ h1.entries {
 }
 
 .modalName {
+  position: relative;
   color: #387181;
   font-family: Montserrat;
   font-size: 24px;
   font-style: normal;
   font-weight: 750;
   letter-spacing: 0.48px;
+  padding: 10px 0px;
 }
 
 .modalButton {
@@ -472,7 +474,6 @@ button.collapsible {
 .leafletPopupContainer {
   height: 400px;
   width: 100%;
-  padding-right: 20px;
   text-overflow: ellipsis;
   align-items: center;
 }
