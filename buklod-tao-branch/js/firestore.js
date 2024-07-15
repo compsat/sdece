@@ -110,7 +110,7 @@ getDocs(colRef)
 				partner.household_address + ' ' + partner.household_phase;
 
 			listItem.classList.add('accordion');
-			anchor.classList.add('accordion', 'link');
+			anchor.classList.add('link');
 			containerDiv.classList.add('container-entry');
 
 			// Append elements to the DOM
@@ -225,8 +225,8 @@ function showModal(partner) {
           <label class="modalLabel">Total</label>
           <label class="modalLabel" id="entry_number_of_residents">${partner.number_residents}</label>
         </div>
-        <hr style="border-top: 1px solid #CBD5E0;">
-        <div class="modalLine">
+        <hr style="border-top: 1px solid #CBD5E0; margin-top:10px;">
+        <div class="modalLine" style="margin-top: 10px;">
           <label class="modalLabel">Minors</label>
           <label class="modalLabel" id="entry_number_of_minor_residents">${partner.number_minors}</label>
         </div>

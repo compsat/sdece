@@ -283,6 +283,26 @@
 
 				<!-- MODALS -->
 
+
+				<!-- Modals of Entries -->
+  				<div id="partnerModal" class="modal">
+    				<!-- Modal Header: includes household owner -->
+    				<div class="modalHeader">
+      					<h1 id="modalHeader" class="modalName"></h1>
+      					<span class="close">&times;</span>
+    				</div>
+    				<!-- Modal Content: content of the entries -->
+    				<div class="modalContent">
+      					<p id="modalContent"></p>
+    				</div>
+    				<!-- Modal footer: contains edit and delete buttons -->
+    				<div class="modalFooter">
+      					<div class="modalLine">
+        					<button class="modalButton" type="submit" id="submit_form" name="submit_form" style="color:#D64747">Delete &nbsp;&nbsp;<img src="./buklod-tao-branch/img/delete.png" alt="delete" style="height: 20px; width: 20px;"></button>   
+        					<button class="modalButton" id="editHousehold" name="submit_form" style="color:#3D97AF">Edit   &nbsp;&nbsp;<img src="./buklod-tao-branch/img/edit.png" alt="edit" style="height: 20px; width: 20px;"></button>   
+      					</div>
+    				</div>
+  				</div>
 				<!-- Main Modal: This is the modal that shows up when pressing the main button in the side navigation panel. -->
 				<div id="mainModal" class="modal-screen">
 					<!--  content -->
@@ -450,6 +470,16 @@
 						</button>
 					</span>
 				</div>
+
+  				<!-- Modal for add household form -->
+  				<div id="addModal" class="formModal" style="display: none;">
+    				<iframe src="./buklod-tao-branch/addloc.html" class="formIframe"></iframe>
+  				</div>
+
+  				<!-- Modal for edit household form -->
+  				<div id="editModal" class="formModal" style="display: none;">
+    				<iframe src="./buklod-tao-branch/editloc.html" class="formIframe"></iframe>
+  				</div>
 
 				<!-- Add Modal: This is the modal that shows up when clicking on the '+' sign that is nested inside the Main Modal. This allows the user to add a new activity to the SDECE collections. -->
 				<div class="modal-screen" id="addModal">
