@@ -1,3 +1,15 @@
+/* Color Definition */
+:root {
+	--darkbg: #387181;
+	--lightbg: #3d97af;
+	--custom-black: #2f2f2f;
+	--custom-gray: #a0a0a0;
+	--custom-dark-gray: #979797;
+	--custom-medium-gray: #f6f6f6;
+	--custom-light-gray: #fcfcfc;
+	--custom-red: #d64747;
+}
+
 * {
 	margin: 0px;
 	padding: 0px;
@@ -320,7 +332,7 @@ button {
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-	color: #3d97af;
+	color: var(--darkbg);
 	font-family: Montserrat;
 	font-size: 18px;
 	font-style: normal;
@@ -343,7 +355,7 @@ button {
 }
 
 .modal-address {
-	color: var(--custom-gray)
+	color: var(--custom-gray);
 	font-family: Montserrat;
 	font-size: 16px;
 	font-style: normal;

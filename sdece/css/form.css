@@ -32,21 +32,14 @@ button {
 }
 
 .close-btn {
-	float: right;
-	color: #aaaaaa;
-	width: 10%;
-	font-size: 28px;
-	font-weight: bold;
-	display: flex;
-	flex-direction: row;
-	align-items: center;
+	width: 2rem /* 32px */;
+	height: 2rem /* 32px */;
+	stroke: var(--custom-dark-gray);
 }
 
 .close-btn:hover,
 .close-btn:focus {
-	color: #3f3f3f;
-	text-decoration: none;
-	cursor: pointer;
+	stroke: var(--custom-black);
 }
 
 .form-container {
