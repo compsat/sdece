@@ -734,7 +734,10 @@ addFormSubmitButton.addEventListener('click', function () {
 			// add it to the ul
 			mainModalDocument.getElementById(
 				'mainModalActivityList'
-			).innerHTML += '<li> ' + info_from_forms['activity_nature'];
+			).innerHTML +=
+				'<li class="main-modal-temporary-activity">' +
+				info_from_forms['activity_nature'] +
+				'</li>';
 		}
 	}
 
