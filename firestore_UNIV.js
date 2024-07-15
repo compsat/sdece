@@ -67,6 +67,50 @@ export function getCoordinates() {
 // Now you can use lat and lng values as needed in this script
 console.log(`Latitude: ${lat}, Longitude: ${lng}`);
 
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+// Get lat and lng from URL parameters
+const lat = getUrlParameter('lat');
+const lng = getUrlParameter('lng');
+
+// Display the values on the page or use them as needed
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('location-info').innerText = `Latitude: ${lat}, Longitude: ${lng}`;
+});
+
+// export function getCoordinates() {
+// 	var roundLat = parseFloat(lat.toFixed(5));
+// 	var roundLon = parseFloat(lon.toFixed(5));
+//     var PARTNER_COORDINATES = `(${roundLat}, ${roundLon})`;
+//     return PARTNER_COORDINATES;
+// }
+
+export function getCoordinates() {
+    // Ensure lat and lng are numbers
+    const latNum = parseFloat(lat);
+    const lngNum = parseFloat(lng);
+
+    // Round the numbers to 5 decimal places
+    var roundLat = parseFloat(latNum.toFixed(5));
+    var roundLon = parseFloat(lngNum.toFixed(5));
+
+	const GEOPOINT = new GeoPoint(roundLat, roundLon);
+
+    // Create the coordinates string
+    var PARTNER_COORDINATES = GEOPOINT;
+
+    return PARTNER_COORDINATES;
+}
+
+
+// Now you can use lat and lng values as needed in this script
+console.log(`Latitude: ${lat}, Longitude: ${lng}`);
+
 // export const firebaseConfig = {
 //     apiKey: "AIzaSyAeo2wTJFotROMNPa4UHXo2MqPaW8k07us",
 //     authDomain: "compsat-sdece.firebaseapp.com",
@@ -436,6 +480,7 @@ export function editEntry(inp_array, docId) {
 }
 
 export function validateData(collectionName, data) {
+
 	//this is seen
 	console.log("VALIDATINGGGGGGG");
 	const rules = VALIDATION_RULES[collectionName];
@@ -535,7 +580,6 @@ export function validateData(collectionName, data) {
 
 		//no validation for geolocation, url yet
 	}
-
 	return errors;
 }
 

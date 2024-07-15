@@ -38,15 +38,15 @@ function onPinClick(doc) {
     </div>
     <div class="leafletContent">
       <br>
-      <div styel="line-height: 1px;">
+      <div style="line-height: 1px;">
         <p>${doc.contact_number}</p>
         <p>${doc.household_address}</p>
       </div>
-      <div class="modal-line">
+      <div class="modalLine" style="width: 100%">
         <label class="leafletLabel">Residency Status</label>
         <label class="leafletLabel">Part of HOA/NOA</label>
       </div>
-      <div class="modal-line" style="line-height: 3px; margin-bottom: 2px;">
+      <div class="modalLine" style="line-height: 3px; margin-bottom: 2px; width: 180px;">
         <p class="leafletDetails">${doc.residency_status}</p>
         <p class="leafletDetails">${doc.is_hoa_noa}</p>
       </div>
@@ -58,35 +58,35 @@ function onPinClick(doc) {
       <div class="leafletSubHeader">
         <label>Risk Levels</label>
       </div>
-      <div class="modal-line">
+      <div class="modalLine">
         <label class="leafletLabel">Earthquake</label>
         <label class="leafletLabel">RISK LEVEL</label>
       </div>
       <div>
         <p class="leafletDetails">${doc.earthquake_risk}</p>
       </div>
-      <div class="modal-line">
+      <div class="modalLine">
         <label class="leafletLabel">Fire</label>
         <label class="leafletLabel">RISK LEVEL</label>
       </div>
       <div>
         <p class="leafletDetails">${doc.fire_risk}</p>
       </div>
-      <div class="modal-line">
+      <div class="modalLine">
         <label class="leafletLabel">Flood</label>
         <label class="leafletLabel">RISK LEVEL</label>
       </div>
       <div>
         <p class="leafletDetails">${doc.flood_risk}</p>
       </div>
-      <div class="modal-line">
+      <div class="modalLine">
         <label class="leafletLabel">Landslide</label>
         <label class="leafletLabel">RISK LEVEL</label>
       </div>
       <div>
         <p class="leafletDetails">${doc.landslide_risk}</p>
       </div>
-      <div class="modal-line">
+      <div class="modalLine">
         <label class="leafletLabel">Storm</label>
         <label class="leafletLabel">RISK LEVEL</label>
       </div>
@@ -98,32 +98,32 @@ function onPinClick(doc) {
       <div class="leafletSubHeader">
         <label>Residents</label>
       </div>
-      <div class="modal-line">
+      <div class="modalLine">
         <label class="leafletLabel">Total</label>
         <label class="leafletLabel">${doc.number_residents}</label>
       </div>
       <hr style="border-top: 1px solid #CBD5E0;">
-      <div class="modal-line">
+      <div class="modalLine">
         <label class="leafletLabel">Minors</label>
         <label class="leafletLabel">${doc.number_minors}</label>
       </div>
       <br>
-      <div class="modal-line">
+      <div class="modalLine">
         <label class="leafletLabel">Seniors</label>
         <label class="leafletLabel">${doc.number_seniors}</label>
       </div>
       <br>
-      <div class="modal-line">
+      <div class="modalLine">
         <label class="leafletLabel">PWD</label>
         <label class="leafletLabel">${doc.number_pwd}</label>
       </div>
       <br>
-      <div class="modal-line">
+      <div class="modalLine">
         <label class="leafletLabel">Sick</label>
         <label class="leafletLabel">${doc.number_sick}</label>
       </div>
       <br>
-      <div class="modal-line">
+      <div class="modalLine">
         <label class="leafletLabel">Pregnant</label>
         <label class="leafletLabel">${doc.number_pregnant}</label>
       </div>
@@ -221,7 +221,7 @@ searchControl.on('results', function (data) {
 //script for add household modal
 
 // modal
-var formModal = document.getElementById('formModal');
+var formModal = document.getElementById('addModal');
 
 // open modal
 var openForm = document.getElementById('addHousehold');
@@ -230,17 +230,17 @@ var openForm = document.getElementById('addHousehold');
 var closeForm = document.getElementsByClassName('closeForm')[0];
 
 // When the user clicks the button, open the modal
-// openForm.onclick = function() {
-//   formModal.style.display = "block";
-// }
+openForm.onclick = function() {
+   formModal.style.display = "block";
+}
 
-// openForm.addEventListener('click', function () {
-// 	formModal.style.display = 'block';
-// });
+openForm.addEventListener('click', function () {
+	formModal.style.display = 'block';
+});
 
-// closeForm.addEventListener('click', function () {
-// 	formModal.style.display = 'none';
-// });
+closeForm.addEventListener('click', function () {
+  formModal.style.display = 'none';
+});
 
 // Closing the modal if the user clicks outside of it
 window.onclick = function (event) {
