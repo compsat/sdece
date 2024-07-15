@@ -43,8 +43,8 @@ iframe {
 	--darkbg: #387181;
 	--lightbg: #3d97af;
 	--custom-black: #2f2f2f;
-	--custom-gray: #a0a0a0;
 	--custom-dark-gray: #979797;
+	--custom-gray: #c6c6c6;
 	--custom-medium-gray: #f6f6f6;
 	--custom-light-gray: #fcfcfc;
 	--custom-red: #d64747;
@@ -157,9 +157,14 @@ iframe {
 	padding-bottom: 1.5rem;
 	padding-left: 2rem;
 	padding-right: 2rem;
-	border-bottom: 1px solid #6b7280;
+	border-bottom: 1px solid var(--custom-gray);
 	width: 100%;
 }
+
+.accordion:hover {
+	background-color: #dbdbdb;
+}
+
 .name {
 	font-family: 'Montserrat';
 	font-weight: bold;
@@ -173,7 +178,7 @@ iframe {
 	font-family: 'Hind', sans-serif;
 	font-weight: normal;
 	font-size: 0.875rem;
-	color: #6b7280;
+	color: #a0a0a0;
 	line-height: 120%;
 	margin-top: 0.5rem;
 }
