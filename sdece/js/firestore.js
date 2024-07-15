@@ -267,7 +267,7 @@ export function showModal(partner) {
 	backarrowDiv.innerHTML =
 		'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor" transform="matrix(-1, 0, 0, -1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
 
-	backarrowDiv.classList.add('close-btn');
+	backarrowDiv.classList.add('back-btn');
 	backarrowDiv.addEventListener('click', () => {
 		document.querySelector('.edit-button').style.display = 'none';
 		document.querySelector('.edit-button').style.padding = '0px';
@@ -400,13 +400,10 @@ export function showModal(partner) {
 				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
 			office.innerHTML = activity.ADMU_office;
 
-
 			activityTitle.appendChild(activityName);
 			activityTitle.appendChild(arrow);
 			activityButton.appendChild(activityTitle);
 			activityButton.appendChild(office);
-
-			
 
 			// Set div content for activity details
 
