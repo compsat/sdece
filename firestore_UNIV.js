@@ -252,7 +252,87 @@ const VALIDATION_RULES = {
 		status: { type: 'string' },
 		storm_risk: { type: 'string', required: true },
 	},
+	'buklod-official': {
+		contact_number: {
+			type: 'string',
+			required: true,
+			minLength: 13,
+			maxLength: 13,
+			regex: /^[0-9 ]+$/,
+		},
+		earthquake_risk: { type: 'string', required: true },
+		fire_risk: { type: 'string', required: true },
+		flood_risk: { type: 'string', required: true },
+		household_address: { type: 'string', required: true, maxLength: 255 },
+		household_material: {
+			type: 'string',
+			required: true,
+			enum: [
+				'Concrete',
+				'Semi-Concrete',
+				'Light materials',
+				'Makeshift',
+				'Natural',
+			],
+		},
+		household_name: { type: 'string', required: true, maxLength: 127 },
+		household_phase: { type: 'string', required: true },
+		is_hoa_noa: {
+			type: 'string',
+			required: true,
+			minLength: 3,
+			maxLength: 3,
+			enum: ['HOA', 'N/A'],
+		},
+		landslide_risk: { type: 'string', required: true },
+		location_coordinates: { type: 'number', required: true },
+		location_link: { type: 'string', required: true },
+		nearest_evac: { type: 'string', required: true, maxLength: 255 },
+		number_minors: { type: 'number' },
+		number_pregnant: { type: 'number' },
+		number_pwd: { type: 'number' },
+		number_residents: { type: 'number', required: true },
+		number_sick: { type: 'number' },
+		residency_status: {
+			type: 'string',
+			required: true,
+			enum: ['May-Ari', 'Umuupa'],
+		},
+		status: { type: 'string' },
+		storm_risk: { type: 'string', required: true },
+	},
 	'sdece-official-TEST': {
+		partner_name: { type: 'string', required: true, maxLength: 255 },
+		partner_address: { type: 'string', required: true, maxLength: 255 },
+		partner_coordinates: { required: true },
+		partner_contact_name: {
+			type: 'string',
+			required: true,
+			maxLength: 255,
+		},
+		partner_contact_number: {
+			type: 'string',
+			required: true,
+			minLength: 13,
+			maxLength: 13,
+			regex: /^[0-9 ]+$/,
+		},
+		partner_email: { type: 'string', required: true, maxLength: 127 },
+		activity_name: { type: 'string', required: true },
+		activity_nature: { type: 'string', required: true, maxLength: 255 },
+		activity_date: { type: 'date', required: true },
+		additional_partnership: { type: 'string', maxLength: 255 },
+		organization_unit: { type: 'string', maxLength: 127 },
+		ADMU_office: { type: 'string', required: true, maxLength: 127 },
+		ADMU_contact_name: { type: 'string', required: true, maxLength: 255 },
+		ADMU_email: {
+			type: 'string',
+			required: true,
+			required: true,
+			maxLength: 127,
+		},
+	},
+	'sdece-official': {
 		partner_name: { type: 'string', required: true, maxLength: 255 },
 		partner_address: { type: 'string', required: true, maxLength: 255 },
 		partner_coordinates: { required: true },
@@ -435,7 +515,7 @@ export function validateData(collectionName, data) {
 	//this is seen
 	console.log("VALIDATINGGGGGGG");
 	const rules = VALIDATION_RULES[collectionName];
-	const errors = [];
+	var errors = [];
 
 	for (const field in rules) {
 		const rule = rules[field];

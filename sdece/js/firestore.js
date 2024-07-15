@@ -645,20 +645,55 @@ addFormSubmitButton.addEventListener('click', function () { //handleAdd
 		} 
 	}
 
-	console.log("data from addloc: ", info_from_forms);
-	if(has_existing_partner){
-		//upload it straight to the firebase db
-		addEntry(info_from_forms);
-	} else {
-		//locally store it
-		temp_activities[temp_activities_id+''] = info_from_forms;
-		console.log("locally stored activities: ", temp_activities);
-		temp_activities_id += 1;
+	//validate the collated input here
+	console.log("ADD VALIDATION IS HAPPENING?", info_from_forms);
+	let errors = validateData('sdece-official-TEST', info_from_forms);
 
-		// add it to the ul
-		mainModalDocument.getElementById("mainModalActivityList").innerHTML += 
-		"<li> " + info_from_forms['activity_nature'];
+	console.log(errors);
+	if (errors.length > 0) {
+		displayErrors(errors);
+		event.preventDefault();
+	} else {
+		console.log("data from addloc: ", info_from_forms);
+		if(has_existing_partner){
+			//upload it straight to the firebase db
+			addEntry(info_from_forms);
+		} else {
+			//locally store it
+			temp_activities[temp_activities_id+''] = info_from_forms;
+			console.log("locally stored activities: ", temp_activities);
+			temp_activities_id += 1;
+	
+			// add it to the ul
+			mainModalDocument.getElementById("mainModalActivityList").innerHTML += 
+			"<li> " + info_from_forms['activity_nature'];
+		}
 	}
+
+	function displayErrors(errors) {
+		let errorDiv =
+		addFormiframeDocument.getElementById('error_messages');
+
+		if (errorDiv) {
+			errorDiv.innerHTML = '';
+
+			if (errors.length > 0) {
+				for (let error of errors) {
+					let errorParagraph =
+					addFormiframeDocument.createElement('p');
+					errorParagraph.textContent = error;
+					errorDiv.appendChild(errorParagraph);
+				}
+			} else {
+				console.error(
+					"Error: Couldn't find element with ID 'error_messages'."
+				);
+			}
+		}
+
+	}
+
+	
 });
 
 // Editloc.html Save button click listener
@@ -683,26 +718,8 @@ export function handleEdit(){
 	}
 
 	//validate the collated input here
-	setCollection('sdece-official-TEST');
-
 	console.log("EDITING VALIDATION IS HAPPENING?");
-	for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
-		//SDECE_RULES_TEST[2] are just the field names of each document
-		console.log(SDECE_RULES_TEST[2][i]);
-
-		let fieldName = SDECE_RULES_TEST[2][i];
-
-		if (fieldName == 'partner_coordinates') {
-			collated_inp[fieldName] = current_viewed_activity["partner_coordinates"];
-		} else {
-			let inputValue = edit_modal.getElementById(fieldName).value;
-			collated_inp[fieldName] = inputValue;
-		}
-	}
-	console.log(collated_inp);
-	console.log("Hello World");
-
-	const errors = validateData('sdece-official-TEST', collated_inp);
+	let errors = validateData('sdece-official-TEST', collated_inp);
 
 	if (errors.length > 0) {
 		displayErrors(errors);
@@ -734,15 +751,9 @@ export function handleEdit(){
 		}
 
 	}
-	console.log(collated_inp);
-
-	
-
-	console.log("Edits made to file with ID: ",current_viewed_activity);
+	console.log("Edits made to file with ID: ",current_viewed_activity["identifier"]);
 	console.log("Here's the edited file: ", collated_inp);
-
-	editEntry(collated_inp, current_viewed_activity["identifier"]);
-}
+	}
 
 // mainmodal save button for batch uploading
 const MAIN_MODAL_SAVE_BUTTON = mainModalDocument.getElementsByClassName("main-modal-save")[0];
@@ -781,7 +792,7 @@ export function populateMainModalList() {
 		arrow.innerHTML =
 			'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
 		arrow.classList.add('arrow');
-		
+
 		activityButton.appendChild(activityName);
 		activityButton.classList.add('modal-activity-button');
 		mainModalActivityList.appendChild(activityButton);
