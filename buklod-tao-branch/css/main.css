@@ -315,7 +315,6 @@ h1.entries {
   max-width: 528px;
   height: 100%; /* Adjust the height of the modal as needed */
   justify-content: center;
-  padding: 20px;
   box-sizing: border-box;
 }
 
@@ -338,7 +337,6 @@ h1.entries {
   margin-left: 25%;
   width: 100%;
   padding: 0px 24px;
-  background-color: #fcfcfc;
   font-family: Hind;
   font-size: 16px;
   font-style: normal;
