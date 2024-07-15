@@ -200,6 +200,7 @@ export const DB_RULES_AND_DATA = [
 	],
 ];
 
+//validation here
 const VALIDATION_RULES = {
 	//Rules for Validating Data
 	'buklod-official-TEST': {
@@ -412,20 +413,15 @@ export function addEntry(inp_obj) {
 	}
 }
 
-export function editEntry(inp_array, docId) {
+export function editEntry(inp_obj, docId) {
 	console.log('edit entry with id ' + docId);
 
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_reference.id) {
 			const DOC_REFERENCE = doc(DB, rule[0], docId);
-
-			let input = {}; // contents depend on the rule engine
-			for (let i = 0; i < inp_array.length; i++) {
-				input[rule[2][i]] = inp_array[i];
-			}
-			updateDoc(DOC_REFERENCE, input)
-				.then((docRef) => {
-					console.log('Document written with ID: ', docRef.id);
+			updateDoc(DOC_REFERENCE, inp_obj)
+				.then(() => {
+					console.log("edited yipee", docId);
 				})
 				.catch((error) => {
 					console.error('Error adding document: ', error);
@@ -538,35 +534,3 @@ export function validateData(collectionName, data) {
 
 	return errors;
 }
-
-// document.addEventListener('DOMContentLoaded', function() {
-//     var addButton = document.querySelector('.addButton');
-//     addButton.addEventListener('click', function () {
-//         const lat = this.getAttribute('data-lat');
-//         const lng = this.getAttribute('data-lng');
-
-//         // Create an input object with the required fields
-//         const inputObject = {
-//             partner_name: 'Partner Name', // Replace with actual value or get from user input
-//             partner_address: 'Partner Address', // Replace with actual value or get from user input
-//             partner_coordinates: parseFloat(`${lat},${lng}`), // Convert lat and lng to a float
-//             partner_contact_name: 'Contact Name', // Replace with actual value or get from user input
-//             partner_contact_number: '12345678901', // Replace with actual value or get from user input
-//             partner_email: 'email@example.com', // Replace with actual value or get from user input
-//             activity_name: 'Activity Name', // Replace with actual value or get from user input
-//             activity_nature: 'Activity Nature', // Replace with actual value or get from user input
-//             activity_date: '2023-07-04', // Replace with actual value or get from user input
-//             additional_partnership: 'Additional Partnership', // Replace with actual value or get from user input
-//             organization_unit: 'Organization Unit', // Replace with actual value or get from user input
-//             ADMU_office: 'ADMU Office', // Replace with actual value or get from user input
-//             ADMU_contact_name: 'ADMU Contact Name', // Replace with actual value or get from user input
-//             ADMU_email: 'admu@example.com' // Replace with actual value or get from user input
-//         };
-
-//         // Set the collection reference
-//         setCollection('sdece-official-TEST');
-
-//         // Add the entry to the Firestore collection
-//         addEntry(inputObject);
-//     });
-// });
