@@ -21,7 +21,7 @@ import {
 	validateData,
 } from '/firestore_UNIV.js';
 import { addListeners, map, getDivContent } from '/index_UNIV.js';
-import { showMainModal, showAddModal } from './index.js';
+import { showMainModal, showAddModal, } from './index.js';
 import { addEntry } from '../../firestore_UNIV.js';
 import { editEntry } from '../../firestore_UNIV.js';
 // Your Firestore code here
@@ -81,6 +81,7 @@ function onMapClick(e) {
 		addForm_geopoint = new GeoPoint(lat, lng);
 		console.log('currently adding coords: ', addForm_geopoint);
 		showMainModal();
+		populateMainModalList();
 	});
 }
 
@@ -745,6 +746,7 @@ export function handleEdit(){
 
 // mainmodal save button for batch uploading
 const MAIN_MODAL_SAVE_BUTTON = mainModalDocument.getElementsByClassName("main-modal-save")[0];
+
 MAIN_MODAL_SAVE_BUTTON.addEventListener('click', async function () {
 	console.log("Here are the activities to be uploaded in this batch: ",temp_activities);
 	Object.keys(temp_activities).forEach((temp_id) => {
@@ -757,3 +759,30 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', async function () {
 		addEntry(current_temp_activity);
 	});
 });
+
+export function populateMainModalList() {
+	// display temporarily saved activities to main modal
+
+	const mainModalActivityList = mainModalDocument.getElementById('mainModalActivityList');
+	mainModalActivityList.innerHTML = '';
+	
+	for (let index = 0; index < temp_activities.length; index++) {
+		var activity = temp_activities[i]; 
+
+		// View activity details button
+		// const activityButton = document.createElement('button');
+		const activityButton = document.createElement('div');
+		activityButton.classList.add('modal-activities');
+		const activityName = document.createElement('div');
+		const arrow = document.createElement('div');
+
+		activityName.textContent = activity.activity_nature + '';
+
+		arrow.innerHTML =
+			'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
+		arrow.classList.add('arrow');
+
+		activityButton.appendChild(activityName);
+		mainModalActivityList.appendChild(activityButton);
+	}
+}
