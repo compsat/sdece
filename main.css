@@ -48,7 +48,6 @@ iframe {
 	--custom-medium-gray: #f6f6f6;
 	--custom-light-gray: #fcfcfc;
 	--custom-red: #d64747;
-	--custom-translucent-teal: #3d97af10;
 }
 
 /* Main page styles */
@@ -67,6 +66,7 @@ iframe {
 	background-color: var(--custom-medium-gray);
 	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
 		0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	padding-bottom: 1.5rem;
 }
 
 .search-bar-container {
@@ -250,12 +250,6 @@ iframe {
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
-	transition: background-color 0.3s ease, color 0.3s ease,
-		transform 0.3s ease;
-}
-
-.logout-btn:hover {
-	transform: scale(1.01);
 }
 
 .logout-icon {
@@ -263,6 +257,7 @@ iframe {
 	height: 1.5rem;
 	margin-right: 0.5rem;
 }
+
 
 .map-container {
 	display: flex;
@@ -303,3 +298,7 @@ iframe {
 .partner-label {
 	font-weight: bold;
 }
+
+
+
+

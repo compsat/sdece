@@ -10,7 +10,6 @@ import {
 	query,
 	where,
 	getDoc,
-	GeoPoint,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import {
 	getCollection,
@@ -19,9 +18,8 @@ import {
 	getDocIdByPartnerName,
 } from '/firestore_UNIV.js';
 import { addListeners, map, getDivContent } from '/index_UNIV.js';
-import { showMainModal } from './index.js';
 
-//import { showAddModal } from './index.js';
+import { showAddModal } from './index.js';
 // Your Firestore code here
 
 // Import the functions you need from the SDKs you need
@@ -34,52 +32,32 @@ import { showMainModal } from './index.js';
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 var col_ref = null;
+
 col_ref = getCollection();
-var partners = {};
+
+var partners = {}; // queried
 var activities = [];
 
-var addForm_geopoint;
+map.panTo(new L.LatLng(14.651, 121.052));
 
-// This pans to the Philippines
-map.setView(new L.LatLng(14.651, 121.052), 14);
+// //list down all documents under the collection in console.log
+// const querySnapshot = await getDocs(colRef);
+// console.log(querySnapshot);
+// querySnapshot.forEach((doc) => {
+//   // doc.data() is never undefined for query doc snapshots
+//   console.log(doc.id, " => ", doc.data());
+// });
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution:
 		'&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
-var searchControl = L.esri.Geocoding.geosearch().addTo(map);
-
+// var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
-function onMapClick(e) {
-	const lat = e.latlng.lat;
-	const lng = e.latlng.lng;
-
-	// This is the popup for when the user clicks on a random spot on the map
-	var popupContent = `
-     <div class="partner-geolocation">
-       
-           Latitude: ${lat} <br> Longitude: ${lng}
-       </div>
-   <button class="addButton" data-lat="${lat}" data-lng="${lng}">Add Location</button>
- `;
-
-	popup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
-
-	// This addButton is from the mini popup
-	var addButton = document.querySelector('.addButton');
-	addButton.addEventListener('click', function () {
-		// show mainmodal from pop up "add location"
-		console.log('main modal called from popup');
-		addForm_geopoint = new GeoPoint(lat, lng);
-		console.log('currently adding coords: ', addForm_geopoint);
-		showMainModal();
-	});
-}
-
-map.on('click', onMapClick);
+// get docs from firestore and place them in partner and activities
 
 getDocs(col_ref)
 	.then((querySnapshot) => {
@@ -110,7 +88,7 @@ getDocs(col_ref)
 			var marker;
 
 			// Some coordinated are null, protective check
-			//console.log(partners[partner][0]['partner_coordinates']);
+			console.log(partners[partner][0]['partner_coordinates']);
 			if (partners[partner][0]['partner_coordinates'] != null) {
 				marker = L.marker([
 					parseFloat(
@@ -126,7 +104,7 @@ getDocs(col_ref)
 
 			results.addLayer(marker);
 			var popupContent = `
-                   <div class="partner-popup" id="`;
+					<div class="partner-popup" id="`;
 			popupContent += partners[partner][0]['partner_name'];
 			popupContent += `">`;
 			popupContent += partners[partner][0]['partner_name'];
@@ -135,9 +113,7 @@ getDocs(col_ref)
 			marker.bindPopup(popupContent);
 			results.addLayer(marker);
 
-			marker.on('mouseover', function () {
-				marker.openPopup();
-
+			marker.on('popupopen', function () {
 				console.log(
 					'Clicked on ' +
 						partners[partner][0]['partner_name'] +
@@ -165,7 +141,6 @@ getDocs(col_ref)
 			const activityDiv = document.createElement('div');
 
 			containerDiv.addEventListener('click', function () {
-				marker.openPopup();
 				map.panTo(
 					new L.LatLng(
 						parseFloat(
@@ -211,6 +186,16 @@ getDocs(col_ref)
 
 			activityDiv.innerHTML = activities_string;
 
+			//   if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
+			//   {
+			//     partner.activities.forEach( (activity) => {
+			//       activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
+			//     });
+			//   }
+			//   else {
+			//     console.log("No activities found");
+			//   }
+
 			listItem.classList.add('accordion');
 			// Append elements to the DOM
 			anchor.appendChild(nameDiv);
@@ -229,9 +214,6 @@ getDocs(col_ref)
 
 // Display partner modal by clicking partner entry (WIP: and on pin pop up click)
 export function showModal(partner) {
-	document.querySelector('.edit-button').style.display = 'none';
-	document.querySelector('.edit-button').style.padding = '0px';
-
 	const modal = document.getElementById('partnerModal');
 	const modalHeader = document.getElementById('modalHeader');
 	const modalContent = document.getElementById('modalContent');
@@ -269,9 +251,6 @@ export function showModal(partner) {
 
 	backarrowDiv.classList.add('close-btn');
 	backarrowDiv.addEventListener('click', () => {
-		document.querySelector('.edit-button').style.display = 'none';
-		document.querySelector('.edit-button').style.padding = '0px';
-
 		modalHeader.innerHTML = '';
 		modalContent.innerHTML = '';
 
@@ -312,64 +291,7 @@ export function showModal(partner) {
 	// Add button for adding activities
 	addActivity.addEventListener('click', () => {
 		console.log('Clicked add activity in the partner modal');
-		// show the addLoc.html with some autofilled values
-		var modal = document.getElementById('addModal');
-
-		// Display the modal
-		modal.style.display = 'flex';
-		// populate the field with current partner values
-		document
-			.getElementById('addModalHTML')
-			.contentWindow.document.getElementById('partner_name').value =
-			partner[0].partner_name;
-
-		document
-			.getElementById('addModalHTML')
-			.contentWindow.document.getElementById(
-				'partner_name'
-			).readOnly = true;
-
-		document
-			.getElementById('addModalHTML')
-			.contentWindow.document.getElementById(
-				'partner_name'
-			).style.backgroundColor = 'var(--custom-medium-gray';
-
-		document
-			.getElementById('addModalHTML')
-			.contentWindow.document.getElementById('partner_address').value =
-			partner[0].partner_address;
-
-		document
-			.getElementById('addModalHTML')
-			.contentWindow.document.getElementById(
-				'partner_address'
-			).readOnly = true;
-
-		document
-			.getElementById('addModalHTML')
-			.contentWindow.document.getElementById(
-				'partner_address'
-			).style.backgroundColor = 'var(--custom-medium-gray';
-
-		document
-			.getElementById('addModalHTML')
-			.contentWindow.document.getElementById(
-				'partner_address'
-			).style.color = 'var(--custom-dark-gray';
-
-		document
-			.getElementById('addModalHTML')
-			.contentWindow.document.getElementById(
-				'partner_name'
-			).style.color = 'var(--custom-dark-gray';
-
-		// Close the Add Activity modal when the user clicks anywhere outside of it
-		window.onclick = function (event) {
-			if (event.target == modal) {
-				modal.style.display = 'none';
-			}
-		};
+		showAddModal(); // TODO: Modify this so that the current partner's details are passed through the Add Activity form as input and then those fields are Disabled.
 	});
 
 	activityHeaderDiv.appendChild(addActivity);
@@ -383,30 +305,21 @@ export function showModal(partner) {
 		partner.forEach((activity) => {
 			console.log(activity);
 			// View activity details button
-			const activityButton = document.createElement('div');
-			const activityTitle = document.createElement('button');
-
-			activityTitle.classList.add('modal-activity-title');
-			activityButton.classList.add('modal-activity-button');
+			const activityButton = document.createElement('button');
+			activityButton.classList.add('modal-activities');
 
 			const activityName = document.createElement('div');
+
 			const arrow = document.createElement('div');
-			arrow.classList.add('arrow');
-			const office = document.createElement('div');
-			office.classList.add('modal-address');
 
 			activityName.textContent = activity.activity_nature + '';
+
 			arrow.innerHTML =
 				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
-			office.innerHTML = activity.ADMU_office;
+			arrow.classList.add('arrow');
 
-
-			activityTitle.appendChild(activityName);
-			activityTitle.appendChild(arrow);
-			activityButton.appendChild(activityTitle);
-			activityButton.appendChild(office);
-
-			
+			activityButton.appendChild(activityName);
+			activityButton.appendChild(arrow);
 
 			// Set div content for activity details
 
@@ -449,8 +362,6 @@ export function showModal(partner) {
 
 			// View activity details in modal after clicking activity
 			activityButton.addEventListener('click', () => {
-				document.querySelector('.edit-button').style.display =
-					'flex';
 				modalHeader.innerHTML = '';
 				modalContent.innerHTML = '';
 
@@ -481,7 +392,7 @@ export function showModal(partner) {
 
 	// NOTE: This is where every partner modal content is added
 	modalHeader.appendChild(nameDiv);
-	modalHeader.appendChild(closeDiv);
+	// modalHeader.appendChild(closeDiv);
 	// TODO: Implement the close button in index.html lang.
 
 	modalContent.appendChild(addressDiv);
@@ -532,72 +443,3 @@ export function showModal(partner) {
 		});
 	}
 }
-
-export async function getCoordsFromAddress(
-	address = '161 Daan Tubo, Diliman, Quezon City'
-) {
-	console.log('ENTER PRESSED IN MAIN MODAL: ', address);
-
-	var parsed_loc = encodeURIComponent(
-		address.toLowerCase().replace(/[^a-z0-9 _-]+/gi, '-')
-	);
-	var api_search = 'https://nominatim.openstreetmap.org/search?q=';
-	var link = api_search.concat(parsed_loc).concat('&format=json');
-	console.log(link);
-
-	var response = await fetch(link);
-	var jsonified = await response.json();
-
-	console.log(jsonified);
-	console.log(jsonified[0]['lat'], jsonified[0]['lon']);
-
-	if (addForm_geopoint == null) {
-		addForm_geopoint = new GeoPoint(
-			jsonified[0]['lat'],
-			jsonified[0]['lon']
-		);
-		console.log(
-			'coords have been set from the address.',
-			addForm_geopoint
-		);
-	} else {
-		console.log('No need, you already set it in the popup');
-	}
-}
-
-//main modal enter the location
-let addInp = document
-	.getElementById('mainModalIframe')
-	.contentWindow.document.getElementById('address-input');
-
-addInp.addEventListener('keyup', ({ key }) => {
-	if (key === 'Enter') {
-		let inp = addInp.value;
-		getCoordsFromAddress(inp);
-	}
-});
-
-//values stored in local before uploading them in batches
-var temp_activities = {};
-
-// handle the temporary variables when adding a new entry
-// function handleSaveEntry() {
-// 	let addForm_modal =
-// 		document.getElementById('addModalHTML').contentWindow.document;
-// }
-
-// Neptune's requested addloc.html Save button click listener
-var addFormiframe = document.getElementById('addModalHTML');
-var addFormiframeDocument = addFormiframe.contentWindow.document;
-var addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
-addFormSubmitButton.addEventListener('click', function () {
-	console.log('The Save button in addloc.html has been pressed.');
-});
-
-// Neptune's requested editloc.html Save button click listener
-var editFormiframe = document.getElementById('editModalHTML');
-var editFormiframeDocument = editFormiframe.contentWindow.document;
-var editFormSubmitButton = editFormiframeDocument.getElementById('submit_form');
-editFormSubmitButton.addEventListener('click', function () {
-	console.log('The Save button in editloc.html has been pressed.');
-});
