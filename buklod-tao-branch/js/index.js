@@ -224,7 +224,7 @@ searchControl.on('results', function (data) {
 var formModal = document.getElementById('addModal');
 
 // open modal
-var openForm = document.getElementById('addHousehold');
+var openForm = document.getElementById('mainButton');
 
 // Get the <span> element that closes the modal
 var closeForm = document.getElementsByClassName('closeForm')[0];

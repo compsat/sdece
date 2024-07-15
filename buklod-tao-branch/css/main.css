@@ -410,7 +410,8 @@ h1.entries {
   letter-spacing: 0.32px;
   line-height: 100%;
   position: relative;
-  top: -10px;
+  margin-top: 5px;
+  margin-bottom: 20px;
 }
 
 button.collapsible {
