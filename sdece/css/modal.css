@@ -521,3 +521,61 @@ button {
 .partner-hover:hover {
 	background-color: var(--custom-medium-gray);
 }
+
+.pm-activity-name {
+	font-family: 'Montserrat';
+	padding: 2.5rem 2.5rem 0rem 2.5rem;
+	font-weight: 600;
+	font-size: 1.25rem;
+	color: var(--lightbg);
+}
+
+.pm-activity-address {
+	font-family: 'Hind';
+	padding: 0rem 2.5rem;
+	color: var(--custom-dark-gray);
+	margin-top: 1rem;
+	line-height: 110%;
+}
+
+.pm-details {
+	padding: 0rem 2.5rem;
+	font-family: 'Hind';
+	line-height: 1rem;
+	margin-top: 1.5rem;
+	color: var(--custom-black);
+}
+
+.pm-detailed-info {
+	margin-top: 1rem;
+}
+
+.pm-activity-office {
+	border-top: 1px solid var(--custom-gray);
+	margin-top: 1.5rem;
+	padding: 1rem 2.5rem 0rem 2.5rem;
+}
+
+.ao-header {
+	font-family: 'Montserrat';
+	color: var(--darkbg);
+	font-size: 1.25rem;
+	line-height: 110%;
+	letter-spacing: 2%;
+}
+
+.ao-office {
+	font-family: 'Montserrat';
+	color: var(--lightbg);
+	font-size: 1.125rem;
+	font-weight: 600;
+	margin-top: 1rem;
+}
+
+.ao-details {
+	font-family: 'Hind';
+	margin-top: 1rem;
+	font-size: 1rem;
+	line-height: 110%;
+	letter-spacing: 2%;
+}

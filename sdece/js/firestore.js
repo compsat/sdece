@@ -500,31 +500,37 @@ export function showModal(partner) {
 			activityAddressDiv.classList.add('modal-address');
 
 			activityContactDiv.innerHTML =
-				'<b>Contact</b> <br> ' +
+				'<b>Contact</b>' +
+				'<p class="pm-detailed-info">' +
 				activity.partner_contact_name +
-				'<br>' +
+				'</p>' +
+				'<p class="pm-detailed-info">' +
 				activity.partner_email +
-				'<br>';
+				'</p>';
 			activityOrganizationDiv.innerHTML =
-				'<b>Organization/Unit</b> <br>' +
-				activity.organization_unit;
+				'<b>Organization/Unit</b>' +
+				'<p class="pm-detailed-info">' +
+				activity.organization_unit +
+				'</p>';
 			activityDatesDiv.innerHTML =
-				'<b>Date/s of Partnership</b> <br>' +
-				activity.activity_date; //this field might become an array in the future
+				'<b>Date/s of Partnership</b>' +
+				'<p class="pm-detailed-info">' +
+				activity.activity_date +
+				'</p>'; //this field might become an array in the future
 
 			activityOfficeDiv.innerHTML =
-				"<hr> <br> <b class='modal-name' >Ateneo Office Oversight</b>" +
-				"<p class='modal-activities-header'>" +
+				'<b class="ao-header">Ateneo Office Oversight</b>' +
+				'<p class="ao-office">' +
 				activity.ADMU_office +
 				'</p>' +
-				'<p>' +
+				'<p class="ao-details">' +
 				activity.ADMU_contact_name +
 				'</p>' +
-				'<p>' +
+				'<p class="ao-details">' +
 				activity.ADMU_email +
 				'</p>';
 
-			// View activity details in modal after clicking activity
+			// Executed when the user clicks on an activity listed in the Partner Modal
 			activityButton.addEventListener('click', () => {
 				current_viewed_activity = activity;
 				console.log(
@@ -536,15 +542,33 @@ export function showModal(partner) {
 				modalHeader.innerHTML = '';
 				modalContent.innerHTML = '';
 
-				// This is the modal content that appears when clicking on an activity in the Partner Modal activities list.
+				// Header
 				modalHeader.appendChild(backarrowDiv);
 				modalHeader.appendChild(nameDiv);
 				modalHeader.appendChild(closeDiv);
+
+				// Content
+
+				// Resetting class list to override styles
+				activityNameDiv.classList = '';
+				activityAddressDiv.classList = '';
+
+				activityNameDiv.classList.add('pm-activity-name');
 				modalContent.appendChild(activityNameDiv);
+
+				activityAddressDiv.classList.add('pm-activity-address');
 				modalContent.appendChild(activityAddressDiv);
+
+				activityContactDiv.classList.add('pm-details');
 				modalContent.appendChild(activityContactDiv);
+
+				activityOrganizationDiv.classList.add('pm-details');
 				modalContent.appendChild(activityOrganizationDiv);
+
+				activityDatesDiv.classList.add('pm-details');
 				modalContent.appendChild(activityDatesDiv);
+
+				activityOfficeDiv.classList.add('pm-activity-office');
 				modalContent.appendChild(activityOfficeDiv);
 			});
 
