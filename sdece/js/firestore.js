@@ -394,7 +394,7 @@ export function showModal(partner) {
 			const arrow = document.createElement('div');
 			arrow.classList.add('arrow');
 			const office = document.createElement('div');
-			office.classList.add('modal-address');
+			office.classList.add('modal-office');
 
 			activityName.textContent = activity.activity_nature + '';
 			arrow.innerHTML =

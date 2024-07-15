@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('./sdece.css/variables.css');
 
 /* Reset default margin and spacing */
 * {
@@ -100,7 +98,7 @@ iframe {
 	outline: none;
 	box-shadow: none;
 	width: 100%;
-	font-family: 'Hind', sans-serif;
+	font-family: 'Hind';
 	font-size: 1.25rem;
 }
 
@@ -143,7 +141,7 @@ iframe {
 .main-btn-text {
 	margin-left: 1rem;
 	font-weight: 700;
-	font-family: Montserrat, sans-serif;
+	font-family: 'Montserrat';
 }
 
 .entries {
@@ -175,7 +173,7 @@ iframe {
 }
 
 .address {
-	font-family: 'Hind', sans-serif;
+	font-family: 'Hind';
 	font-weight: normal;
 	font-size: 0.875rem;
 	color: #a0a0a0;
@@ -184,7 +182,7 @@ iframe {
 }
 
 .activity {
-	font-family: 'Hind', sans-serif;
+	font-family: 'Hind';
 	font-weight: normal;
 	font-size: 0.875rem;
 	color: #000;
@@ -222,7 +220,7 @@ iframe {
 .layer-toggle {
 	display: block;
 	width: auto;
-	font-family: 'Montserrat', sans-serif;
+	font-family: 'Montserrat';
 	font-size: 1.125rem;
 	font-weight: bold;
 	border: none;

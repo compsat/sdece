@@ -1,4 +1,4 @@
-@import "../../main.css";
+@import url('variables.css');
 
 * {
 	margin: 0px;
@@ -118,7 +118,7 @@ button {
 	padding-right: 2rem;
 	width: 24rem /* 384px */;
 	border-radius: 0.25rem /* 4px */;
-	font-family: Montserrat, sans-serif;
+	font-family: 'Montserrat';
 	border-style: solid;
 	border-width: 1px;
 	background-color: white;
