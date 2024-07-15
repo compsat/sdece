@@ -16,6 +16,10 @@ import {
 	setCollection,
 	SDECE_RULES,
 	getDocIdByPartnerName,
+	addEntry,
+	SDECE_RULES_TEST,
+	validateData,
+	getCoordinates,
 } from '/firestore_UNIV.js';
 import { addListeners, map, getDivContent } from '/index_UNIV.js';
 
