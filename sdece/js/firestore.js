@@ -338,6 +338,7 @@ export function showModal(partner) {
 		'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor" transform="matrix(-1, 0, 0, -1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
 
 	backarrowDiv.classList.add('back-btn');
+
 	backarrowDiv.addEventListener('click', () => {
 		current_viewed_activity = null;
 		document.querySelector('.edit-button').style.display = 'none';
@@ -347,10 +348,11 @@ export function showModal(partner) {
 		modalContent.innerHTML = '';
 
 		// Append the div elements to the modal content
+
 		modalHeader.appendChild(nameDiv);
 		modalHeader.appendChild(closeDiv);
 
-		//modalContent.appendChild(addressDiv);
+		modalContent.appendChild(addressDiv);
 		modalContent.appendChild(activityHeaderDiv);
 		modalContent.appendChild(activityDiv);
 	});
@@ -534,10 +536,10 @@ export function showModal(partner) {
 				modalHeader.innerHTML = '';
 				modalContent.innerHTML = '';
 
+				// This is the modal content that appears when clicking on an activity in the Partner Modal activities list.
 				modalHeader.appendChild(backarrowDiv);
 				modalHeader.appendChild(nameDiv);
 				modalHeader.appendChild(closeDiv);
-
 				modalContent.appendChild(activityNameDiv);
 				modalContent.appendChild(activityAddressDiv);
 				modalContent.appendChild(activityContactDiv);
