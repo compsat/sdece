@@ -156,8 +156,10 @@ button {
 .modal {
 	display: none;
 	width: 25%;
-	height: 100%;
+	height: auto;
+	max-height: 50%;
 	border-radius: 0.5rem;
+	overflow: scroll;
 	position: absolute;
 	z-index: 2000;
 	top: 100px;
@@ -168,6 +170,8 @@ button {
 	/* overflow-y: scroll;
 	overflow-x: hidden; */
 	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+	overflow-y: scroll;
+	animation: slide-out 500ms forwards;
 }
 
 .open {
@@ -210,6 +214,7 @@ button {
 	/* align-self: flex-end;
 	justify-content: center;
 	float: right; */
+
 	width: 100%;
 	display: flex;
 	flex-direction: column;
@@ -217,14 +222,15 @@ button {
 	align-items: center;
 	padding: 24px 24px;
 	background-color: #fcfcfc;
-	position: relative;
+	position: sticky;
+	top: 0rem;
 	box-shadow: 0px 2px 5px rgb(225, 225, 225);
 	z-index: 1;
 }
 
 .modal-content {
 	position: relative;
-	height: 50%;
+	height: 100%;
 	padding: 32px 32px;
 	background-color: #fcfcfc;
 	font-family: Hind;
@@ -242,7 +248,8 @@ button {
 	width: 100%;
 	height: auto;
 	background-color: #fcfcfc;
-	position: relative;
+	position: sticky;
+	bottom: 0rem;
 	box-shadow: 0px -2px 50px rgb(235, 235, 235);
 	z-index: 1;
 }
@@ -268,7 +275,7 @@ button {
 
 .edit-button {
 	font-weight: 600;
-	padding: 24px 24px;
+	padding: 1rem !important;
 	display: none;
 	color: rgb(61 151 175);
 	display: flex;
@@ -277,7 +284,7 @@ button {
 	font-size: 1rem;
 	font-family: 'Montserrat';
 	align-items: center;
-	width: 50%;
+	width: 100%;
 }
 #modalContent > div {
 	margin-bottom: 15px;
@@ -287,19 +294,20 @@ button {
 	padding: 0;
 }
 
-.modal-activity-title{
+.modal-activity-title {
 	font-size: 1.25rem;
 	font-weight: 600;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 12px;
+	text-align: left;
+	font-family: 'Hind';
 }
 
 .modal-activity-button {
-	padding-top: 1rem;
-	padding-bottom: 1rem;
+	padding: 1rem 0rem;
+	height: auto;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -311,7 +319,7 @@ button {
 	border-width: 0px;
 	border-bottom: 0.5px solid var(--custom-gray);
 }
-.modal-activity-button:hover{
+.modal-activity-button:hover {
 	background-color: #efefef;
 	text-decoration: none;
 	cursor: pointer;
@@ -353,9 +361,20 @@ button {
 	font-weight: 400;
 	line-height: 120%;
 	letter-spacing: 0.32px;
-	margin-bottom: -16px;
 }
 
+.back-btn {
+	animation: slide-in 500ms forwards;
+	margin-right: 1rem;
+	float: right;
+	color: #aaaaaa;
+	width: 5%;
+	font-size: 28px;
+	font-weight: bold;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
 .close-btn {
 	float: right;
 	color: var(--custom-dark-gray);
@@ -369,8 +388,10 @@ button {
 }
 
 .close-btn:hover,
-.close-btn:focus {
-	color: var(--custom-black);
+.close-btn:focus,
+.back-btn:hover,
+.back-btn:focus {
+	color: #3f3f3f;
 	text-decoration: none;
 	cursor: pointer;
 }
