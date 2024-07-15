@@ -578,10 +578,26 @@ addInp.addEventListener('keyup', ({ key }) => {
 });
 
 //values stored in local before uploading them in batches
-temp_activities = {};
+var temp_activities = {};
 
 // handle the temporary variables when adding a new entry
-function handleSaveEntry() {
-	let addForm_modal =
-		document.getElementById('addModalHTML').contentWindow.document;
-}
+// function handleSaveEntry() {
+// 	let addForm_modal =
+// 		document.getElementById('addModalHTML').contentWindow.document;
+// }
+
+// Neptune's requested addloc.html Save button click listener
+var addFormiframe = document.getElementById('addModalHTML');
+var addFormiframeDocument = addFormiframe.contentWindow.document;
+var addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
+addFormSubmitButton.addEventListener('click', function () {
+	console.log('The Save button in addloc.html has been pressed.');
+});
+
+// Neptune's requested editloc.html Save button click listener
+var editFormiframe = document.getElementById('editModalHTML');
+var editFormiframeDocument = editFormiframe.contentWindow.document;
+var editFormSubmitButton = editFormiframeDocument.getElementById('submit_form');
+editFormSubmitButton.addEventListener('click', function () {
+	console.log('The Save button in editloc.html has been pressed.');
+});

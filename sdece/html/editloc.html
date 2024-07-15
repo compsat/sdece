@@ -44,17 +44,18 @@
 				console.log('clicked');
 				var collatedInput = {};
 
-				for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
-					//SDECE_RULES_TEST[2] are just the field names of each document
-					console.log(SDECE_RULES_TEST[2][i]);
-					let q = document.getElementById(
-						SDECE_RULES_TEST[2][i]
-					).value;
-					collatedInput[SDECE_RULES_TEST[2][i]] = q;
+				// Nep i commented this out muna cos it was causing errors!
+				// for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
+				// 	//SDECE_RULES_TEST[2] are just the field names of each document
+				// 	console.log(SDECE_RULES_TEST[2][i]);
+				// 	let q = document.getElementById(
+				// 		SDECE_RULES_TEST[2][i]
+				// 	).value;
+				// 	collatedInput[SDECE_RULES_TEST[2][i]] = q;
 
-					// this is where data validation will happen
-					// add the if-else statements of edge cases here
-				}
+				// 	// this is where data validation will happen
+				// 	// add the if-else statements of edge cases here
+				// }
 
 				console.log(collatedInput);
 				// This actually works but it needs some data validation
