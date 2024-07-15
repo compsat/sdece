@@ -23,12 +23,13 @@ export function signIn(email, password) {
         .then((userCredential) => {
             // Signed in successfully
             const USER = userCredential.user;
+            alert("Login Successful");
             window.location.replace("index.html");
         })
         .catch((error) => {
             // Handle errors
             console.error("Error signing in:", error);
-            console.log("SIGN IN ERROR. TRY AGAIN");
+            alert("Error Signing in. Please check username and password");
         });
 }
 
