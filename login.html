@@ -34,7 +34,7 @@
 			class="header flex flex-row bg-darkbg p-10 justify-center items-center w-full h-auto"
 		>
 			<img
-				src="sdece/img/logo-osci.png"
+				src="img/logo-osci.png"
 				alt="OSCI Logo"
 				class="img w-14 h-auto mr-8"
 			/>
@@ -66,11 +66,12 @@
 				>
 					Login
 				</button>
+				<p id="error"></p>
 			</form>
 		</div>
 
 		<script type="module">
-			import { signIn } from '/auth.js';
+			import { signIn } from './js/auth.js';
 			// Add event listener to the button to call signIn function
 			document
 				.getElementById('loginButton')
