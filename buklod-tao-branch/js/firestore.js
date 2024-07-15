@@ -160,10 +160,7 @@ function showModal(partner) {
 
 	// Create div elements for each piece of information
 	const nameDiv = document.createElement('div');
-	const closeDiv = document.createElement('div');
 	const partnerContentDiv = document.createElement('div');
-
-	let close_button = `<span class="close">&times;</span>`;
 
 	let partner_content = `
 	  <br>
@@ -223,6 +220,7 @@ function showModal(partner) {
       </div>
 	  <button type="button" class="collapsible">Residents</button>
       <div class="colContent" style="display: block;">
+        <br>
         <div class="modalLine">
           <label class="modalLabel">Total</label>
           <label class="modalLabel" id="entry_number_of_residents">${partner.number_residents}</label>
@@ -232,22 +230,27 @@ function showModal(partner) {
           <label class="modalLabel">Minors</label>
           <label class="modalLabel" id="entry_number_of_minor_residents">${partner.number_minors}</label>
         </div>
+        <br>
         <div class="modalLine">
           <label class="modalLabel">Seniors</label>
           <label class="modalLabel" id="entry_number_of_senior_residents">${partner.number_seniors}</label>
         </div>
+        <br>
         <div class="modalLine">
           <label class="modalLabel">PWD</label>
           <label class="modalLabel" id="entry_number_of_pwd_residents">${partner.number_pwd}</label>
         </div>
+        <br>
         <div class="modalLine">
           <label class="modalLabel">Sick</label>
           <label class="modalLabel" id="entry_number_of_sick_residents">${partner.number_sick}</label>
         </div>
+        <br>
         <div class="modalLine">
           <label class="modalLabel" >Pregnant</label>
           <label class="modalLabel" id="entry_number_of_pregnant_residents">${partner.number_pregnant}</label>
         </div>
+        <br>
       </div>
 	`;
 
@@ -256,12 +259,10 @@ function showModal(partner) {
 
 	// Set the content of each div
 	nameDiv.textContent = partner.household_name;
-	closeDiv.innerHTML = close_button;
 	partnerContentDiv.innerHTML = partner_content;
 
 	// Append the div elements to the modal content
 	modalHeader.appendChild(nameDiv);
-	modalHeader.appendChild(closeDiv);
 	modalContent.appendChild(partnerContentDiv);
 
 	var coll = document.getElementsByClassName("collapsible");
