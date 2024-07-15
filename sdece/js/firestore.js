@@ -90,6 +90,15 @@ console.log(document.getElementById('mainModalIframe'));
 const newButton = mainModalDocument.getElementById('addModalButton');
 newButton.addEventListener('click', () => {
 	has_existing_partner = false;
+	//reset the values and format of addLoc.html
+	for (let field of SDECE_RULES[2]){
+		if (field != "partner_coordinates"){
+			addFormiframeDocument.getElementById(field).value = null;
+			addFormiframeDocument.getElementById(field).readOnly = false;
+			//palagay dito yung default format ty. Yung style.color
+		} else {
+		}
+	}
 	showAddModal();
 });
 
@@ -602,9 +611,7 @@ var temp_activities_id = 0;
 // 		document.getElementById('addModalHTML').contentWindow.document;
 // }
 
-//access main modal iframe
-
-// Neptune's requested addloc.html Save button click listener
+// Addloc.html Save button click listener
 var addFormiframe = document.getElementById('addModalHTML');
 var addFormiframeDocument = addFormiframe.contentWindow.document;
 var addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
@@ -629,7 +636,7 @@ addFormSubmitButton.addEventListener('click', function () {
 
 });
 
-// Neptune's requested editloc.html Save button click listener
+// Editloc.html Save button click listener
 var editFormiframe = document.getElementById('editModalHTML');
 var editFormiframeDocument = editFormiframe.contentWindow.document;
 var editFormSubmitButton = editFormiframeDocument.getElementById('submit_form');
