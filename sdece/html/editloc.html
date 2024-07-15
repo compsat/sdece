@@ -44,17 +44,18 @@
 				console.log('clicked');
 				var collatedInput = {};
 
-				for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
-					//SDECE_RULES_TEST[2] are just the field names of each document
-					console.log(SDECE_RULES_TEST[2][i]);
-					let q = document.getElementById(
-						SDECE_RULES_TEST[2][i]
-					).value;
-					collatedInput[SDECE_RULES_TEST[2][i]] = q;
+				// Nep i commented this out muna cos it was causing errors!
+				// for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
+				// 	//SDECE_RULES_TEST[2] are just the field names of each document
+				// 	console.log(SDECE_RULES_TEST[2][i]);
+				// 	let q = document.getElementById(
+				// 		SDECE_RULES_TEST[2][i]
+				// 	).value;
+				// 	collatedInput[SDECE_RULES_TEST[2][i]] = q;
 
-					// this is where data validation will happen
-					// add the if-else statements of edge cases here
-				}
+				// 	// this is where data validation will happen
+				// 	// add the if-else statements of edge cases here
+				// }
 
 				console.log(collatedInput);
 				// This actually works but it needs some data validation
@@ -116,7 +117,7 @@
 
 					<div class="form-field">
 						<label class="form-label" for="activity_date"
-							>Dates of Partnership
+							>Date of Partnership
 						</label>
 						<div
 							style="
@@ -133,7 +134,8 @@
 								class="form-input"
 								placeholder=""
 							/>
-							<a
+							<!-- Commenting out the additional date functionality! -->
+							<!-- <a
 								href=""
 								id="addDate"
 								style="
@@ -145,7 +147,7 @@
 									margin-top: 1rem;
 								"
 								>Add another date
-							</a>
+							</a> -->
 						</div>
 					</div>
 				</div>
@@ -297,12 +299,16 @@
 					>
 						Save
 					</button>
-					<button
+					<input
 						class="form-button negative"
-						id="deleteActivityButton"
+						data-id="Delete Button"
+						id="delete-btn"
+						onclick="resetForm()"
+						type="button"
+						value="Clear"
 					>
-						Delete
-					</button>
+						
+					</input>
 				</div>
 				<div id="error_messages"></div>
 
@@ -311,6 +317,15 @@
 		</form>
 
 		<script>
+			function resetForm() {
+				var inputFields = document.getElementsByTagName('input');
+				for (var i = 0; i < inputFields.length; i++) {
+					var field = inputFields[i];
+					if (!field.readOnly && field.type !== 'button') {
+						field.value = '';
+					}
+				}
+			}
 			document
 				.getElementById('addLocForm')
 				.addEventListener('submit', function (event) {
@@ -327,19 +342,19 @@
 					);
 				});
 
-			document
-				.getElementById('addDate')
-				.addEventListener('click', function (event) {
-					event.preventDefault();
-					var dateContainer =
-						document.getElementById('date-container');
-					var newDateInput = document.createElement('input');
-					newDateInput.type = 'date';
-					newDateInput.name = 'activity_date';
-					newDateInput.className = 'form-input';
-					newDateInput.style.marginTop = '1.5rem';
-					dateContainer.insertBefore(newDateInput, this);
-				});
+			// document
+			// 	.getElementById('addDate')
+			// 	.addEventListener('click', function (event) {
+			// 		event.preventDefault();
+			// 		var dateContainer =
+			// 			document.getElementById('date-container');
+			// 		var newDateInput = document.createElement('input');
+			// 		newDateInput.type = 'date';
+			// 		newDateInput.name = 'activity_date';
+			// 		newDateInput.className = 'form-input';
+			// 		newDateInput.style.marginTop = '1.5rem';
+			// 		dateContainer.insertBefore(newDateInput, this);
+			// 	});
 
 			function closeModal() {
 				window.parent.postMessage('closeEditModal', '*');

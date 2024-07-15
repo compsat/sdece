@@ -41,7 +41,7 @@ var activities = [];
 var addForm_geopoint;
 
 // This pans to the Philippines
-map.panTo(new L.LatLng(14.651, 121.052));
+map.setView(new L.LatLng(14.651, 121.052), 14);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution:
@@ -60,11 +60,8 @@ function onMapClick(e) {
 	// This is the popup for when the user clicks on a random spot on the map
 	var popupContent = `
      <div class="partner-geolocation">
-           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-           <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C11.337 11.5 10.7011 11.2366 10.2322 10.7678C9.76339 10.2989 9.5 9.66304 9.5 9C9.5 8.33696 9.76339 7.70107 10.2322 7.23223C10.7011 6.76339 11.337 6.5 12 6.5C12.663 6.5 13.2989 6.76339 13.7678 7.23223C14.2366 7.70107 14.5 8.33696 14.5 9C14.5 9.66304 14.2366 10.2989 13.7678 10.7678C13.2989 11.2366 12.663 11.5 12 11.5Z" fill="#91C9DB"/>
-           </svg>
-           ${lat} + ${lng}
-           <br>
+       
+           Latitude: ${lat} <br> Longitude: ${lng}
        </div>
    <button class="addButton" data-lat="${lat}" data-lng="${lng}">Add Location</button>
  `;
@@ -81,14 +78,6 @@ function onMapClick(e) {
 		showMainModal();
 	});
 }
-
-// Show Main modal from the sideNav
-const element = document.getElementById('addButton_v2');
-element.addEventListener('click', () => {
-	console.log('main modal called from sideNav');
-	addForm_geopoint = null;
-	showMainModal();
-});
 
 map.on('click', onMapClick);
 
@@ -146,7 +135,9 @@ getDocs(col_ref)
 			marker.bindPopup(popupContent);
 			results.addLayer(marker);
 
-			marker.on('popupopen', function () {
+			marker.on('mouseover', function () {
+				marker.openPopup();
+
 				console.log(
 					'Clicked on ' +
 						partners[partner][0]['partner_name'] +
@@ -174,6 +165,7 @@ getDocs(col_ref)
 			const activityDiv = document.createElement('div');
 
 			containerDiv.addEventListener('click', function () {
+				marker.openPopup();
 				map.panTo(
 					new L.LatLng(
 						parseFloat(
@@ -219,16 +211,6 @@ getDocs(col_ref)
 
 			activityDiv.innerHTML = activities_string;
 
-			//   if (partner.activities.length > 0)      // check if list of activities is present, otherwise is skipped to avoid errors
-			//   {
-			//     partner.activities.forEach( (activity) => {
-			//       activityDiv.innerHTML += activity.activityName + "<br/>";       // there might be a better way to display multiple activities
-			//     });
-			//   }
-			//   else {
-			//     console.log("No activities found");
-			//   }
-
 			listItem.classList.add('accordion');
 			// Append elements to the DOM
 			anchor.appendChild(nameDiv);
@@ -247,6 +229,9 @@ getDocs(col_ref)
 
 // Display partner modal by clicking partner entry (WIP: and on pin pop up click)
 export function showModal(partner) {
+	document.querySelector('.edit-button').style.display = 'none';
+	document.querySelector('.edit-button').style.padding = '0px';
+
 	const modal = document.getElementById('partnerModal');
 	const modalHeader = document.getElementById('modalHeader');
 	const modalContent = document.getElementById('modalContent');
@@ -284,6 +269,9 @@ export function showModal(partner) {
 
 	backarrowDiv.classList.add('close-btn');
 	backarrowDiv.addEventListener('click', () => {
+		document.querySelector('.edit-button').style.display = 'none';
+		document.querySelector('.edit-button').style.padding = '0px';
+
 		modalHeader.innerHTML = '';
 		modalContent.innerHTML = '';
 
@@ -334,6 +322,7 @@ export function showModal(partner) {
 			.getElementById('addModalHTML')
 			.contentWindow.document.getElementById('partner_name').value =
 			partner[0].partner_name;
+
 		document
 			.getElementById('addModalHTML')
 			.contentWindow.document.getElementById(
@@ -342,13 +331,38 @@ export function showModal(partner) {
 
 		document
 			.getElementById('addModalHTML')
+			.contentWindow.document.getElementById(
+				'partner_name'
+			).style.backgroundColor = 'var(--custom-medium-gray';
+
+		document
+			.getElementById('addModalHTML')
 			.contentWindow.document.getElementById('partner_address').value =
 			partner[0].partner_address;
+
 		document
 			.getElementById('addModalHTML')
 			.contentWindow.document.getElementById(
 				'partner_address'
 			).readOnly = true;
+
+		document
+			.getElementById('addModalHTML')
+			.contentWindow.document.getElementById(
+				'partner_address'
+			).style.backgroundColor = 'var(--custom-medium-gray';
+
+		document
+			.getElementById('addModalHTML')
+			.contentWindow.document.getElementById(
+				'partner_address'
+			).style.color = 'var(--custom-dark-gray';
+
+		document
+			.getElementById('addModalHTML')
+			.contentWindow.document.getElementById(
+				'partner_name'
+			).style.color = 'var(--custom-dark-gray';
 
 		// Close the Add Activity modal when the user clicks anywhere outside of it
 		window.onclick = function (event) {
@@ -369,21 +383,30 @@ export function showModal(partner) {
 		partner.forEach((activity) => {
 			console.log(activity);
 			// View activity details button
-			const activityButton = document.createElement('button');
-			activityButton.classList.add('modal-activities');
+			const activityButton = document.createElement('div');
+			const activityTitle = document.createElement('button');
+
+			activityTitle.classList.add('modal-activity-title');
+			activityButton.classList.add('modal-activity-button');
 
 			const activityName = document.createElement('div');
-
 			const arrow = document.createElement('div');
+			arrow.classList.add('arrow');
+			const office = document.createElement('div');
+			office.classList.add('modal-address');
 
 			activityName.textContent = activity.activity_nature + '';
-
 			arrow.innerHTML =
 				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
-			arrow.classList.add('arrow');
+			office.innerHTML = activity.ADMU_office;
 
-			activityButton.appendChild(activityName);
-			activityButton.appendChild(arrow);
+
+			activityTitle.appendChild(activityName);
+			activityTitle.appendChild(arrow);
+			activityButton.appendChild(activityTitle);
+			activityButton.appendChild(office);
+
+			
 
 			// Set div content for activity details
 
@@ -426,6 +449,8 @@ export function showModal(partner) {
 
 			// View activity details in modal after clicking activity
 			activityButton.addEventListener('click', () => {
+				document.querySelector('.edit-button').style.display =
+					'flex';
 				modalHeader.innerHTML = '';
 				modalContent.innerHTML = '';
 
@@ -553,10 +578,26 @@ addInp.addEventListener('keyup', ({ key }) => {
 });
 
 //values stored in local before uploading them in batches
-temp_activities = {};
+var temp_activities = {};
 
 // handle the temporary variables when adding a new entry
-function handleSaveEntry() {
-	let addForm_modal =
-		document.getElementById('addModalHTML').contentWindow.document;
-}
+// function handleSaveEntry() {
+// 	let addForm_modal =
+// 		document.getElementById('addModalHTML').contentWindow.document;
+// }
+
+// Neptune's requested addloc.html Save button click listener
+var addFormiframe = document.getElementById('addModalHTML');
+var addFormiframeDocument = addFormiframe.contentWindow.document;
+var addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
+addFormSubmitButton.addEventListener('click', function () {
+	console.log('The Save button in addloc.html has been pressed.');
+});
+
+// Neptune's requested editloc.html Save button click listener
+var editFormiframe = document.getElementById('editModalHTML');
+var editFormiframeDocument = editFormiframe.contentWindow.document;
+var editFormSubmitButton = editFormiframeDocument.getElementById('submit_form');
+editFormSubmitButton.addEventListener('click', function () {
+	console.log('The Save button in editloc.html has been pressed.');
+});

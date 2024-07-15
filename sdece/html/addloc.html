@@ -38,11 +38,12 @@
 
 			setCollection('sdece-official-TEST');
 
-			document.addEventListener('DOMContentLoaded', function () {
-				document
-					.getElementById('submit_form')
-					.addEventListener('click', handleFormSubmit_v2);
-			});
+			// Commenting this out first as new_activity_form is not defined and is causing errors
+			// document.addEventListener('DOMContentLoaded', function () {
+			// 	document
+			// 		.getElementById('new_activity_form')
+			// 		.addEventListener('click', handleFormSubmit_v2);
+			// });
 			// .addEventListener('click', handleFormSubmit_v3);
 
 			function handleFormSubmit_v2() {
@@ -167,7 +168,7 @@
 
 					<div class="form-field">
 						<label class="form-label" for="activity_date"
-							>Dates of Partnership
+							>Date of Partnership
 						</label>
 						<div
 							style="
@@ -184,7 +185,8 @@
 								class="form-input"
 								placeholder=""
 							/>
-							<a
+							<!-- Commenting out the additional dates functionality first! -->
+							<!-- <a
 								href=""
 								id="addDate"
 								style="
@@ -196,7 +198,7 @@
 									margin-top: 1rem;
 								"
 								>Add another date
-							</a>
+							</a> -->
 						</div>
 					</div>
 				</div>
@@ -372,12 +374,16 @@
 					>
 						Save
 					</button>
-					<button
+					<input
 						class="form-button negative"
 						data-id="Delete Button"
+						id="delete-btn"
+						onclick="resetForm()"
+						type="button"
+						value="Clear"
 					>
-						Delete
-					</button>
+						
+					</input>
 				</div>
 				<div class id="error_messages"></div>
 
@@ -385,11 +391,13 @@
 			</div>
 		</form>
 
+
+
 		<script>
 			document
 				.getElementById('addLocForm')
 				.addEventListener('submit', function (event) {
-					console.log('SCRIPT BEING READ');
+					console.log('Function defined for addloc.html form submit event has been called');
 					event.preventDefault(); // Prevent the default form submission
 
 					// Simulate successful submission (replace with actual form submission code)
@@ -403,20 +411,23 @@
 					);
 				});
 
-			document
-				.getElementById('addDate')
-				.addEventListener('click', function (event) {
-					event.preventDefault();
-					var dateContainer =
-						document.getElementById('date-container');
-					var newDateInput = document.createElement('input');
-					newDateInput.type = 'date';
-					newDateInput.name = 'activity_date';
-					newDateInput.className = 'form-input';
-					newDateInput.style.marginTop = '1.5rem';
-					dateContainer.insertBefore(newDateInput, this);
-				});
+			// Commenting this out since the Date Adding feature will not be implemented yet.
+			// document
+			// 	.getElementById('addDate')
+			// 	.addEventListener('click', function (event) {
+			// 		event.preventDefault();
+			// 		var dateContainer =
+			// 			document.getElementById('date-container');
+			// 		var newDateInput = document.createElement('input');
+			// 		newDateInput.type = 'date';
+			// 		newDateInput.name = 'activity_date';
+			// 		newDateInput.className = 'form-input';
+			// 		newDateInput.style.marginTop = '1.5rem';
+			// 		dateContainer.insertBefore(newDateInput, this);
+			// 	});
 
+
+			// This chunk is for closing the modal, given iFrame approach
 			function closeModal() {
 				window.parent.postMessage('closeAddModal', '*');
 			}
@@ -430,6 +441,18 @@
 					);
 					closeModal();
 				});
+
+			// This function is for clearing all input that is not readOnly
+			function resetForm() {
+				var inputFields = document.getElementsByTagName('input');
+				for (var i = 0; i < inputFields.length; i++) {
+					var field = inputFields[i];
+					if (!field.readOnly && field.type !== 'button') {
+						field.value = '';
+					}
+				}
+			}
+
 		</script>
 	</body>
 </html>

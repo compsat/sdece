@@ -215,13 +215,6 @@
 									</div>
 								</div>
 							</div>
-							<button id="addButton_v2" class="main-btn">
-								<div>+</div>
-								<p
-									id="mainButtonText"
-									class="main-btn-text"
-								></p>
-							</button>
 						</div>
 						<div class="entries">
 							<ul
@@ -291,20 +284,14 @@
 					</div>
 
 					<!-- Modal Content -->
-					<div class="modal-content">
-						<!-- <div class='flex justify-around' style='color: #3d97af; font-size: 32px'>
-                    <b>List of activities: </b>
-                    <b><span class="addActivity">&plus;</span></b>
-                </div> -->
-
+					<div class="modal-content" id="modalContent">
 						<!-- NOTE: This is where all Entry modal content shoul go (ie. Households for Buklod-Tao, Partners for SDECE) -->
-						<div id="modalContent"></div>
 					</div>
 
 					<!-- Buttons -->
 					<span class="modal-button">
 						<!-- Delete -->
-						<button class="delete-button">
+						<button class="delete-button partner-hover">
 							Delete
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -312,7 +299,6 @@
 								viewBox="0 0 24 24"
 								stroke-width="1.5"
 								stroke="currentColor"
-								style="width: 10%"
 								class="modal-button-icon"
 							>
 								<path
@@ -325,7 +311,7 @@
 							</svg>
 						</button>
 						<!-- Edit -->
-						<button class="edit-button">
+						<button class="edit-button partner-hover">
 							Edit
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -333,7 +319,6 @@
 								viewBox="0 0 24 24"
 								stroke-width="1.5"
 								stroke="currentColor"
-								style="width: 10%"
 								class="modal-button-icon"
 							>
 								<path
@@ -380,6 +365,7 @@
 					<iframe
 						src="./sdece/html/editloc.html"
 						class="form-modal"
+						id="editModalHTML"
 					></iframe>
 				</div>
 
