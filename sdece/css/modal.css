@@ -1,4 +1,16 @@
-@import url('variables.css');
+
+/* Color Definition */
+:root {
+	--darkbg: #387181;
+	--lightbg: #3d97af;
+	--custom-black: #2f2f2f;
+	--custom-gray: #a0a0a0;
+	--custom-dark-gray: #979797;
+	--custom-medium-gray: #f6f6f6;
+	--custom-light-gray: #fcfcfc;
+	--custom-red: #d64747;
+}
+
 
 * {
 	margin: 0px;
@@ -330,7 +342,7 @@ button {
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-	color: #3d97af;
+	color: var(--darkbg);
 	font-family: Montserrat;
 	font-size: 18px;
 	font-style: normal;
@@ -353,7 +365,7 @@ button {
 }
 
 .modal-address {
-	color: #a0a0a0;
+	color: var(--custom-gray);
 	font-family: Montserrat;
 	font-size: 16px;
 	font-style: normal;
@@ -376,8 +388,8 @@ button {
 }
 .close-btn {
 	float: right;
-	color: #aaaaaa;
-	width: 5%;
+	color: var(--custom-gray);
+	width: 10%;
 	font-size: 28px;
 	font-weight: bold;
 	display: flex;
@@ -394,6 +406,17 @@ button {
 	cursor: pointer;
 }
 
+.plus-btn {
+	float: right;
+	color: var(--darkbg);
+	width: 10%;
+	font-size: 28px;
+	font-weight: bold;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
 .arrow {
 	width: 1rem;
 	width: 1rem;
@@ -401,7 +424,7 @@ button {
 
 .arrow:hover,
 .arrow:focus {
-	color: #3f3f3f;
+	color: var(--custom-black);
 	text-decoration: none;
 	cursor: pointer;
 }
@@ -443,6 +466,11 @@ button {
 	border-radius: 0.375rem; /* Assuming rounded-lg corresponds to 6px rounded corners */
 	font-weight: 500;
 	font-size: 1rem;
+}
+
+.addButton:hover {
+	background-color: var(--lightbg);
+	color: white;
 }
 .message-modal-header {
 	align-self: flex-end;
