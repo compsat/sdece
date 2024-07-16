@@ -889,10 +889,12 @@ export function populateMainModalList() {
 	const mainModalActivityList = mainModalDocument.getElementById(
 		'mainModalActivityList'
 	);
+	console.log(temp_activities);
+	console.log("mainModalActivityList: ", mainModalActivityList);
 	mainModalActivityList.innerHTML = '';
 
-	for (let index = 0; index < temp_activities.length; index++) {
-		var activity = temp_activities[i];
+	Object.keys(temp_activities).forEach((temp_id) => {
+		var activity = temp_activities[temp_id];
 
 		// View activity details button
 		// const activityButton = document.createElement('button');
@@ -910,5 +912,5 @@ export function populateMainModalList() {
 		activityButton.appendChild(activityName);
 		activityButton.classList.add('modal-activity-button');
 		mainModalActivityList.appendChild(activityButton);
-	}
+	});
 }
