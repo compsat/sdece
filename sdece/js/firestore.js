@@ -445,11 +445,11 @@ export function showModal(partner) {
 			).style.color = 'var(--custom-dark-gray';
 
 		// Close the Add Activity modal when the user clicks anywhere outside of it
-		window.onclick = function (event) {
-			if (event.target == modal) {
-				modal.style.display = 'none';
-			}
-		};
+		// window.onclick = function (event) {
+		// 	if (event.target == modal) {
+		// 		modal.style.display = 'none';
+		// 	}
+		// };
 	});
 
 	activityHeaderDiv.appendChild(addActivity);
