@@ -867,6 +867,7 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 
 });
 
+// Handling main modal close on clicking close button
 mainModalDocument
 				.getElementById('close-btn')
 				.addEventListener('click', function (event) {
@@ -883,6 +884,34 @@ mainModalDocument
 					} else {
 						event.preventDefault();
 					}
+				});
+
+// Handling main modal close on autoclose after submit
+mainModalDocument
+				.getElementById('saveButton')				
+				.addEventListener('click', function (event) {
+					console.log('Function defined for main modal.html form submit event has been called');
+					event.preventDefault(); // Prevent the default form submission
+	
+					// Simulate successful submission (replace with actual form submission code)
+					// Example: Submit form data via AJAX or fetch API
+	
+					// Assuming form submission is successful
+					// Notify parent window (where the iframe is embedded)
+					window.parent.postMessage(
+						{ type: 'mainModalFormSuccess' },
+						'*'
+					);
+	
+					//Auto close modal
+					window.parent.postMessage('closeMainModal', '*');
+	
+					//Clear input partner name and address
+					mainModalDocument.getElementById('inputted_partner_name').value = '';
+					mainModalDocument.getElementById('address-input').value = '';
+
+					//clear temp_activities
+					temp_activities = {};
 				});
 
 export function populateMainModalList() {
