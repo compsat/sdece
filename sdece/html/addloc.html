@@ -443,6 +443,16 @@
 				window.parent.postMessage('closeAddModal', '*');
 			}
 
+			// function resetForm() {
+			// 	var inputFields = document.getElementsByTagName('input');
+			// 	for (var i = 0; i < inputFields.length; i++) {
+			// 		var field = inputFields[i];
+			// 		if (!field.readOnly && field.type !== 'button') {
+			// 			field.value = '';
+			// 		}
+			// 	}
+			// }
+
 			function resetForm() {
 				var inputFields = document.getElementsByTagName('input');
 				for (var i = 0; i < inputFields.length; i++) {
@@ -450,6 +460,18 @@
 					if (!field.readOnly && field.type !== 'button') {
 						field.value = '';
 					}
+				}
+
+				// Reset error messages
+				var errorMessages = document.getElementsByClassName('error-message');
+				for (var j = 0; j < errorMessages.length; j++) {
+					errorMessages[j].textContent = '';
+				}
+
+				// Clear the overall error messages container
+				var errorContainer = document.getElementById('error_messages');
+				if (errorContainer) {
+					errorContainer.innerHTML = '';
 				}
 			}
 			
