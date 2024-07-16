@@ -860,9 +860,7 @@ export function populateMainModalList() {
 		var activity = temp_activities[i];
 
 		// View activity details button
-		// const activityButton = document.createElement('button');
-		const activityButton = document.createElement('div');
-
+		const activityButton = document.createElement('li');
 		const activityName = document.createElement('div');
 		const arrow = document.createElement('div');
 
