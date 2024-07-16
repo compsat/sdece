@@ -126,20 +126,39 @@
 			</div>
 
 			<div class="main-modal-btn-container">
-				<button class="main-modal-save">Save</button>
+				<button id="saveButton" class="main-modal-save">Save</button>
 			</div>
 		</div>
 
 		<script>
-			document
-				.getElementById('close-btn')
-				.addEventListener('click', function (event) {
-					event.preventDefault();
-					console.log(
-						'The user has closed the Add Activity modal.'
-					);
-					window.parent.postMessage('closeMainModal', '*');
-				});
+			// This chunk is for closing the modal, given iFrame approach
+			// function closeModal() {
+			// 	window.parent.postMessage('closeMainModal', '*');
+			// }
+
+			// document
+			// .getElementById('saveButton')
+			// .addEventListener('click', function (event) {
+			// 	console.log('Function defined for main modal.html form submit event has been called');
+			// 	event.preventDefault(); // Prevent the default form submission
+
+			// 	// Simulate successful submission (replace with actual form submission code)
+			// 	// Example: Submit form data via AJAX or fetch API
+
+			// 	// Assuming form submission is successful
+			// 	// Notify parent window (where the iframe is embedded)
+			// 	window.parent.postMessage(
+			// 		{ type: 'mainModalFormSuccess' },
+			// 		'*'
+			// 	);
+
+			// 	//Auto close modal
+			// 	closeModal();
+
+			// 	//Clear input partner name and address
+			// 	document.getElementById('inputted_partner_name').value = '';
+			// 	document.getElementById('address-input').value = '';
+			// });
 		</script>
 	</body>
 </html>

@@ -395,7 +395,13 @@
 							const addModal =
 								document.getElementById('addModal');
 							addModal.classList.add('hidden'); // Hide the iframe
+						}
 
+						if (
+							event.data &&
+							event.data.type === 'mainModalFormSuccess'
+						) {
+							// Handle successful form submission event here
 							const messageModal =
 								document.getElementById('messageModal');
 							messageModal.style.display = 'flex'; //display success message

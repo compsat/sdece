@@ -358,10 +358,14 @@
 			document
 				.getElementById('close-btn')
 				.addEventListener('click', function (event) {
-					event.preventDefault();
-					console.log('The user has closed the Edit modal.');
-					closeModal();
-					resetForm();
+					if(confirm("Closing may lead to unsaved data being deleted, proceed?")){
+						event.preventDefault();
+						console.log('The user has closed the Edit modal.');
+						closeModal();
+						resetForm();
+					} else {
+						event.preventDefault();
+					}	
 				});
 		</script>
 	</body>
