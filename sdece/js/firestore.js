@@ -695,6 +695,7 @@ var addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
 addFormSubmitButton.addEventListener('click', function () {
 	//handleAdd
 	console.log('The Save button in addloc.html has been pressed.');
+	
 	//get data from addloc.html
 	var info_from_forms = {};
 	for (let field of SDECE_RULES[2]) {
@@ -731,14 +732,19 @@ addFormSubmitButton.addEventListener('click', function () {
 			console.log('locally stored activities: ', temp_activities);
 			temp_activities_id += 1;
 
+			populateMainModalList();
+
 			// add it to the ul
-			mainModalDocument.getElementById(
-				'mainModalActivityList'
-			).innerHTML +=
-				'<li class="main-modal-temporary-activity">' +
-				info_from_forms['activity_nature'] +
-				'</li>';
+			// mainModalDocument.getElementById(
+			// 	'mainModalActivityList'
+			// ).innerHTML +=
+			// 	'<li class="main-modal-temporary-activity">' +
+			// 	info_from_forms['activity_nature'] +
+			// 	'</li>';
 		}
+
+		// close the save modal
+		addFormiframeDocument.style.display = 'none';
 	}
 
 	function displayErrors(errors) {
@@ -829,24 +835,53 @@ export function handleEdit() {
 const MAIN_MODAL_SAVE_BUTTON =
 	mainModalDocument.getElementsByClassName('main-modal-save')[0];
 
-MAIN_MODAL_SAVE_BUTTON.addEventListener('click', async function () {
+MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 	console.log(
 		'Here are the activities to be uploaded in this batch: ',
 		temp_activities
 	);
-	Object.keys(temp_activities).forEach((temp_id) => {
-		let current_temp_activity = temp_activities[temp_id];
-		let new_partner_name = mainModalDocument.getElementsByClassName(
-			'main-modal-partner-name'
-		)[0].value;
-		let new_partner_address =
-			mainModalDocument.getElementById('address-input').value;
-		current_temp_activity['partner_name'] = new_partner_name;
-		current_temp_activity['partner_address'] = new_partner_address;
-		console.log('toUpload:', current_temp_activity);
-		addEntry(current_temp_activity);
-	});
+
+	let temp_keys = Object.keys(temp_activities).length;
+	console.log(temp_keys);
+
+	if (temp_keys > 0){
+		Object.keys(temp_activities).forEach((temp_id) => {
+			let current_temp_activity = temp_activities[temp_id];
+			let new_partner_name = mainModalDocument.getElementsByClassName(
+				'main-modal-partner-name'
+			)[0].value;
+			let new_partner_address =
+				mainModalDocument.getElementById('address-input').value;
+			current_temp_activity['partner_name'] = new_partner_name;
+			current_temp_activity['partner_address'] = new_partner_address;
+			console.log('toUpload:', current_temp_activity);
+			addEntry(current_temp_activity);
+		});
+		alert("Reload the page for the new additions to reflect on your browser");
+	} else {
+		alert("Can't submit a partner with an empty list of activities ");
+	}
+	
+
 });
+
+mainModalDocument
+				.getElementById('close-btn')
+				.addEventListener('click', function (event) {
+					if(confirm("Closing may lead to unsaved data being deleted, proceed?")){
+						event.preventDefault();
+
+						//clear temp_activities
+						temp_activities = {}
+	
+						console.log(
+							'The user has closed the Add Activity modal.'
+						);
+						window.parent.postMessage('closeMainModal', '*');
+					} else {
+
+					}
+				});
 
 export function populateMainModalList() {
 	// display temporarily saved activities to main modal

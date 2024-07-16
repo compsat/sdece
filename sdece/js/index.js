@@ -2,11 +2,11 @@ export function showMainModal() {
 	var mainModal = document.getElementById('mainModal');
 	mainModal.style.display = 'flex';
 
-	window.onclick = function (event) {
-		if (event.target == mainModal) {
-			mainModal.style.display = 'none';
-		}
-	};
+	// window.onclick = function (event) {
+	// 	if (event.target == mainModal) {
+	// 		mainModal.style.display = 'none';
+	// 	}
+	// };
 }
 
 export function showAddModal() {

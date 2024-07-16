@@ -130,16 +130,6 @@
 			</div>
 		</div>
 
-		<script>
-			document
-				.getElementById('close-btn')
-				.addEventListener('click', function (event) {
-					event.preventDefault();
-					console.log(
-						'The user has closed the Add Activity modal.'
-					);
-					window.parent.postMessage('closeMainModal', '*');
-				});
-		</script>
+
 	</body>
 </html>
