@@ -131,7 +131,10 @@
 							collections.options[
 								collections.selectedIndex
 							].value;
-						console.log("selected this for collection ", SELECTED);
+						console.log(
+							'selected this for collection ',
+							SELECTED
+						);
 						setCollection(SELECTED);
 						setCurrentBranchCookie(
 							'current_branch',
@@ -292,7 +295,6 @@
 
 					<!-- Buttons -->
 					<span class="modal-button">
-
 						<!-- Delete -->
 						<!-- <button class="delete-button partner-hover">
 							Delete
@@ -397,6 +399,10 @@
 							const messageModal =
 								document.getElementById('messageModal');
 							messageModal.style.display = 'flex'; //display success message
+
+							setTimeout(() => {
+								messageModal.style.display = 'none';
+							}, 3000);
 						}
 					});
 
