@@ -531,9 +531,11 @@ export function validateData(collectionName, data) {
 			//this is not
 			console.log('TESTINGGGG');
 			continue;
-		} else {
-			errors.push("Field is valid!");
-		}
+		} 
+		
+		// else {
+		// 	errors.push("Field is valid!");
+		// }
 
 		// Skip type validation if not required
 		if (
