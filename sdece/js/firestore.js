@@ -879,7 +879,7 @@ mainModalDocument
 						);
 						window.parent.postMessage('closeMainModal', '*');
 					} else {
-
+						event.preventDefault();
 					}
 				});
 

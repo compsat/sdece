@@ -445,12 +445,16 @@
 			document
 				.getElementById('close-btn')
 				.addEventListener('click', function (event) {
-					event.preventDefault();
-					console.log(
-						'The user has closed the Add Activity modal.'
-					);
-					closeModal();
-					resetForm();
+					if(confirm("Closing may lead to unsaved data being deleted, proceed?")){
+						event.preventDefault();
+						console.log(
+							'The user has closed the Add Activity modal.'
+						);
+						closeModal();
+						resetForm();
+					} else {
+						event.preventDefault();
+					}
 				});
 
 			// This function is for clearing all input that is not readOnly
