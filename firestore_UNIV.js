@@ -516,6 +516,7 @@ export function validateData(collectionName, data) {
 	console.log("VALIDATINGGGGGGG");
 	const rules = VALIDATION_RULES[collectionName];
 	var errors = [];
+	// let errors = [];
 
 	for (const field in rules) {
 		const rule = rules[field];
@@ -530,7 +531,11 @@ export function validateData(collectionName, data) {
 			//this is not
 			console.log('TESTINGGGG');
 			continue;
-		}
+		} 
+		
+		// else {
+		// 	errors.push("Field is valid!");
+		// }
 
 		// Skip type validation if not required
 		if (

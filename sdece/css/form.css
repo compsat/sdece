@@ -145,26 +145,28 @@ button {
 	border-radius: 0.5rem /* 8px */;
 }
 
-[data-id="Save Button"] {
-    transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+[data-id='Save Button'] {
+	transition: background-color 0.25s ease, color 0.25s ease,
+		transform 0.25s ease, box-shadow 0.25s ease;
+	box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-[data-id="Save Button"]:hover {
-    transform: scale(1.01);
-    background-color: var(--custom-green);
+[data-id='Save Button']:hover {
+	transform: scale(1.01);
+	background-color: var(--custom-green);
 	box-shadow: 0px 4px 15px var(--custom-green);
 }
 
-[data-id="Delete Button"] {
-    transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+[data-id='Delete Button'] {
+	transition: background-color 0.25s ease, color 0.25s ease,
+		transform 0.25s ease, box-shadow 0.25s ease;
+	box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-[data-id="Delete Button"]:hover {
-    transform: scale(1.01);
-    color: var(--custom-light-gray);
-    background-color: var(--custom-red);
+[data-id='Delete Button']:hover {
+	transform: scale(1.01);
+	color: var(--custom-light-gray);
+	background-color: var(--custom-red);
 	box-shadow: 0px 4px 15px var(--custom-red);
 }
 
@@ -201,4 +203,25 @@ button {
 	transform: scale(1.01);
 	color: var(--custom-light-gray);
 	background-color: var(--custom-red);
+}
+
+/* .form-input {
+    border: 1px solid #D64747;
+    background-color: #FFF4F4;
+} */
+
+/* .form-field[data-error] .error-message {
+	color: red;
+	font-size: 0.875rem;
+	margin-top: 0.25rem;
+}
+
+.form-field[data-error]:not([data-error=""]) .error-message::before {
+	content: attr(data-error);
+} */
+
+#error_messages {
+	font-family: 'Hind';
+	color: var(--custom-red);
+	margin-bottom: 1rem;
 }
