@@ -203,10 +203,10 @@ button {
 	background-color: var(--custom-red);
 }
 
-.form-input {
+/* .form-input {
     border: 1px solid #D64747;
     background-color: #FFF4F4;
-}
+} */
 
 /* .form-field[data-error] .error-message {
 	color: red;
