@@ -126,11 +126,36 @@
 			</div>
 
 			<div class="main-modal-btn-container">
-				<button id="saveButton" class="main-modal-save">Save</button>
+				<button id="saveButton" class="main-modal-save">
+					Save
+				</button>
 			</div>
 		</div>
 
 		<script>
+			function resetForm() {
+				var inputFields = document.getElementsByTagName('input');
+				for (var i = 0; i < inputFields.length; i++) {
+					var field = inputFields[i];
+					if (!field.readOnly && field.type !== 'button') {
+						field.value = '';
+					}
+				}
+
+				// Reset error messages
+				var errorMessages =
+					document.getElementsByClassName('error-message');
+				for (var j = 0; j < errorMessages.length; j++) {
+					errorMessages[j].textContent = '';
+				}
+
+				// Clear the overall error messages container
+				var errorContainer =
+					document.getElementById('error_messages');
+				if (errorContainer) {
+					errorContainer.innerHTML = '';
+				}
+			}
 			// This chunk is for closing the modal, given iFrame approach
 			// function closeModal() {
 			// 	window.parent.postMessage('closeMainModal', '*');

@@ -695,7 +695,7 @@ var addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
 addFormSubmitButton.addEventListener('click', function () {
 	//handleAdd
 	console.log('The Save button in addloc.html has been pressed.');
-	
+
 	//get data from addloc.html
 	var info_from_forms = {};
 	for (let field of SDECE_RULES[2]) {
@@ -726,7 +726,9 @@ addFormSubmitButton.addEventListener('click', function () {
 		if (has_existing_partner) {
 			//upload it straight to the firebase db
 			addEntry(info_from_forms);
-			alert("Reload the page for the new additions to reflect on your browser");
+			alert(
+				'Reload the page for the new additions to reflect on your browser'
+			);
 		} else {
 			//locally store it
 			temp_activities[temp_activities_id + ''] = info_from_forms;
@@ -805,9 +807,9 @@ export function handleEdit() {
 		event.preventDefault();
 	} else {
 		editEntry(collated_inp, current_viewed_activity['identifier']);
-		document.getElementById("editModal").style = "display: 'none'";
+		document.getElementById('editModal').style = "display: 'none'";
 		console.log('Entry EDITED!');
-		alert("Reload the page for the new edits to reflect on your browser");
+		alert('Reload the page for the new edits to reflect on your browser');
 	}
 
 	function displayErrors(errors) {
@@ -849,7 +851,7 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 	let temp_keys = Object.keys(temp_activities).length;
 	console.log(temp_keys);
 
-	if (temp_keys > 0){
+	if (temp_keys > 0) {
 		Object.keys(temp_activities).forEach((temp_id) => {
 			let current_temp_activity = temp_activities[temp_id];
 			let new_partner_name = mainModalDocument.getElementsByClassName(
@@ -863,13 +865,12 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 			addEntry(current_temp_activity);
 		});
 
-		console.log('Function defined for main modal.html form submit event has been called');
+		console.log(
+			'Function defined for main modal.html form submit event has been called'
+		);
 
 		// Notify parent window (where the iframe is embedded)
-		window.parent.postMessage(
-			{ type: 'mainModalFormSuccess' },
-			'*'
-		);
+		window.parent.postMessage({ type: 'mainModalFormSuccess' }, '*');
 
 		//Auto close modal
 		window.parent.postMessage('closeMainModal', '*');
@@ -881,32 +882,40 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 		//clear temp_activities
 		temp_activities = {};
 
-		alert("Reload the page for the new additions to reflect on your browser");
+		alert(
+			'Reload the page for the new additions to reflect on your browser'
+		);
 	} else {
 		alert("Can't submit a partner with an empty list of activities ");
 	}
-	
-
 });
 
 // Handling main modal close on clicking close button
-mainModalDocument
-				.getElementById('close-btn')
-				.addEventListener('click', function (event) {
-					if(confirm("Closing may lead to unsaved data being deleted, proceed?")){
-						event.preventDefault();
 
-						//clear temp_activities
-						temp_activities = {}
-	
-						console.log(
-							'The user has closed the Add Activity modal.'
-						);
-						window.parent.postMessage('closeMainModal', '*');
-					} else {
-						event.preventDefault();
-					}
-				});
+const mainModalCloseButton = mainModalDocument.getElementById('close-btn');
+
+mainModalCloseButton.addEventListener('click', function (event) {
+	if (confirm('Closing may lead to unsaved data being deleted, proceed?')) {
+		event.preventDefault();
+
+		// Clear temp_activities
+		temp_activities = {};
+
+		// Call the resetForm method in the document's script tag
+		if (typeof mainModalDocument.defaultView.resetForm === 'function') {
+			mainModalDocument.defaultView.resetForm();
+		} else {
+			console.error(
+				"resetForm function is not defined in the document's script tag."
+			);
+		}
+
+		console.log('The user has closed the Add Activity modal.');
+		window.parent.postMessage('closeMainModal', '*');
+	} else {
+		event.preventDefault();
+	}
+});
 
 export function populateMainModalList() {
 	// display temporarily saved activities to main modal
@@ -915,7 +924,7 @@ export function populateMainModalList() {
 		'mainModalActivityList'
 	);
 	console.log(temp_activities);
-	console.log("mainModalActivityList: ", mainModalActivityList);
+	console.log('mainModalActivityList: ', mainModalActivityList);
 	mainModalActivityList.innerHTML = '';
 
 	if (Object.keys(temp_activities).length == 0) {
