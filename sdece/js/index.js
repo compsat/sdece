@@ -14,11 +14,11 @@ export function showAddModal() {
 	var addModal = document.getElementById('addModal');
 	addModal.style.display = 'flex';
 
-	window.onclick = function (event) {
-		if (event.target == addModal) {
-			addModal.style.display = 'none';
-		}
-	};
+	// window.onclick = function (event) {
+	// 	if (event.target == addModal) {
+	// 		addModal.style.display = 'none';
+	// 	}
+	// };
 }
 
 

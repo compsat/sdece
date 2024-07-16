@@ -642,11 +642,11 @@ export function showModal(partner) {
 					}
 				});
 				// Close the modal when the user clicks anywhere outside of it
-				window.onclick = function (event) {
-					if (event.target == modal) {
-						modal.style.display = 'none';
-					}
-				};
+				// window.onclick = function (event) {
+				// 	if (event.target == modal) {
+				// 		modal.style.display = 'none';
+				// 	}
+				// };
 			} else {
 				console.log('Not looking at an activity');
 			}
