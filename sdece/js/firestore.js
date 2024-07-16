@@ -297,7 +297,7 @@ getDocs(col_ref)
 
 var current_viewed_activity = null; //docId of the currently viewed activity
 
-// Display partner modal by clicking partner entry (WIP: and on pin pop up click)
+// Display partner modal by clicking partner entry
 export function showModal(partner) {
 	document.querySelector('.edit-button').style.display = 'none';
 	document.querySelector('.edit-button').style.padding = '0px';
@@ -859,6 +859,25 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 			console.log('toUpload:', current_temp_activity);
 			addEntry(current_temp_activity);
 		});
+
+		console.log('Function defined for main modal.html form submit event has been called');
+
+		// Notify parent window (where the iframe is embedded)
+		window.parent.postMessage(
+			{ type: 'mainModalFormSuccess' },
+			'*'
+		);
+
+		//Auto close modal
+		window.parent.postMessage('closeMainModal', '*');
+
+		//Clear input partner name and address
+		mainModalDocument.getElementById('inputted_partner_name').value = '';
+		mainModalDocument.getElementById('address-input').value = '';
+
+		//clear temp_activities
+		temp_activities = {};
+
 		alert("Reload the page for the new additions to reflect on your browser");
 	} else {
 		alert("Can't submit a partner with an empty list of activities ");
@@ -884,34 +903,6 @@ mainModalDocument
 					} else {
 						event.preventDefault();
 					}
-				});
-
-// Handling main modal close on autoclose after submit
-mainModalDocument
-				.getElementById('saveButton')				
-				.addEventListener('click', function (event) {
-					console.log('Function defined for main modal.html form submit event has been called');
-					event.preventDefault(); // Prevent the default form submission
-	
-					// Simulate successful submission (replace with actual form submission code)
-					// Example: Submit form data via AJAX or fetch API
-	
-					// Assuming form submission is successful
-					// Notify parent window (where the iframe is embedded)
-					window.parent.postMessage(
-						{ type: 'mainModalFormSuccess' },
-						'*'
-					);
-	
-					//Auto close modal
-					window.parent.postMessage('closeMainModal', '*');
-	
-					//Clear input partner name and address
-					mainModalDocument.getElementById('inputted_partner_name').value = '';
-					mainModalDocument.getElementById('address-input').value = '';
-
-					//clear temp_activities
-					temp_activities = {};
 				});
 
 export function populateMainModalList() {
