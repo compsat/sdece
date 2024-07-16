@@ -802,8 +802,9 @@ export function handleEdit() {
 		event.preventDefault();
 	} else {
 		editEntry(collated_inp, current_viewed_activity['identifier']);
-		edit_modal.style.display = 'none';
+		document.getElementById("editModal").style = "display: 'none'";
 		console.log('Entry EDITED!');
+		alert("Reload the page for the new edits to reflect on your browser");
 	}
 
 	function displayErrors(errors) {
