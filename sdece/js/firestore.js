@@ -726,6 +726,7 @@ addFormSubmitButton.addEventListener('click', function () {
 		if (has_existing_partner) {
 			//upload it straight to the firebase db
 			addEntry(info_from_forms);
+			alert("Reload the page for the new additions to reflect on your browser");
 		} else {
 			//locally store it
 			temp_activities[temp_activities_id + ''] = info_from_forms;
