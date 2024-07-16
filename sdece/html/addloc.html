@@ -78,6 +78,8 @@
 				if (errors.length > 0) {
 					displayErrors(errors);
 					event.preventDefault();
+					console.log(errors);
+					//for loop here
 				} else {
 					addEntry(collatedInput);
 					console.log('Entry added!');
@@ -139,7 +141,7 @@
 
 				<!-- General Information -->
 				<div class="form-section">
-					<div class="form-field">
+					<div class="form-field" data-error="">
 						<label class="form-label" for="activity_name"
 							>Activity Name</label
 						>
@@ -152,8 +154,8 @@
 							placeholder="Ex. CSIP Session Week 3"
 						/>
 					</div>
-
-					<div class="form-field">
+					<div class="error-message"></div>
+					<div class="form-field" data-error="">
 						<label class="form-label" for="activity_nature"
 							>Nature of Activity</label
 						>
@@ -165,8 +167,8 @@
 							placeholder="Ex. Tutorial Classes"
 						/>
 					</div>
-
-					<div class="form-field">
+					<div class="error-message"></div>
+					<div class="form-field" data-error="">
 						<label class="form-label" for="activity_date"
 							>Date of Partnership
 						</label>
@@ -200,14 +202,16 @@
 								>Add another date
 							</a> -->
 						</div>
+						
 					</div>
+					<div class="error-message"></div>
 				</div>
 
 				<!-- PARTNER INFORMATION -->
 				<div class="form-section">
 					<h2 class="form-subheading">PARTNER INFORMATION</h2>
 
-					<div class="form-field">
+					<div class="form-field" data-error="">
 						<label
 							class="form-label"
 							for="additional_partnership"
@@ -221,8 +225,8 @@
 							placeholder="Ex. Couples for Christ North B Sector"
 						/>
 					</div>
-
-					<div class="form-field">
+					<!-- <div class="error-message"></div> -->
+					<div class="form-field" data-error="">
 						<label class="form-label" for="organization_unit"
 							>Organization Unit
 						</label>
@@ -234,7 +238,8 @@
 							placeholder="Ex. ACIL"
 						/>
 					</div>
-					<div class="form-field">
+					<!-- <div class="error-message"></div> -->
+					<div class="form-field" data-error="">
 						<label class="form-label" for="partner_name"
 							>Name of Host Partner</label
 						>
@@ -246,8 +251,8 @@
 							placeholder="Ex. Íñigo López de Loyola"
 						/>
 					</div>
-
-					<div class="form-field">
+					<!-- <div class="error-message"></div> -->
+					<div class="form-field" data-error="">
 						<label class="form-label" for="partner_address"
 							>Address of Host Partner</label
 						>
@@ -259,7 +264,8 @@
 							placeholder="Ex. Katipunan, Quezon City"
 						/>
 					</div>
-					<div class="form-field">
+					<!-- <div class="error-message"></div> -->
+					<div class="form-field" data-error="">
 						<label
 							class="form-label"
 							for="partner_contact_name"
@@ -273,8 +279,8 @@
 							placeholder="Ex. Maria Katipunera"
 						/>
 					</div>
-
-					<div class="form-field">
+					<div class="error-message"></div>
+					<div class="form-field" data-error="">
 						<label
 							class="form-label"
 							for="partner_contact_number"
@@ -288,7 +294,8 @@
 							placeholder="09XX XXX XXXX"
 						/>
 					</div>
-					<div class="form-field">
+					<div class="error-message"></div>
+					<div class="form-field" data-error="">
 						<label class="form-label" for="partner_email"
 							>Email of Contact Person / Partner</label
 						>
@@ -300,9 +307,10 @@
 							placeholder="Ex. ignatius@ateneo.edu"
 						/>
 					</div>
+					<div class="error-message"></div>
 					<!-- to see the currently clicked geopoint -->
 					<!-- <div id="location-info" class="form-label"></div> -->
-					<div class="form-field" style="display: none">
+					<div class="form-field" style="display: none" data-error="">
 						<label
 							class="form-label"
 							for="partner_coordinates"
@@ -316,6 +324,7 @@
 							placeholder="Ex. 14.6895421, 121.0818291"
 						/>
 					</div>
+					<!-- <div class="error-message"></div> -->
 				</div>
 
 				<div class="form-section">
@@ -323,7 +332,7 @@
 						ATENEO OFFICE OVERSIGHT
 					</h2>
 
-					<div class="form-field">
+					<div class="form-field" data-error="">
 						<label class="form-label" for="ADMU_office"
 							>Name of Office</label
 						>
@@ -335,7 +344,8 @@
 							placeholder="Ex. OSCI"
 						/>
 					</div>
-					<div class="form-field">
+					<div class="error-message"></div>
+					<div class="form-field" data-error="">
 						<label class="form-label" for="ADMU_contact"
 							>Name of Ateneo Contact Person</label
 						>
@@ -347,8 +357,8 @@
 							placeholder="Ex. Íñigo López de Loyola"
 						/>
 					</div>
-
-					<div class="form-field">
+					<div class="error-message"></div>
+					<div class="form-field" data-error="">
 						<label class="form-label" for="ADMU_email"
 							>Email of Ateneo Contact Person</label
 						>
@@ -360,6 +370,7 @@
 							placeholder="Ex. ignatius@ateneo.edu"
 						/>
 					</div>
+					<div class="error-message"></div>
 				</div>
 
 				<!-- Buttons -->

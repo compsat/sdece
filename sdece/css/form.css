@@ -202,3 +202,19 @@ button {
 	color: var(--custom-light-gray);
 	background-color: var(--custom-red);
 }
+
+.form-input {
+    border: 1px solid #D64747;
+    background-color: #FFF4F4;
+}
+
+/* .form-field[data-error] .error-message {
+	color: red;
+	font-size: 0.875rem;
+	margin-top: 0.25rem;
+}
+
+.form-field[data-error]:not([data-error=""]) .error-message::before {
+	content: attr(data-error);
+} */
+
