@@ -755,6 +755,9 @@ addFormSubmitButton.addEventListener('click', function () {
 					errorParagraph.textContent = error;
 					errorDiv.appendChild(errorParagraph);
 				}
+
+				// Scroll the document back to the top
+				errorDiv.ownerDocument.defaultView.scrollTo(0, 0);
 			} else {
 				console.error(
 					"Error: Couldn't find element with ID 'error_messages'."
@@ -857,10 +860,9 @@ export function populateMainModalList() {
 	);
 	mainModalActivityList.innerHTML = '';
 
-	if(Object.keys(temp_activities).length == 0){
+	if (Object.keys(temp_activities).length == 0) {
 		mainModalActivityList.innerHTML = '<p> No activities to show </p>';
-	}
-	else{
+	} else {
 		for (let i = 0; i < Object.keys(temp_activities).length; i++) {
 			var activity = temp_activities[Object.keys(temp_activities)[i]];
 
@@ -874,11 +876,10 @@ export function populateMainModalList() {
 			arrow.innerHTML =
 				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
 			arrow.classList.add('arrow');
-			
+
 			activityButton.appendChild(activityName);
 			activityButton.classList.add('main-modal-temporary-activity');
 			mainModalActivityList.appendChild(activityButton);
-		}		
+		}
 	}
-
 }
