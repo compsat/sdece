@@ -762,6 +762,7 @@ export function handleEdit() {
 					errorParagraph.textContent = error;
 					errorDiv.appendChild(errorParagraph);
 				}
+				errorDiv.ownerDocument.defaultView.scrollTo(0, 0);
 			} else {
 				console.error(
 					"Error: Couldn't find element with ID 'error_messages'."
