@@ -726,9 +726,9 @@ addFormSubmitButton.addEventListener('click', function () {
 		if (has_existing_partner) {
 			//upload it straight to the firebase db
 			addEntry(info_from_forms);
-			alert(
-				'Reload the page for the new additions to reflect on your browser'
-			);
+			// alert(
+			// 	'Reload the page for the new additions to reflect on your browser'
+			// );
 		} else {
 			//locally store it
 			temp_activities[temp_activities_id + ''] = info_from_forms;
@@ -809,7 +809,7 @@ export function handleEdit() {
 		editEntry(collated_inp, current_viewed_activity['identifier']);
 		document.getElementById('editModal').style = "display: 'none'";
 		console.log('Entry EDITED!');
-		alert('Reload the page for the new edits to reflect on your browser');
+		//alert('Reload the page for the new edits to reflect on your browser');
 	}
 
 	function displayErrors(errors) {
@@ -882,9 +882,9 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 		//clear temp_activities
 		temp_activities = {};
 
-		alert(
-			'Reload the page for the new additions to reflect on your browser'
-		);
+		// alert(
+		// 	'Reload the page for the new additions to reflect on your browser'
+		// );
 	} else {
 		alert("Can't submit a partner with an empty list of activities ");
 	}

@@ -484,9 +484,12 @@ export function addEntry(inp_obj) {
 			addDoc(collection_reference, input)
 				.then((docRef) => {
 					console.log('Document written with ID: ', docRef.id);
+					alert("You may now reload the page for your addition to reflect on this page");
+					
 				})
 				.catch((error) => {
 					console.error('Error adding document: ', error);
+					alert("Error uploading new activity. Please try again");
 				});
 			break;
 		}
@@ -502,9 +505,11 @@ export function editEntry(inp_obj, docId) {
 			updateDoc(DOC_REFERENCE, inp_obj)
 				.then(() => {
 					console.log("edited yipee", docId);
+					alert("You may now reload the page for your edit to reflect on this page");
 				})
 				.catch((error) => {
 					console.error('Error adding document: ', error);
+					alert("Error uploading the edited activity. Please try again");
 				});
 			break;
 		}
