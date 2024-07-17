@@ -299,8 +299,8 @@ var current_viewed_activity = null; //docId of the currently viewed activity
 
 // Display partner modal by clicking partner entry
 export function showModal(partner) {
-	document.querySelector('.edit-button').style.display = 'none';
-	document.querySelector('.edit-button').style.padding = '0px';
+	document.querySelector('.modal-button').style.display = 'none';
+	document.querySelector('.modal-button').style.padding = '0px';
 
 	const modal = document.getElementById('partnerModal');
 	const modalHeader = document.getElementById('modalHeader');
@@ -341,8 +341,8 @@ export function showModal(partner) {
 
 	backarrowDiv.addEventListener('click', () => {
 		current_viewed_activity = null;
-		document.querySelector('.edit-button').style.display = 'none';
-		document.querySelector('.edit-button').style.padding = '0px';
+		document.querySelector('.modal-button').style.display = 'none';
+		document.querySelector('.modal-button').style.padding = '0px';
 
 		modalHeader.innerHTML = '';
 		modalContent.innerHTML = '';
@@ -537,7 +537,7 @@ export function showModal(partner) {
 					'currently looking at activity with ID: ',
 					activity['identifier']
 				);
-				document.querySelector('.edit-button').style.display =
+				document.querySelector('.modal-button').style.display =
 					'flex';
 				modalHeader.innerHTML = '';
 				modalContent.innerHTML = '';
@@ -595,7 +595,7 @@ export function showModal(partner) {
 	modalContent.appendChild(activityDiv);
 
 	// Show the partner modal
-	modal.style.display = 'block';
+	modal.style.display = 'flex';
 	modal.classList.add('open'); //transition in
 
 	// Close the modal when the user clicks outside of it
