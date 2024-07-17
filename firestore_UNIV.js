@@ -501,18 +501,34 @@ export function editEntry(inp_obj, docId) {
 export function validateData(collectionName, data) {
 	const rules = VALIDATION_RULES[collectionName];
 	var errors = [];
-	// let errors = [];
+	const fieldLabels = {
+		'activity_name': 'Activity Name',
+		'activity_nature': 'Nature of Activity',
+		'activity_date': 'Date of Partnership',
+		'additional_partnership': 'Additional Partnership',
+		'organization_unit': 'Organization Unit',
+		'partner_name': 'Name of Host Partner',
+		'partner_address': 'Address of Host Partner',
+		'partner_contact_name': 'Name of Contact Person',
+		'partner_contact_number': 'Number of Contact Person',
+		'partner_email': 'Email of Contact Person / Partner',
+		'partner_coordinates': 'Partner Coordinates',
+		'ADMU_office': 'Name of Office',
+		'ADMU_contact_name': 'Name of Ateneo Contact Person',
+		'ADMU_email': 'Email of Ateneo Contact Person'
+	};
 
 	for (const field in rules) {
 		const rule = rules[field];
 		const value = data[field];
+		const fieldLabel = fieldLabels[field] || field;
 
 		// Check for required field
 		if (
 			rule.required &&
 			(value == undefined || value == null || value == '')
 		) {
-			errors.push(`Field '${field}' is required.`);
+			errors.push(`${fieldLabel} is required.`);
 			continue;
 		} 
 		
@@ -533,19 +549,19 @@ export function validateData(collectionName, data) {
 				const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 				if (!dateRegex.test(value)) {
 					errors.push(
-						`Field '${field}' must be a valid date in YYYY-MM-DD format.`
+						`${fieldLabel} must be a valid date in YYYY-MM-DD format.`
 					);
 					continue;
 				}
 
 				const date = new Date(value);
 				if (isNaN(date.getTime())) {
-					errors.push(`Field '${field}' must be a valid date.`);
+					errors.push(`${fieldLabel} must be a valid date.`);
 					continue;
 				}
 			} else if (typeof value != rule.type) {
 				errors.push(
-					`Field '${field}' must be of type ${rule.type}.`
+					`${fieldLabel} must be of type ${rule.type}.`
 				);
 				continue;
 			}
@@ -559,12 +575,12 @@ export function validateData(collectionName, data) {
 		) {
 			if (field === 'partner_contact_number') {
 				errors.push(
-					`Field '${field}' must be at least ${rule.minLength} characters long and in the form 09XX XXX XXXX.`
+					`${fieldLabel} must be at least ${rule.minLength} characters long and in the form 09XX XXX XXXX.`
 				);
 				
 			} else {
 				errors.push(
-					`Field '${field}' must be at least ${rule.minLength} characters long.`
+					`${fieldLabel} must be at least ${rule.minLength} characters long.`
 				);
 			}
 			
@@ -578,21 +594,21 @@ export function validateData(collectionName, data) {
 			value.length > rule.maxLength
 		) {
 			errors.push(
-				`Field '${field}' cannot exceed ${rule.maxLength} characters.`
+				`${fieldLabel} cannot exceed ${rule.maxLength} characters.`
 			);
 			continue;
 		}
 
 		// Check for regular expression pattern
 		if (rule.regex && !rule.regex.test(value)) {
-			errors.push(`Field '${field}' is invalid.`);
+			errors.push(`${fieldLabel} is invalid.`);
 			continue;
 		}
 
 		// Check for enumerated values
 		if (rule.enum && !rule.enum.includes(value)) {
 			errors.push(
-				`Field '${field}' must be one of ${rule.enum.join(',')}.`
+				`${fieldLabel}' must be one of ${rule.enum.join(',')}.`
 			);
 			continue;
 		}
