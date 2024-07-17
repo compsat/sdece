@@ -131,30 +131,22 @@
 							collections.options[
 								collections.selectedIndex
 							].value;
-						console.log(
-							'selected this for collection ',
-							SELECTED
-						);
 						setCollection(SELECTED);
 						setCurrentBranchCookie(
 							'current_branch',
 							SELECTED
 						);
-						console.log(getCurrentBranchCookie());
 						location.reload();
 					});
 
 					if (getCurrentBranchCookie() === null) {
-						console.log(DB_RULES_AND_DATA[0][0]);
 						setCollection(DB_RULES_AND_DATA[0][0]);
 						setCurrentBranchCookie(
 							'current_branch',
 							DB_RULES_AND_DATA[0][0]
 						);
-						console.log(getCollection());
 						loadJsCssFiles(getCurrentBranchCookie());
 					} else {
-						console.log(getCurrentBranchCookie());
 						setCollection(getCurrentBranchCookie());
 						collections.value = getCurrentBranchCookie();
 						loadJsCssFiles(getCurrentBranchCookie());
@@ -426,8 +418,6 @@
 						} else {
 							button.style.display = 'none';
 						}
-
-						console.log('The user has typed ' + input);
 
 						let container =
 							document.getElementById('locationList');

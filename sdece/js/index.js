@@ -10,7 +10,6 @@ export function showMainModal() {
 }
 
 export function showAddModal() {
-	console.log("The user clicked the '+' button within the Main Modal");
 	var addModal = document.getElementById('addModal');
 	addModal.style.display = 'flex';
 

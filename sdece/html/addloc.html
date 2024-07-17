@@ -47,12 +47,10 @@
 			// .addEventListener('click', handleFormSubmit_v3);
 
 			function handleFormSubmit_v2() {
-				console.log('clicked');
 				var collatedInput = {};
 
 				for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
-					//SDECE_RULES_TEST[2] are just the fi eld names of each document
-					console.log(SDECE_RULES_TEST[2][i]);
+					//SDECE_RULES_TEST[2] are just the field names of each document
 
 					let fieldName = SDECE_RULES_TEST[2][i];
 					let inputValue =
@@ -65,11 +63,6 @@
 					}
 				}
 
-				console.log(collatedInput);
-				// This actually works but it needs some data validation
-				// uncomment at the db's risk
-				// addEntry(collatedInput);
-
 				const errors = validateData(
 					'sdece-official-TEST',
 					collatedInput
@@ -78,12 +71,10 @@
 				if (errors.length > 0) {
 					displayErrors(errors);
 					event.preventDefault();
-					console.log(errors);
-					//for loop here
+
 				} else {
 					addEntry(collatedInput);
-					console.log('Entry added!');
-					//continue;
+
 				}
 
 				function displayErrors(errors) {
@@ -408,7 +399,6 @@
 			document
 				.getElementById('addLocForm')
 				.addEventListener('submit', function (event) {
-					console.log('Function defined for addloc.html form submit event has been called');
 					event.preventDefault(); // Prevent the default form submission
 
 					// Simulate successful submission (replace with actual form submission code)
@@ -480,9 +470,6 @@
 				.addEventListener('click', function (event) {
 					if(confirm("Closing may lead to unsaved data being deleted, proceed?")){
 						event.preventDefault();
-						console.log(
-							'The user has closed the Add Activity modal.'
-						);
 						closeModal();
 						resetForm();
 					} else {

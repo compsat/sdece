@@ -74,12 +74,9 @@ function onMapClick(e) {
 
 	// This addButton is from the mini popup
 	var addButton = document.querySelector('.addButton');
-	console.log(addButton);
 	addButton.addEventListener('click', function () {
 		// show mainmodal from pop up "add location"
-		console.log('main modal called from popup');
 		addForm_geopoint = new GeoPoint(lat, lng);
-		console.log('currently adding coords: ', addForm_geopoint);
 		showMainModal();
 		populateMainModalList();
 	});
@@ -88,14 +85,12 @@ function onMapClick(e) {
 map.on('click', onMapClick);
 
 // add activity from the main modal
-// console.log(document.getElementById('mainModalIframe'));
 const mainModalDocument =
 	document.getElementById('mainModalIframe').contentDocument;
 const newButton = mainModalDocument.getElementById('addModalButton');
 
 newButton.addEventListener('click', () => {
 	// Get the Add Activity form and the needed input fields for autofill
-
 	var inputtedPartnerName = mainModalDocument.getElementById(
 		'inputted_partner_name'
 	).value;
@@ -160,7 +155,6 @@ getDocs(col_ref)
 		//  Populate with partners
 		Object.keys(activities).forEach((activity) => {
 			let partner = activities[activity][SDECE_RULES[1]];
-			console.log(activities[activity]['partner_name']);
 			if (partners[partner] == null) {
 				partners[partner] = [];
 				partners[partner].push(activities[activity]);
@@ -169,16 +163,12 @@ getDocs(col_ref)
 			}
 		});
 
-		console.log('Activities: ', activities);
-		console.log('Partners: ', partners);
-
 		// Populate side navigation <ul> with partners
 		Object.keys(partners).forEach((partner) => {
 			// Trying to add the pins here instead
 			var marker;
 
 			// Some coordinated are null, protective check
-			//console.log(partners[partner][0]['partner_coordinates']);
 			if (partners[partner][0]['partner_coordinates'] != null) {
 				marker = L.marker([
 					parseFloat(
@@ -205,20 +195,10 @@ getDocs(col_ref)
 				marker.on('mouseover', function () {
 					marker.openPopup();
 
-					console.log(
-						'Clicked on ' +
-							partners[partner][0]['partner_name'] +
-							' pin!'
-					);
-
 					var test = document.getElementById(
 						partners[partner][0]['partner_name']
 					);
 					test.addEventListener('click', function () {
-						console.log(
-							'Clicked on the pop-up content of ' +
-								partners[partner][0]['partner_name']
-						);
 						showModal(partners[partner]);
 					});
 				});
@@ -260,8 +240,6 @@ getDocs(col_ref)
 					activityDiv.innerHTML +=
 						activities[activity].activity_name + '<br/>'; // there might be a better way to display multiple activities
 				});
-			} else {
-				console.log('No activities found');
 			}
 
 			nameDiv.classList.add('name');
@@ -363,8 +341,6 @@ export function showModal(partner) {
 	// Close the modal when the close button is clicked
 	closeDiv.addEventListener('click', () => {
 		current_viewed_activity = null;
-		console.log('modal closed');
-
 		//might be better to put this in its own function
 		modal.style.display = 'none';
 		modal.classList.remove('open'); //transition out
@@ -386,7 +362,6 @@ export function showModal(partner) {
 
 	// Add button for adding activities
 	addActivity.addEventListener('click', () => {
-		console.log('Clicked add activity in the partner modal');
 		has_existing_partner = true;
 		addForm_geopoint = new GeoPoint(
 			partner[0].partner_coordinates._lat,
@@ -456,12 +431,9 @@ export function showModal(partner) {
 	activityHeaderDiv.classList.add('modal-activities-header');
 
 	// Add each activity to the modal content
-
-	console.log(partner.length);
 	if (partner.length > 0) {
 		// check if list of activities is present, otherwise is skipped to avoid errors
 		partner.forEach((activity) => {
-			console.log(activity);
 			// View activity details button
 			const activityButton = document.createElement('div');
 			const activityTitle = document.createElement('button');
@@ -533,10 +505,6 @@ export function showModal(partner) {
 			// Executed when the user clicks on an activity listed in the Partner Modal
 			activityButton.addEventListener('click', () => {
 				current_viewed_activity = activity;
-				console.log(
-					'currently looking at activity with ID: ',
-					activity['identifier']
-				);
 				document.querySelector('.modal-button').style.display =
 					'flex';
 				modalHeader.innerHTML = '';
@@ -612,14 +580,6 @@ export function showModal(partner) {
 	for (var i = 0; i < editButtons.length; i++) {
 		editButtons[i].addEventListener('click', function () {
 			if (current_viewed_activity != null) {
-				console.log(
-					'Clicked edit currently editing activity with ID: ',
-					current_viewed_activity['identifier'],
-					current_viewed_activity
-				);
-
-				//Close activity details modal
-
 				// Select the modal and partnerName elements
 				var modal = document.getElementById('editModal');
 
@@ -631,12 +591,10 @@ export function showModal(partner) {
 
 				//autofill existing values inside the modal
 				SDECE_RULES[2].forEach((field) => {
-					//console.log(field);
 					let current_inp = document
 						.getElementById('editModal_iframe')
 						.contentWindow.document.getElementById(field);
 					if (current_inp != null) {
-						//console.log(current_inp);
 						current_inp.value =
 							current_viewed_activity[field];
 					}
@@ -647,8 +605,6 @@ export function showModal(partner) {
 				// 		modal.style.display = 'none';
 				// 	}
 				// };
-			} else {
-				console.log('Not looking at an activity');
 			}
 		});
 	}
@@ -656,32 +612,22 @@ export function showModal(partner) {
 
 // This is unreliable but will probably be useful in the future
 // export async function getCoordsFromAddress(address = '161 Daan Tubo, Diliman, Quezon City') {
-// 	console.log('ENTER PRESSED IN MAIN MODAL: ', address);
 
 // 	var parsed_loc = encodeURIComponent(
 // 		address.toLowerCase().replace(/[^a-z0-9 _-]+/gi, '-')
 // 	);
 // 	var api_search = 'https://nominatim.openstreetmap.org/search?q=';
 // 	var link = api_search.concat(parsed_loc).concat('&format=json');
-// 	console.log(link);
 
 // 	var response = await fetch(link);
 // 	var jsonified = await response.json();
-
-// 	console.log(jsonified);
-// 	console.log(jsonified[0]['lat'], jsonified[0]['lon']);
 
 // 	if (addForm_geopoint == null) {
 // 		addForm_geopoint = new GeoPoint(
 // 			jsonified[0]['lat'],
 // 			jsonified[0]['lon']
 // 		);
-// 		console.log(
-// 			'coords have been set from the address.',
-// 			addForm_geopoint
-// 		);
 // 	} else {
-// 		console.log('No need, you already set it in the popup');}
 // 	}
 
 //values stored in local before uploading them in batches
@@ -694,8 +640,6 @@ var addFormiframeDocument = addFormiframe.contentWindow.document;
 var addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
 addFormSubmitButton.addEventListener('click', function () {
 	//handleAdd
-	console.log('The Save button in addloc.html has been pressed.');
-
 	//get data from addloc.html
 	var info_from_forms = {};
 	for (let field of SDECE_RULES[2]) {
@@ -714,15 +658,12 @@ addFormSubmitButton.addEventListener('click', function () {
 	}
 
 	//validate the collated input here
-	console.log('ADD VALIDATION IS HAPPENING?', info_from_forms);
 	let errors = validateData('sdece-official-TEST', info_from_forms);
 
-	console.log(errors);
 	if (errors.length > 0) {
 		displayErrors(errors);
 		event.preventDefault();
 	} else {
-		console.log('data from addloc: ', info_from_forms);
 		if (has_existing_partner) {
 			//upload it straight to the firebase db
 			addEntry(info_from_forms);
@@ -732,7 +673,6 @@ addFormSubmitButton.addEventListener('click', function () {
 		} else {
 			//locally store it
 			temp_activities[temp_activities_id + ''] = info_from_forms;
-			console.log('locally stored activities: ', temp_activities);
 			temp_activities_id += 1;
 
 			populateMainModalList();
@@ -799,7 +739,6 @@ export function handleEdit() {
 	}
 
 	//validate the collated input here
-	console.log('EDITING VALIDATION IS HAPPENING?');
 	let errors = validateData('sdece-official-TEST', collated_inp);
 
 	if (errors.length > 0) {
@@ -808,7 +747,6 @@ export function handleEdit() {
 	} else {
 		editEntry(collated_inp, current_viewed_activity['identifier']);
 		document.getElementById('editModal').style = "display: 'none'";
-		console.log('Entry EDITED!');
 		//alert('Reload the page for the new edits to reflect on your browser');
 	}
 
@@ -831,11 +769,6 @@ export function handleEdit() {
 			}
 		}
 	}
-	console.log(
-		'Edits made to file with ID: ',
-		current_viewed_activity['identifier']
-	);
-	console.log("Here's the edited file: ", collated_inp);
 }
 
 // mainmodal save button for batch uploading
@@ -843,13 +776,8 @@ const MAIN_MODAL_SAVE_BUTTON =
 	mainModalDocument.getElementsByClassName('main-modal-save')[0];
 
 MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
-	console.log(
-		'Here are the activities to be uploaded in this batch: ',
-		temp_activities
-	);
 
 	let temp_keys = Object.keys(temp_activities).length;
-	console.log(temp_keys);
 
 	if (temp_keys > 0) {
 		Object.keys(temp_activities).forEach((temp_id) => {
@@ -861,13 +789,8 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 				mainModalDocument.getElementById('address-input').value;
 			current_temp_activity['partner_name'] = new_partner_name;
 			current_temp_activity['partner_address'] = new_partner_address;
-			console.log('toUpload:', current_temp_activity);
 			addEntry(current_temp_activity);
 		});
-
-		console.log(
-			'Function defined for main modal.html form submit event has been called'
-		);
 
 		// Notify parent window (where the iframe is embedded)
 		window.parent.postMessage({ type: 'mainModalFormSuccess' }, '*');
@@ -910,7 +833,6 @@ mainModalCloseButton.addEventListener('click', function (event) {
 			);
 		}
 
-		console.log('The user has closed the Add Activity modal.');
 		window.parent.postMessage('closeMainModal', '*');
 	} else {
 		event.preventDefault();
@@ -923,8 +845,6 @@ export function populateMainModalList() {
 	const mainModalActivityList = mainModalDocument.getElementById(
 		'mainModalActivityList'
 	);
-	console.log(temp_activities);
-	console.log('mainModalActivityList: ', mainModalActivityList);
 	mainModalActivityList.innerHTML = '';
 
 	if (Object.keys(temp_activities).length == 0) {

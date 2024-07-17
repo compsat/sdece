@@ -18,8 +18,6 @@ import {
 	collection,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 
-console.log('UNIVERSAL JS LOADING ');
-
 function getUrlParameter(name) {
 	name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
 	var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
@@ -65,7 +63,6 @@ export function getCoordinates() {
 }
 
 // Now you can use lat and lng values as needed in this script
-console.log(`Latitude: ${lat}, Longitude: ${lng}`);
 
 // export const firebaseConfig = {
 //     apiKey: "AIzaSyAeo2wTJFotROMNPa4UHXo2MqPaW8k07us",
@@ -380,13 +377,10 @@ export const SDECE_RULES_TEST = DB_RULES_AND_DATA[3];
 
 export function setCollection(collection_name) {
 	for (let rule of DB_RULES_AND_DATA) {
-		console.log('rule[0]: ' + rule[0]);
 		if (rule[0] === collection_name) {
-			console.log('IS EQUAL');
 			collection_reference = collection(DB, collection_name);
 		}
 	}
-	console.log(collection_reference);
 }
 
 export function getCollection() {
@@ -408,13 +402,10 @@ export function getDocIdByPartnerName(partner_name) {
 			)
 				.then((querySnapshot) => {
 					if (!querySnapshot.empty) {
-						console.log('not empty, here the only document');
 						// Assuming there is only one document with the given partner name
 						const doc = querySnapshot.docs[0];
-						console.log(doc.id);
 						return doc.id;
 					} else {
-						console.log('EMPTY: No matching document found.');
 						return null;
 					}
 				})
@@ -435,19 +426,15 @@ export function getDocsByPartnerName(partner_name) {
 			return getDocs(
 				query(
 					collection_reference,
-					where(rule[1], '>=', partner_name), // let's wait for Luigi's standardization. IF_ELSE nalang muna
+					where(rule[1], '>=', partner_name), 
 					where(rule[1], '<=', partner_name + endName)
 				)
 			)
 				.then((querySnapshot) => {
-					console.log(querySnapshot);
 					if (!querySnapshot.empty) {
-						console.log('not empty, here are the docs');
 						const docs = querySnapshot.docs;
-						console.log(docs);
 						return docs;
 					} else {
-						console.log('EMPTY: No matching document found.');
 						return null;
 					}
 				})
@@ -473,7 +460,6 @@ export function getDocByID(docId) {
 }
 
 export function addEntry(inp_obj) {
-	console.log('add Entry');
 
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_reference.id) {
@@ -483,7 +469,6 @@ export function addEntry(inp_obj) {
 			}
 			addDoc(collection_reference, input)
 				.then((docRef) => {
-					console.log('Document written with ID: ', docRef.id);
 					alert("You may now reload the page for your addition to reflect on this page");
 					
 				})
@@ -497,14 +482,11 @@ export function addEntry(inp_obj) {
 }
 
 export function editEntry(inp_obj, docId) {
-	console.log('edit entry with id ' + docId);
-
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_reference.id) {
 			const DOC_REFERENCE = doc(DB, rule[0], docId);
 			updateDoc(DOC_REFERENCE, inp_obj)
 				.then(() => {
-					console.log("edited yipee", docId);
 					alert("You may now reload the page for your edit to reflect on this page");
 				})
 				.catch((error) => {
@@ -517,8 +499,6 @@ export function editEntry(inp_obj, docId) {
 }
 
 export function validateData(collectionName, data) {
-	//this is seen
-	console.log("VALIDATINGGGGGGG");
 	const rules = VALIDATION_RULES[collectionName];
 	var errors = [];
 	// let errors = [];
@@ -533,8 +513,6 @@ export function validateData(collectionName, data) {
 			(value == undefined || value == null || value == '')
 		) {
 			errors.push(`Field '${field}' is required.`);
-			//this is not
-			console.log('TESTINGGGG');
 			continue;
 		} 
 		

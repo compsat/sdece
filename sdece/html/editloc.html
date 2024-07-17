@@ -48,7 +48,7 @@
 			</div>
 			<div class="form-body">
 				<!-- Header -->
-
+			<div class id="error_messages"></div>
 				<!-- General Information -->
 				<div class="form-section">
 					<div class="form-field">
@@ -307,7 +307,6 @@
 						
 					</input>
 				</div>
-				<div class id="error_messages"></div>
 			</div>
 			
 		</form>
@@ -360,7 +359,6 @@
 				.addEventListener('click', function (event) {
 					if(confirm("Closing may lead to unsaved data being deleted, proceed?")){
 						event.preventDefault();
-						console.log('The user has closed the Edit modal.');
 						closeModal();
 						resetForm();
 					} else {
