@@ -110,7 +110,7 @@ getDocs(colRef)
 				partner.household_address + ' ' + partner.household_phase;
 
 			listItem.classList.add('accordion');
-			anchor.classList.add('link');
+			anchor.classList.add('accordion', 'link');
 			containerDiv.classList.add('container-entry');
 
 			// Append elements to the DOM
