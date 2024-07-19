@@ -74,101 +74,7 @@
     </div>
     <!-- Modal Content: content of the entries -->
     <div class="modalContent">
-      <!-- Div for contact no. and address -->
-      <br>
-      <div>
-        <p class="modalText" id="entry_contact_number" style="margin-top: -5px;"></p>
-        <p class="modalText" id="entry_address"></p>
-      </div>
-      <!-- Div for residency status and part of HOA/NOA labels -->
-      <div class="modalLine">
-        <label class="modalLabel" style="width: 220px;">Residency Status</label>
-        <label class="modalLabel" style="width: 220px;">Part of HOA / NOA</label>
-      </div>
-      <!-- Div for residency status and part of HOA/NOA content -->
-      <div class="modalLine">
-        <p class="modalText" id="entry_residency_status" style="width: 220px;"></p>
-        <p class="modalText" id="entry_HOA/NOA" style="width: 220px;"></label>
-      </div>
-      <!-- Div for evacuation area -->
-      <div>
-        <label class="modalLabel">Nearest Evacuation Area</label>
-        <p class="modalText" id="entry_nearest_evacuation_area"></p>
-      </div>
-      <!-- Risk Levels -->
-      <button type="button" class="collapsible">Risk Levels</button>
-      <div class="colContent" style="display: block;">
-        <div class="modalLine">
-          <label class="modalLabel">Earthquake</label>
-          <label class="modalLabel" id="entry_earthquake_risk_level">RISK LEVEL</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_earthquake_desc"></p>
-        </div>
-        <div class="modalLine">
-          <label class="modalLabel">Fire</label>
-          <label class="modalLabel" id="entry_fire_risk_level">RISK LEVEL</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_fire_desc"></p>
-        </div>
-        <div class="modalLine">
-          <label class="modalLabel">Flood</label>
-          <label class="modalLabel" id="entry_flood_risk_level">RISK LEVEL</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_flood_desc"></p>
-        </div>
-        <div class="modalLine">
-          <label class="modalLabel">Landslide</label>
-          <label class="modalLabel" id="entry_landslide_risk_level">RISK LEVEL</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_landslide_desc"></p>
-        </div>
-        <div class="modalLine">
-          <label class="modalLabel">Storm</label>
-          <label class="modalLabel" id="entry_storm_risk_level">RISK LEVEL</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_storm_desc"></p>
-        </div>
-      </div>
-      <!-- Residents -->
-      <button type="button" class="collapsible">Residents</button>
-      <div class="colContent" style="display: block;">
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">Total</label>
-          <label class="modalLabel" id="entry_number_of_residents"></label>
-        </div>
-        <hr style="border-top: 1px solid #CBD5E0;">
-        <div class="modalLine">
-          <label class="modalLabel">Minors</label>
-          <label class="modalLabel" id="entry_number_of_minor_residents"></label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">Seniors</label>
-          <label class="modalLabel" id="entry_number_of_senior_residents"></label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">PWD</label>
-          <label class="modalLabel" id="entry_number_of_pwd_residents"></label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">Sick</label>
-          <label class="modalLabel" id="entry_number_of_sick_residents"></label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel" >Pregnant</label>
-          <label class="modalLabel" id="entry_number_of_pregnant_residents"></label>
-        </div>
-        <br>
-      </div>
+      <p id="modalContent"></p>
     </div>
     <!-- Modal footer: contains edit and delete buttons -->
     <div class="modalFooter">
@@ -180,332 +86,17 @@
   </div>
 
   <!-- Modal for add household form -->
-  <div id="formModal" class="formModal" style="display: none;">
-    <!-- Modal Header: includes title and address -->
-    <div class="formModalHeader">
-      <span class="closeForm">&times;</span>
-      <h1 class="formHeader">Add Household</h1>
-    </div>
-    <!-- Modal Content: everything else -->
-    <div class="formModalContent">
-      <h2 class="subHeader">HOUSEHOLD INFORMATION</h2>
-      <br>
-      <!-- Form Proper -->
-      <div class="inputContainer">
-          <label class="form" for="household_name">Household Name</label>
-          <input type="text" id="household_name" name="household_name" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="address">Address</label>
-          <input type="text" id="address" name="address" class="attribs">    
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="contact_number">Contact Number</label>
-          <input type="text" id="contact_number" name="contact_number" class="attribs">    
-      </div>
-      <br>
-      <div class="inputContainer">
-        <label class="form" for="residency_status">Residency Status</label>
-        <select id="residency_status" name="residency_status" class="attribs">
-            <option value="" disabled selected hidden></option>
-            <option value="May-ari">May-ari</option>
-            <option value="Umuupa">Umuupa</option>
-        </select>
-      </div>
-      <br>
-      <div class="input_container checkbox-container">
-        <div class="labelColumn">
-            <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
-        </div>
-        <div class="checkboxColumn">
-            <input type="checkbox" id="HOA/NOA" name="HOA/NOA" class="attribs" style="height: 30px;">
-        </div>
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="materials_used_for_house">Materials Used for House</label>
-          <input type="text" id="materials_used_for_house" name="materials_used_for_house" class="attribs"> 
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="nearest_evacuation_area">Nearest Evacuation Area</label>
-          <input type="text" id="nearest_evacuation_area" name="nearest_evacuation_area" class="attribs">    
-      </div>
-      <br>
-      <h2 class="subHeader">RESIDENT INFORMATION</h2>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="number_of_residents">Number of Residents</label>
-          <input type="text" id="number_of_residents" name="number_of_residents" class="attribs">    
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="number_of_minor_residents">Number of Minor Residents</label>
-          <input type="text" id="number_of_minor_residents" name="number_of_minor_residents" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="number_of_senior_residents">Number of Senior Citizen Residents</label>
-          <input type="text" id="number_of_senior_residents" name="number_of_senior_residents" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="number_of_pwd_residents">Number of PWD Residents</label>
-          <input type="text" id="number_of_pwd_residents" name="number_of_pwd_residents" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="number_of_sick_residents">Number of Sick Residents</label>
-          <input type="text" id="number_of_sick_residents" name="number_of_sick_residents" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="number_of_pregnant_residents">Number of Pregnant Residents</label>
-          <input type="text" id="number_of_pregnant_residents" name="number_of_pregnant_residents" class="attribs">
-      </div>
-      <br>
-      <h2 class="subHeader">RISK LEVELS</h2>
-      <br>
-      <div class="inputContainer">
-          <label class="disasterForm" for="earthquake">Earthquake</label>
-          <select name="earthquake_level" id="earthquake" class="attribs">
-              <option value="" disabled selected hidden></option>
-              <option value="high">HIGH</option>
-              <option value="medium">MEDIUM</option>
-              <option value="low">LOW</option>
-          </select>
-          <input type="text" id="earthquake" name="earthquake" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="disasterForm" for="fire">Fire</label>
-          <select name="fire_level" id="fire" class="attribs">
-              <option value="" disabled selected hidden></option>
-              <option value="high">HIGH</option>
-              <option value="medium">MEDIUM</option>
-              <option value="low">LOW</option>
-          </select>
-          <input type="text" id="fire" name="fire" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="disasterForm" for="flood">Flood</label>
-          <select name="flood_level" id="flood" class="attribs">
-              <option value="" disabled selected hidden></option>
-              <option value="high">HIGH</option>
-              <option value="medium">MEDIUM</option>
-              <option value="low">LOW</option>
-          </select>
-          <input type="email" id="flood" name="flood" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="disasterForm" for="landslide">Landslide</label>
-          <select name="landslide_level" id="landslide" class="attribs">
-              <option value="" disabled selected hidden></option>
-              <option value="high">HIGH</option>
-              <option value="medium">MEDIUM</option>
-              <option value="low">LOW</option>
-          </select>
-          <input type="email" id="landslide" name="landslide" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="disasterForm" for="storm">Storm</label>
-          <select name="storm_level" id="storm" class="attribs">
-              <option value="" disabled selected hidden></option>
-              <option value="high">HIGH</option>
-              <option value="medium">MEDIUM</option>
-              <option value="low">LOW</option>
-          </select>
-          <input type="email" id="storm" name="storm" class="attribs">
-      </div>
-      <!-- Save and Delete buttons -->
-      <div class="buttonContainer">
-        <div>
-          <!-- Submits contents of the form -->                                               
-          <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save</button>   
-        </div>
-        <div>
-          <!-- Clears all contents of the form -->
-          <button class="clear form">Delete</button>
-        </div>
-      </div>
-    </div>
-    <!-- Modal Footer: empty space (for design) -->
-     <div class="formModalFooter"></div>
+  <div id="addModal" class="formModal" style="display: none;">
+    <iframe src="./addloc.html" class="formIframe"></iframe>
   </div>
 
   <!-- Modal for edit household form -->
-  <div id="editForm-modal" class="formModal" style="display: none;">
-    <!-- Modal Header: includes title and address -->
-    <div class="formModalHeader">
-      <span class="closeEditForm">&times;</span>
-      <h1 class="formHeader">Edit Household</h1>
-    </div>
-    <!-- Modal Content: everything else -->
-    <div class="formModalContent">
-      <h2 class="subHeader">HOUSEHOLD INFORMATION</h2>
-      <br>
-      <!-- Form Proper -->
-      <div class="inputContainer">
-          <label class="form" for="household_name">Household Name</label>
-          <input type="text" id="edit_household_name" name="household_name" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="address">Address</label>
-          <input type="text" id="edit_address" name="address" class="attribs">    
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="contact_number">Contact Number</label>
-          <input type="text" id="edit_contact_number" name="contact_number" class="attribs">    
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="residency_status">Residency Status</label>
-          <input type="text" id="edit_residency_status" name="residency_status" class="attribs"> 
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="HOA/NOA">Part of HOA / NOA</label>
-          <input type="text" id="edit_HOA/NOA" name="HOA/NOA" class="attribs"> 
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="nearest_evacuation_area">Nearest Evacuation Area</label>
-          <input type="text" id="edit_nearest_evacuation_area" name="nearest_evacuation_area" class="attribs">    
-      </div>
-      <br>
-      <h2 class="subHeader">RESIDENT INFORMATION</h2>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="number_of_residents">Number of Residents</label>
-          <input type="text" id="edit_number_of_residents" name="number_of_residents" class="attribs">    
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="number_of_minor_residents">Number of Minor Residents</label>
-          <input type="text" id="edit_number_of_minor_residents" name="number_of_minor_residents" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="number_of_senior_residents">Number of Senior Citizen Residents</label>
-          <input type="text" id="edit_number_of_senior_residents" name="number_of_senior_residents" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="number_of_pwd_residents">Number of PWD Residents</label>
-          <input type="text" id="edit_number_of_pwd_residents" name="number_of_pwd_residents" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="number_of_sick_residents">Number of Sick Residents</label>
-          <input type="text" id="edit_number_of_sick_residents" name="number_of_sick_residents" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="form" for="number_of_pregnant_residents">Number of Pregnant Residents</label>
-          <input type="text" id="edit_number_of_pregnant_residents" name="number_of_pregnant_residents" class="attribs">
-      </div>
-      <br>
-      <h2 class="subHeader">RISK LEVELS</h2>
-      <br>
-      <div class="inputContainer">
-          <label class="disasterForm" for="earthquake">Earthquake</label>
-          <select name="earthquake_level" id="edit_earthquake_risk_level" class="attribs">
-              <option id="default_earthquake" value="" disabled selected hidden></option>
-              <option value="high">HIGH</option>
-              <option value="medium">MEDIUM</option>
-              <option value="low">LOW</option>
-          </select>
-          <input type="text" id="edit_earthquake_desc" name="earthquake" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="disasterForm" for="fire">Fire</label>
-          <select name="fire_level" id="edit_fire_risk_level" class="attribs">
-              <option id="default_fire" value="" disabled selected hidden></option>
-              <option value="high">HIGH</option>
-              <option value="medium">MEDIUM</option>
-              <option value="low">LOW</option>
-          </select>
-          <input type="text" id="edit_fire_desc" name="fire" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="disasterForm" for="flood">Flood</label>
-          <select name="flood_level" id="edit_flood_risk_level" class="attribs">
-              <option id="default_flood" value="" disabled selected hidden></option>
-              <option value="high">HIGH</option>
-              <option value="medium">MEDIUM</option>
-              <option value="low">LOW</option>
-          </select>
-          <input type="email" id="edit_flood_desc" name="flood" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="disasterForm" for="landslide">Landslide</label>
-          <select name="landslide_level" id="edit_landslide_risk_level" class="attribs">
-              <option id="default_landslide" value="" disabled selected hidden></option>
-              <option value="high">HIGH</option>
-              <option value="medium">MEDIUM</option>
-              <option value="low">LOW</option>
-          </select>
-          <input type="email" id="edit_landslide_desc" name="landslide" class="attribs">
-      </div>
-      <br>
-      <div class="inputContainer">
-          <label class="disasterForm" for="storm">Storm</label>
-          <select name="storm_level" id="edit_storm_risk_level" class="attribs">
-              <option id="default_storm" value="" disabled selected hidden></option>
-              <option value="high">HIGH</option>
-              <option value="medium">MEDIUM</option>
-              <option value="low">LOW</option>
-          </select>
-          <input type="email" id="edit_storm_desc" name="storm" class="attribs">
-      </div>
-      <!-- save and Delete buttons -->
-      <div class="buttonContainer">
-        <div>
-          <!-- submits contents of the form -->                                               
-          <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save</button>   
-        </div>
-        <div>
-          <!-- clears all contents of the form -->
-          <button class="clear form">Delete</button>
-        </div>
-      </div>
-    </div>
-    <!-- modal Footer: empty space -->
-     <div class="formModalFooter"></div>
+  <div id="editModal" class="formModal" style="display: none;">
+    <iframe src="./editloc.html" class="formIframe"></iframe>
   </div>
   
   <!--script for map-->
   <script type="module" src="js/index.js"></script>
-
-  <!--script for collapsibles-->
-  <script>
-    var coll = document.getElementsByClassName("collapsible");
-    var i;
-
-    for (i = 0; i < coll.length; i++) {
-      coll[i].addEventListener("click", function() {
-        this.classList.toggle("active");
-        var colContent = this.nextElementSibling;
-        if (colContent.style.display === "block") {
-          colContent.style.display = "none";
-          coll.style.transform = "none";
-        } else {
-          colContent.style.display = "block";
-          coll.style.transform = "rotate(180deg)";
-        }
-      });
-    }
-  </script>
 
   <!--script for search bar-->
   <script>
@@ -523,7 +114,81 @@
         }
       }
     }
+    
+					// This hides the Add Activity modal when the user submits the form
+					window.addEventListener('message', function (event) {
+						if (
+							event.data &&
+							event.data.type === 'addlocFormSuccess'
+						) {
+							// Handle successful form submission event here
+							const addModal =
+								document.getElementById('addModal');
+							addModal.classList.add('hidden'); // Hide the iframe
+
+							const messageModal =
+								document.getElementById('messageModal');
+							messageModal.style.display = 'flex'; //display success message
+						}
+					});
+
+					// Function to hide the div containing the iframe
+					function hideModalContainer(modal) {
+						var iframe = document.getElementById(modal);
+						if (iframe) {
+							iframe.style.display = 'none';
+						}
+					}
+
+					// Add an event listener to handle messages from the iframe
+					window.addEventListener('message', function (event) {
+						if (event.data === 'closeAddModal') {
+							hideModalContainer('addModal');
+						}
+						if (event.data === 'closeEditModal') {
+							hideModalContainer('editModal');
+						}
+						if (event.data === 'closeMainModal') {
+							hideModalContainer('mainModal');
+						}
+						if (event.data === 'closeMessageModal') {
+							hideModalContainer('messageModal');
+						}
+						// TEST: remove later
+						if (event.data === 'testMessageModal') {
+							console.log('testing message modal');
+							const messageModal =
+								document.getElementById('messageModal');
+							messageModal.style.display = 'flex';
+						}
+					});
   </script>
+
+  
+<!--script for add a location on map click-->
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    document.body.addEventListener('click', function(event) {
+      if (event.target.matches('.addButton')) {
+        // Prevent default behavior if necessary
+        event.preventDefault();
+
+        // Get the modal
+        var modal = document.getElementById("addModal");
+
+        // Show the modal
+        modal.style.display = "block";
+      }
+
+      // Close the modal when the close button is clicked
+      if (event.target.matches('.close')) {
+        var modal = document.getElementById("addModal");
+        modal.style.display = "none";
+      }
+    });
+  });
+</script>
+
 </body>
 
 </html>
