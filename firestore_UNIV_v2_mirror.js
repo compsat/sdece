@@ -40,7 +40,7 @@ var collection_reference = null;
 
 var document_map = {};
 
-const DB_RULES_AND_DATA = { // can only be changed in hardcode
+export const DB_RULES_AND_DATA = { // can only be changed in hardcode
 	"sdece-official": {
 		identifier: "identifier",
 		fields: 
@@ -107,7 +107,7 @@ const DB_RULES_AND_DATA = { // can only be changed in hardcode
 	},
 };
 
-const DB_RULES_AND_DATA_TEST = {
+export const DB_RULES_AND_DATA_TEST = {
     "sdece-official-TEST" : DB_RULES_AND_DATA["sdece-official"],
     "buklod-official-TEST" : DB_RULES_AND_DATA["buklod-official"],
 }
@@ -117,7 +117,130 @@ export const BUKLOD_RULES = DB_RULES_AND_DATA["buklod-official"];
 export const SDECE_RULES_TEST = DB_RULES_AND_DATA_TEST["sdece-official-TEST"];
 export const BUKLOD_RULES_TEST = DB_RULES_AND_DATA_TEST["buklod-official-TEST"];
 
-export function setCollection(collection_name, include_doc_id, is_debug_mode = false){
+const VALIDATION_RULES = { //Rules for Validating Data
+	'buklod-official': {
+		'contact_number': {type: 'string', required: true, minLength: 11, maxLength: 11, regex: /^[0-9]+$/},
+		'earthquake_risk': {type: 'string', required: true},
+		'fire_risk': {type: 'string', required: true},
+		'flood_risk': {type: 'string', required: true},
+		'household_address': {type: 'string', required: true, maxLength: 255},
+		'household_material': {type: 'string', required: true, enum: ['Concrete', 'Semi-Concrete', 'Light materials', 'Makeshift', 'Natural'] },
+		'household_name': {type: 'string', required: true, maxLength: 127},
+		'household_phase': {type: 'string', required: true},
+		'is_hoa_noa': {type: 'string', required: true, minLength: 3, maxLength: 3, enum: ['HOA', 'N/A'] },
+		'landslide_risk': {type: 'string', required: true},
+		'location_coordinates': {type: 'number', required: true},
+		'location_link': {type: 'string', required: true},
+		'nearest_evac': {type: 'string', required: true, maxLength: 255},
+		'number_minors': {type: 'number'},
+		'number_pregnant': {type: 'number'},
+		'number_pwd': {type: 'number'},
+		'number_residents': {type: 'number', required: true},
+		'number_sick': {type: 'number'},
+		'residency_status': {type: 'string', required: true, enum: ['May-Ari', 'Umuupa']},
+		'status': {type: 'string'},
+		'storm_risk': {type: 'string', required:true}
+	},
+	'sdece-official': {
+		'partner_name': {type: 'string', required: true, maxLength: 255},
+		'partner_address': {type: 'string', required: true, maxLength: 255},
+		'partner_coordinates': {required: true},
+		'partner_contact_name': {type: 'string', required: true, maxLength: 255},
+		'partner_contact_number': {type: 'string', required: true, minLength: 13, maxLength: 13, regex: /^[0-9 ]+$/},
+		'partner_email': {type: 'string', required: true, maxLength: 127},
+		'activity_name': {type: 'string', required: true},
+		'activity_nature': {type: 'string', required: true, maxLength:255},
+		'activity_date': {type: 'date', required: true},
+		'additional_partnership': {type: 'string', maxLength: 255},
+		'organization_unit': {type: 'string',  maxLength: 127},
+		'ADMU_office': {type: 'string', required: true, maxLength: 127},
+		'ADMU_contact_name': {type: 'string', required: true, maxLength: 255},
+		'ADMU_email': {type: 'string', required: true, required: true, maxLength: 127},
+
+	}
+};
+
+export function validateData(collectionName, data) {
+	const rules = VALIDATION_RULES[collectionName];
+	const errors = [];
+
+	for(const field in rules) {
+		const rule = rules[field];
+		const value = data[field];
+
+
+		// Check for required field
+		if (rule.required && (value == undefined || value == null || value == '')) {
+			errors.push("Field '${field}' is required.");
+			continue;
+		}
+
+		// Skip type validation if not required
+		if (!rule.required && (value == undefined || value == null || value == '')) {
+			continue;
+		}
+
+		// Check for type field
+		// if (rule.type && typeof value !== rule.type) {
+		// 	errors.push(Field '${field}' must be of type ${rule.type}.);
+		// 	continue;
+		// }
+		if (rule.type) {
+			if (rule.type === 'date') {
+
+				const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+				if (!dateRegex.test(value)) {
+					errors.push("Field '${field}' must be a valid date in YYYY-MM-DD format.");
+					continue;
+				}
+
+				const date = new Date(value);
+				if(isNaN(date.getTime())) {
+					errors.push("Field '${field}' must be a valid date.");
+					continue;
+				}
+
+			} else if (typeof value != rule.type) {
+				errors.push("Field '${field}' must be of type ${rule.type}.");
+				continue;
+			}
+		}
+
+
+		// Check for minimum length
+		if (rule.minLength && typeof value == 'string' && value.length < rule.minLength) {
+			errors.push("Field '${field}' must be at least ${rule.minLength} characters long.");
+			continue;
+		}
+
+		// Check for maximum length
+		if (rule.maxLength && typeof value == 'string' && value.length >  rule.maxLength) {
+			errors.push("Field '${field}' cannot exceed ${rule.maxLength} characters.");
+			continue;
+		}
+
+
+		// Check for regular expression pattern
+		if (rule.regex && !rule.regex.test(value)) {
+			errors.push("Field '${field}' is invalid.");
+			continue;
+		}
+
+		// Check for enumerated values
+		if (rule.enum && !rule.enum.includes(value)) {
+			errors.push("Field '${field}' must be one of ${rule.enum.join(',')}.");
+			continue;
+		}
+
+		//no validation for geolocation, url yet
+	}
+	
+	return errors;
+
+	
+}
+
+export async function setCollection(collection_name, include_doc_id, is_debug_mode = false){
     let currentCollection = null;
     if (is_debug_mode){
         currentCollection = DB_RULES_AND_DATA_TEST[collection_name];
@@ -127,28 +250,27 @@ export function setCollection(collection_name, include_doc_id, is_debug_mode = f
     
     if(currentCollection != null){
         collection_reference = collection(DB, collection_name);
+        console.log(collection_reference.id);
         console.log("collection set to: " + collection_name + " now loading to docs");
 
-        // loadDocs(collection_name); // had to separate because this is async
-        let getDocuments = async() => {
-            const results = await getDocs(collection_reference);
-            return results;
-        }       
-        getDocuments().then(result => {
-            result.forEach((entryentry) => {
-                var doc = entry.data();
-                var doc_id = entry.id;
-                document_map[doc_id] = doc;
-                if (include_doc_id){    document_map[doc_id]["identifier"] = doc_id;    }
-            })
+        let docs = await getDocs(collection_reference);
+        docs.forEach((entry) => {
+            let doc = entry.data();
+            let doc_id = entry.id;
+
+            document_map[doc_id] = doc;
+            if (include_doc_id) {   document_map[doc_id]["identifier"] = doc_id;    }
         });
+
         console.log(document_map);
+        
     } else {
         console.log("Collection does not exist");
     }
 }
 
 export function getCollection(){
+  console.log("I GOT CALLED BRO");
     if(collection_reference != null){
         return collection_reference;
     }
@@ -180,7 +302,7 @@ export function groupBy(custom_key_identifier){
 }
 
 export async function addEntry(obj_input, is_debug_mode = false){
-    collection_reference = collection(DB, "sdece-official-TEST"); // temporary. remove after testing
+    //collection_reference = collection(DB, "sdece-official-TEST"); // temporary. remove after testing
     console.log(collection_reference.id);
     let needed_fields = null;
 
@@ -207,7 +329,7 @@ export async function addEntry(obj_input, is_debug_mode = false){
 }
 
 export async function editEntry(obj_input, doc_id, is_debug_mode = false){
-    collection_reference = collection(DB, "sdece-official-TEST"); // temporary. remove after testing
+    //collection_reference = collection(DB, "sdece-official-TEST"); // temporary. remove after testing
     console.log(collection_reference.id, doc_id);
 
     let needed_fields = null;

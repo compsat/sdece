@@ -14,7 +14,6 @@ export function getDivContent(name) {
 	var div_content = ``; // This isn't affected, this is the one getting printed
 	return getDocIdByPartnerName(name).then((docId) => {
 		if (docId) {
-			// console.log("is this seen")
 			return getDocByID(docId).then((doc) => {
 				// Insert the partner details into the div with class "partner-contact"
 				for (let rule of DB_RULES_AND_DATA) {
@@ -44,7 +43,6 @@ export function getDivContent(name) {
 				return div_content;
 			});
 		} else {
-			console.log('No matching partner found.');
 			div_content = 'no partner';
 			return div_content;
 		}
@@ -58,7 +56,6 @@ function panLocation(doc, map) {
 			for (let i = 0; i < rule[2].length; i++) {
 				if (rule[2][i].includes('coordinates')) {
 					coordinates = doc.get(rule[2][i]);
-					console.log(coordinates);
 					map.panTo(
 						new L.LatLng(
 							coordinates.latitude,
@@ -73,7 +70,6 @@ function panLocation(doc, map) {
 }
 
 function searchLocation(name, map) {
-	console.log('Calling searchLocation() on ' + name);
 	getDocIdByPartnerName(name).then((docId) => {
 		getDocByID(docId).then((doc) => {
 			panLocation(doc, map);
@@ -109,13 +105,10 @@ export function addListeners() {
 	var locationList = document.getElementById(`locationList`);
 	locationList.addEventListener('click', (event) => {
 		searchLocation(event.target.innerHTML, map);
-		console.log('Calling searchLocation()');
 	});
-	console.log('added');
 }
 
 export function clearMarkers() {
-	console.log('test');
 	map.eachLayer((layer) => {
 		if (layer instanceof L.Marker) {
 			layer.remove();
@@ -124,7 +117,6 @@ export function clearMarkers() {
 }
 
 export function clearLocationList() {
-	console.log('test2');
 	var locationList = document.getElementById(`locationList`);
 	locationList.innerHTML = '';
 }
@@ -142,16 +134,34 @@ export const JS_CS_ENGINE = [
 		],
 	],
 	[
+		'buklod-official-TEST',
+		[
+			'buklod-tao-branch/js/index.js',
+			'buklod-tao-branch/js/firestore.js',
+			'buklod-tao-branch/css/form.css',
+			//   'buklod-tao-branch/css/login.css',
+			'buklod-tao-branch/css/main.css',
+		],
+	],
+	[
 		'sdece-official',
 		[
 			'sdece/js/index.js',
 			'sdece/js/firestore.js',
 			'sdece/css/form.css',
 			'sdece/css/modal.css',
-			// '/css/login.css',
-			'sdece/css/main.css',
 		],
 	],
+	[
+		'sdece-official-TEST',
+		[
+			'sdece/js/index.js',
+			'sdece/js/firestore.js',
+			'sdece/css/form.css',
+			'sdece/css/modal.css',
+		],
+	],
+	
 ];
 
 // creates the JS CSS Files
