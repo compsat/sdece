@@ -61,7 +61,6 @@ export function getCoordinates() {
 
 
 // Now you can use lat and lng values as needed in this script
-console.log(`Latitude: ${lat}, Longitude: ${lng}`);
 
 // export const firebaseConfig = {
 //     apiKey: "AIzaSyAeo2wTJFotROMNPa4UHXo2MqPaW8k07us",
@@ -271,13 +270,10 @@ export function getDocIdByPartnerName(partner_name) {
 			)
 				.then((querySnapshot) => {
 					if (!querySnapshot.empty) {
-						console.log("not empty, here the only document");
 						// Assuming there is only one document with the given partner name
 						const doc = querySnapshot.docs[0];
-						console.log(doc.id);
 						return doc.id;
 					} else {
-						console.log('EMPTY: No matching document found.');
 						return null;
 					}
 				})
@@ -303,14 +299,10 @@ export function getDocsByPartnerName(partner_name) {
 				)
 			)
 				.then((querySnapshot) => {
-					console.log(querySnapshot);
 					if (!querySnapshot.empty) {
-						console.log("not empty, here are the docs");
 						const docs = querySnapshot.docs;
-						console.log(docs);
 						return docs;
 					} else {
-						console.log('EMPTY: No matching document found.');
 						return null;
 					}
 				})
@@ -338,7 +330,6 @@ export function getDocByID(docId) {
 }
 
 export function addEntry(inp_obj){
-    console.log("add Entry");
 
     for (let rule of DB_RULES_AND_DATA){
         if(rule[0] === collection_reference.id){
@@ -347,7 +338,6 @@ export function addEntry(inp_obj){
                 input[rule[2][i]] = inp_obj[rule[2][i]];
             }
             addDoc(collection_reference, input).then((docRef) => {
-                console.log("Document written with ID: ", docRef.id);
               })
               .catch((error) => {
                 console.error("Error adding document: ", error);
@@ -358,7 +348,6 @@ export function addEntry(inp_obj){
 }
 
 export function editEntry(inp_array, docId) {
-	console.log('edit entry with id ' + docId);
 
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_reference.id) {
@@ -370,7 +359,6 @@ export function editEntry(inp_array, docId) {
 			}
 			updateDoc(DOC_REFERENCE, input)
 				.then((docRef) => {
-					console.log('Document written with ID: ', docRef.id);
 				})
 				.catch((error) => {
 					console.error('Error adding document: ', error);

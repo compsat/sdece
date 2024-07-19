@@ -138,18 +138,15 @@
 							'current_branch',
 							SELECTED
 						);
-						console.log(getCurrentBranchCookie());
 						location.reload();
 					});
 
 					if (getCurrentBranchCookie() === null) {
-						console.log(DB_RULES_AND_DATA[0][0]);
 						setCollection(DB_RULES_AND_DATA[0][0]);
 						setCurrentBranchCookie(
 							'current_branch',
 							DB_RULES_AND_DATA[0][0]
 						);
-						console.log(getCollection());
 						loadJsCssFiles(getCurrentBranchCookie());
 					} else {
 						setCollection(getCurrentBranchCookie());
@@ -527,7 +524,6 @@
 							button.style.display = 'none';
 						}
 
-						console.log('The user has typed ' + input);
 
 						let container =
 							document.getElementById('locationList');
