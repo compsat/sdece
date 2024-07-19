@@ -1,0 +1,615 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+}
+
+.mapContainer {
+  flex: 0 0 20%;
+  display: flex;
+  position: absolute;
+  top: 63px; /* containerizing based on the height of the topbar */
+  left: 380px; /* containerizing based on the height of the sidenav */
+  right: 0;
+  bottom: 0;
+}
+
+#map {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+.topBar{
+  background-color: #387181;
+  height: 63px;
+  width: 100%;
+  display: flex;
+  position: fixed;
+  z-index: 2;
+  justify-content: flex-end;
+}
+
+.sideNav {
+  display: flex;
+  position: fixed;
+  width: 380px;
+  height: 100%;
+  background-color: #FFFFFF;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow-y: auto;
+  z-index: 4;
+}
+
+.header {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+/* search bar itself */
+.searchBar {
+  height: 45px;
+  margin: -15px -15px -15px -15px;
+  padding: 15px 32px;
+  width: 107%;
+  box-sizing: border-box;
+  border-radius: 12px;
+  background-color: #F6F6F6;
+  border: transparent;
+  background-position: calc(100% - 16px) center;
+  font-family: 'Montserrat';
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  background-image: url("../img/search-icon.png");
+  background-repeat: no-repeat;
+  background-size: 25px 25px;
+  justify-content: right;
+}
+
+.searchBar:hover {
+  background-color: #e4e3e3;
+}
+.searchBar:focus {
+  background-image: none;
+}
+
+.logoContainer {
+  display: flex;
+  padding: 8px 40px;
+  align-items: center;
+  gap: 32px;
+  background: #387181;
+}
+
+.logo {
+  width: 48px;
+}
+
+li {
+  list-style-type: none;
+}
+
+.heading {
+  color: #387181;
+  font-family: Garamond;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 86.682%;
+  display: flex;
+  align-self: stretch;
+  height: 44px;
+  flex-direction: column;
+}
+
+.label {
+  padding-left: 10px;
+  text-align: left;
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  text-decoration: none;
+  color: #979797; /* Gray */
+  margin: 8px;
+  vertical-align: middle;
+}
+
+.label:hover {
+  color: #49a2bb; /* Viking */
+}
+
+.label:active {
+  color: #387181; /* Calypso */
+}
+
+/* logout icon */
+.logoutIcon {
+  height: 15px;
+  width: 15px;
+  margin: 2px 15px 0px 0px;
+}
+
+/* logout button */
+.buttonLogout {
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #FFFFFF;
+  height: 35px;
+  width: 150px;
+  margin-right: 25px;
+  background-color: #3D97AF ;
+  border: none;
+  border-radius: 4px;
+  display: block;
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  filter: drop-shadow(0 0 0.25rem #00000025);
+  justify-content: space-between;
+}
+
+.logoutIcon {
+  height: 15px;
+  width: 15px;
+  margin: 2px 15px 0px 0px;
+}
+
+button.container {
+  display: flex;
+  position: relative;
+  z-index: 10;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  border: 0;
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2); 
+}
+
+button.labelFont {
+  font-family: Montserrat;
+  padding-top: 30px;
+  padding-left: 30px;
+  padding-bottom: 30px;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 750;
+  line-height: normal;
+  color: #3D97AF;
+  letter-spacing: 0.8px;
+  background-color: #F6F6F6;
+}
+
+button:hover {
+  background-color: #e4e4e4;
+  cursor: pointer;
+}
+
+div.buttons {
+  position: relative;
+  display: flex;
+  padding: 24px 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  align-self: stretch;
+  border-bottom: 0px solid #cbd5e0; 
+}
+
+/* magnifying glass icon */
+.searchButton {
+  background-image: url("./img/search-icon.png");
+  background-repeat: no-repeat;
+  justify-content: right;
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+}
+
+/* entries in household list */
+a.accordion {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 0.16px;
+}
+
+img.accordion {
+  fill: #91c9db;
+}
+
+.entries {
+  background-color: #F6F6F6;
+  width: 100%;
+  overflow-y: auto;
+}
+
+ul.accordion {
+  padding-inline-start: 0px !important;
+}
+
+.containerEntry {
+  width: 100%;
+}
+
+li.accordion {
+  display: flex;
+  padding: 24px 32px;
+  border-bottom: 0.5px solid #bdbdbd;
+}
+
+a.accordion {
+  text-decoration: none;
+}
+
+.name {                           /* Name of each entry in list [Partner Name] */
+  text-decoration: none;
+  color: #387181;
+  font-family: Montserrat;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 750;
+  line-height: 110%;
+  letter-spacing: 0.36px;
+}
+
+.address {                        /* Address of each entry in list [Partner Address] */
+  color: #a0a0a0;
+  margin-top: 10px;
+  text-overflow: ellipsis;
+  font-family: Hind;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%; /* 16.8px */
+  letter-spacing: 0.28px;
+}
+
+.activity {
+  color: #2f2f2f;
+  text-overflow: ellipsis;
+  font-family: Hind;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 110%;
+  letter-spacing: 0.28px;
+}
+h1.entries {
+  color: #000;
+  font-family: Montserrat;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+/* CSS for the household entry modals */
+/* CSS for the entry modal */
+
+/* modal containers */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9900;
+  top: 3%;
+  left: 20%;
+  width: 100%; /* Adjust the width of the modal as needed */
+  max-width: 528px;
+  height: 100%; /* Adjust the height of the modal as needed */
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.modalHeader {
+  position: relative;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  margin-left: 25%;
+  margin-top: 5%;
+  padding: 7px 24px;
+  width: 100%;
+  background-color: #fcfcfc;
+  z-index: 9901;
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2); 
+}
+
+.modalContent {
+  margin-left: 25%;
+  width: 100%;
+  padding: 0px 24px;
+  background-color: #fcfcfc;
+  font-family: Hind;
+  font-size: 16px;
+  font-style: normal;
+  max-height: calc(80% - 140px);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.modalFooter {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  margin-left: 25%;
+  padding: 24px;
+  width: 100%;
+  background-color: #fcfcfc;
+  position: relative;
+  z-index: 9901;
+  box-shadow: 0 -5px 5px -5px rgba(0, 0, 0, 0.2); 
+}
+
+.modalLine {
+  display: flex; 
+  justify-content: space-between;
+}
+
+/* modal text */
+.modalLabel {
+  font-family: 'Montserrat';
+  font-size: 16px;
+  color: #000;
+  font-weight: 750;
+  font-style: normal;
+  letter-spacing: 2%;
+}
+
+.modalName {
+  position: relative;
+  color: #387181;
+  font-family: Montserrat;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 750;
+  letter-spacing: 0.48px;
+  padding: 10px 0px;
+}
+
+.modalButton {
+  width: 100%;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 750;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background-color: #fcfcfc;
+}
+
+.modalButton:hover {
+  background-color: #fcfcfc;
+}
+
+.modalText {
+  color: #a0a0a0;
+  font-family: Hind;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0.32px;
+  line-height: 100%;
+  position: relative;
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+
+button.collapsible {
+  padding: 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  border: 0;
+  background-color: #fcfcfc;
+  width: 100%;
+  height: 50px;
+  color: #3D97AF;
+  font-family: 'Montserrat';
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 750;
+}
+
+.collapsible:after {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+  content: "";
+  background: url("../img/dropdown.png") no-repeat 0 0;
+  background-size: 100%;
+}
+
+.active:after {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+  content: "";
+  background: url("../img/dropdown.png") no-repeat 0 0;
+  background-size: 100%;
+  transform: rotate(180deg);
+}
+
+/* closing modal */
+.close {
+  text-align: center;
+  color: #aaaaaa;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.partnerGeolocation {
+  display: flex;
+  align-items: center;
+}
+
+.leafletPopupContainer {
+  height: 400px;
+  width: 100%;
+  text-overflow: ellipsis;
+  align-items: center;
+}
+
+.leafletHeader {
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  color: #387181;
+  background-color: #FFFFFF;
+  width: 89%;
+  position: fixed;
+  margin: -10px 0px -10px 0px;
+  padding: 10px 0px 10px 0px;
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2)
+}
+
+.leafletSubHeader {
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  color: #3D97AF;
+  margin: 20px 0px 10px 0px;
+}
+
+.leafletLabel {
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 700;
+  color: #000000;
+}
+
+.leafletContent {
+  font-family: Hind;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.32px;
+  color: #A0A0A0;
+  width: 100%;
+  margin: 15px 0px 15px 0px;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.leafletDetails {
+  margin-bottom: 5px;
+}
+
+.leafletButtons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.deleteButton {
+  color: #d64747;
+}
+
+.editButton,
+.addButton {
+  color: #3d97af;
+}
+
+.deleteButton,
+.editButton,
+.addButton {
+  display: flex;
+  padding: 16px 24px;
+  width: fit-content;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  border: 0;
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  background-color: transparent;
+}
+
+.deleteButton:hover,
+.editButton:hover,
+.addButton:hover {
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.partnerValue {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: Hind;
+  font-size: 12px;
+  font-style: normal;
+  line-height: 110%;
+  letter-spacing: 0.32px;
+  margin: 0 !important;
+}
+
+.partnerLabel {
+  color: #3d97af;
+  font-family: Hind;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 110%;
+  letter-spacing: 0.36px;
+  font-size: 14px;
+  margin: 12px 0 8px 0 !important;
+}
+
+.partnerActivity {
+  color: #2f2f2f;
+  font-family: Hind;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 110%;
+  letter-spacing: 0.4px;
+}
+
+.formIframe {
+  margin-left: 15%;
+  margin-top: 2%;
+  border: none;
+  width: 50%;
+  height: 90%;
+  position: relative;
+  justify-content: center;
+  left: 10%;
+  border-radius: 8px 8px 8px 8px;
+}
+
+.modal-screen {
+	display: none;
+}

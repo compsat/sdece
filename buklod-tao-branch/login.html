@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/login.css"> <!--reference login.css-->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"> <!--reference google fonts for 'Montserrat'-->
+  <link href="https://fonts.googleapis.com/css?family=Hind" rel="stylesheet"> <!--reference google fonts for 'Hind'-->
+  <link href='https://fonts.googleapis.com/css?family=Cormorant Garamond' rel='stylesheet'> <!--reference google fonts for 'Coromant Garamond'-->
+  
+  <title>Login</title>
+</head>
+<body>
+  <div class="header"> <!--header container for logo and organization title-->
+      <img src="./img/logout-icon.png" alt="logo"><p class="header-text">Office of Social Concern and Involvement</p> <!--OSCI logo and title-->
+  </div>
+  <div class="center"> <!--Align items to center-->
+    <form> <!--input form for login-->
+      <input type="email" id="email" placeholder="Enter Email" required> <!--email input-->
+      <input type="password" id="password" placeholder="Enter Password" required> <!--username input-->
+      <button type="button" id="loginButton">Login</button> <!--submit button for login-->
+      <p id="error"></p> <!--error message-->
+    </form>
+  </div>
+    <script type="module">
+        import { signIn } from "./js/auth.js";
+        // Add event listener to the button to call signIn function
+        document.getElementById("loginButton").addEventListener("click", function() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        signIn(email, password);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NSTP Hazard Mapping</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+  <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
+
+  <!--Load Leaflet from CDN-->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+    integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+    crossorigin=""></script>
+
+  <!--Load Esri Leaflet from CDN-->
+  <script src="https://unpkg.com/esri-leaflet@2.4.1/dist/esri-leaflet.js"
+    integrity="sha512-xY2smLIHKirD03vHKDJ2u4pqeHA7OQZZ27EjtqmuhDguxiUvdsOuXMwkg16PQrm9cgTmXtoxA6kwr8KBy3cdcw=="
+    crossorigin=""></script>
+
+  <!--Load Esri Leaflet Geocoder from CDN-->
+  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.css"
+    integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+    crossorigin="">
+  <script src="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.js"
+    integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
+    crossorigin=""></script>
+
+  <!--Load CSS sheets and Firestore Database-->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/form.css">
+  <script type="module" src="js/firestore.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+  <!-- Side bar, Top Bar, and Map -->
+  <div class="main">
+    <div class="sideNav">
+      <!-- Search Bar -->
+      <div class="buttons">
+        <input class="searchBar" type="search" placeholder="Search... " oninput="searchEntries()">
+      </div>
+      <!-- Add Household Form -->
+      <button class="container labelFont" id="addHousehold" name="addHousehold">+ Add a Household</button>
+      <!-- List of Entries -->
+      <div class="entries">
+        <ul id="locationList" class="accordion">
+        </ul>
+      </div>
+    </div>
+    <!-- Logout Button -->
+    <div class="topBar">
+      <button class="buttonLogout"><img class="logoutIcon" src="./img/logout.256x256.png" alt="logout"> Logout</button>
+    </div>
+    <!-- Map -->
+    <div class="mapContainer">
+      <div id="map">
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals of Entries -->
+  <div id="partnerModal" class="modal">
+    <!-- Modal Header: includes household owner -->
+    <div class="modalHeader">
+      <h1 id="modalHeader" class="modalName"></h1>
+      <span class="close">&times;</span>
+    </div>
+    <!-- Modal Content: content of the entries -->
+    <div class="modalContent">
+      <p id="modalContent"></p>
+    </div>
+    <!-- Modal footer: contains edit and delete buttons -->
+    <div class="modalFooter">
+      <div class="modalLine">
+        <button class="modalButton" type="submit" id="submit_form" name="submit_form" style="color:#D64747">Delete &nbsp;&nbsp;<img src="./img/delete.png" alt="delete" style="height: 20px; width: 20px;"></button>   
+        <button class="modalButton" id="editHousehold" name="submit_form" style="color:#3D97AF">Edit   &nbsp;&nbsp;<img src="./img/edit.png" alt="edit" style="height: 20px; width: 20px;"></button>   
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for add household form -->
+  <div id="addModal" class="formModal" style="display: none;">
+    <iframe src="./addloc.html" class="formIframe"></iframe>
+  </div>
+
+  <!-- Modal for edit household form -->
+  <div id="editModal" class="formModal" style="display: none;">
+    <iframe src="./editloc.html" class="formIframe"></iframe>
+  </div>
+  
+  <!--script for map-->
+  <script type="module" src="js/index.js"></script>
+
+  <!--script for search bar-->
+  <script>
+    function searchEntries() {
+      var input = document.querySelector('.searchBar').value.toUpperCase();
+      var ul = document.getElementById("locationList");
+      var li = ul.getElementsByTagName('li');
+      for (var i = 0; i < li.length; i++) {
+        var a = li[i].getElementsByTagName("a")[0];
+        var txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(input) > -1) {
+          li[i].style.display = "";
+        } else {
+          li[i].style.display = "none";
+        }
+      }
+    }
+    
+					// This hides the Add Activity modal when the user submits the form
+					window.addEventListener('message', function (event) {
+						if (
+							event.data &&
+							event.data.type === 'addlocFormSuccess'
+						) {
+							// Handle successful form submission event here
+							const addModal =
+								document.getElementById('addModal');
+							addModal.classList.add('hidden'); // Hide the iframe
+
+							const messageModal =
+								document.getElementById('messageModal');
+							messageModal.style.display = 'flex'; //display success message
+						}
+					});
+
+					// Function to hide the div containing the iframe
+					function hideModalContainer(modal) {
+						var iframe = document.getElementById(modal);
+						if (iframe) {
+							iframe.style.display = 'none';
+						}
+					}
+
+					// Add an event listener to handle messages from the iframe
+					window.addEventListener('message', function (event) {
+						if (event.data === 'closeAddModal') {
+							hideModalContainer('addModal');
+						}
+						if (event.data === 'closeEditModal') {
+							hideModalContainer('editModal');
+						}
+						if (event.data === 'closeMainModal') {
+							hideModalContainer('mainModal');
+						}
+						if (event.data === 'closeMessageModal') {
+							hideModalContainer('messageModal');
+						}
+						// TEST: remove later
+						if (event.data === 'testMessageModal') {
+							console.log('testing message modal');
+							const messageModal =
+								document.getElementById('messageModal');
+							messageModal.style.display = 'flex';
+						}
+					});
+  </script>
+
+  
+<!--script for add a location on map click-->
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    document.body.addEventListener('click', function(event) {
+      if (event.target.matches('.addButton')) {
+        // Prevent default behavior if necessary
+        event.preventDefault();
+
+        // Get the modal
+        var modal = document.getElementById("addModal");
+
+        // Show the modal
+        modal.style.display = "block";
+      }
+
+      // Close the modal when the close button is clicked
+      if (event.target.matches('.close')) {
+        var modal = document.getElementById("addModal");
+        modal.style.display = "none";
+      }
+    });
+  });
+</script>
+
+</body>
+
+</html>

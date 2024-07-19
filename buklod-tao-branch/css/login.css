@@ -1,0 +1,68 @@
+
+/* Simple styling for demonstration */
+body {                                              /* Style for body of page */
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+.center {                                          /* Aligning items to center */
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 774px;
+}
+form {                                             /* Size of form */
+  width: 500px;
+}
+input {                                            /* Style for Inputs */
+  display: block;
+  margin-bottom: 10px;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  font-family: 'Hind'; font-size: 20px;
+  border-style: double;
+  border-color: rgb(196, 196, 196);
+  border-width: 0.5px;
+  border-radius: 3px;
+}
+button {                                          /* Style for Buttons */
+  background-color: #3D97AF;
+  width: 100%;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  margin-top: 50px;
+  font-family: 'Montserrat'; font-size: 24px;
+  font-weight: bold;
+  border-radius: 10px;
+  letter-spacing: 1px;
+}
+button:hover {                                    /* Style for when cursor hovers over button */
+  opacity: 0.8;
+}
+#error {                                          /* Style for error message [to be implemented] */
+  color: red;
+  margin-top: 10px;
+}
+.header {                                         /* Style for page header */
+  background-color: #215361;
+  height: 150px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  position: absolute;
+}
+.header-text {                                    /* Style for text in page header */
+  font-family: 'Cormorant Garamond'; font-size: 24px;
+  font-weight: bold;
+  color: white;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  margin-left: 30px;
+}
+
+

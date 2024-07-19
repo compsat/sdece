@@ -1,0 +1,270 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+div.container {
+    margin: auto;
+    width: 50%; 
+}
+
+/* container for each input field */
+div.inputContainer {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+/* Specific to the checkbox container for the HOA / NOA option */
+div.inputContainer.checkboxContainer {
+    display: flex;
+}
+
+/* Specific to the select input for residency status */
+#residencyStatus {
+    width: 400px; 
+}
+
+/* Styling for the label column specific for the HOA / NOA option */
+div.labelColumn {
+    flex: 1; 
+    display: flex;
+    justify-content: flex-start; 
+}
+
+/* Styling for the checkbox column specific for the HOA / NOA option */
+div.checkboxColumn {
+    display: flex;
+    justify-content: left; 
+    padding-right: 180px;
+}
+
+/* CSS for "Add Household" modal */
+.formModal {
+    background-color: rgb(107, 106, 106, 0.4);
+    align-items: center;
+    position: fixed;
+    z-index: 9990;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+  
+.formModalHeader {
+    position: fixed;
+    z-index: 9991;
+    padding: 1px 18.3px;
+    width: 95%;
+    background-color: #fcfcfc;
+    border-radius: 8px 0px 0px 0px;
+    overflow-y: auto;
+    position: relative; 
+}
+  
+.formModalContent {
+    padding: 10px 32px;
+    padding-bottom: 32px;
+    height: calc(97% - 140px);
+    max-width: 100%;
+    max-height: 73%;
+    background-color: #fcfcfc;
+    font-family: Hind;
+    font-size: 16px;
+    font-style: normal;
+    overflow-y: auto;
+}
+  
+/* form footer (empty) */
+.formModalFooter {
+    height: 8px;
+    max-width: 100%;
+    background-color: #fcfcfc;
+    border-radius: 0px 0px 8px 8px;
+}
+
+/* form header */
+.formHeader {
+    font-family: "Montserrat";
+    font-weight: 700;
+    font-size: 32px;
+    letter-spacing: 0.5px;
+    color: #387181;
+}
+
+/* form sub-headers */
+.subHeader {
+    font-family: "Montserrat";
+    font-weight: 700;
+    font-size: 20px;
+    color: #3D97AF;
+    letter-spacing: 0.5px;
+}
+
+/* input field labels */
+label.form {
+    font-family: "Montserrat";
+    font-weight: 400;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    color: #979797;
+}
+
+/* specific to disaster risk level (uses both selects and inputs) labels */
+label.disasterForm {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    color: #979797;
+    width: 100px;
+}
+
+/* CSS for select elements */
+select.attribs {
+    display: block; 
+    width: 125px;
+    height: 40px;
+    box-sizing: border-box;
+    font-family: 'Hind'; font-size: 18px;
+    border-style: double;
+    border-color: rgb(196, 196, 196);
+    border-width: 0.5px;
+    border-radius: 4px;
+    padding-inline: 5px;
+}
+
+/* when hovering over input field */
+select.attribs:hover {
+    border-color: #000000;
+}
+
+/* CSS for input elements */
+input.attribs {
+    display: block; 
+    width: 400px;
+    height: 40px;
+    box-sizing: border-box;
+    font-family: 'Hind'; font-size: 18px;
+    border-style: double;
+    border-color: rgb(196, 196, 196);
+    border-width: 0.5px;
+    border-radius: 4px;
+    padding-inline: 15px;
+}
+
+/* when hovering over input field */
+input.attribs:hover {
+    border-color: #000000;
+}
+
+/* when typing in an input field */
+input.attribs:focus {
+    outline: none;
+    border-bottom: 3px solid #3D97AF;
+}
+
+/* for placeholders in input fields */
+input.attribs::placeholder {
+    font-family: "Source Sans Pro";
+    font-style: italic;
+}
+
+/* container for Save and Delete buttons */
+.buttonContainer {
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+/* CSS for buttons */
+button.form {
+    align-items: center;
+    width: 100%;
+    height: 48px;
+    font-family: "Montserrat";
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    outline: none;
+}
+
+/* specific to delete button */
+button.clear {
+    background-color: white;
+    color: #D64747;
+    border-width: 1px;
+    border-radius: 8px;
+    border-color: #D64747;
+    transition: transform 0.1s ease-out;
+}
+
+/* when hovering cursor over delete button */
+button.clear:hover {
+    background-color: #ededed;
+    transform: translateY(-2px);
+}
+
+/* specific to save button */
+button.confirm {
+    background-color: #49A2BB;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    transition: transform 0.1s ease-out;
+}
+
+/* when hovering over save button */
+button.confirm:hover {
+    background-color: #2d839b;
+    transform: translateY(-2px);
+}
+
+/* for close button */
+.closeForm {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute; 
+    top: 10px; 
+    right: 20px; 
+    z-index: 9992; 
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.closeForm svg {
+    width: 40px; 
+    height: 40px; 
+    fill: #aaaaaa;
+    transition: fill 0.2s;
+}
+
+.closeForm:hover svg,
+.closeForm:focus svg {
+    fill: #000000;
+}
+
+.closeEditForm {
+    color: #aaaaaa;
+    float: right;
+    padding-top: 15px;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.closeEditForm:hover,
+.closeEditForm:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
