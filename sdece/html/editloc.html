@@ -25,67 +25,18 @@
 			href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap"
 			rel="stylesheet"
 		/>
-
-		<script type="module">
-			//import { addLocation } from "./js/firestore.js";
-			import {
-				addEntry,
-				SDECE_RULES_TEST,
-				setCollection,
-			} from '/firestore_UNIV.js';
-
-			setCollection('sdece-official-TEST');
-
-			document
-				.getElementById('submit_form')
-				.addEventListener('click', handleFormSubmit_v2);
-
-			function handleFormSubmit_v2() {
-				console.log('clicked');
-				var collatedInput = {};
-
-				for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
-					//SDECE_RULES_TEST[2] are just the field names of each document
-					console.log(SDECE_RULES_TEST[2][i]);
-					let q = document.getElementById(
-						SDECE_RULES_TEST[2][i]
-					).value;
-					collatedInput[SDECE_RULES_TEST[2][i]] = q;
-
-					// this is where data validation will happen
-					// add the if-else statements of edge cases here
-				}
-
-				console.log(collatedInput);
-				// This actually works but it needs some data validation
-				// uncomment at the db's risk
-				addEntry(collatedInput);
-			}
-		</script>
 	</head>
 	<body>
-		<form
-			action=""
-			id="addLocForm"
-			class="form-container"
-		>
-			<div class="form-body">
-				<!-- Header -->
-				<div class="form-header">
-					<h1
-						class="form-heading"
-					>
-						Edit Activity
-					</h1>
-
-					<button id="close-btn">
-
+		<form action="" id="addLocForm" class="form-container">
+			<div class="form-header">
+				<h1 class="form-heading">Edit Activity</h1>
+				<button id="close-btn">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
 						viewBox="0 0 24 24"
 						stroke-width="1.5"
-						class="form-icon"
+						class="close-btn"
 					>
 						<path
 							stroke-linecap="round"
@@ -93,42 +44,36 @@
 							d="M6 18 18 6M6 6l12 12"
 						/>
 					</svg>
-				</div>
-					</button>
-
+				</button>
+			</div>
+			<div class="form-body">
+				<!-- Header -->
+			<div class id="error_messages"></div>
 				<!-- General Information -->
 				<div class="form-section">
-					<div
-						class="form-field"
-					>
-						<label
-							class="form-label"
-							for="activity_name"
-							>Activity Name</label
-						>
+					<div class="form-field">
+						<label class="form-label" for="activity_name"
+							>Activity Name
+						</label>
 						<input
 							type="text"
 							id="activity_name"
 							name="activity_name"
 							class="form-input"
-							placeholder=""
+							placeholder="Ex. CSIP Session Week 3"
 						/>
 					</div>
 
-					<div
-						class="form-field"
-					>
-						<label
-							class="form-label"
-							for="activity_nature"
-							>Nature of Activity</label
-						>
+					<div class="form-field">
+						<label class="form-label" for="activity_nature"
+							>Nature of Activity
+						</label>
 						<input
 							type="text"
 							id="activity_nature"
 							name="activity_nature"
 							class="form-input"
-							placeholder=""
+							placeholder="Ex. Tutorial Classes"
 						/>
 					</div>
 
@@ -136,7 +81,7 @@
 						<label
 							class="form-label"
 							for="activity_date"
-							>Dates of Partnership</label
+							>Date of Partnership</label
 						>
 
 						<div
@@ -148,12 +93,13 @@
 							id="date-container"
 						>
 							<input
-								type="date"
+								type="Date"
 								id="activity_date"
 								name="activity_date"
 								class="form-input"
 								placeholder=""
 							/>
+							<!--
 							<a
 								href=""
 								id="addDate"
@@ -166,7 +112,7 @@
 									margin-top: 1rem;
 								"
 								>Add another date</a
-							>
+							>-->
 						</div>
 					</div>
 				</div>
@@ -178,7 +124,33 @@
 					>
 						PARTNER INFORMATION
 					</h2>
+					<div class="form-field">
+						<label
+							class="form-label"
+							for="additional_partnership"
+							>Additional Partnership
+						</label>
+						<input
+							type="text"
+							id="additional_partnership"
+							name="additional_partnership"
+							class="form-input"
+							placeholder="Ex. Couples for Christ North B Sector"
+						/>
+					</div>
 
+					<div class="form-field">
+						<label class="form-label" for="organization_unit"
+							>Organization Unit
+						</label>
+						<input
+							type="text"
+							id="organization_unit"
+							name="organization_unit"
+							class="form-input"
+							placeholder="Ex. ACIL"
+						/>
+					</div>
 					<div
 						class="form-field"
 					>
@@ -192,7 +164,7 @@
 							id="partner_name"
 							name="partner_name"
 							class="form-input"
-							placeholder=""
+							placeholder="Ex. Íñigo López de Loyola"
 						/>
 					</div>
 
@@ -201,72 +173,64 @@
 					>
 						<label
 							class="form-label"
-							for="partner_contact"
+							for="partner_address"
 							>Address of Host Partner</label
 						>
 						<input
 							type="text"
-							id="partner_contact"
-							name="partner_contact"
+							id="partner_address"
+							name="partner_address"
 							class="form-input"
-							placeholder=""
+							placeholder="Ex. Katipunan, Quezon City"
 						/>
 					</div>
-					<div
-						class="form-field"
-					>
+
+					<div class="form-field">
 						<label
 							class="form-label"
-							for="partner_contact"
+							for="partner_contact_name"
 							>Name of Contact Person</label
 						>
 						<input
 							type="text"
-							id="partner_contact"
-							name="partner_contact"
+							id="partner_contact_name"
+							name="partner_contact_name"
 							class="form-input"
-							placeholder=""
+							placeholder="Ex. Íñigo López de Loyola"
 						/>
 					</div>
 
-					<div
-						class="form-field"
-					>
+					<div class="form-field">
 						<label
 							class="form-label"
-							for="partner_number"
+							for="partner_contact_number"
 							>Number of Contact Person
 						</label>
 						<input
 							type="text"
-							id="partner_number"
-							name="partner_number"
+							id="partner_contact_number"
+							name="partner_contact_number"
 							class="form-input"
-							placeholder=""
+							placeholder="09XX XXX XXXX"
 						/>
 					</div>
-					<div
-						class="form-field"
-					>
-						<label
-							class="form-label"
-							for="partner_email"
-							>Email of Contact Person / Partner</label
-						>
+
+					<div class="form-field">
+						<label class="form-label" for="partner_email"
+							>Email of Contact Person / Partner
+						</label>
 						<input
 							type="email"
 							id="partner_email"
 							name="partner_email"
 							class="form-input"
-							placeholder=""
+							placeholder="Ex. ignatius@ateneo.edu"
 						/>
 					</div>
 				</div>
 
 				<div class="form-section">
-					<h2
-						class="form-subheading"
-					>
+					<h2 class="form-subheading">
 						ATENEO OFFICE OVERSIGHT
 					</h2>
 
@@ -275,15 +239,15 @@
 					>
 						<label
 							class="form-label"
-							for="admu_office"
+							for="ADMU_office"
 							>Name of Office</label
 						>
 						<input
 							type="text"
-							id="admu_office"
-							name="admu_office"
+							id="ADMU_office"
+							name="ADMU_office"
 							class="form-input"
-							placeholder=""
+							placeholder="Ex. OSA"
 						/>
 					</div>
 					<div
@@ -291,15 +255,15 @@
 					>
 						<label
 							class="form-label"
-							for="admu_contact"
+							for="ADMU_contact_name"
 							>Name of Ateneo Contact Person</label
 						>
 						<input
 							type="text"
-							id="admu_contact"
-							name="admu_contact"
+							id="ADMU_contact_name"
+							name="ADMU_contact_name"
 							class="form-input"
-							placeholder=""
+							placeholder="Ex. Íñigo López de Loyola"
 						/>
 					</div>
 
@@ -308,15 +272,15 @@
 					>
 						<label
 							class="form-label"
-							for="admu_email"
+							for="ADMU_email"
 							>Email of Ateneo Contact Person</label
 						>
 						<input
 							type="email"
-							id="admu_email"
-							name="admu_email"
+							id="ADMU_email"
+							name="ADMU_email"
 							class="form-input"
-							placeholder=""
+							placeholder="Ex. ignatius@ateneo.edu"
 						/>
 					</div>
 				</div>
@@ -332,16 +296,31 @@
 					>
 						Save
 					</button>
-					<button
-						class="form-button negative" id="deleteActivityButton"
+					<input
+						class="form-button negative"
+						data-id="Delete Button"
+						id="delete-btn"
+						onclick="resetForm()"
+						type="button"
+						value="Clear"
 					>
-						Delete
-					</button>
+						
+					</input>
 				</div>
 			</div>
+			
 		</form>
 
 		<script>
+			function resetForm() {
+				var inputFields = document.getElementsByTagName('input');
+				for (var i = 0; i < inputFields.length; i++) {
+					var field = inputFields[i];
+					if (!field.readOnly && field.type !== 'button') {
+						field.value = '';
+					}
+				}
+			}
 			document
 				.getElementById('addLocForm')
 				.addEventListener('submit', function (event) {
@@ -357,7 +336,7 @@
 						'*'
 					);
 				});
-
+				/*
 			document
 				.getElementById('addDate')
 				.addEventListener('click', function (event) {
@@ -370,16 +349,21 @@
 					newDateInput.className = 'form-input';
 					newDateInput.style.marginTop = '1.5rem';
 					dateContainer.insertBefore(newDateInput, this);
-				});
+				});*/
 
+			function closeModal() {
+				window.parent.postMessage('closeEditModal', '*');
+			}
 			document
 				.getElementById('close-btn')
 				.addEventListener('click', function (event) {
-					event.preventDefault();
-					console.log(
-						'The user has closed the Edit Activity modal.'
-					);
-					window.parent.postMessage('closeEditModal', '*');
+					if(confirm("Closing may lead to unsaved data being deleted, proceed?")){
+						event.preventDefault();
+						closeModal();
+						resetForm();
+					} else {
+						event.preventDefault();
+					}	
 				});
 		</script>
 	</body>

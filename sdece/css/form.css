@@ -1,14 +1,4 @@
-/* Color Definition */
-:root {
-	--darkbg: #387181;
-	--lightbg: #3d97af;
-	--custom-black: #2f2f2f;
-	--custom-gray: #a0a0a0;
-	--custom-dark-gray: #979797;
-	--custom-medium-gray: #f6f6f6;
-	--custom-light-gray: #fcfcfc;
-	--custom-red: #d64747;
-}
+@import url('variables.css');
 
 * {
 	margin: 0px;
@@ -31,28 +21,50 @@ button {
 	cursor: pointer;
 }
 
+.close-btn {
+	width: 2rem /* 32px */;
+	height: 2rem /* 32px */;
+	stroke: var(--custom-dark-gray);
+}
+
+.close-btn:hover,
+.close-btn:focus {
+	stroke: var(--custom-black);
+}
+
 .form-container {
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	z-index: 999999999999999;
-	background-color: #fafafa;
+	background-color: var(--custom-medium-gray);
+	position: relative;
 }
 
 .form-body {
 	padding: 2rem;
-	overflow-y: scroll;
+	overflow: scroll;
 	border-radius: 0.5rem;
 	width: 100%;
+	position: relative;
+	background-color: var(--custom-medium-gray);
 }
 
 .form-header {
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
+	z-index: 10000000000000000000;
+	background-color: var(--custom-medium-gray);
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	margin-bottom: 2rem;
 	align-items: center;
+	background-color: var(--custom-light-gray);
+	position: sticky;
+	top: 0;
+	width: 100%;
+	padding: 2rem;
 }
 
 .form-heading {
@@ -106,7 +118,7 @@ button {
 	padding-right: 2rem;
 	width: 24rem /* 384px */;
 	border-radius: 0.25rem /* 4px */;
-	font-family: Montserrat, sans-serif;
+	font-family: 'Montserrat';
 	border-style: solid;
 	border-width: 1px;
 	background-color: white;
@@ -115,8 +127,10 @@ button {
 
 .form-buttons-container {
 	padding-top: 2rem /* 32px */;
-	padding-bottom: 2rem /* 32px */;
-	margin-top: 2rem /* 32px */;
+	/* margin-top: 2rem /* 32px */
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
 }
 
 .form-button {
@@ -131,15 +145,83 @@ button {
 	border-radius: 0.5rem /* 8px */;
 }
 
+[data-id='Save Button'] {
+	transition: background-color 0.25s ease, color 0.25s ease,
+		transform 0.25s ease, box-shadow 0.25s ease;
+	box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+[data-id='Save Button']:hover {
+	transform: scale(1.01);
+	background-color: var(--custom-green);
+	box-shadow: 0px 4px 15px var(--custom-green);
+}
+
+[data-id='Delete Button'] {
+	transition: background-color 0.25s ease, color 0.25s ease,
+		transform 0.25s ease, box-shadow 0.25s ease;
+	box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+[data-id='Delete Button']:hover {
+	transform: scale(1.01);
+	color: var(--custom-light-gray);
+	background-color: var(--custom-red);
+	box-shadow: 0px 4px 15px var(--custom-red);
+}
+
 .positive {
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 	background-color: var(--lightbg);
 	color: var(--custom-light-gray);
+	transition: background-color 0.3s ease, color 0.3s ease,
+		transform 0.3s ease;
+	border-style: solid;
+	border-color: var(--lightbg);
+}
+
+.positive:hover {
+	transform: scale(1.01);
+	background: none;
+	border-style: solid;
+	border-color: var(--lightbg);
+	color: var(--lightbg);
 }
 
 .negative {
+	transition: background-color 0.3s ease, color 0.3s ease,
+		transform 0.3s ease;
 	background: none;
 	border-style: solid;
 	border-color: var(--custom-red);
 	color: var(--custom-red);
-	margin-top: 1rem;
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+	cursor: pointer;
+}
+
+.negative:hover {
+	transform: scale(1.01);
+	color: var(--custom-light-gray);
+	background-color: var(--custom-red);
+}
+
+/* .form-input {
+    border: 1px solid #D64747;
+    background-color: #FFF4F4;
+} */
+
+/* .form-field[data-error] .error-message {
+	color: red;
+	font-size: 0.875rem;
+	margin-top: 0.25rem;
+}
+
+.form-field[data-error]:not([data-error=""]) .error-message::before {
+	content: attr(data-error);
+} */
+
+#error_messages {
+	font-family: 'Hind';
+	color: var(--custom-red);
+	margin-bottom: 1rem;
 }

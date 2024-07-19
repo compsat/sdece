@@ -19,8 +19,6 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
 			href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap"
-			<!DOCTYPE
-			html
 		/>
 		<html>
 			<head>
@@ -90,7 +88,7 @@
 					integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
 					crossorigin=""
 				></script>
-				<link href="main.css" rel="stylesheet" />
+				<link href="./main.css" rel="stylesheet" />
 				<!-- <link href="./src/output.css" rel="stylesheet" /> -->
 
 				<!--<script type="module" src="js/firestore.js"></script>-->
@@ -138,18 +136,15 @@
 							'current_branch',
 							SELECTED
 						);
-						console.log(getCurrentBranchCookie());
 						location.reload();
 					});
 
 					if (getCurrentBranchCookie() === null) {
-						console.log(DB_RULES_AND_DATA[0][0]);
 						setCollection(DB_RULES_AND_DATA[0][0]);
 						setCurrentBranchCookie(
 							'current_branch',
 							DB_RULES_AND_DATA[0][0]
 						);
-						console.log(getCollection());
 						loadJsCssFiles(getCurrentBranchCookie());
 					} else {
 						setCollection(getCurrentBranchCookie());
@@ -217,13 +212,6 @@
 									</div>
 								</div>
 							</div>
-							<button id="mainButton" class="main-btn">
-								<div>+</div>
-								<p
-									id="mainButtonText"
-									class="main-btn-text"
-								></p>
-							</button>
 						</div>
 						<div class="entries">
 							<ul
@@ -283,100 +271,8 @@
 
 				<!-- MODALS -->
 
-				<!-- Main Modal: This is the modal that shows up when pressing the main button in the side navigation panel. -->
-				<div id="mainModal" class="modal-screen">
-					<!--  content -->
-					<div class="main-modal">
-						<div class="main-modal-header">
-							<button>
-								<svg
-									id="closeButton"
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="1.5"
-									stroke="currentColor"
-									class="main-modal-icon"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M6 18 18 6M6 6l12 12"
-									/>
-								</svg>
-							</button>
-						</div>
-
-						<div class="main-modal-content">
-							<h1 class="main-modal-partner-name">
-								Partner Name
-							</h1>
-
-							<div class="main-modal-location-select">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="1.5"
-									stroke="currentColor"
-									class="main-modal-icon main-modal-pin"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-									/>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
-									/>
-								</svg>
-								<input
-									class="main-modal-input"
-									type="text"
-									placeholder="Type the location partner"
-								/>
-
-								<!-- TODO: Populate this dropdown with Location search results -->
-								<ul id="mainModalLocationsList"></ul>
-							</div>
-
-							<div class="main-modal-list-header">
-								<h2 class="main-modal-list-heading">
-									List of Activities
-								</h2>
-								<button id="addModalButton">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke-width="1.5"
-										stroke="currentColor"
-										class="main-modal-icon"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M12 4.5v15m7.5-7.5h-15"
-										/>
-									</svg>
-								</button>
-							</div>
-
-							<!-- TODO: Populate this with the chosen partner's list of activities -->
-							<ul id="mainModalActivityList">
-								No activities for this partner.
-							</ul>
-
-							<button class="main-modal-save">Save</button>
-						</div>
-					</div>
-				</div>
-
 				<!-- Partner Modal: This is the modal that shows up when clicking on an SDECE entry in the side navigation panel OR the pop-up of a map marker pin. -->
 				<div id="partnerModal" class="modal">
-					HELLO THIS IS THE INDEX MODAL
 					<!-- Modal Header -->
 					<div class="modal-header">
 						<!-- <div class="close"></div> -->
@@ -385,20 +281,14 @@
 					</div>
 
 					<!-- Modal Content -->
-					<div class="modal-content">
-						<!-- <div class='flex justify-around' style='color: #3d97af; font-size: 32px'>
-                    <b>List of activities: </b>
-                    <b><span class="addActivity">&plus;</span></b>
-                </div> -->
-
+					<div class="modal-content" id="modalContent">
 						<!-- NOTE: This is where all Entry modal content shoul go (ie. Households for Buklod-Tao, Partners for SDECE) -->
-						<div id="modalContent"></div>
 					</div>
 
 					<!-- Buttons -->
 					<span class="modal-button">
 						<!-- Delete -->
-						<button class="delete-button">
+						<!-- <button class="delete-button partner-hover">
 							Delete
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -406,7 +296,6 @@
 								viewBox="0 0 24 24"
 								stroke-width="1.5"
 								stroke="currentColor"
-								style="width: 10%"
 								class="modal-button-icon"
 							>
 								<path
@@ -417,9 +306,9 @@
 									stroke-linejoin="round"
 								></path>
 							</svg>
-						</button>
+						</button> -->
 						<!-- Edit -->
-						<button class="edit-button">
+						<button class="edit-button partner-hover">
 							Edit
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -427,7 +316,6 @@
 								viewBox="0 0 24 24"
 								stroke-width="1.5"
 								stroke="currentColor"
-								style="width: 10%"
 								class="modal-button-icon"
 							>
 								<path
@@ -451,19 +339,39 @@
 					</span>
 				</div>
 
+				<!-- Main Modal: This is the modal that shows up when pressing the main button in the side navigation panel. -->
+				<div class="modal-screen" id="mainModal">
+					<iframe
+						src="./sdece/html/main_modal.html"
+						class="main-modal"
+						id="mainModalIframe"
+					></iframe>
+				</div>
+
 				<!-- Add Modal: This is the modal that shows up when clicking on the '+' sign that is nested inside the Main Modal. This allows the user to add a new activity to the SDECE collections. -->
 				<div class="modal-screen" id="addModal">
 					<iframe
-						src="./sdece/html/addloc.html"
 						class="form-modal"
+						id="addModalHTML"
+						src="./sdece/html/addloc.html"
 					></iframe>
 				</div>
 
 				<!-- Edit Modal: This is the modal that shows up when clicking on the Edit button that is nested within Partner Modal. This allows the user to edit an existing activity within the SDECE Collections. -->
 				<div class="modal-screen" id="editModal">
 					<iframe
+						id="editModal_iframe"
 						src="./sdece/html/editloc.html"
 						class="form-modal"
+						id="editModalHTML"
+					></iframe>
+				</div>
+
+				<!-- Message Modal: This is the modal that displays a message. Used to indicate form submission/deletion success -->
+				<div class="modal-screen" id="messageModal">
+					<iframe
+						src="./sdece/html/message_modal.html"
+						class="message-modal"
 					></iframe>
 				</div>
 
@@ -479,6 +387,20 @@
 							const addModal =
 								document.getElementById('addModal');
 							addModal.classList.add('hidden'); // Hide the iframe
+						}
+
+						if (
+							event.data &&
+							event.data.type === 'mainModalFormSuccess'
+						) {
+							// Handle successful form submission event here
+							const messageModal =
+								document.getElementById('messageModal');
+							messageModal.style.display = 'flex'; //display success message
+
+							setTimeout(() => {
+								messageModal.style.display = 'none';
+							}, 3000);
 						}
 					});
 
@@ -496,8 +418,6 @@
 						} else {
 							button.style.display = 'none';
 						}
-
-						console.log('The user has typed ' + input);
 
 						let container =
 							document.getElementById('locationList');
@@ -537,29 +457,26 @@
 					}
 
 					// Function to hide the div containing the iframe
-					function hideAddModalContainer() {
-						var iframeContainer =
-							document.getElementById('addModal');
-						if (iframeContainer) {
-							iframeContainer.style.display = 'none';
-						}
-					}
-
-					function hideEditModalContainer() {
-						var iframeContainer =
-							document.getElementById('editModal');
-						if (iframeContainer) {
-							iframeContainer.style.display = 'none';
+					function hideModalContainer(modal) {
+						var iframe = document.getElementById(modal);
+						if (iframe) {
+							iframe.style.display = 'none';
 						}
 					}
 
 					// Add an event listener to handle messages from the iframe
 					window.addEventListener('message', function (event) {
 						if (event.data === 'closeAddModal') {
-							hideAddModalContainer();
+							hideModalContainer('addModal');
 						}
 						if (event.data === 'closeEditModal') {
-							hideEditModalContainer();
+							hideModalContainer('editModal');
+						}
+						if (event.data === 'closeMainModal') {
+							hideModalContainer('mainModal');
+						}
+						if (event.data === 'closeMessageModal') {
+							hideModalContainer('messageModal');
 						}
 					});
 				</script>
