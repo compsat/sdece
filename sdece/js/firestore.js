@@ -19,11 +19,11 @@ import {
 	SDECE_RULES_TEST,
 	getDocIdByPartnerName,
 	validateData,
-} from '/firestore_UNIV.js';
-import { addListeners, map, getDivContent } from '/index_UNIV.js';
+	addEntry,
+	editEntry
+} from '/js/firestore_UNIV.js';
+import { addListeners, map, getDivContent } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
-import { addEntry } from '../../firestore_UNIV.js';
-import { editEntry } from '../../firestore_UNIV.js';
 // Your Firestore code here
 
 // Import the functions you need from the SDKs you need

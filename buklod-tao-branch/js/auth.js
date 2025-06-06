@@ -1,41 +1,60 @@
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+} from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
 
-const firebaseConfig = {
-    apiKey: "AIzaSyAcs4DxFX0knEEloIjN_sK6iMugGM7kGmM",
-    authDomain: "angelo-authtest.firebaseapp.com",
-    projectId: "angelo-authtest",
-    storageBucket: "angelo-authtest.appspot.com",
-    messagingSenderId: "876214232341",
-    appId: "1:876214232341:web:ccd742f75679419933f51c"
-  };
+const SECRETS_PATH = "./secrets.json";
+const SECRETS_REQ = new Request(SECRETS_PATH);
+const SECRETS_RES = await fetch(SECRETS_REQ);
+const SECRETS = await SECRETS_RES.json();
 
-const firebaseApp = initializeApp(firebaseConfig);
-const auth = getAuth(firebaseApp);
+export const firebaseConfig = SECRETS.firebaseConfig;
+
+initializeApp(firebaseConfig);
+const AUTH = getAuth();
 
 // Sign in function
 export function signIn(email, password) {
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed in successfully
-            const user = userCredential.user;
-            console.log("User signed in:", user);
-        })
-        .catch((error) => {
-            // Handle errors
-            console.error("Error signing in:", error);
-        });
+  signInWithEmailAndPassword(AUTH, email, password)
+    .then((userCredential) => {
+      // Signed in successfully
+      const USER = userCredential.user;
+      alert("Login Successful");
+      window.location.replace("index.html");
+    })
+    .catch((error) => {
+      // Handle errors
+      console.error("Error signing in:", error);
+      alert("Error Signing in. Please check username and password");
+    });
 }
 
 // Sign out function
 export function signOutUser() {
-    signOut(auth)
-        .then(() => {
-            // Signed out successfully
-            console.log("User signed out");
-        })
-        .catch((error) => {
-            // Handle errors
-            console.error("Error signing out:", error);
-        });
+  signOut(AUTH)
+    .then(() => {
+      // Signed out successfully
+      console.log("User signed out");
+      window.location.replace("login.html");
+    })
+    .catch((error) => {
+      // Handle errors
+      console.error("Error signing out:", error);
+    });
 }
+
+export function getCurrentUser(thing) {
+  return AUTH.user;
+}
+
+onAuthStateChanged(AUTH, (user) => {
+  if (user) {
+    console.log("User signed in:", user.email);
+  } else {
+    console.log("User not signed in");
+  }
+});
