@@ -1,4 +1,4 @@
-import { setCollection, getCollection } from "/firestore_UNIV.js";
+import { setCollection, getCollection } from "/js/firestore_UNIV.js";
 
 export function setCurrentBranchCookie(name, value){
     const DATE = new Date();

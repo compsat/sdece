@@ -3,7 +3,7 @@ import {
 	getDocByID,
 	getDocIdByPartnerName,
 	getCollection,
-} from '/firestore_UNIV.js';
+} from '/js/firestore_UNIV.js';
 
 // Global Map Variable (the map shown)
 export var map = L.map('map').setView([14.5995, 120.9842], 10);
@@ -54,14 +54,16 @@ function panLocation(doc, map) {
 		if (getCollection().id === rule[0]) {
 			var coordinates;
 			for (let i = 0; i < rule[2].length; i++) {
-				if (rule[2][i].includes('coordinates')) {
+				if (rule[2][i].includes('location_coordinates')) {
 					coordinates = doc.get(rule[2][i]);
-					map.panTo(
-						new L.LatLng(
-							coordinates.latitude,
-							coordinates.longitude
-						)
-					);
+					if(coordinates != null) {
+						map.panTo(
+							new L.LatLng(
+								coordinates.latitude,
+								coordinates.longitude
+							)
+						);
+					}
 					break;
 				}
 			}
@@ -161,7 +163,7 @@ export const JS_CS_ENGINE = [
 			'sdece/css/modal.css',
 		],
 	],
-	
+
 ];
 
 // creates the JS CSS Files
