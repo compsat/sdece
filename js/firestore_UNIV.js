@@ -299,7 +299,7 @@ const VALIDATION_RULES = {
 			maxLength: 13,
 			regex: /^[0-9 ]+$/,
 		},
-		partner_email: { type: 'string', required: true, maxLength: 127 },
+		partner_email: { type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
 		activity_name: { type: 'string', required: true },
 		activity_nature: { type: 'string', required: true, maxLength: 255 },
 		activity_date: { type: 'date', required: true },
@@ -310,8 +310,9 @@ const VALIDATION_RULES = {
 		ADMU_email: {
 			type: 'string',
 			required: true,
-			required: true,
+			// required: true					redundant declaration
 			maxLength: 127,
+			regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/
 		},
 	},
 	'sdece-official': {
@@ -330,7 +331,7 @@ const VALIDATION_RULES = {
 			maxLength: 13,
 			regex: /^[0-9 ]+$/,
 		},
-		partner_email: { type: 'string', required: true, maxLength: 127 },
+		partner_email: { type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
 		activity_name: { type: 'string', required: true },
 		activity_nature: { type: 'string', required: true, maxLength: 255 },
 		activity_date: { type: 'date', required: true },
@@ -341,8 +342,9 @@ const VALIDATION_RULES = {
 		ADMU_email: {
 			type: 'string',
 			required: true,
-			required: true,
+			// required: true					redundant declaration
 			maxLength: 127,
+			regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/
 		},
 	},
 };
