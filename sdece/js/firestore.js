@@ -198,9 +198,29 @@ getDocs(col_ref)
 					var test = document.getElementById(
 						partners[partner][0]['partner_name']
 					);
-					test.addEventListener('click', function () {
-						showModal(partners[partner]);
+				});
+
+				marker.on('click', function () {
+					map.panTo(
+					new L.LatLng(
+						parseFloat(
+							partners[partner][0]['partner_coordinates']
+								.latitude
+						),
+						parseFloat(
+							partners[partner][0]['partner_coordinates']
+								.longitude
+						)
+					)
+				);
+					const sidebarItems = document.querySelectorAll('.partnerDiv');
+					sidebarItems.forEach((item) => {
+						const nameDiv = item.querySelector('.name');
+						if (nameDiv && nameDiv.textContent === partner) {
+							item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+						}
 					});
+					showModal(partners[partner]);
 				});
 			}
 
