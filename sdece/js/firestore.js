@@ -138,7 +138,7 @@ newButton.addEventListener('click', () => {
 	// Set autofill or reset field
 });
 
-//If activity name is empty, used activity nature
+//If activity name is empty, used activity nature	
 function getActivity(activity){ 
 	if ((activity['activity_name']).trim() === ""){
 		return activity['activity_nature'];
@@ -246,7 +246,7 @@ getDocs(col_ref)
 				// check if list of activities is present, otherwise is skipped to avoid errors
 				Object.keys(activities).forEach((activity) => {
 					activityDiv.innerHTML +=
-						activities[activity].activity_name + '<br/>'; // there might be a better way to display multiple activities
+						getActivity + '<br/>'; // there might be a better way to display multiple activities
 				});
 			}
 
@@ -260,7 +260,7 @@ getDocs(col_ref)
 			let activities_string = '';
 
 			for (let activity of partners[partner]) {
-				activities_string += getActivity(activity);
+				activities_string += activity['activity_name'] + '<br>';
 			}
 
 			activityDiv.innerHTML = activities_string;
