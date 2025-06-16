@@ -138,6 +138,14 @@ newButton.addEventListener('click', () => {
 	// Set autofill or reset field
 });
 
+//If activity name is empty, used activity nature
+function getActivity(activity){ 
+	if ((activity['activity_name']).trim() === ""){
+		return activity['activity_nature'];
+	}
+	return activity['activity_name']
+};
+
 getDocs(col_ref)
 	.then((querySnapshot) => {
 		// Populate activities
@@ -252,7 +260,7 @@ getDocs(col_ref)
 			let activities_string = '';
 
 			for (let activity of partners[partner]) {
-				activities_string += activity['activity_name'] + '<br>';
+				activities_string += getActivity(activity);
 			}
 
 			activityDiv.innerHTML = activities_string;
@@ -447,7 +455,7 @@ export function showModal(partner) {
 			const office = document.createElement('div');
 			office.classList.add('modal-office');
 
-			activityName.textContent = activity.activity_name + '';
+			activityName.textContent = getActivity(activity) + '';
 			arrow.innerHTML =
 				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
 			office.innerHTML = activity.ADMU_office;
@@ -466,7 +474,7 @@ export function showModal(partner) {
 			const activityDatesDiv = document.createElement('div');
 			const activityOfficeDiv = document.createElement('div');
 
-			activityNameDiv.innerHTML = activity.activity_name + '';
+			activityNameDiv.innerHTML = getActivity(activity) + '';
 			activityNameDiv.classList.add('modal-activities-header');
 			activityAddressDiv.innerHTML = activity.partner_address;
 			activityAddressDiv.classList.add('modal-address');
@@ -859,7 +867,7 @@ export function populateMainModalList() {
 			const activityName = document.createElement('div');
 			const arrow = document.createElement('div');
 
-			activityName.textContent = activity.activity_name + '';
+			activityName.textContent = getActivity(activity) + '';
 
 			arrow.innerHTML =
 				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
