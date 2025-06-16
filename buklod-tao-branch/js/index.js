@@ -161,20 +161,20 @@ function onPinClick(doc) {
   `;
   return leaflet_html;
 }
+
 // Loads art the start
 getDocs(colRef)
   .then((querySnapshot) => {
     querySnapshot.forEach((entry) => {
       var doc = entry.data();
-      var marker = L.marker([0, 0]);
-
+      
       if (doc.location_coordinates != null) {
+        var marker = L.marker([0, 0]);
         marker = L.marker([
           parseFloat(doc.location_coordinates._lat),
           parseFloat(doc.location_coordinates._long),
         ]);
-      }
-      // shows partner info on pin click
+        // shows partner info on pin click
       var popupContent = onPinClick(doc);
       marker.bindPopup(popupContent);
       marker.on('popupopen', function(e) {
@@ -190,6 +190,8 @@ getDocs(colRef)
         }
       })
       results.addLayer(marker);
+      }
+      
     });
   }).catch((error) => {
     console.error('Error getting documents: ', error);
@@ -212,23 +214,26 @@ evacCenters.forEach(center => {
       <br>Location: ${center.latitude}, ${center.longitude}
     </div>`);
 });
+console.log("run1");
+/*
 partnersArray.forEach((partner) => {
     var doc = partner;
-    var this_marker = partner.marker;
-    //console.log(doc);
     if (doc.location_coordinates != null) {
+      var this_marker = partner.marker;
+      //console.log(doc.location_coordinates);
       this_marker = L.marker([
         parseFloat(doc.location_coordinates._lat),
         parseFloat(doc.location_coordinates._long),
       ]);
-    }
-    // shows partner info on pin click
-    var popupContent = onPinClick(doc);
-    this_marker.bindPopup(popupContent);
-    results.addLayer(this_marker);
-    Object.defineProperty(partner, "marker", {value:this_marker, configurable: true});
-  });
 
+      // shows partner info on pin click
+      var popupContent = onPinClick(doc);
+      this_marker.bindPopup(popupContent);
+      results.addLayer(this_marker);
+      Object.defineProperty(partner, "marker", {value:this_marker, configurable: true});
+    }
+  });
+*/
 addListeners();
 
 function onMapClick(e) {
