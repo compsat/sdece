@@ -157,7 +157,7 @@ function onPinClick(doc) {
         <label class="leafletLabel">Pregnant</label>
         <label class="leafletLabel">${doc.number_pregnant}</label>
       </div>
-      <button class="modalButton" id="editHouseholdPopup" name="submit_form" style="color:#3D97AF">Edit   &nbsp;&nbsp;<img src="./img/edit.png" alt="edit" style="height: 20px; width: 20px;"></button>
+      <button class="modalButton editHousehold" id="editHouseholdPopup" name="submit_form" style="color:#3D97AF">Edit   &nbsp;&nbsp;<img src="./img/edit.png" alt="edit" style="height: 20px; width: 20px;"></button>
       </div>
     </div>
   </div>
@@ -182,16 +182,29 @@ getDocs(colRef)
       var popupContent = onPinClick(doc);
       marker.bindPopup(popupContent);
       marker.on('popupopen', function(e) {
-        var editBtn = document.getElementById('editHouseholdPopup')
-        if (editBtn) {
-          editBtn.addEventListener('click', function() {
+        const editBtns = document.querySelectorAll('.editHousehold');
+        editBtns.forEach((btn) => {
+          btn.addEventListener('click', function() {
+            console.log('Edit button was clicked!');
             const modal = document.getElementById('partnerModal');
             var editFormModal = document.getElementById('editModal');
             editFormModal.style.display = 'block';
             modal.style.display = 'none';
             populateEditForm(doc, editFormModal)
-          })
-        }
+          });
+        });
+
+        //var editBtn = document.getElementById('editHouseholdPopup')
+        //if (editBtn) {
+          //editBtn.addEventListener('click', function() {
+            //console.log('Edit button was clicked!');
+            //const modal = document.getElementById('partnerModal');
+            //var editFormModal = document.getElementById('editModal');
+            //editFormModal.style.display = 'block';
+            //modal.style.display = 'none';
+            //populateEditForm(doc, editFormModal)
+          //})
+        //}
       })
       results.addLayer(marker);
       }
