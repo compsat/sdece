@@ -129,7 +129,7 @@ const VALIDATION_RULES = { //Rules for Validating Data
 		'household_phase': {type: 'string', required: true},
 		'is_hoa_noa': {type: 'string', required: true, minLength: 3, maxLength: 3, enum: ['HOA', 'N/A'] },
 		'landslide_risk': {type: 'string', required: true},
-		'location_coordinates': {type: 'number', required: true},
+		'location_coordinates': {type: 'float', required: true},
 		'location_link': {type: 'string', required: true},
 		'nearest_evac': {type: 'string', required: true, maxLength: 255},
 		'number_minors': {type: 'number'},
@@ -144,7 +144,7 @@ const VALIDATION_RULES = { //Rules for Validating Data
 	'sdece-official': {
 		'partner_name': {type: 'string', required: true, maxLength: 255},
 		'partner_address': {type: 'string', required: true, maxLength: 255},
-		'partner_coordinates': {required: true},
+		'partner_coordinates': {type: 'float', required: true},
 		'partner_contact_name': {type: 'string', required: true, maxLength: 255},
 		'partner_contact_number': {type: 'string', required: true, minLength: 13, maxLength: 13, regex: /^[0-9 ]+$/},
 		'partner_email': {type: 'string', required: true, maxLength: 127},

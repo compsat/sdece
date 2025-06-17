@@ -286,7 +286,7 @@ const VALIDATION_RULES = {
 	'sdece-official-TEST': {
 		partner_name: { type: 'string', required: true, maxLength: 255 },
 		partner_address: { type: 'string', required: true, maxLength: 255 },
-		partner_coordinates: { required: true },
+		partner_coordinates: { type: 'float', required: true },
 		partner_contact_name: {
 			type: 'string',
 			required: true,
@@ -317,7 +317,7 @@ const VALIDATION_RULES = {
 	'sdece-official': {
 		partner_name: { type: 'string', required: true, maxLength: 255 },
 		partner_address: { type: 'string', required: true, maxLength: 255 },
-		partner_coordinates: { required: true },
+		partner_coordinates: { type: 'float', required: true },
 		partner_contact_name: {
 			type: 'string',
 			required: true,
