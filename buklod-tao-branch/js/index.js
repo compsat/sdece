@@ -16,6 +16,9 @@ import {
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import evacCenters from '/hardcode/evac-centers.json' with {type: 'json'};
 
+
+console.log("index");
+
 var colRef = getCollection();
 
 map.panTo(new L.LatLng(14.673, 121.11215));
@@ -162,6 +165,7 @@ function onPinClick(doc) {
   return leaflet_html;
 }
 
+/*
 // Loads art the start
 getDocs(colRef)
   .then((querySnapshot) => {
@@ -196,7 +200,7 @@ getDocs(colRef)
   }).catch((error) => {
     console.error('Error getting documents: ', error);
   });
-
+*/
 evacCenters.forEach(center => {
   const marker = L.marker(
     [center.latitude, center.longitude],
@@ -214,8 +218,7 @@ evacCenters.forEach(center => {
       <br>Location: ${center.latitude}, ${center.longitude}
     </div>`);
 });
-console.log("run1");
-/*
+
 partnersArray.forEach((partner) => {
     var doc = partner;
     if (doc.location_coordinates != null) {
@@ -229,11 +232,23 @@ partnersArray.forEach((partner) => {
       // shows partner info on pin click
       var popupContent = onPinClick(doc);
       this_marker.bindPopup(popupContent);
+      this_marker.on('popupopen', function(e) {
+        var editBtn = document.getElementById('editHouseholdPopup')
+        if (editBtn) {
+          editBtn.addEventListener('click', function() {
+            const modal = document.getElementById('partnerModal');
+            var editFormModal = document.getElementById('editModal');
+            editFormModal.style.display = 'block';
+            modal.style.display = 'none';
+            populateEditForm(doc, editFormModal)
+          })
+        }
+      })
       results.addLayer(this_marker);
       Object.defineProperty(partner, "marker", {value:this_marker, configurable: true});
     }
   });
-*/
+
 addListeners();
 
 function onMapClick(e) {
