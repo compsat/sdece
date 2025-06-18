@@ -139,12 +139,15 @@ newButton.addEventListener('click', () => {
 });
 
 //If activity name is empty, used activity nature	
-function getActivity(activity){ 
-	if ((activity['activity_name']).trim() === ""){
-		return activity['activity_nature'];
+function getActivity(activity) {
+	const name = activity['activity_name'];
+	const nature = activity['activity_nature'];
+
+	if (!name || name.trim() === '') {
+		return nature;
 	}
-	return activity['activity_name']
-};
+	return name;
+}
 
 getDocs(col_ref)
 	.then((querySnapshot) => {
@@ -260,7 +263,7 @@ getDocs(col_ref)
 			let activities_string = '';
 
 			for (let activity of partners[partner]) {
-				activities_string += activity['activity_name'] + '<br>';
+				activities_string += getActivity(activity)+ '<br>';
 			}
 
 			activityDiv.innerHTML = activities_string;
