@@ -28,7 +28,7 @@ const firebaseConfig = {
 };
 initializeApp(firebaseConfig);
 const db = getFirestore();
-setCollection('buklod-official');
+setCollection('buklod-official-TEST');
 const colRef = getCollection();
 let partnersArray = [];
 
