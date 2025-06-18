@@ -37,11 +37,8 @@
                     } else if (fieldName == 'storm_risk') {
                         collatedInput['storm_risk'] = inputValue;
                     } else if (fieldName == 'location_coordinates') {
-                        var inputValueSplit = inputValue.split('+');
-                        collatedInput['location_coordinates'] = {
-                            _lat: Number(inputValueSplit[0]),
-                            _long: Number(inputValueSplit[1])
-                        };
+                        const geoPoint = getCoordinates(inputValue);
+                        collatedInput['location_coordinates'] = geoPoint;
                     } else {
                         collatedInput[fieldName] = inputValue;
                     }

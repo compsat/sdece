@@ -38,12 +38,6 @@ const lng = getUrlParameter('lng');
 // 	).innerText = `Latitude: ${lat}, Longitude: ${lng}`;
 // });
 
-// export function getCoordinates() {
-// 	var roundLat = parseFloat(lat.toFixed(5));
-// 	var roundLon = parseFloat(lon.toFixed(5));
-//     var PARTNER_COORDINATES = `(${roundLat}, ${roundLon})`;
-//     return PARTNER_COORDINATES;
-// }
 
 export function getCoordinates(coordinates) {
 	var arr = coordinates.split('+');
@@ -601,7 +595,7 @@ export function validateData(collectionName, data) {
 			continue;
 		}
 
-		//no validation for geolocation, url yet
+		//no validation for geolocation yet
 	}
 
 	return errors;
