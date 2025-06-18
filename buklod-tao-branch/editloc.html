@@ -315,7 +315,7 @@
         <br>
         <div>
             <!-- Clears all contents of the form -->
-            <button class="clear form">Delete</button>
+            <button class="clear form">Clear</button>
         </div>
     </div>
     <div class="formModalFooter"></div>
@@ -330,7 +330,7 @@
             .addEventListener('click', function (event) {
                 event.preventDefault();
                 console.log(
-                    'The user has closed the Add Activity modal.'
+                    'The user has closed the Edit Activity modal.'
                 );
                 closeModal();
             });
@@ -343,7 +343,7 @@
         document.getElementById('close-btn').addEventListener('click', function (event) {
             event.preventDefault();
             console.log(
-                'The user has closed the Add Activity modal.'
+                'The user has closed the Edit Activity modal.'
             );
             closeModal();
         });
