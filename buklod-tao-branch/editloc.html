@@ -170,7 +170,7 @@
         <div class="inputContainer">
             <label class="form" for="location_coordinates">Location Coordinates
             </label>
-            <input type="text" id="location_coordinates" name="location_coordinates" class="attribs" />
+            <input type="text" id="location_coordinates" name="location_coordinates" class="attribs" readonly/>
         </div>
         <br>
         <div class="inputContainer">
@@ -315,12 +315,22 @@
         <br>
         <div>
             <!-- Clears all contents of the form -->
-            <button class="clear form">Clear</button>
+            <button onclick="resetForm()" class="clear form">Clear</button>
         </div>
     </div>
     <div class="formModalFooter"></div>
 
     <script>
+        function resetForm() {
+            var inputFields = document.getElementsByTagName('input');
+            for (var i = 0; i < inputFields.length; i++) {
+                var field = inputFields[i];
+                if (!field.readOnly && field.type !== 'button') {
+                    field.value = '';
+                }
+            }
+        }
+
         function closeModal() {
             window.parent.postMessage('closeEditModal', '*');
         }
