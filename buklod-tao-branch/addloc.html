@@ -17,14 +17,14 @@
 
                 for (let i = 0; i < BUKLOD_RULES_TEST[2].length; i++) {
                     //BUKLOD_RULES_TEST[2] are just the field names of each document
-                    // console.log(BUKLOD_RULES_TEST[2][i]);
+                    console.log(BUKLOD_RULES_TEST[2][i]);
                     // let q = document.getElementById(BUKLOD_RULES_TEST[2][i]).value;
                     // collatedInput[BUKLOD_RULES_TEST[2][i]] = q;
 
                     let fieldName = BUKLOD_RULES_TEST[2][i];
                     let inputValue = document.getElementById(fieldName).value;
 
-                    if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick') {
+                    if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_seniors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick') {
                         collatedInput[fieldName] = Number(inputValue);
                     } else if (fieldName == 'earthquake_risk') {
                         collatedInput['earthquake_risk'] = inputValue;
@@ -48,11 +48,11 @@
                     // this is where data validation will happen
                     // add the if-else statements of edge cases here
                 }
-                collatedInput['earthquake_risk'] = document.getElementById("earthquake_level").value + " RISK: " + collatedInput['earthquake_risk'];
-                collatedInput['fire_risk'] = document.getElementById("fire_level").value + " RISK: " + collatedInput['fire_risk'];
-                collatedInput['flood_risk'] = document.getElementById("flood_level").value + " RISK: " + collatedInput['flood_risk'];
-                collatedInput['landslide_risk'] = document.getElementById("landslide_level").value + " RISK: " + collatedInput['landslide_risk'];
-                collatedInput['storm_risk'] = document.getElementById("storm_level").value + " RISK: " + collatedInput['storm_risk'];
+                collatedInput['earthquake_risk'] = document.getElementById("earthquake_level").value + " RISK: " + document.getElementById("earthquake_risk").value;
+                collatedInput['fire_risk'] = document.getElementById("fire_level").value + " RISK: " + document.getElementById("fire_risk").value;
+                collatedInput['flood_risk'] = document.getElementById("flood_level").value + " RISK: " + document.getElementById("flood_risk").value;
+                collatedInput['landslide_risk'] = document.getElementById("landslide_level").value + " RISK: " + document.getElementById("landslide_risk").value;
+                collatedInput['storm_risk'] = document.getElementById("storm_level").value + " RISK: " + document.getElementById("storm_risk").value;
                 
                 // if (isLoggedIn == true) {
                 //     const errors = validateData("buklod-official-TEST", collatedInput);
@@ -201,7 +201,8 @@
                     type="text"
                     id="location_link"
                     name="location_link"
-                    class="attribs"> 
+                    class="attribs"
+                    value="https://www.openstreetmap.org/"> 
             </div>
             
             <div class="inputContainer">
@@ -414,7 +415,7 @@
                     <option value="LOW">LOW</option>
                 </select>
                 <input
-                    type="email"
+                    type="text"
                     id="flood_risk"
                     name="flood"
                     class="attribs"
@@ -435,7 +436,7 @@
                     <option value="LOW">LOW</option>
                 </select>
                 <input
-                    type="email"
+                    type="text"
                     id="landslide_risk"
                     name="landslide"
                     class="attribs"
@@ -455,7 +456,7 @@
                     <option value="LOW">LOW</option>
                 </select>
                 <input
-                    type="email"
+                    type="text"
                     id="storm_risk"
                     name="storm_risk"
                     class="attribs"

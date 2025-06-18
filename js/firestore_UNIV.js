@@ -211,8 +211,8 @@ const VALIDATION_RULES = {
 			maxLength: 3,
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
-		// location_coordinates: { type: 'number', required: true },
-		location_link: { type: 'string', required: true },
+		location_coordinates: { type: 'object', required: true },
+		location_link: { type: 'string', required: true, regex: /^https:\/\/www\.openstreetmap\.org\/.+/ }, // data validation for link
 		household_address: { type: 'string', required: true, maxLength: 100 },
 		household_material: {
 			type: 'string',
@@ -261,7 +261,7 @@ const VALIDATION_RULES = {
 			maxLength: 3,
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
-		location_coordinates: { type: 'number', required: true },
+		location_coordinates: { type: 'object', required: true },
 		location_link: { type: 'string', required: true },
 		household_address: { type: 'string', required: true, maxLength: 100 },
 		household_material: {
@@ -513,7 +513,8 @@ export function validateData(collectionName, data) {
 		// Check for required field
 		if (
 			rule.required &&
-			(value == undefined || value == null || value == '')
+			(value == undefined || value == null || value == '' || 
+				value == ' RISK: ' || String(value).startsWith(' RISK:') || String(value).endsWith('RISK: ')) // checks if risk for buklod tao is empty
 		) {
 			errors.push(`${fieldLabel} is required.`);
 			continue;
