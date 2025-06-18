@@ -11,6 +11,7 @@ import {
 	where,
 	getDoc,
 	GeoPoint,
+	Timestamp
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import {
 	getCollection,
@@ -666,6 +667,14 @@ addFormSubmitButton.addEventListener('click', function () {
 	} else {
 		if (has_existing_partner) {
 			//upload it straight to the firebase db
+			if (
+				typeof info_from_forms.activity_date === 'string' &&
+				!isNaN(Date.parse(info_from_forms.activity_date))
+			) {
+				const parsedDate = new Date(info_from_forms.activity_date);
+				parsedDate.setHours(0, 0, 0, 0);
+				info_from_forms.activity_date = Timestamp.fromDate(new Date(info_from_forms.activity_date));
+			}
 			addEntry(info_from_forms);
 			// alert(
 			// 	'Reload the page for the new additions to reflect on your browser'
@@ -745,6 +754,14 @@ export function handleEdit() {
 		displayErrors(errors);
 		event.preventDefault();
 	} else {
+		if (
+			typeof collated_inp.activity_date === 'string' &&
+			!isNaN(Date.parse(collated_inp.activity_date))
+		) {
+			const dateOnly = new Date(collated_inp.activity_date);
+			dateOnly.setHours(0, 0, 0, 0);
+			collated_inp.activity_date = Timestamp.fromDate(dateOnly);
+		}
 		editEntry(collated_inp, current_viewed_activity['identifier']);
 		document.getElementById('editModal').style = "display: 'none'";
 		//alert('Reload the page for the new edits to reflect on your browser');
@@ -790,6 +807,14 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 				mainModalDocument.getElementById('address-input').value;
 			current_temp_activity['partner_name'] = new_partner_name;
 			current_temp_activity['partner_address'] = new_partner_address;
+			if (
+				typeof current_temp_activity.activity_date === 'string' &&
+				!isNaN(Date.parse(current_temp_activity.activity_date))
+			) {
+				const dateOnly = new Date(current_temp_activity.activity_date);
+				dateOnly.setHours(0, 0, 0, 0);
+				current_temp_activity.activity_date = Timestamp.fromDate(dateOnly);
+			}
 			addEntry(current_temp_activity);
 		});
 
