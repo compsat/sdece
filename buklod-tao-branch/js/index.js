@@ -17,9 +17,10 @@ import {
 import evacCenters from '/hardcode/evac-centers.json' with {type: 'json'};
 
 var colRef = getCollection();
+var partnersArray = getPartnersArray();
 
+// Pans map to Banaba area upon loading the page
 map.panTo(new L.LatLng(14.673, 121.11215));
-
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution:
@@ -31,9 +32,7 @@ var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
-var partnersArray = getPartnersArray();
-
-// function to store the html for info display on pin click
+// Function to store the html for info display on pin click
 function onPinClick(doc) {
   // Variables for risk levels
   var earthquake = doc.earthquake_risk;
@@ -161,7 +160,8 @@ function onPinClick(doc) {
   `;
   return leaflet_html;
 }
-// Loads art the start
+
+// Loads at the start
 getDocs(colRef)
   .then((querySnapshot) => {
     querySnapshot.forEach((entry) => {
@@ -208,6 +208,7 @@ getDocs(colRef)
     console.error('Error getting documents: ', error);
   });
 
+// Pin display
 evacCenters.forEach(center => {
   const marker = L.marker(
     [center.latitude, center.longitude],
@@ -244,6 +245,7 @@ partnersArray.forEach((partner) => {
 
 addListeners();
 
+// When user clicks on the map to add household and open Add Household form
 function onMapClick(e) {
   const lat = e.latlng.lat;
   const lng = e.latlng.lng;
@@ -348,12 +350,12 @@ searchControl.on('results', function (data) {
   }
 });
 
-//script for add household modal
+// Script for add household modal
 
-// modal
+// Modal
 var formModal = document.getElementById('addModal');
 
-// open modal
+// Open modal
 var openForm = document.getElementById('mainButton');
 
 // Get the <span> element that closes the modal
