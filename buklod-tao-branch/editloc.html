@@ -322,14 +322,16 @@
 
     <script>
         function resetForm() {
-            var inputFields = document.getElementsByTagName('input');
-            for (var i = 0; i < inputFields.length; i++) {
-                var field = inputFields[i];
-                if (!field.readOnly && field.type !== 'button') {
-                    field.value = '';
+            let messageText = "Are you sure you want to clear the form?";
+            if (confirm(messageText) == true) {
+                var inputFields = document.getElementsByTagName('input');
+                for (var i = 0; i < inputFields.length; i++) {
+                    var field = inputFields[i];
+                    if (!field.readOnly && field.type !== 'button') {
+                        field.value = '';
+                    }
                 }
             }
-            alert("Form contents have now been cleared.");
         }
 
         function closeModal() {
