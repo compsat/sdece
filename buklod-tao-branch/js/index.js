@@ -19,7 +19,9 @@ import evacCenters from '/hardcode/evac-centers.json' with {type: 'json'};
 
 var colRef = getCollection();
 var partnersArray = getPartnersArray();
+var partnersArray = getPartnersArray();
 
+// Pans map to Banaba area upon loading the page
 // Pans map to Banaba area upon loading the page
 map.panTo(new L.LatLng(14.673, 121.11215));
 
