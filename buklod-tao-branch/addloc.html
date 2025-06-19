@@ -488,6 +488,7 @@
                         field.value = '';
                     }
                 }
+                alert("Form contents have now been cleared.");
             }
 
             function closeModal() {
@@ -498,16 +499,9 @@
 				.getElementsByClassName('closeForm')[0]
 				.addEventListener('click', function (event) {
 					event.preventDefault();
-					console.log(
-						'The user has closed the Add Activity modal.'
-					);
+					console.log('The user has closed the Add Activity modal.');
 					closeModal();
 				});
-
-
-			function closeModal() {
-				window.parent.postMessage('closeAddModal', '*');
-			}
 
 			document.getElementById('close-btn').addEventListener('click', function (event) {
 					event.preventDefault();
