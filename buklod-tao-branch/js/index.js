@@ -215,7 +215,7 @@ evacCenters.forEach(center => {
     </div>`);
 });
 console.log("run1");
-/*
+
 partnersArray.forEach((partner) => {
     var doc = partner;
     if (doc.location_coordinates != null) {
@@ -233,7 +233,7 @@ partnersArray.forEach((partner) => {
       Object.defineProperty(partner, "marker", {value:this_marker, configurable: true});
     }
   });
-*/
+
 addListeners();
 
 function onMapClick(e) {
