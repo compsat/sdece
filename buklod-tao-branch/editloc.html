@@ -220,8 +220,9 @@
     <div class="formModalFooter"></div>
 
     <script type="module">
-        import { editEntry, BUKLOD_RULES_TEST, getDocIdByPartnerName, getDocByID } from "/js/firestore_UNIV.js";
-        
+        import { editEntry, setCollection, BUKLOD_RULES_TEST, getDocIdByPartnerName, getDocByID } from "/js/firestore_UNIV.js";
+        setCollection("buklod-official-TEST");
+
         function populateFormFields(partnerData) {
             document.getElementById("partner").value = partnerData.name;
             document.getElementById("partner_contact-person").value = partnerData["`partner-contact`"];
@@ -289,11 +290,43 @@
             // then call editEntry(inp_obj, docId), inp_obj is collatedInput, docID is gotten from getDocIdByPartnerName/getDocByID
             // so basically editEntry(collatedInput, docID via  getDocIdByPartnerName/getDocByID)
     
-            const partnerName = document.getElementById("partner").value;
+            const partnerName = document.getElementById("household_name").value;
             getDocIdByPartnerName(partnerName)
                 .then((docId) => {
                     if (docId) {
                         // If a matching docId is found, proceed with updating the document
+                        const name = partnerName;
+                        const address = document.getElementById("household_address").value;
+                        const phase = document.getElementById("household_phase").value;
+                        const contactNum = document.getElementById("contact_number").value;
+                        const residencyStatus = document.getElementById("residency_status").value;
+                        const membership = document.getElementById("is_hoa_noa").value;
+                        const locationLink = document.getElementById("location_link").value;
+                        const locationCoordinates = document.getElementById("location_coordinates").value;
+                        const householdMat = document.getElementById("household_material").value;
+                        const nearestEvac = document.getElementById("nearest_evac").value;
+                        const status = document.getElementById("status").value;
+                        const residentNum = document.getElementById("number_residents").value;
+                        const adultNum = document.getElementById("number_adults").value;
+                        const minorNum = document.getElementById("number_minors").value;
+                        const seniorNum = document.getElementById("number_seniors").value;
+                        const pwdNum = document.getElementById("number_pwd").value;
+                        const sickNum = document.getElementById("number_sick").value;
+                        const sickType = document.getElementById("sickness_present").value;
+                        const pregnantNum = document.getElementById("number_pregnant").value;
+                        const earthquake = document.getElementById("earthquake").value;
+                        const earthquakeRisk = document.getElementById("earthquake_risk").value;
+                        const fire = document.getElementById("fire").value;
+                        const fireRisk = document.getElementById("fire_risk").value;
+                        const flood = document.getElementById("flood").value;
+                        const floodRisk = document.getElementById("flood_risk").value;
+                        const landslide = document.getElementById("landslide").value;
+                        const landslideRisk = document.getElementById("landslide_risk").value;
+                        const storm = document.getElementById("storm").value;
+                        const stormRisk = document.getElementById("storm_risk").value;                   
+
+
+                        /*
                         const name = partnerName;
                         const activity = document.getElementById("nature_of_act").value;
                         const admuContact = document.getElementById("ateneo_contact-person").value;
@@ -302,6 +335,7 @@
                         const org = document.getElementById("organization").value;
                         const partnerContact = document.getElementById("partner_contact-person").value;
                         const dates = document.getElementById("dates_of_partnership").value;
+                        */
 
                         editEntry(collatedInput, docId);
                     }
