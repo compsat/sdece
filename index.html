@@ -47,6 +47,7 @@
 			crossorigin=""
 		></script>
 		<link href="./main.css" rel="stylesheet" />
+		<script type="module" src="/components/SearchBar.js"></script>
 		<!-- <link href="./src/output.css" rel="stylesheet" /> -->
 
 		<!--<script type="module" src="js/firestore.js"></script>-->
@@ -130,58 +131,7 @@
 						<h1 class="sdece-title">SDECE</h1>
 						<select name="collections" id="collections" class="layer-toggle" style="display: none;"></select>
 					</div>
-					<div class="search-bar-container">
-						<div class="search-bar">
-							<input
-								onkeyup="onSearchInput()"
-								type="text"
-								id="search-input"
-								placeholder="Search partner name..."
-								class="search-input-field"
-							/>
-							<div
-								class="search-bar-btn-container"
-							>
-								<button>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke-width="1.5"
-										class="search-btn"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-										/>
-									</svg>
-								</button>
-								<button
-									id="searchClear"
-									onclick="clearSearch()"
-									style="
-										padding-left: 1.25rem;
-										display: none;
-									"
-								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke-width="1.5"
-										class="search-btn"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M6 18 18 6M6 6l12 12"
-										/>
-									</svg>
-								</button>
-							</div>
-						</div>
-					</div>
+					<search-bar id="search-bar-component"></search-bar>
 					<div class="actions-container">
 						<button class="action-btn">Filter</button>
 						<button class="action-btn">Sort</button>
@@ -335,57 +285,26 @@
 				}
 			});
 
-			function onSearchInput() {
-				let input = document
-					.getElementById('search-input')
-					.value.toLowerCase();
+			document.addEventListener('DOMContentLoaded', () => {
+				const searchBar = document.getElementById('search-bar-component');
+				searchBar.addEventListener('search', (e) => {
+					const searchTerm = e.detail;
+					
+					let container = document.getElementById('locationList');
+					let partnerContainers = container.getElementsByClassName('partnerDiv');
 
-				var button =
-					document.getElementById('searchClear');
+					for (let i = 0; i < partnerContainers.length; i++) {
+						let nameElement = partnerContainers[i].getElementsByClassName('name')[0];
+						let name = nameElement.textContent.toLowerCase();
 
-				// Show the button if input is not empty, hide it otherwise
-				if (input !== '') {
-					button.style.display = 'flex';
-				} else {
-					button.style.display = 'none';
-				}
-
-				let container =
-					document.getElementById('locationList');
-				let partnerContainers =
-					container.getElementsByClassName(
-						'partnerDiv'
-					);
-
-				for (
-					let i = 0;
-					i < partnerContainers.length;
-					i++
-				) {
-					let nameElement =
-						partnerContainers[
-							i
-						].getElementsByClassName('name')[0];
-					let name =
-						nameElement.textContent.toLowerCase();
-
-					let current_container = partnerContainers[i];
-					if (name.includes(input)) {
-						partnerContainers[i].style.display =
-							'flex';
-					} else {
-						partnerContainers[i].style.display =
-							'none';
+						if (name.includes(searchTerm)) {
+							partnerContainers[i].style.display = 'flex';
+						} else {
+							partnerContainers[i].style.display = 'none';
+						}
 					}
-				}
-			}
-
-			function clearSearch() {
-				var input =
-					document.getElementById('search-input');
-				input.value = '';
-				onSearchInput();
-			}
+				});
+			});
 
 			// Function to hide the div containing the iframe
 			function hideModalContainer(modal) {
