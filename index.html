@@ -9,8 +9,11 @@
     />
 
 		<!-- Import Geist from Google Fonts -->
+		<!-- Import Geist from Google Fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+
 		<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
 
 
@@ -26,7 +29,25 @@
 			integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
 			crossorigin=""
 		></script>
+		<!-- Load Leaflet from CDN -->
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+			integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+			crossorigin=""
+		/>
+		<script
+			src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+			integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+			crossorigin=""
+		></script>
 
+		<!-- Load Esri Leaflet from CDN -->
+		<script
+			src="https://unpkg.com/esri-leaflet@2.4.1/dist/esri-leaflet.js"
+			integrity="sha512-xY2smLIHKirD03vHKDJ2u4pqeHA7OQZZ27EjtqmuhDguxiUvdsOuXMwkg16PQrm9cgTmXtoxA6kwr8KBy3cdcw=="
+			crossorigin=""
+		></script>
 		<!-- Load Esri Leaflet from CDN -->
 		<script
 			src="https://unpkg.com/esri-leaflet@2.4.1/dist/esri-leaflet.js"
@@ -47,38 +68,45 @@
 			crossorigin=""
 		></script>
 		<link href="./main.css" rel="stylesheet" />
-		<script type="module" src="/components/SearchBar.js"></script>
 		<!-- <link href="./src/output.css" rel="stylesheet" /> -->
 
 		<!--<script type="module" src="js/firestore.js"></script>-->
+		<!--<script type="module" src="js/firestore.js"></script>-->
 
-        <!--  Module for the implementation of the Rules Engine for switching maps -->
-        <script type="module">
-          import {
-            setCollection,
-            getCollection,
-            DB_RULES_AND_DATA,
-          } from "/js/firestore_UNIV.js";
-          import {
-            readyField,
-            clearMarkers,
-            clearLocationList,
-            map,
-            loadJsCssFiles,
-            createJsCssFiles,
-          } from "/js/index_UNIV.js";
-          import {
-            getDocs,
-            query,
-          } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
-          import {
-            getCurrentBranchCookie,
-            setCurrentBranchCookie,
-          } from "/js/cookies.js";
+		<!--  Module for the implementation of the Rules Engine for switching maps -->
+		<script type="module">
+			import {
+				setCollection,
+				getCollection,
+				DB_RULES_AND_DATA,
+			} from '/js/firestore_UNIV.js';
+			import {
+				readyField,
+				clearMarkers,
+				clearLocationList,
+				map,
+				loadJsCssFiles,
+				createJsCssFiles,
+			} from '/js/index_UNIV.js';
+			import {
+				getDocs,
+				query,
+			} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+			import {
+				getCurrentBranchCookie,
+				setCurrentBranchCookie,
+			} from '/cookies.js';
 
 			var collections =
 				document.getElementById('collections');
+			var collections =
+				document.getElementById('collections');
 
+			for (let rule of DB_RULES_AND_DATA) {
+				collections.innerHTML += `<option value="${
+					rule[0]
+				}"> ${readyField(rule[0])}</option>`;
+			}
 			for (let rule of DB_RULES_AND_DATA) {
 				collections.innerHTML += `<option value="${
 					rule[0]
@@ -131,7 +159,58 @@
 						<h1 class="sdece-title">SDECE</h1>
 						<select name="collections" id="collections" class="layer-toggle" style="display: none;"></select>
 					</div>
-					<search-bar id="search-bar-component"></search-bar>
+					<div class="search-bar-container">
+						<div class="search-bar">
+							<input
+								onkeyup="onSearchInput()"
+								type="text"
+								id="search-input"
+								placeholder="Search partner name..."
+								class="search-input-field"
+							/>
+							<div
+								class="search-bar-btn-container"
+							>
+								<button>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										class="search-btn"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+										/>
+									</svg>
+								</button>
+								<button
+									id="searchClear"
+									onclick="clearSearch()"
+									style="
+										padding-left: 1.25rem;
+										display: none;
+									"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										class="search-btn"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M6 18 18 6M6 6l12 12"
+										/>
+									</svg>
+								</button>
+							</div>
+						</div>
+					</div>
 					<div class="actions-container">
 						<button class="action-btn">Filter</button>
 						<button class="action-btn">Sort</button>
@@ -139,7 +218,7 @@
 					</div>
 				</div>
 				<div class="partners-header">
-					<span id="partners-count">PARTNERS</span>
+					<span id="partners-count">PARTNERS (10)</span>
 				</div>
 				<div class="entries">
 					<ul
@@ -260,15 +339,19 @@
           ></iframe>
         </div>
 
-        <!-- SCRIPTS -->
-        <script>
-          // This hides the Add Activity modal when the user submits the form
-          window.addEventListener("message", function (event) {
-            if (event.data && event.data.type === "addlocFormSuccess") {
-              // Handle successful form submission event here
-              const addModal = document.getElementById("addModal");
-              addModal.classList.add("hidden"); // Hide the iframe
-            }
+		<!-- SCRIPTS -->
+		<script>
+			// This hides the Add Activity modal when the user submits the form
+			window.addEventListener('message', function (event) {
+				if (
+					event.data &&
+					event.data.type === 'addlocFormSuccess'
+				) {
+					// Handle successful form submission event here
+					const addModal =
+						document.getElementById('addModal');
+					addModal.classList.add('hidden'); // Hide the iframe
+				}
 
 				if (
 					event.data &&
@@ -285,27 +368,65 @@
 				}
 			});
 
-			document.addEventListener('DOMContentLoaded', () => {
-				const searchBar = document.getElementById('search-bar-component');
-				searchBar.addEventListener('search', (e) => {
-					const searchTerm = e.detail;
-					
-					let container = document.getElementById('locationList');
-					let partnerContainers = container.getElementsByClassName('partnerDiv');
+			function onSearchInput() {
+				let input = document
+					.getElementById('search-input')
+					.value.toLowerCase();
 
-					for (let i = 0; i < partnerContainers.length; i++) {
-						let nameElement = partnerContainers[i].getElementsByClassName('name')[0];
-						let name = nameElement.textContent.toLowerCase();
+				var button =
+					document.getElementById('searchClear');
 
-						if (name.includes(searchTerm)) {
-							partnerContainers[i].style.display = 'flex';
-						} else {
-							partnerContainers[i].style.display = 'none';
-						}
+				// Show the button if input is not empty, hide it otherwise
+				if (input !== '') {
+					button.style.display = 'flex';
+				} else {
+					button.style.display = 'none';
+				}
+
+				let container =
+					document.getElementById('locationList');
+				let partnerContainers =
+					container.getElementsByClassName(
+						'partnerDiv'
+					);
+
+				for (
+					let i = 0;
+					i < partnerContainers.length;
+					i++
+				) {
+					let nameElement =
+						partnerContainers[
+							i
+						].getElementsByClassName('name')[0];
+					let name =
+						nameElement.textContent.toLowerCase();
+
+					let current_container = partnerContainers[i];
+					if (name.includes(input)) {
+						partnerContainers[i].style.display =
+							'flex';
+					} else {
+						partnerContainers[i].style.display =
+							'none';
 					}
-				});
-			});
+				}
+			}
 
+			function clearSearch() {
+				var input =
+					document.getElementById('search-input');
+				input.value = '';
+				onSearchInput();
+			}
+
+			// Function to hide the div containing the iframe
+			function hideModalContainer(modal) {
+				var iframe = document.getElementById(modal);
+				if (iframe) {
+					iframe.style.display = 'none';
+				}
+			}
 			// Function to hide the div containing the iframe
 			function hideModalContainer(modal) {
 				var iframe = document.getElementById(modal);
