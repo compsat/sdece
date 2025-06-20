@@ -165,6 +165,7 @@ function onPinClick(doc) {
 }
 
 /*
+/*
 // Loads at the start
 getDocs(colRef)
   .then((querySnapshot) => {
@@ -212,6 +213,7 @@ getDocs(colRef)
   }).catch((error) => {
     console.error('Error getting documents: ', error);
   });
+*/
 */
 // Pin display
 evacCenters.forEach(center => {
