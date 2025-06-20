@@ -161,6 +161,7 @@ function onPinClick(doc) {
   return leaflet_html;
 }
 
+/*
 // Loads at the start
 getDocs(colRef)
   .then((querySnapshot) => {
@@ -207,7 +208,7 @@ getDocs(colRef)
   }).catch((error) => {
     console.error('Error getting documents: ', error);
   });
-
+*/
 // Pin display
 evacCenters.forEach(center => {
   const marker = L.marker(
@@ -228,19 +229,44 @@ evacCenters.forEach(center => {
 });
 partnersArray.forEach((partner) => {
     var doc = partner;
-    var this_marker = partner.marker;
     //console.log(doc);
     if (doc.location_coordinates != null) {
+      var this_marker = partner.marker;
       this_marker = L.marker([
         parseFloat(doc.location_coordinates._lat),
         parseFloat(doc.location_coordinates._long),
       ]);
-    }
     // shows partner info on pin click
     var popupContent = onPinClick(doc);
     this_marker.bindPopup(popupContent);
+    this_marker.bindPopup(popupContent);
+      this_marker.on('popupopen', function(e) {
+        const editBtns = document.querySelectorAll('.editHousehold');
+        editBtns.forEach((btn) => {
+          btn.addEventListener('click', function() {
+            console.log('Edit button was clicked!');
+            const modal = document.getElementById('partnerModal');
+            var editFormModal = document.getElementById('editModal');
+            editFormModal.style.display = 'block';
+            modal.style.display = 'none';
+            populateEditForm(doc, editFormModal)
+          });
+        });
+        //var editBtn = document.getElementById('editHouseholdPopup')
+        //if (editBtn) {
+          //editBtn.addEventListener('click', function() {
+            //console.log('Edit button was clicked!');
+            //const modal = document.getElementById('partnerModal');
+            //var editFormModal = document.getElementById('editModal');
+            //editFormModal.style.display = 'block';
+            //modal.style.display = 'none';
+            //populateEditForm(doc, editFormModal)
+          //})
+        //}
+      })
     results.addLayer(this_marker);
     Object.defineProperty(partner, "marker", {value:this_marker, configurable: true});
+    }
   });
 
 addListeners();
