@@ -81,58 +81,6 @@ iframe {
 	color: #111827;
 }
 
-.search-bar-container {
-	height: auto;
-	padding: 0;
-	background-color: white;
-	width: 100%;
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	margin-bottom: 1rem;
-}
-
-.search-bar {
-	background-color: var(--custom-medium-gray);
-	font-size: 1rem;
-	display: flex;
-	flex-direction: row;
-	width: 100%;
-	border-radius: 0.5rem;
-	overflow: hidden;
-	padding: 0.5rem 1rem;
-	border: 1px solid #e0e0e0;
-}
-
-.search-input-field {
-	border: none;
-	background-color: transparent;
-	outline: none;
-	box-shadow: none;
-	width: 100%;
-	font-family: 'Geist';
-	font-size: 1rem;
-}
-
-.search-input-field::placeholder {
-	color: #9ca3af;
-}
-
-.search-bar-btn-container {
-	background: none;
-	display: flex;
-	flex-direction: row;
-	justify-content: end;
-	align-items: center;
-}
-
-.search-btn {
-	width: 1.5rem;
-	height: 1.5rem;
-	stroke: var(--custom-dark-gray);
-	border: none;
-}
-
 .actions-container {
 	display: flex;
 	gap: 0.5rem;
