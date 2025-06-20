@@ -230,7 +230,7 @@ evacCenters.forEach(center => {
 partnersArray.forEach((partner) => {
     var doc = partner;
     //console.log(doc);
-    if (doc.location_coordinates != null) {
+    if (doc.location_coordinates != null && !isNaN(doc.location_coordinates._lat) && !isNaN(doc.location_coordinates._long)) {
       var this_marker = partner.marker;
       this_marker = L.marker([
         parseFloat(doc.location_coordinates._lat),
