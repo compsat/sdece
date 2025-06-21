@@ -149,6 +149,13 @@ function getActivity(activity) {
 	return name;
 }
 
+function clearAllHighlights() {
+	const sidebarItems = document.querySelectorAll('.partnerDiv');
+	sidebarItems.forEach((item) => {
+		item.classList.remove('highlight');
+	});
+}
+
 getDocs(col_ref)
 	.then((querySnapshot) => {
 		// Populate activities
@@ -209,23 +216,10 @@ getDocs(col_ref)
 					var test = document.getElementById(
 						partners[partner][0]['partner_name']
 					);
-					test.addEventListener('click', function () {
-						showModal(partners[partner]);
-					});
 				});
-			}
 
-			const containerDiv = document.createElement('div');
-			const img = document.createElement('svg');
-			const listItem = document.createElement('li');
-			const anchor = document.createElement('a');
-			const nameDiv = document.createElement('div');
-			const addressDiv = document.createElement('div');
-			const activityDiv = document.createElement('div');
-
-			containerDiv.addEventListener('click', function () {
-				marker.openPopup();
-				map.panTo(
+				marker.on('click', function () {
+					map.panTo(
 					new L.LatLng(
 						parseFloat(
 							partners[partner][0]['partner_coordinates']
@@ -237,6 +231,43 @@ getDocs(col_ref)
 						)
 					)
 				);
+
+					clearAllHighlights();
+
+					const sidebarItems = document.querySelectorAll('.partnerDiv');
+					sidebarItems.forEach((item) => {
+						const nameDiv = item.querySelector('.name');
+						if (nameDiv && nameDiv.textContent === partner) {
+							item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+							item.classList.add('highlight');
+						}
+					});
+					showModal(partners[partner]);
+				});
+			}
+
+			const containerDiv = document.createElement('div');
+			const img = document.createElement('svg');
+			const listItem = document.createElement('li');
+			const anchor = document.createElement('a');
+			const nameDiv = document.createElement('div');
+			const addressDiv = document.createElement('div');
+			const activityDiv = document.createElement('div');
+			const sidebarItems = document.querySelectorAll('.partnerDiv');
+
+			containerDiv.addEventListener('click', function () {
+				marker.openPopup();
+				map.panTo(
+					new L.LatLng(
+						parseFloat(partners[partner][0]['partner_coordinates'].latitude),
+						parseFloat(partners[partner][0]['partner_coordinates'].longitude)
+					)
+				);
+
+				clearAllHighlights();
+
+				containerDiv.classList.add('highlight');
+
 				showModal(partners[partner]);
 			});
 
@@ -352,6 +383,7 @@ export function showModal(partner) {
 	// Close the modal when the close button is clicked
 	closeDiv.addEventListener('click', () => {
 		current_viewed_activity = null;
+		clearAllHighlights();
 		//might be better to put this in its own function
 		modal.style.display = 'none';
 		modal.classList.remove('open'); //transition out
