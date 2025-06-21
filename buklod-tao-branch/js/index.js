@@ -77,7 +77,7 @@ function onPinClick(doc) {
         <p class="leafletDetails">${doc.residency_status}</p>
         <p class="leafletDetails">${doc.is_hoa_noa}</p>
       </div>
-      <div style="line-height: 3px; margin-bottom: 2px;">
+      <div style="line-height: 105%; margin-bottom: 2px;">
         <label class="leafletLabel">Nearest Evacuation Area</label>
         <p class="leafletDetails">${doc.nearest_evac}</p>
       </div>
