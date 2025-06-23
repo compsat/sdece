@@ -45,6 +45,7 @@ export function getCoordinates(coordinates) {
 	// Ensure lat and lng are numbers
 	const latNum = parseFloat(lat);
 	const lngNum = parseFloat(lng);
+	
 
 	// Round the numbers to 5 decimal places
 	var roundLat = parseFloat(latNum.toFixed(5));
@@ -54,6 +55,8 @@ export function getCoordinates(coordinates) {
 
 	// Create the coordinates string
 	var PARTNER_COORDINATES = GEOPOINT;
+	console.log(typeof GEOPOINT)
+	console.log( GEOPOINT)
 
 	return PARTNER_COORDINATES;
 }
@@ -508,7 +511,7 @@ export function validateData(collectionName, data) {
 		if (
 			rule.required &&
 			(value == undefined || value == null || value == '' || 
-				value == ' RISK: ' || String(value).startsWith(' RISK:') || String(value).endsWith('RISK: ')) // checks if risk for buklod tao is empty
+				value == ' RISK: ' || String(value).startsWith(' RISK:') ) // checks if risk for buklod tao is empty
 		) {
 			errors.push(`${fieldLabel} is required.`);
 			continue;
