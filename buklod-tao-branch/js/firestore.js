@@ -12,7 +12,7 @@ import {
   where,
   getDoc,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-import { getCollection, setCollection } from '/js/firestore_UNIV.js';
+import { getCollection, setCollection, validateData } from '/js/firestore_UNIV.js';
 // Your Firestore code here
 console.log("run2");
 // Your web app's Firebase configuration
@@ -28,7 +28,7 @@ const firebaseConfig = {
 };
 initializeApp(firebaseConfig);
 const db = getFirestore();
-setCollection('buklod-official-TEST');
+setCollection('buklod-official');
 const colRef = getCollection();
 let partnersArray = [];
 
@@ -381,6 +381,7 @@ export function addEntry(data) {
   });
 }
 
+//TODO: change to use UNIV validation
 export function populateEditForm(partner, editFormModal) {
   var iframe = editFormModal.getElementsByClassName('formIframe')[0]
   var editForm = iframe.contentWindow.document
@@ -390,10 +391,12 @@ export function populateEditForm(partner, editFormModal) {
     if (data.includes('risk')) {
       var assessment = partner[data].split(':')
       var risk = assessment[0].split(' ')[0].toLowerCase()
-      var details = assessment[1].slice(1)
+      if (assessment[1] != null){
+        var details = assessment[1].slice(1)
+        editForm.getElementById(data.toString()).value = details
+      }
       var riskType = data.split('_')
       editForm.getElementById(riskType[0]).value = risk
-      editForm.getElementById(data.toString()).value = details
     } else if (partner[data] instanceof Object){
       editForm.getElementById(data.toString()).value = partner[data]._lat + " " + partner[data]._long
     } else {
