@@ -14,7 +14,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import { getCollection, setCollection } from '/js/firestore_UNIV.js';
 // Your Firestore code here
-
+console.log("run2");
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {

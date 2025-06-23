@@ -78,7 +78,7 @@ function onPinClick(doc) {
         <p class="leafletDetails">${doc.residency_status}</p>
         <p class="leafletDetails">${doc.is_hoa_noa}</p>
       </div>
-      <div style="line-height: 3px; margin-bottom: 2px;">
+      <div style="line-height: 105%; margin-bottom: 2px;">
         <label class="leafletLabel">Nearest Evacuation Area</label>
         <p class="leafletDetails">${doc.nearest_evac}</p>
       </div>
@@ -161,23 +161,21 @@ function onPinClick(doc) {
   </div>
   `;
   return leaflet_html;
-}
-
+} 
 /*
-// Loads at the start
+// Loads art the start
 getDocs(colRef)
   .then((querySnapshot) => {
     querySnapshot.forEach((entry) => {
       var doc = entry.data();
-      var marker = L.marker([0, 0]);
-
+      
       if (doc.location_coordinates != null) {
+        var marker = L.marker([0, 0]);
         marker = L.marker([
           parseFloat(doc.location_coordinates._lat),
           parseFloat(doc.location_coordinates._long),
         ]);
-      }
-      // shows partner info on pin click
+        // shows partner info on pin click
       var popupContent = onPinClick(doc);
       marker.bindPopup(popupContent);
       marker.on('popupopen', function(e) {
@@ -206,6 +204,8 @@ getDocs(colRef)
         //}
       })
       results.addLayer(marker);
+      }
+      
     });
   }).catch((error) => {
     console.error('Error getting documents: ', error);
@@ -229,46 +229,23 @@ evacCenters.forEach(center => {
       <br>Location: ${center.latitude}, ${center.longitude}
     </div>`);
 });
+console.log("run1");
+
 partnersArray.forEach((partner) => {
     var doc = partner;
+    var this_marker = partner.marker;
     //console.log(doc);
-    if (doc.location_coordinates != null && !isNaN(doc.location_coordinates._lat) && !isNaN(doc.location_coordinates._long)) {
-      var this_marker = partner.marker;
+    if (doc.location_coordinates != null) {
       this_marker = L.marker([
         parseFloat(doc.location_coordinates._lat),
         parseFloat(doc.location_coordinates._long),
       ]);
+    }
     // shows partner info on pin click
     var popupContent = onPinClick(doc);
     this_marker.bindPopup(popupContent);
-    this_marker.bindPopup(popupContent);
-      this_marker.on('popupopen', function(e) {
-        const editBtns = document.querySelectorAll('.editHousehold');
-        editBtns.forEach((btn) => {
-          btn.addEventListener('click', function() {
-            console.log('Edit button was clicked!');
-            const modal = document.getElementById('partnerModal');
-            var editFormModal = document.getElementById('editModal');
-            editFormModal.style.display = 'block';
-            modal.style.display = 'none';
-            populateEditForm(doc, editFormModal)
-          });
-        });
-        //var editBtn = document.getElementById('editHouseholdPopup')
-        //if (editBtn) {
-          //editBtn.addEventListener('click', function() {
-            //console.log('Edit button was clicked!');
-            //const modal = document.getElementById('partnerModal');
-            //var editFormModal = document.getElementById('editModal');
-            //editFormModal.style.display = 'block';
-            //modal.style.display = 'none';
-            //populateEditForm(doc, editFormModal)
-          //})
-        //}
-      })
     results.addLayer(this_marker);
     Object.defineProperty(partner, "marker", {value:this_marker, configurable: true});
-    }
   });
 
 addListeners();
