@@ -25,7 +25,7 @@
                     let fieldName = BUKLOD_RULES_TEST[2][i];
                     let inputValue = document.getElementById(fieldName).value;
 
-                    if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick') {
+                    if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick' || fieldName == 'number_seniors') {
                         collatedInput[fieldName] = Number(inputValue);
                     } else if (fieldName == 'earthquake_risk') {
                         collatedInput['earthquake_risk'] = inputValue;
