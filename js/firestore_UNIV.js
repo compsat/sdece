@@ -218,7 +218,7 @@ const VALIDATION_RULES = {
 			enum: ['HOA', 'N/A'],
 		},
 		landslide_risk: { type: 'string', required: true },
-		// location_coordinates: { type: 'string', required: true },
+		location_coordinates: { type: 'float', required: true },
 		location_link: { type: 'string', required: true },
 		nearest_evac: { type: 'string', required: true, maxLength: 255 },
 		number_minors: { type: 'number' },
@@ -267,7 +267,7 @@ const VALIDATION_RULES = {
 			enum: ['HOA', 'N/A'],
 		},
 		landslide_risk: { type: 'string', required: true },
-		location_coordinates: { type: 'number', required: true },
+		location_coordinates: { type: 'float', required: true },
 		location_link: { type: 'string', required: true },
 		nearest_evac: { type: 'string', required: true, maxLength: 255 },
 		number_minors: { type: 'number' },
@@ -286,7 +286,7 @@ const VALIDATION_RULES = {
 	'sdece-official-TEST': {
 		partner_name: { type: 'string', required: true, maxLength: 255 },
 		partner_address: { type: 'string', required: true, maxLength: 255 },
-		partner_coordinates: { required: true },
+		partner_coordinates: { type: 'float', required: true },
 		partner_contact_name: {
 			type: 'string',
 			required: true,
@@ -318,7 +318,7 @@ const VALIDATION_RULES = {
 	'sdece-official': {
 		partner_name: { type: 'string', required: true, maxLength: 255 },
 		partner_address: { type: 'string', required: true, maxLength: 255 },
-		partner_coordinates: { required: true },
+		partner_coordinates: { type: 'float', required: true },
 		partner_contact_name: {
 			type: 'string',
 			required: true,
