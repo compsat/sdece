@@ -16,7 +16,6 @@ import {
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import evacCenters from '/hardcode/evac-centers.json' with {type: 'json'};
 
-setCollection("buklod-official-TEST");
 
 var colRef = getCollection();
 var partnersArray = getPartnersArray();
