@@ -568,6 +568,17 @@ export function validateData(collectionName, data) {
 			} continue;
 		}
 
+		// Check for minimum value
+		if (
+			rule.minimum !== undefined &&
+			typeof value === 'number' &&
+			value < rule.minimum
+		) {
+			errors.push(`${fieldLabel} must be at least ${rule.minimum}.`);
+			continue;
+		}
+
+
 		// Check for maximum length
 		if (
 			rule.maxLength &&
