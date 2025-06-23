@@ -38,12 +38,6 @@ const lng = getUrlParameter('lng');
 // 	).innerText = `Latitude: ${lat}, Longitude: ${lng}`;
 // });
 
-// export function getCoordinates() {
-// 	var roundLat = parseFloat(lat.toFixed(5));
-// 	var roundLon = parseFloat(lon.toFixed(5));
-//     var PARTNER_COORDINATES = `(${roundLat}, ${roundLon})`;
-//     return PARTNER_COORDINATES;
-// }
 
 export function getCoordinates(coordinates) {
 	var arr = coordinates.split('+');
@@ -51,6 +45,7 @@ export function getCoordinates(coordinates) {
 	// Ensure lat and lng are numbers
 	const latNum = parseFloat(lat);
 	const lngNum = parseFloat(lng);
+	
 
 	// Round the numbers to 5 decimal places
 	var roundLat = parseFloat(latNum.toFixed(5));
@@ -60,6 +55,8 @@ export function getCoordinates(coordinates) {
 
 	// Create the coordinates string
 	var PARTNER_COORDINATES = GEOPOINT;
+	console.log(typeof GEOPOINT)
+	console.log( GEOPOINT)
 
 	return PARTNER_COORDINATES;
 }
@@ -86,58 +83,56 @@ export const DB_RULES_AND_DATA = [
 		'buklod-official',
 		'household_name',
 		[
+			'household_name',
 			'contact_number',
+			'number_residents',
+			'number_minors',
+			'number_seniors',
+			'number_pregnant',
+			'number_pwd',
+			'number_sick',
+			'sickness_present',
+			'residency_status',
+			'is_hoa_noa',
+			'location_coordinates',
+			'location_link',
+			'household_address',
+			'household_material',
+			'household_phase',
+			'landslide_risk',
 			'earthquake_risk',
 			'fire_risk',
 			'flood_risk',
-			'household_address',
-			'household_material',
-			'household_name',
-			'household_phase',
-			'is_hoa_noa',
-			'landslide_risk',
-			'location_coordinates',
-			'location_link',
-			'nearest_evac',
-			'number_minors',
-			'number_pregnant',
-			'number_pwd',
-			'number_residents',
-			'number_seniors',
-			'number_sick',
-			'residency_status',
-			'sickness_present',
-			'status',
 			'storm_risk',
+			'nearest_evac',
 		],
 	],
 	[
 		'buklod-official-TEST',
 		'household_name',
 		[
+			'household_name',
 			'contact_number',
+			'number_residents',
+			'number_minors',
+			'number_seniors',
+			'number_pregnant',
+			'number_pwd',
+			'number_sick',
+			'sickness_present',
+			'residency_status',
+			'is_hoa_noa',
+			'location_coordinates',
+			'location_link',
+			'household_address',
+			'household_material',
+			'household_phase',
+			'landslide_risk',
 			'earthquake_risk',
 			'fire_risk',
 			'flood_risk',
-			'household_address',
-			'household_material',
-			'household_name',
-			'household_phase',
-			'is_hoa_noa',
-			'landslide_risk',
-			'location_coordinates',
-			'location_link',
-			'nearest_evac',
-			'number_minors',
-			'number_pregnant',
-			'number_pwd',
-			'number_residents',
-			'number_seniors',
-			'number_sick',
-			'residency_status',
-			'sickness_present',
-			'status',
 			'storm_risk',
+			'nearest_evac',
 		],
 	],
 	[
@@ -186,17 +181,36 @@ export const DB_RULES_AND_DATA = [
 const VALIDATION_RULES = {
 	//Rules for Validating Data
 	'buklod-official-TEST': {
+		household_name: { type: 'string', required: true, maxLength: 127 },
 		contact_number: {
 			type: 'string',
 			required: true,
-			minLength: 13,
-			maxLength: 13,
-			regex: /^[0-9 ]+$/,
+			minLength: 11,
+			maxLength: 11,
+			regex: /^[0-9]+$/,
 		},
-		earthquake_risk: { type: 'string', required: true },
-		fire_risk: { type: 'string', required: true },
-		flood_risk: { type: 'string', required: true },
-		household_address: { type: 'string', required: true, maxLength: 255 },
+		number_residents: { type: 'number', required: true , 'minimum': 1},
+		number_minors: { type: 'number', 'minimum': 0 },
+		number_seniors: { type: 'number' , 'minimum': 0 },
+		number_pregnant: { type: 'number' , 'minimum': 0 },
+		number_pwd: { type: 'number' , 'minimum': 0 },
+		number_sick: { type: 'number' , 'minimum': 0 },
+		sickness_present: { type: 'string' },
+		residency_status: {
+			type: 'string',
+			required: true,
+			enum: ['May-Ari', 'Umuupa'],
+		},
+		is_hoa_noa: {
+			type: 'string',
+			required: true,
+			minLength: 3,
+			maxLength: 3,
+			enum: ['HOA', 'NOA', 'N/A'],
+		},
+		location_coordinates: { type: 'object', required: true },
+		location_link: { type: 'string', required: true, regex: /^https:\/\/www\.openstreetmap\.org\/.+/ }, // data validation for link
+		household_address: { type: 'string', required: true, maxLength: 100 },
 		household_material: {
 			type: 'string',
 			required: true,
@@ -208,44 +222,45 @@ const VALIDATION_RULES = {
 				'Natural',
 			],
 		},
-		household_name: { type: 'string', required: true, maxLength: 127 },
-		household_phase: { type: 'string', required: true },
-		is_hoa_noa: {
-			type: 'string',
-			required: true,
-			minLength: 3,
-			maxLength: 3,
-			enum: ['HOA', 'N/A'],
-		},
 		landslide_risk: { type: 'string', required: true },
-		// location_coordinates: { type: 'string', required: true },
-		location_link: { type: 'string', required: true },
-		nearest_evac: { type: 'string', required: true, maxLength: 255 },
-		number_minors: { type: 'number' },
-		number_pregnant: { type: 'number' },
-		number_pwd: { type: 'number' },
-		number_residents: { type: 'number', required: true },
-		number_sick: { type: 'number' },
-		residency_status: {
-			type: 'string',
-			required: true,
-			enum: ['May-Ari', 'Umuupa'],
-		},
-		status: { type: 'string' },
+		household_phase: { type: 'string', required: true },
+		earthquake_risk: { type: 'string', required: true },
+		fire_risk: { type: 'string', required: true },
+		flood_risk: { type: 'string', required: true },
 		storm_risk: { type: 'string', required: true },
+		nearest_evac: { type: 'string', required: true, maxLength: 255 },
 	},
 	'buklod-official': {
+		household_name: { type: 'string', required: true, maxLength: 127 },
 		contact_number: {
 			type: 'string',
 			required: true,
-			minLength: 13,
-			maxLength: 13,
-			regex: /^[0-9 ]+$/,
+			minLength: 11,
+			maxLength: 11,
+			regex: /^[0-9]+$/,
 		},
-		earthquake_risk: { type: 'string', required: true },
-		fire_risk: { type: 'string', required: true },
-		flood_risk: { type: 'string', required: true },
-		household_address: { type: 'string', required: true, maxLength: 255 },
+		number_residents: { type: 'number', required: true , 'minimum': 1},
+		number_minors: { type: 'number', 'minimum': 0 },
+		number_seniors: { type: 'number' , 'minimum': 0 },
+		number_pregnant: { type: 'number' , 'minimum': 0 },
+		number_pwd: { type: 'number' , 'minimum': 0 },
+		number_sick: { type: 'number' , 'minimum': 0 },
+		sickness_present: { type: 'string' },
+		residency_status: {
+			type: 'string',
+			required: true,
+			enum: ['May-Ari', 'Umuupa'],
+		},
+		is_hoa_noa: {
+			type: 'string',
+			required: true,
+			minLength: 3,
+			maxLength: 3,
+			enum: ['HOA', 'NOA', 'N/A'],
+		},
+		location_coordinates: { type: 'object', required: true },
+		location_link: { type: 'string', required: true },
+		household_address: { type: 'string', required: true, maxLength: 100 },
 		household_material: {
 			type: 'string',
 			required: true,
@@ -257,31 +272,13 @@ const VALIDATION_RULES = {
 				'Natural',
 			],
 		},
-		household_name: { type: 'string', required: true, maxLength: 127 },
-		household_phase: { type: 'string', required: true },
-		is_hoa_noa: {
-			type: 'string',
-			required: true,
-			minLength: 3,
-			maxLength: 3,
-			enum: ['HOA', 'N/A'],
-		},
 		landslide_risk: { type: 'string', required: true },
-		location_coordinates: { type: 'number', required: true },
-		location_link: { type: 'string', required: true },
-		nearest_evac: { type: 'string', required: true, maxLength: 255 },
-		number_minors: { type: 'number' },
-		number_pregnant: { type: 'number' },
-		number_pwd: { type: 'number' },
-		number_residents: { type: 'number', required: true },
-		number_sick: { type: 'number' },
-		residency_status: {
-			type: 'string',
-			required: true,
-			enum: ['May-Ari', 'Umuupa'],
-		},
-		status: { type: 'string' },
+		household_phase: { type: 'string', required: true },
+		earthquake_risk: { type: 'string', required: true },
+		fire_risk: { type: 'string', required: true },
+		flood_risk: { type: 'string', required: true },
 		storm_risk: { type: 'string', required: true },
+		nearest_evac: { type: 'string', required: true, maxLength: 255 },
 	},
 	'sdece-official-TEST': {
 		partner_name: { type: 'string', required: true, maxLength: 255 },
@@ -515,7 +512,8 @@ export function validateData(collectionName, data) {
 		// Check for required field
 		if (
 			rule.required &&
-			(value == undefined || value == null || value == '')
+			(value == undefined || value == null || value == '' || 
+				value == ' RISK: ' || String(value).startsWith(' RISK:') ) // checks if risk for buklod tao is empty
 		) {
 			errors.push(`${fieldLabel} is required.`);
 			continue;
@@ -550,7 +548,7 @@ export function validateData(collectionName, data) {
 				}
 			} else if (typeof value != rule.type) {
 				errors.push(
-					`${fieldLabel} must be of type ${rule.type}.`
+					`${fieldLabel} must be of type ${rule.type}. type is ${value}` //checking for the type of value in location coordinates
 				);
 				continue;
 			}
@@ -569,6 +567,17 @@ export function validateData(collectionName, data) {
 
 			} continue;
 		}
+
+		// Check for minimum value
+		if (
+			rule.minimum !== undefined &&
+			typeof value === 'number' &&
+			value < rule.minimum
+		) {
+			errors.push(`${fieldLabel} must be at least ${rule.minimum}.`);
+			continue;
+		}
+
 
 		// Check for maximum length
 		if (
@@ -596,7 +605,7 @@ export function validateData(collectionName, data) {
 			continue;
 		}
 
-		//no validation for geolocation, url yet
+		//no validation for geolocation yet
 	}
 
 	return errors;
