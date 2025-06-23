@@ -295,11 +295,11 @@ const VALIDATION_RULES = {
 		partner_contact_number: {
 			type: 'string',
 			required: true,
-			minLength: 11,
-			maxLength: 11,
-			regex: /^09\d{9}$/
+			minLength: 13,
+			maxLength: 13,
+			regex: /^[0-9 ]+$/,
 		},
-		partner_email: { type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
+		partner_email: { type: 'string', required: true, maxLength: 127 },
 		activity_name: { type: 'string', required: true },
 		activity_nature: { type: 'string', required: true, maxLength: 255 },
 		activity_date: { type: 'date', required: true },
@@ -310,9 +310,8 @@ const VALIDATION_RULES = {
 		ADMU_email: {
 			type: 'string',
 			required: true,
-			// required: true					redundant declaration
+			required: true,
 			maxLength: 127,
-			regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/
 		},
 	},
 	'sdece-official': {
@@ -327,11 +326,11 @@ const VALIDATION_RULES = {
 		partner_contact_number: {
 			type: 'string',
 			required: true,
-			minLength: 11,
-			maxLength: 11,
-			regex: /^09\d{9}$/,
+			minLength: 13,
+			maxLength: 13,
+			regex: /^[0-9 ]+$/,
 		},
-		partner_email: { type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
+		partner_email: { type: 'string', required: true, maxLength: 127 },
 		activity_name: { type: 'string', required: true },
 		activity_nature: { type: 'string', required: true, maxLength: 255 },
 		activity_date: { type: 'date', required: true },
@@ -342,9 +341,8 @@ const VALIDATION_RULES = {
 		ADMU_email: {
 			type: 'string',
 			required: true,
-			// required: true					redundant declaration
+			required: true,
 			maxLength: 127,
-			regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/
 		},
 	},
 };
@@ -564,10 +562,16 @@ export function validateData(collectionName, data) {
 		) {
 			if (field === 'partner_contact_number') {
 				errors.push(
-					`${fieldLabel} must be ${rule.minLength} characters long.`
+					`${fieldLabel} must be at least ${rule.minLength} characters long and in the form 09XX XXX XXXX.`
 				);
 
-			} continue;
+			} else {
+				errors.push(
+					`${fieldLabel} must be at least ${rule.minLength} characters long.`
+				);
+			}
+
+			continue;
 		}
 
 		// Check for maximum length
