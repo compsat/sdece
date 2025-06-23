@@ -17,7 +17,7 @@ import {
 import evacCenters from '/hardcode/evac-centers.json' with {type: 'json'};
 
 
-//console.log("index");
+console.log("index");
 
 var colRef = getCollection();
 
