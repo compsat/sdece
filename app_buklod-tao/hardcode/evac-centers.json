@@ -1,0 +1,38 @@
+[
+    {
+        "name": "Ynares Basketball Court",
+        "latitude": 14.676018,
+        "longitude": 121.109596,
+        "type": "Temporary Shelter"
+    },
+    {
+        "name": "SM San Mateo",
+        "latitude": 14.679451,
+        "longitude": 121.114464,
+        "type": "Temporary Shelter"
+    },
+    {
+        "name": "Buklod Tao",
+        "latitude": 14.671060,
+        "longitude": 121.126207,
+        "type": "Evacuation Center"
+    },
+    {
+        "name": "Doña Pepeng Elementary School",
+        "latitude": 14.676547254288643,
+        "longitude": 121.10958329815257,
+        "type": "Temporary Shelter"
+    },
+    {
+        "name": "Doña Pepeng Multipurpose Court",
+        "latitude": 14.676345219099842,
+        "longitude": 121.10950546455487,
+        "type": "Temporary Shelter"
+    },
+    {
+        "name": "Agape Church",
+        "latitude": 14.680388604968686,
+        "longitude": 121.11038906016722,
+        "type": "Temporary Shelter"
+    }
+]

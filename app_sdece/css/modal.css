@@ -1,0 +1,619 @@
+@import url('variables.css');
+
+* {
+	margin: 0px;
+	padding: 0px;
+	box-sizing: border-box;
+	background: none;
+	text-decoration: none;
+	list-style: none;
+}
+
+button,
+input {
+	border: none;
+	outline: none;
+	width: auto;
+	height: auto;
+}
+
+button {
+	cursor: pointer;
+}
+.modal-screen {
+	display: none;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.1); /* 10% opacity black */
+	z-index: 4500;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+}
+
+.form-modal {
+	height: 69%;
+	width: 45%;
+	z-index: 3500;
+	display: flex;
+	border-radius: 0.375rem; /* Assuming rounded-lg corresponds to 6px rounded corners */
+	overflow: hidden;
+}
+
+/* Main Modal */
+.main-modal {
+	border-radius: 0.5rem;
+	background-color: #f3f4f6; /* Assuming bg-customLightGray corresponds to a specific custom color */
+	height: 40.5rem;
+	width: 30rem;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+	overflow: visible;
+}
+
+.main-modal-header {
+	display: flex;
+	flex-direction: row;
+	justify-content: end;
+	padding: 1rem;
+	width: 100%;
+	position: sticky;
+	top: 0rem;
+	height: auto;
+}
+
+.main-modal-icon,
+#close-btn {
+	width: 1.5rem /* 24px */;
+	height: 1.5rem /* 24px */;
+}
+
+.main-modal-pin {
+	color: var(--custom-gray);
+}
+
+.main-modal-content {
+	font-family: 'Montserrat';
+	display: flex;
+	flex: 1 1 0%;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 1.5rem;
+}
+
+.main-modal-partner-name {
+	border-bottom: 2px solid var(--lightbg);
+	width: 100%;
+	font-family: 'Montserrat';
+	font-weight: 500;
+	font-size: 1.5rem;
+	line-height: 2rem;
+	color: var(--custom-dark-gray);
+	padding-bottom: 0.5rem;
+}
+
+.main-modal-location-select {
+	display: flex;
+	flex-direction: row;
+	margin-top: 1.5rem /* 24px */;
+	width: 100%;
+	padding-bottom: 0.75rem;
+	border-style: solid;
+	align-items: center;
+	border: none;
+	border-bottom: 1px solid var(--custom-gray);
+}
+
+.main-modal-list-header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 3.5rem /* 56px */;
+}
+
+.main-modal-list-heading {
+	font-family: 'Montserrat';
+	font-weight: 700;
+	font-size: 1.5rem /* 24px */;
+	line-height: 2rem; /* 32px */
+	color: var(--custom-black);
+}
+.map-container {
+	display: flex;
+	flex: 1 1 0%;
+}
+
+.main-modal-input,
+.main-modal-input::placeholder {
+	font-family: 'Hind';
+	font-size: 1.125rem /* 18px */;
+	line-height: 120%;
+	width: 100%;
+	margin-left: 0.5rem /* 8px */;
+	color: var(--custom-gray);
+}
+
+.main-modal-list-heading {
+	font-family: 'Montserrat';
+	font-weight: 700;
+	font-size: 1.5rem /* 24px */;
+	line-height: 2rem /* 32px */;
+}
+
+.main-modal-btn-container {
+	width: 100%;
+}
+.main-modal-save {
+	transition: background-color 0.3s ease, color 0.3s ease,
+		transform 0.3s ease;
+	/* margin-top: 3.5rem /* 56px */
+	width: 100%;
+	padding-top: 1rem /* 16px */;
+	padding-bottom: 1rem /* 16px */;
+	text-align: center;
+	font-family: 'Montserrat';
+	font-size: 1.5rem /* 24px */;
+	line-height: 2rem;
+	background-color: var(--lightbg);
+	color: white;
+	font-weight: 700;
+	border-radius: 0.5rem /* 8px */;
+	border-style: solid;
+	border-color: var(--lightbg);
+}
+
+.main-modal-save:hover {
+	transform: scale(1.01);
+	background: none;
+	border-style: solid;
+	border-color: var(--lightbg);
+	color: var(--lightbg);
+}
+/* Partner modal */
+.modal {
+	justify-content: start;
+	width: 25%;
+	height: 50%;
+	border-radius: 0.5rem;
+	overflow: scroll;
+	position: absolute;
+	z-index: 2000;
+	top: 100px;
+	left: 26rem;
+	justify-content: center;
+	box-sizing: border-box;
+	border-radius: 0.5rem;
+	/* overflow-y: scroll;
+	overflow-x: hidden; */
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+	overflow-y: hidden;
+	animation: slide-out 500ms forwards;
+	display: none;
+	flex-direction: column;
+}
+
+.open {
+	animation: slide-in 500ms forwards;
+	/* display: block; */
+}
+
+@keyframes fade-in {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes slide-in {
+	0% {
+		transform: translateX(-100%);
+		opacity: 0;
+	}
+	100% {
+		transform: translateX(0%);
+		opacity: 1;
+	}
+}
+
+@keyframes slide-out {
+	100% {
+		transform: translateX(-100%);
+		opacity: 0;
+	}
+	0% {
+		transform: translateX(0%);
+		opacity: 1;
+	}
+}
+
+.modal-header {
+	/* align-self: flex-end;
+	justify-content: center;
+	float: right; */
+	position: relative;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	padding: 24px 24px;
+	background-color: #fcfcfc;
+	top: 0rem;
+	box-shadow: 0px 2px 5px rgb(225, 225, 225);
+	z-index: 1;
+}
+
+.modal-content {
+	height: 100%;
+	flex: 1;
+	background-color: #fcfcfc;
+	font-family: 'Hind';
+	font-size: 1rem;
+	font-style: normal;
+	line-height: 2rem;
+	overflow-y: scroll;
+	box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1); /* inset shadow-md */
+	padding-bottom: 1.5rem;
+}
+
+.modal-button {
+	display: none;
+	flex-direction: row;
+	justify-content: center;
+	width: 100%;
+	height: 3.5rem;
+	background-color: #fcfcfc;
+	position: sticky;
+	bottom: 0rem;
+	box-shadow: 0px -2px 50px rgb(235, 235, 235);
+	z-index: 1;
+}
+
+.modal-button-icon {
+	margin-left: 0.5rem;
+	width: 1rem;
+	width: 1rem;
+}
+
+.delete-button {
+	color: #b91c1c;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	font-size: 1rem;
+	font-family: 'Montserrat';
+	align-items: center;
+	font-weight: 600;
+	padding: 24px 24px;
+	flex: 1 1 0%;
+}
+
+.edit-button {
+	font-weight: 600;
+	position: sticky;
+	bottom: 0rem;
+	padding: 1rem !important;
+	color: rgb(61 151 175);
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	font-size: 1rem;
+	font-family: 'Montserrat';
+	align-items: center;
+	width: 100%;
+}
+
+.modal-activities-list {
+	margin-top: 12px;
+}
+
+.modal-activity-title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	display: flex;
+	gap: 1rem;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	text-align: left;
+	font-family: 'Hind';
+	color: var(--custom-black);
+}
+
+.modal-activity-button {
+	height: auto;
+	display: flex;
+	flex-direction: column;
+	align-items: left;
+	font-family: 'Montserrat';
+	text-align: left;
+	border-style: solid;
+	border-width: 0px;
+	border-bottom: 0.5px solid var(--custom-gray);
+	margin-left: 1.5rem;
+	margin-right: 1.5rem;
+	padding: 1rem;
+}
+.modal-activity-button:hover {
+	background-color: #efefef;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.modal-activities-header {
+	margin-top: 1.5rem;
+	margin-left: 2.5rem;
+	margin-right: 2.5rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	color: var(--lightbg);
+	font-family: Montserrat;
+	font-size: 1.25rem;
+	font-style: normal;
+	font-weight: bolder;
+	line-height: 110%;
+	letter-spacing: 0.48px;
+}
+
+.modal-name {
+	font-family: 'Montserrat';
+	color: #387181;
+	font-size: 1.5rem;
+	font-weight: 700;
+	flex: 1 1 0%;
+	line-height: 110%;
+	letter-spacing: 0.48px;
+	margin-bottom: 2px;
+	padding-right: 1rem;
+}
+
+.modal-address {
+	margin-left: 2.5rem;
+	margin-right: 2.5rem;
+
+	margin-top: 1.8rem;
+	color: var(--custom-gray);
+	font-family: Montserrat;
+	font-size: 1rem;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 120%;
+	letter-spacing: 0.32px;
+}
+
+.modal-office {
+}
+.back-btn {
+	animation: slide-in 500ms forwards;
+	margin-right: 1rem;
+	float: right;
+	color: #aaaaaa;
+	width: 1rem;
+	width: 1rem;
+	font-size: 28px;
+	font-weight: bold;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.close-btn {
+	float: right;
+	color: var(--custom-gray);
+	width: 1rem;
+	width: 1rem;
+	font-size: 28px;
+	font-weight: bold;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.close-btn:hover,
+.close-btn:focus,
+.back-btn:hover,
+.back-btn:focus {
+	color: #3f3f3f;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.plus-btn {
+	transition: color 0.1s ease, transform 0.1s ease;
+	float: right;
+	color: var(--darkbg);
+	width: 1rem;
+	width: 1rem;
+	font-size: 28px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.plus-btn:hover,
+.plus-btn:focus {
+	transform: scale(1.5);
+	color: var(--lightbg);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.arrow {
+	width: 1rem;
+	width: 1rem;
+}
+
+.arrow:hover,
+.arrow:focus {
+	color: var(--custom-black);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+/* Message modal */
+.message-modal {
+	border-radius: 0.5rem;
+	background-color: #f3f6f4; /* Assuming bg-customLightGray corresponds to a specific custom color */
+	height: fit-content; /* h-auto */
+	width: fit-content; /* w-[480px] */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+	overflow: visible;
+	padding: 32px 32px;
+	flex-direction: column;
+	align-items: flex-start;
+
+	animation: slide-in 500ms forwards;
+}
+
+.leaflet-popup-content {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.partner-geolocation {
+	color: var(--custom-gray);
+	padding-bottom: 0.5rem;
+	text-align: center;
+}
+
+.addButton {
+	transition: background-color 0.3s ease, color 0.3s ease,
+		transform 0.3s ease;
+	background-color: var(--custom-translucent-teal);
+	color: var(--lightbg);
+	width: 100%;
+	font-family: 'Montserrat';
+	padding: 0.5rem;
+	border-radius: 0.375rem; /* Assuming rounded-lg corresponds to 6px rounded corners */
+	font-weight: 500;
+	font-size: 1rem;
+	transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.addButton:hover {
+	transform: scale(1.01);
+	background-color: var(--lightbg);
+	color: white;
+
+	transform: scale(1.01);
+}
+.message-modal-header {
+	align-self: flex-end;
+	justify-content: center;
+	width: fit-content;
+	float: right;
+}
+
+.message-modal-content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	width: fit-content;
+	font-family: 'Montserrat';
+	font-weight: 700;
+	font-size: 1.5rem /* 24px */;
+	line-height: 2rem; /* 32px */
+	color: var(--custom-black);
+	font-style: normal;
+	overflow: visible;
+}
+
+.partner-hover:hover {
+	background-color: var(--custom-medium-gray);
+}
+
+.pm-activity-name {
+	font-family: 'Montserrat';
+	padding: 2.5rem 2.5rem 0rem 2.5rem;
+	font-weight: 600;
+	font-size: 1.25rem;
+	color: var(--lightbg);
+}
+
+.pm-activity-address {
+	font-family: 'Hind';
+	padding: 0rem 2.5rem;
+	color: var(--custom-dark-gray);
+	margin-top: 1rem;
+	line-height: 110%;
+}
+
+.pm-details {
+	padding: 0rem 2.5rem;
+	font-family: 'Hind';
+	line-height: 1rem;
+	margin-top: 1.5rem;
+	color: var(--custom-black);
+}
+
+.pm-detailed-info {
+	margin-top: 1rem;
+}
+
+.pm-activity-office {
+	border-top: 1px solid var(--custom-gray);
+	margin-top: 1.5rem;
+	padding: 1rem 2.5rem 0rem 2.5rem;
+}
+
+.ao-header {
+	font-family: 'Montserrat';
+	color: var(--darkbg);
+	font-size: 1.25rem;
+	line-height: 110%;
+	letter-spacing: 2%;
+}
+
+.ao-office {
+	font-family: 'Montserrat';
+	color: var(--lightbg);
+	font-size: 1.125rem;
+	font-weight: 600;
+	margin-top: 1rem;
+}
+
+.ao-details {
+	font-family: 'Hind';
+	margin-top: 1rem;
+	font-size: 1rem;
+	line-height: 110%;
+	letter-spacing: 2%;
+}
+
+/* For styling the UL containing the temporary activities that the user adds through Main Modal */
+.main-modal-temporary-activities {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	font-family: 'Hind';
+	font-size: 1.25rem;
+	line-height: 110%;
+	letter-spacing: 2%;
+	margin-top: 1.5rem;
+	padding: 0px 24px;
+}
+
+.main-modal-temporary-activity {
+	font-family: 'Hind';
+	font-weight: bold;
+	color: var(--custom-black);
+	text-align: left;
+	padding: 1rem;
+	width: 100%;
+	border-bottom: 0.5px solid var(--custom-dark-gray);
+}
+
+/* For styling each LI in the UL mentioned above. */
