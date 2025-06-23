@@ -234,6 +234,7 @@ partnersArray.forEach((partner) => {
     var doc = partner;
     var this_marker = partner.marker;
     //console.log(doc);
+    console.log(doc.household_name);
     if (doc.location_coordinates != null) {
       this_marker = L.marker([
         parseFloat(doc.location_coordinates._lat),
