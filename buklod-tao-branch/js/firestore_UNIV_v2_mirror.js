@@ -23,6 +23,39 @@ import {
 
 console.log('UNIVERSAL JS v2 LOADING ');
 
+
+function getUrlParameter(name) {
+	name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+	var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+	var results = regex.exec(location.search);
+	return results === null
+		? ''
+		: decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+// Get lat and lng from URL parameters
+const lat = getUrlParameter('lat');
+const lng = getUrlParameter('lng');
+
+export function getCoordinates(coordinates) {
+	var arr = coordinates.split('+');
+	var lat = arr[0], lng = arr[1];
+	// Ensure lat and lng are numbers
+	const latNum = parseFloat(lat);
+	const lngNum = parseFloat(lng);
+
+	// Round the numbers to 5 decimal places
+	var roundLat = parseFloat(latNum.toFixed(5));
+	var roundLon = parseFloat(lngNum.toFixed(5));
+
+	const GEOPOINT = new GeoPoint(roundLat, roundLon);
+
+	// Create the coordinates string
+	var PARTNER_COORDINATES = GEOPOINT;
+
+	return PARTNER_COORDINATES;
+}
+
 export const firebaseConfig = {
 	apiKey: 'AIzaSyA8QWgic_hjbDL-EYIkvSRRII_yfTRdtOQ',
 	authDomain: 'discs-osci-prj.firebaseapp.com',
@@ -129,7 +162,7 @@ const VALIDATION_RULES = { //Rules for Validating Data
 		'household_phase': {type: 'string', required: true},
 		'is_hoa_noa': {type: 'string', required: true, minLength: 3, maxLength: 3, enum: ['HOA', 'N/A'] },
 		'landslide_risk': {type: 'string', required: true},
-		'location_coordinates': {type: 'number', required: true},
+		'location_coordinates': {type: 'float', required: true},
 		'location_link': {type: 'string', required: true},
 		'nearest_evac': {type: 'string', required: true, maxLength: 255},
 		'number_minors': {type: 'number'},
@@ -144,7 +177,7 @@ const VALIDATION_RULES = { //Rules for Validating Data
 	'sdece-official': {
 		'partner_name': {type: 'string', required: true, maxLength: 255},
 		'partner_address': {type: 'string', required: true, maxLength: 255},
-		'partner_coordinates': {required: true},
+		'partner_coordinates': {type:'float', required: true},
 		'partner_contact_name': {type: 'string', required: true, maxLength: 255},
 		'partner_contact_number': {type: 'string', required: true, minLength: 13, maxLength: 13, regex: /^[0-9 ]+$/},
 		'partner_email': {type: 'string', required: true, maxLength: 127},
