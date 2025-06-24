@@ -375,23 +375,25 @@ export function populateEditForm(partner, editFormModal) {
   for (var data in partner) {
     // console.log(data.toString()+ " '" + partner[data] + "'")
     // console.log(partner[data])``
-    if (data.includes('risk')) {
-      var assessment = partner[data].split(':')
-      var risk = assessment[0].split(' ')[0].toLowerCase()
-      if (assessment[1] != null){
-        var details = assessment[1].slice(1)
-        editForm.getElementById(data.toString()).value = details
-      }
-      var riskType = data.split('_')
-      editForm.getElementById(riskType[0]).value = risk
-    } else if (partner[data] instanceof Object){
+
+    if (partner[data] instanceof Object){
       editForm.getElementById(data.toString()).value = partner[data]._lat + " " + partner[data]._long
-    } else {
+    } 
+    
+    else {
       if (partner[data] != null) {
         editForm.getElementById(data.toString()).value = partner[data].toString();
       } else {
         editForm.getElementById(data.toString()).value = '';
       }
+    }
+    
+    if (data.includes('risk') && !data.includes('description')) {
+      // splits ":" in case its still there (test set curently)
+      // splits " " to keep the number
+      var risk = partner[data].split(':')[0].split(' ')[0].toLowerCase()
+      editForm.getElementById(data).value = risk;
+      
     }
   }
   // partner.forEach(data => {
