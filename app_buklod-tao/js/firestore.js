@@ -390,10 +390,12 @@ export function populateEditForm(partner, editFormModal) {
     if (data.includes('risk')) {
       var assessment = partner[data].split(':')
       var risk = assessment[0].split(' ')[0].toLowerCase()
-      var details = assessment[1].slice(1)
+      if (assessment[1] != null){
+        var details = assessment[1].slice(1)
+        editForm.getElementById(data.toString()).value = details
+      }
       var riskType = data.split('_')
       editForm.getElementById(riskType[0]).value = risk
-      editForm.getElementById(data.toString()).value = details
     } else if (partner[data] instanceof Object){
       editForm.getElementById(data.toString()).value = partner[data]._lat + " " + partner[data]._long
     } else {
