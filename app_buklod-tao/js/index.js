@@ -7,8 +7,8 @@ import {
   DB,
   addEntry,
   BUKLOD_RULES_TEST,
-} from '/js/firestore_UNIV.js';
-import { addListeners, map } from '/js/index_UNIV.js';
+} from '../../js/firestore_UNIV.js';
+import { addListeners, map } from '../../js/index_UNIV.js';
 import {
   getFirestore,
   collection,
@@ -201,7 +201,7 @@ evacCenters.forEach(center => {
   const marker = L.marker(
     [center.latitude, center.longitude],
     {icon: L.icon({
-      iconUrl: "app_buklod-tao/hardcode/evac.svg",
+      iconUrl: "/app_buklod-tao/hardcode/evac.svg",
       iconSize: [39,39],
       popupAnchor: [0.5, -15]
     })}
