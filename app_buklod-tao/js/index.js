@@ -14,7 +14,7 @@ import {
   collection,
   getDocs,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-import evacCenters from '/hardcode/evac-centers.json' with {type: 'json'};
+import evacCenters from '../hardcode/evac-centers.json' with {type: 'json'};
 
 var colRef = getCollection();
 
@@ -201,7 +201,7 @@ evacCenters.forEach(center => {
   const marker = L.marker(
     [center.latitude, center.longitude],
     {icon: L.icon({
-      iconUrl: "/hardcode/evac.svg",
+      iconUrl: "app_buklod-tao/hardcode/evac.svg",
       iconSize: [39,39],
       popupAnchor: [0.5, -15]
     })}
