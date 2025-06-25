@@ -350,7 +350,7 @@ export function showModal(partner) {
 			<div class="modal-card-header-activity" style="font-size:1rem;font-weight:500;">${getActivity(activity) || 'Activity Name'}</div>
 			<div class="modal-card-row" style="margin-top:-0.5rem;">
 				<span class="modal-office">${activity.ADMU_office || 'Department'}</span>
-			</div>
+	  </div>
 			<span class="modal-activity-arrow" style="position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);font-size:1.3rem;color:#b0b0b0;">&#8250;</span>
 		`;
 		card.style.position = 'relative';
@@ -372,6 +372,224 @@ export function showModal(partner) {
 	// Show the partner modal
 		modal.style.display = 'flex';
 	modal.classList.add('open');
+}
+
+function showEditActivityForm(activity, partnerName, coords) {
+	const modal = document.getElementById('partnerModal');
+	const modalHeader = document.getElementById('modalHeader');
+	const modalContent = document.getElementById('modalContent');
+	modalHeader.innerHTML = '';
+	modalContent.innerHTML = '';
+
+	// --- HEADER ---
+	const headerRow = document.createElement('div');
+	headerRow.style.display = 'flex';
+	headerRow.style.alignItems = 'center';
+	headerRow.style.gap = '1rem';
+
+	// Back button
+	const backBtn = document.createElement('button');
+	backBtn.className = 'modal-back-btn';
+	backBtn.innerHTML = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 19L8.5 12L15.5 5" stroke="#222b45" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+	backBtn.onclick = function() {
+		showActivityDetailModal(activity, partnerName, coords);
+	};
+	headerRow.appendChild(backBtn);
+
+	const headerTitle = document.createElement('div');
+	headerTitle.style.fontFamily = 'Montserrat, Geist, sans-serif';
+	headerTitle.style.fontWeight = '700';
+	headerTitle.style.fontSize = '1.7rem';
+	headerTitle.style.color = '#181c26';
+	headerTitle.textContent = 'Edit Activity Details';
+	headerRow.appendChild(headerTitle);
+	modalHeader.appendChild(headerRow);
+
+	// --- FORM ---
+	const form = document.createElement('form');
+	form.style.display = 'flex';
+	form.style.flexDirection = 'column';
+	form.style.gap = '2.2rem';
+	form.style.marginTop = '0.5rem';
+	form.onsubmit = function(e) {
+		e.preventDefault();
+		// Gather form data
+		const updated = {};
+		const fields = [
+			'activity_name', 'activity_nature', 'activity_date',
+			'additional_partnership', 'organization_unit', 'partner_name',
+			'partner_address', 'partner_contact_name', 'partner_contact_number',
+			'partner_email', 'ADMU_office', 'ADMU_contact_name', 'ADMU_email'
+		];
+		fields.forEach(f => {
+			const el = form.querySelector(`[name="${f}"]`);
+			updated[f] = el ? el.value : '';
+		});
+		// Keep coordinates
+		updated['partner_coordinates'] = activity.partner_coordinates;
+		// Validate and update
+		let errors = validateData('sdece-official-TEST', updated);
+		const errorDiv = form.querySelector('.modal-edit-errors');
+		errorDiv.innerHTML = '';
+		if (errors.length > 0) {
+			errors.forEach(err => {
+				const p = document.createElement('p');
+				p.textContent = err;
+				p.style.color = '#b91c1c';
+				p.style.fontSize = '0.95rem';
+				errorDiv.appendChild(p);
+			});
+			return;
+		}
+		// Date handling
+		if (typeof updated.activity_date === 'string' && !isNaN(Date.parse(updated.activity_date))) {
+			const dateOnly = new Date(updated.activity_date);
+			dateOnly.setHours(0, 0, 0, 0);
+			updated.activity_date = Timestamp.fromDate(dateOnly);
+		}
+		editEntry(updated, activity.identifier);
+		// Return to detail view (simulate update)
+		showActivityDetailModal({...activity, ...updated}, partnerName, coords);
+	};
+
+	// Error messages
+	const errorDiv = document.createElement('div');
+	errorDiv.className = 'modal-edit-errors';
+	errorDiv.style.marginBottom = '1rem';
+	form.appendChild(errorDiv);
+
+	// --- General Information ---
+	const generalSection = document.createElement('div');
+	generalSection.style.display = 'flex';
+	generalSection.style.flexDirection = 'column';
+	generalSection.style.gap = '1.2rem';
+	const generalHeader = document.createElement('h2');
+	generalHeader.textContent = 'General Information';
+	generalHeader.style.fontFamily = 'Montserrat, Geist, sans-serif';
+	generalHeader.style.fontWeight = '700';
+	generalHeader.style.fontSize = '1.1rem';
+	generalHeader.style.color = '#222b45';
+	generalSection.appendChild(generalHeader);
+	generalSection.innerHTML += `
+	  <label style="font-weight:600;margin-bottom:0.3rem;">Activity Name</label>
+	  <input name="activity_name" value="${activity.activity_name || ''}" style="font-size:1.1rem;padding:0.7rem 1rem;border-radius:0.6rem;border:1px solid #e5e7eb;" />
+	  <label style="font-weight:600;margin-bottom:0.3rem;">Nature of Activity</label>
+	  <input name="activity_nature" value="${activity.activity_nature || ''}" style="font-size:1.1rem;padding:0.7rem 1rem;border-radius:0.6rem;border:1px solid #e5e7eb;" />
+	  <label style="font-weight:600;margin-bottom:0.3rem;">Date of Partnership</label>
+	  <input name="activity_date" type="date" value="${activity.activity_date ? (typeof activity.activity_date === 'string' ? activity.activity_date : (activity.activity_date.toDate ? activity.activity_date.toDate().toISOString().split('T')[0] : '')) : ''}" style="font-size:1.1rem;padding:0.7rem 1rem;border-radius:0.6rem;border:1px solid #e5e7eb;" />
+	`;
+	form.appendChild(generalSection);
+
+	// --- Partnership Information ---
+	const partnershipSection = document.createElement('div');
+	partnershipSection.style.display = 'flex';
+	partnershipSection.style.flexDirection = 'column';
+	partnershipSection.style.gap = '1.2rem';
+	const partnershipHeader = document.createElement('h2');
+	partnershipHeader.textContent = 'Partnership Information';
+	partnershipHeader.style.fontFamily = 'Montserrat, Geist, sans-serif';
+	partnershipHeader.style.fontWeight = '700';
+	partnershipHeader.style.fontSize = '1.1rem';
+	partnershipHeader.style.color = '#222b45';
+	partnershipSection.appendChild(partnershipHeader);
+	partnershipSection.innerHTML += `
+	  <label style="font-weight:600;margin-bottom:0.3rem;">Organization/Unit</label>
+	  <input name="organization_unit" value="${activity.organization_unit || ''}" style="font-size:1.1rem;padding:0.7rem 1rem;border-radius:0.6rem;border:1px solid #e5e7eb;" />
+	  <label style="font-weight:600;margin-bottom:0.3rem;">Additional Partnership</label>
+	  <input name="additional_partnership" value="${activity.additional_partnership || ''}" style="font-size:1.1rem;padding:0.7rem 1rem;border-radius:0.6rem;border:1px solid #e5e7eb;" />
+	`;
+	form.appendChild(partnershipSection);
+
+	// --- Contact Information ---
+	const contactSection = document.createElement('div');
+	contactSection.style.display = 'flex';
+	contactSection.style.flexDirection = 'column';
+	contactSection.style.gap = '1.2rem';
+	const contactHeader = document.createElement('h2');
+	contactHeader.textContent = 'Contact Information';
+	contactHeader.style.fontFamily = 'Montserrat, Geist, sans-serif';
+	contactHeader.style.fontWeight = '700';
+	contactHeader.style.fontSize = '1.1rem';
+	contactHeader.style.color = '#222b45';
+	contactSection.appendChild(contactHeader);
+	contactSection.innerHTML += `
+	  <label style="font-weight:600;margin-bottom:0.3rem;">Name of Contact Person</label>
+	  <input name="partner_contact_name" value="${activity.partner_contact_name || ''}" style="font-size:1.1rem;padding:0.7rem 1rem;border-radius:0.6rem;border:1px solid #e5e7eb;" />
+	  <label style="font-weight:600;margin-bottom:0.3rem;">Number of Contact Person</label>
+	  <input name="partner_contact_number" value="${activity.partner_contact_number || ''}" style="font-size:1.1rem;padding:0.7rem 1rem;border-radius:0.6rem;border:1px solid #e5e7eb;" />
+	  <label style="font-weight:600;margin-bottom:0.3rem;">Email of Contact Person / Partner</label>
+	  <input name="partner_email" value="${activity.partner_email || ''}" style="font-size:1.1rem;padding:0.7rem 1rem;border-radius:0.6rem;border:1px solid #e5e7eb;" />
+	`;
+	form.appendChild(contactSection);
+
+	// --- Partner Information ---
+	const partnerSection = document.createElement('div');
+	partnerSection.style.display = 'flex';
+	partnerSection.style.flexDirection = 'column';
+	partnerSection.style.gap = '1.2rem';
+	const partnerHeader = document.createElement('h2');
+	partnerHeader.textContent = 'Partner Information';
+	partnerHeader.style.fontFamily = 'Montserrat, Geist, sans-serif';
+	partnerHeader.style.fontWeight = '700';
+	partnerHeader.style.fontSize = '1.1rem';
+	partnerHeader.style.color = '#222b45';
+	partnerSection.appendChild(partnerHeader);
+	partnerSection.innerHTML += `
+	  <label style="font-weight:600;margin-bottom:0.3rem;">Name of Host Partner</label>
+	  <input name="partner_name" value="${activity.partner_name || ''}" style="font-size:1.1rem;padding:0.7rem 1rem;border-radius:0.6rem;border:1px solid #e5e7eb;" />
+	  <label style="font-weight:600;margin-bottom:0.3rem;">Address of Host Partner</label>
+	  <input name="partner_address" value="${activity.partner_address || ''}" style="font-size:1.1rem;padding:0.7rem 1rem;border-radius:0.6rem;border:1px solid #e5e7eb;" />
+	`;
+	form.appendChild(partnerSection);
+
+	// --- Ateneo Office Oversight ---
+	const officeSection = document.createElement('div');
+	officeSection.style.display = 'flex';
+	officeSection.style.flexDirection = 'column';
+	officeSection.style.gap = '1.2rem';
+	const officeHeader = document.createElement('h2');
+	officeHeader.textContent = 'Ateneo Office Oversight';
+	officeHeader.style.fontFamily = 'Montserrat, Geist, sans-serif';
+	officeHeader.style.fontWeight = '700';
+	officeHeader.style.fontSize = '1.1rem';
+	officeHeader.style.color = '#222b45';
+	officeSection.appendChild(officeHeader);
+	officeSection.innerHTML += `
+	  <label style="font-weight:600;margin-bottom:0.3rem;">Ateneo Office</label>
+	  <input name="ADMU_office" value="${activity.ADMU_office || ''}" style="font-size:1.1rem;padding:0.7rem 1rem;border-radius:0.6rem;border:1px solid #e5e7eb;" />
+	  <label style="font-weight:600;margin-bottom:0.3rem;">Oversight Contact</label>
+	  <input name="ADMU_contact_name" value="${activity.ADMU_contact_name || ''}" style="font-size:1.1rem;padding:0.7rem 1rem;border-radius:0.6rem;border:1px solid #e5e7eb;" />
+	  <label style="font-weight:600;margin-bottom:0.3rem;">Email address</label>
+	  <input name="ADMU_email" value="${activity.ADMU_email || ''}" style="font-size:1.1rem;padding:0.7rem 1rem;border-radius:0.6rem;border:1px solid #e5e7eb;" />
+	`;
+	form.appendChild(officeSection);
+
+	// --- BUTTONS ---
+	const btnRow = document.createElement('div');
+	btnRow.style.display = 'flex';
+	btnRow.style.gap = '1rem';
+	btnRow.style.marginTop = '2.5rem';
+	btnRow.style.justifyContent = 'flex-end';
+
+	const saveBtn = document.createElement('button');
+	saveBtn.type = 'submit';
+	saveBtn.className = 'modal-edit-btn';
+	saveBtn.textContent = 'Save';
+	btnRow.appendChild(saveBtn);
+
+	const cancelBtn = document.createElement('button');
+	cancelBtn.type = 'button';
+	cancelBtn.className = 'modal-edit-btn';
+	cancelBtn.style.background = '#e0e7ef';
+	cancelBtn.style.color = '#222b45';
+	cancelBtn.textContent = 'Cancel';
+	cancelBtn.onclick = function() {
+		showActivityDetailModal(activity, partnerName, coords);
+	};
+	btnRow.appendChild(cancelBtn);
+
+	form.appendChild(btnRow);
+	modalContent.appendChild(form);
 }
 
 function showActivityDetailModal(activity, partnerName, coords) {
@@ -478,8 +696,7 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	editBtn.className = 'modal-edit-btn';
 	editBtn.textContent = 'Edit Activity';
 	editBtn.onclick = function() {
-	  const editButtons = document.getElementsByClassName('edit-button');
-	  if (editButtons.length > 0) editButtons[0].click();
+		showEditActivityForm(activity, partnerName, coords);
 	};
 	modalContent.appendChild(editBtn);
 
