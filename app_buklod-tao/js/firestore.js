@@ -28,7 +28,7 @@ const firebaseConfig = {
 };
 initializeApp(firebaseConfig);
 const db = getFirestore();
-setCollection('buklod-official');
+setCollection('buklod-official-TEST');
 const colRef = getCollection();
 let partnersArray = [];
 
@@ -141,7 +141,7 @@ const loadData = async() => {
 const loadIndex = async() => {
 	let index = document.createElement("script");
 	index.type = "module";
-	index.src = "./js/index.js";
+	index.src = "js/index.js";
 	document.body.appendChild(index);
 }
 
