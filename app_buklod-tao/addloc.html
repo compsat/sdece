@@ -29,7 +29,11 @@
                     if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick') {
                         collatedInput[fieldName] = Number(inputValue);
                     } else if (fieldName ==  'earthquake_risk_description' || fieldName == 'fire_risk_description' || fieldName == 'flood_risk_description' || fieldName == 'storm_risk_description' || fieldName == 'landslide_risk_description' ) { 
+                      if (inputValue == "") {
+                        collatedInput[fieldName] = "N/A";
+                      } else {
                         collatedInput[fieldName] = inputValue;
+                      }
                     } else if (fieldName == 'earthquake_risk') {
                         collatedInput['earthquake_risk'] = inputValue;
                     } else if (fieldName == 'fire_risk') {
@@ -207,9 +211,9 @@
                 <label class="disasterForm" for="earthquake">Earthquake</label>
                 <select name="earthquake_risk" id="earthquake_risk" class="attribs">
                     <option value="" disabled selected hidden></option>
-                    <option value="HIGH">HIGH</option>
-                    <option value="MEDIUM">MEDIUM</option>
-                    <option value="LOW">LOW</option>
+                    <option value="HIGH RISK">HIGH</option>
+                    <option value="MEDIUM RISK">MEDIUM</option>
+                    <option value="LOW RISK">LOW</option>
                 </select>
                 <input type="text" id="earthquake_risk_description" name="earthquake_risk_description" class="attribs"/>
             </div>
@@ -218,9 +222,9 @@
                 <label class="disasterForm" for="fire">Fire</label>
                 <select name="fire_risk" id="fire_risk" class="attribs">
                     <option value="" disabled selected hidden></option>
-                    <option value="HIGH">HIGH</option>
-                    <option value="MEDIUM">MEDIUM</option>
-                    <option value="LOW">LOW</option>
+                    <option value="HIGH RISK">HIGH</option>
+                    <option value="MEDIUM RISK">MEDIUM</option>
+                    <option value="LOW RISK">LOW</option>
                 </select>
                 <input type="text" id="fire_risk_description" name="fire_risk_description" class="attribs"/>
             </div>
@@ -229,9 +233,9 @@
                 <label class="disasterForm" for="flood">Flood</label>
                 <select name="flood_risk" id="flood_risk" class="attribs">
                     <option value="" disabled selected hidden></option>
-                    <option value="HIGH">HIGH</option>
-                    <option value="MEDIUM">MEDIUM</option>
-                    <option value="LOW">LOW</option>
+                    <option value="HIGH RISK">HIGH</option>
+                    <option value="MEDIUM RISK">MEDIUM</option>
+                    <option value="LOW RISK">LOW</option>
                 </select>
                 <input type="text" id="flood_risk_description" name="flood_risk_description" class="attribs"/>
             </div>
@@ -240,9 +244,9 @@
                 <label class="disasterForm" for="landslide">Landslide</label>
                 <select name="landslide_risk" id="landslide_risk" class="attribs">
                     <option value="" disabled selected hidden></option>
-                    <option value="HIGH">HIGH</option>
-                    <option value="MEDIUM">MEDIUM</option>
-                    <option value="LOW">LOW</option>
+                    <option value="HIGH RISK">HIGH</option>
+                    <option value="MEDIUM RISK">MEDIUM</option>
+                    <option value="LOW RISK">LOW</option>
                 </select>
                 <input type="email" id="landslide_risk_description" name="landslide_risk_description" class="attribs"/>
             </div>
@@ -251,9 +255,9 @@
                 <label class="disasterForm" for="storm">Storm</label>
                 <select name="storm_risk" id="storm_risk" class="attribs">
                     <option value="" disabled selected hidden></option>
-                    <option value="HIGH">HIGH</option>
-                    <option value="MEDIUM">MEDIUM</option>
-                    <option value="LOW">LOW</option>
+                    <option value="HIGH RISK">HIGH</option>
+                    <option value="MEDIUM RISK">MEDIUM</option>
+                    <option value="LOW RISK">LOW</option>
                 </select>
                 <input type="email" id="storm_risk_description" name="storm_risk_description" class="attribs"/>
             </div>
