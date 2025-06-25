@@ -141,7 +141,7 @@ const loadData = async() => {
 const loadIndex = async() => {
 	let index = document.createElement("script");
 	index.type = "module";
-	index.src = "./js/index.js";
+	index.src = "/app_buklod-tao/js/index.js";
 	document.body.appendChild(index);
 }
 
