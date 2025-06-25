@@ -107,37 +107,37 @@
         <div class="inputContainer">
             <label class="form" for="number_minors">Number of Minor Residents
             </label>
-            <input type="text" id="number_minors" name="number_minors" class="attribs" />
+            <input type="number" id="number_minors" name="number_minors" class="attribs" />
         </div>
         <br>
         <div class="inputContainer">
             <label class="form" for="number_seniors">Number of Senior Citizen Residents
             </label>
-            <input type="text" id="number_seniors" name="number_seniors" class="attribs" />
+            <input type="number" id="number_seniors" name="number_seniors" class="attribs" />
         </div>
         <br>
         <div class="inputContainer">
             <label class="form" for="number_pwd">Number of PWD Residents
             </label>
-            <input type="text" id="number_pwd" name="number_pwd" class="attribs" />
+            <input type="number" id="number_pwd" name="number_pwd" class="attribs" />
         </div>
         <br>
         <div class="inputContainer">
             <label class="form" for="number_sick">Number of Sick Residents
             </label>
-            <input type="text" id="number_sick" name="number_sick" class="attribs" />
+            <input type="number" id="number_sick" name="number_sick" class="attribs" />
         </div>
         <br>
         <div class="inputContainer">
             <label class="form" for="sickness_present">Sickness Present
             </label>
-            <input type="text" id="sickness_present" name="sickness_present" class="attribs" />
+            <input type="number" id="sickness_present" name="sickness_present" class="attribs" />
         </div>
         <br>
         <div class="inputContainer">
             <label class="form" for="number_pregnant">Number of Pregnant Residents
             </label>
-            <input type="text" id="number_pregnant" name="number_pregnant" class="attribs" />
+            <input type="number" id="number_pregnant" name="number_pregnant" class="attribs" />
         </div>
         <br>
         <h2 class="subHeader">RISK LEVELS</h2>
@@ -220,9 +220,14 @@
     <div class="formModalFooter"></div>
 
     <script type="module">
-        import { editEntry, setCollection, BUKLOD_RULES_TEST, getDocIdByPartnerName, getDocByID } from "/js/firestore_UNIV.js";
-        setCollection("buklod-official");
 
+        
+        import { editEntry, setCollection, BUKLOD_RULES_TEST, getDocIdByPartnerName, getDocByID } from "/js/firestore_UNIV.js";
+        import {submitForm} from '../js/firestore.js';
+        setCollection("buklod-official-TEST");
+        
+
+        /*
         function populateFormFields(partnerData) {
             document.getElementById("partner").value = partnerData.name;
             document.getElementById("partner_contact-person").value = partnerData["`partner-contact`"];
@@ -233,6 +238,9 @@
             document.getElementById("ateneo_contact-person").value = partnerData["`admu-contact`"];
             document.getElementById("ateneo_contact-email").value = partnerData["`admu-email`"];
         }
+            */
+
+        /*
         function fetchPartnerData() {
             const params = new URLSearchParams(window.location.search);
             const partnerName = params.get("partnerName");
@@ -253,6 +261,7 @@
                 alert("No partnerName parameter found in the URL.");
             }
         }
+        
         function handleFormSubmit() {
             console.log("Form is submitting!");
             var collatedInput = {}; 
@@ -325,7 +334,7 @@
                         const storm = document.getElementById("storm").value;
                         const stormRisk = document.getElementById("storm_risk").value;                   
 
-
+                        */
                         /*
                         const name = partnerName;
                         const activity = document.getElementById("nature_of_act").value;
@@ -337,6 +346,7 @@
                         const dates = document.getElementById("dates_of_partnership").value;
                         */
 
+                        /*
                         editEntry(collatedInput, docId);
                     }
                     else {
@@ -378,7 +388,7 @@
         });
         */
 
-        document.getElementById("submit_form").addEventListener("click", handleFormSubmit);
+        document.getElementById("submit_form").addEventListener("click", submitForm);
 
     </script>
 
