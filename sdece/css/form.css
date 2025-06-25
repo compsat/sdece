@@ -101,31 +101,32 @@ button {
 
 .form-label {
 	font-family: 'Geist', sans-serif;
-	font-size: 1rem;
-	line-height: 1.5rem;
+	font-size: 0.92rem;
+	line-height: 1.3rem;
 	color: #7E8A98;
-	margin-bottom: 0.5rem;
+	margin-bottom: 0.4rem;
 	padding-right: 0;
 	font-weight: 400;
 }
 
 .form-input {
-	padding: 1rem 1.2rem;
+	padding: 0.7rem 1rem;
 	width: 100%;
-	border-radius: 0.7rem;
+	border-radius: 0.5rem;
 	font-family: 'Geist', sans-serif;
-	font-size: 1.08rem;
+	font-size: 1rem;
 	font-weight: 500;
 	color: #181c26;
 	background-color: white;
-	border: 1.5px solid #cbd5e0;
+	border: 1.2px solid #cbd5e0;
 	transition: border 0.15s, box-shadow 0.15s;
 	box-shadow: 0 1px 4px rgba(44,62,80,0.04);
 }
 
 .form-input:focus {
-	border: 1.5px solid #2563eb;
 	box-shadow: 0 2px 8px rgba(44,62,80,0.10);
+	border: 1.5px solid #bfc9d1;
+	box-shadow: none;
 }
 
 .form-buttons-container {
@@ -172,7 +173,6 @@ button {
 .negative:hover {
 	background: #f3f4f6;
 	color: #7E8A98;
-	border: 2px solid #7E8A98;
 }
 
 /* .form-input {
