@@ -37,25 +37,15 @@ var partnersArray = getPartnersArray();
 function onPinClick(doc) {
   // Variables for risk levels
   var earthquake = doc.earthquake_risk;
-  var earthquake_split = earthquake.split(' RISK: ');
-  var earthquake1 = earthquake_split[0];
-  var earthquake2 = earthquake_split[1];
+  var earthquake_desc = doc.earthquake_risk_description;
   var fire = doc.fire_risk;
-  var fire_split = fire.split(' RISK: ');
-  var fire1 = fire_split[0];
-  var fire2 = fire_split[1];
+  var fire_desc = doc.fire_risk_description;
   var flood = doc.flood_risk;
-  var flood_split = flood.split(' RISK: ');
-  var flood1 = flood_split[0];
-  var flood2 = flood_split[1];
+  var flood_desc = doc.flood_risk_description;
   var landslide = doc.landslide_risk;
-  var landslide_split = landslide.split(' RISK: ');
-  var landslide1 = landslide_split[0];
-  var landslide2 = landslide_split[1];
+  var landslide_desc = doc.landslide_risk_description;
   var storm = doc.storm_risk;
-  var storm_split = storm.split(' RISK: ');
-  var storm1 = storm_split[0];
-  var storm2 = storm_split[1];
+  var storm_desc = doc.storm_risk_description;
 
   let leaflet_html = `
   <div class="leafletPopupContainer" id="leafletModal">
@@ -87,38 +77,38 @@ function onPinClick(doc) {
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Earthquake</label>
-        <label class="leafletLabel">${earthquake1}</label>
+        <label class="leafletLabel">${earthquake}</label>
       </div>
       <div>
-        <p class="leafletDetails">${earthquake2}</p>
+        <p class="leafletDetails">${earthquake_desc}</p>
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Fire</label>
-        <label class="leafletLabel">${fire1}</label>
+        <label class="leafletLabel">${fire}</label>
       </div>
       <div>
-        <p class="leafletDetails">${fire2}</p>
+        <p class="leafletDetails">${fire_desc}</p>
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Flood</label>
-        <label class="leafletLabel">${flood1}</label>
+        <label class="leafletLabel">${flood}</label>
       </div>
       <div>
-        <p class="leafletDetails">${flood2}</p>
+        <p class="leafletDetails">${flood_desc}</p>
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Landslide</label>
-        <label class="leafletLabel">${landslide1}</label>
+        <label class="leafletLabel">${landslide}</label>
       </div>
       <div>
-        <p class="leafletDetails">${landslide2}</p>
+        <p class="leafletDetails">${landslide_desc}</p>
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Storm</label>
-        <label class="leafletLabel">${storm1}</label>
+        <label class="leafletLabel">${storm}</label>
       </div>
       <div>
-        <p class="leafletDetails">${storm2}</p>
+        <p class="leafletDetails">${storm_desc}</p>
       </div>
     </div>
     <div>
