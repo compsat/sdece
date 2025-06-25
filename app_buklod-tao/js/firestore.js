@@ -449,6 +449,7 @@ export function submitForm(){
   
   if (validateErrors.length > 0){
     console.log("failed vaildation");
+    alert("Error in validating values. Check console for errors present");
     for(var i in validateErrors){
       console.log(validateErrors[i]);
     }
