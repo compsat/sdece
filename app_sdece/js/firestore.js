@@ -254,7 +254,8 @@ getDocs(col_ref)
 			if (Object.keys(activities).length > 0) {
 				let html = ';'
 				Object.keys(activities).forEach((activity) => {
-					html += getActivity(activity) + '<br/>'; 
+					activityDiv.innerHTML +=
+						getActivity(activity) + '<br/>'; // there might be a better way to display multiple activities
 				});
 			}
 
@@ -300,249 +301,201 @@ export function showModal(partner) {
 	const modal = document.getElementById('partnerModal');
 	const modalHeader = document.getElementById('modalHeader');
 	const modalContent = document.getElementById('modalContent');
-	const modalHeaderStyle = modalHeader.style;
 
-	modalHeaderStyle.width = '100%';
-	modalHeaderStyle.display = 'flex';
-	modalHeaderStyle.flexDirection = 'row';
-	modalHeaderStyle.justifyContent = 'space-between';
-	modalHeaderStyle.alignItems = 'center';
+	modalHeader.style.width = '100%';
+	modalHeader.style.display = 'flex';
+	modalHeader.style.flexDirection = 'column';
+	modalHeader.style.justifyContent = 'flex-start';
+	modalHeader.style.alignItems = 'flex-start';
 
 	// Clear previous content
 	modalHeader.innerHTML = '';
 	modalContent.innerHTML = '';
 
-	// Create div elements for each piece of information
-	const backarrowDiv = document.createElement('div');
-	const closeDiv = document.createElement('div');
-	const nameDiv = document.createElement('div');
-	const addressDiv = document.createElement('div');
-	const activityHeaderDiv = document.createElement('div');
-	const activityDiv = document.createElement('div');
-	const admuContactDiv = document.createElement('div');
-	const admuEmailDiv = document.createElement('div');
-	const admuOfficeDiv = document.createElement('div');
-	const orgDiv = document.createElement('div');
-	// const datesDiv = document.createElement('div');
-	// const contactPersonDiv = document.createElement('div');
+	// --- HEADER ---
+	const headerTitle = document.createElement('div');
+	headerTitle.className = 'modal-modern-title';
+	headerTitle.innerHTML = `
+	  <span class="modal-modern-location">${partner[0].partner_name || ''}</span>
+	`;
+	modalHeader.appendChild(headerTitle);
 
-	nameDiv.classList.add('modal-name');
-	addressDiv.classList.add('modal-address');
+	// --- COORDINATES ---
+	const coords = partner[0].partner_coordinates;
+	let lat = coords && (coords._lat || coords.latitude);
+	let lng = coords && (coords._long || coords.longitude);
+	if (lat && lng) {
+		lat = (Math.round(lat * 10000) / 10000).toFixed(4);
+		lng = (Math.round(lng * 10000) / 10000).toFixed(4);
+		const coordDiv = document.createElement('div');
+		coordDiv.className = 'modal-geolocation-row';
+		coordDiv.innerHTML = `
+			<span class="geo-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 20.8995L16.9497 15.9497C19.6834 13.2161 19.6834 8.78392 16.9497 6.05025C14.2161 3.31658 9.78392 3.31658 7.05025 6.05025C4.31658 8.78392 4.31658 13.2161 7.05025 15.9497L12 20.8995ZM12 23.7279L5.63604 17.364C2.12132 13.8492 2.12132 8.15076 5.63604 4.63604C9.15076 1.12132 14.8492 1.12132 18.364 4.63604C21.8787 8.15076 21.8787 13.8492 18.364 17.364L12 23.7279ZM12 13C13.1046 13 14 12.1046 14 11C14 9.89543 13.1046 9 12 9C10.8954 9 10 9.89543 10 11C10 12.1046 10.8954 13 12 13ZM12 15C9.79086 15 8 13.2091 8 11C8 8.79086 9.79086 7 12 7C14.2091 7 16 8.79086 16 11C16 13.2091 14.2091 15 12 15Z"></path></svg></span>
+			<span>${lat}, ${lng}</span>
+		`;
+		modalHeader.appendChild(coordDiv);
+	}
 
-	// Set the content of each div
-	backarrowDiv.innerHTML = '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor" transform="matrix(-1, 0, 0, -1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
-	backarrowDiv.classList.add('back-btn');
-	backarrowDiv.addEventListener('click', () => {
-		current_viewed_activity = null;
-		document.querySelector('.modal-button').style.display = 'none';
-		document.querySelector('.modal-button').style.padding = '0px';
-
-		modalHeader.innerHTML = '';
-		modalContent.innerHTML = '';
-
-		// Append the div elements to the modal content
-		modalHeader.appendChild(nameDiv);
-		modalHeader.appendChild(closeDiv);
-		modalContent.appendChild(addressDiv);
-		modalContent.appendChild(activityHeaderDiv);
-		modalContent.appendChild(activityDiv);
+	// --- LIST OF ACTIVITIES SECTION ---
+	const activitiesSection = document.createElement('div');
+	activitiesSection.className = 'modal-section';
+	activitiesSection.innerHTML = `
+	  <div class=\"modal-section-header\">\n        <span class=\"modal-section-icon\" style=\"display:flex;align-items:center;\">\n          <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"#7b8a99\" width=\"1.1em\" height=\"1.1em\"><path d=\"M20.0833 15.1999L21.2854 15.9212C21.5221 16.0633 21.5989 16.3704 21.4569 16.6072C21.4146 16.6776 21.3557 16.7365 21.2854 16.7787L12.5144 22.0412C12.1977 22.2313 11.8021 22.2313 11.4854 22.0412L2.71451 16.7787C2.47772 16.6366 2.40093 16.3295 2.54301 16.0927C2.58523 16.0223 2.64413 15.9634 2.71451 15.9212L3.9166 15.1999L11.9999 20.0499L20.0833 15.1999ZM20.0833 10.4999L21.2854 11.2212C21.5221 11.3633 21.5989 11.6704 21.4569 11.9072C21.4146 11.9776 21.3557 12.0365 21.2854 12.0787L11.9999 17.6499L2.71451 12.0787C2.47772 11.9366 2.40093 11.6295 2.54301 11.3927C2.58523 11.3223 2.64413 11.2634 2.71451 11.2212L3.9166 10.4999L11.9999 15.3499L20.0833 10.4999ZM12.5144 1.30864L21.2854 6.5712C21.5221 6.71327 21.5989 7.0204 21.4569 7.25719C21.4146 7.32757 21.3557 7.38647 21.2854 7.42869L11.9999 12.9999L2.71451 7.42869C2.47772 7.28662 2.40093 6.97949 2.54301 6.7427C2.58523 6.67232 2.64413 6.61343 2.71451 6.5712L11.4854 1.30864C11.8021 1.11864 12.1977 1.11864 12.5144 1.30864ZM11.9999 3.33233L5.88723 6.99995L11.9999 10.6676L18.1126 6.99995L11.9999 3.33233Z\"></path></svg>\n        </span>\n        <span>List of activities</span>\n      </div>\n      <div class='modal-section-divider'></div>\n    `;
+	// List of activity cards
+	partner.forEach((activity) => {
+		const card = document.createElement('div');
+		card.className = 'modal-card modal-activity-summary-card';
+		card.style.cursor = 'pointer';
+		card.innerHTML = `
+			<div class="modal-card-header-activity" style="font-size:1rem;font-weight:500;">${getActivity(activity) || 'Activity Name'}</div>
+			<div class="modal-card-row" style="margin-top:-0.5rem;">
+				<span class="modal-office">${activity.ADMU_office || 'Department'}</span>
+			</div>
+			<span class="modal-activity-arrow" style="position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);font-size:1.3rem;color:#b0b0b0;">&#8250;</span>
+		`;
+		card.style.position = 'relative';
+		card.onclick = () => showActivityDetailModal(activity, partner[0].partner_name, coords);
+		activitiesSection.appendChild(card);
 	});
+	modalContent.appendChild(activitiesSection);
 
-	closeDiv.innerHTML = '<svg viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><path d="M20.7457 3.32851C20.3552 2.93798 19.722 2.93798 19.3315 3.32851L12.0371 10.6229L4.74275 3.32851C4.35223 2.93798 3.71906 2.93798 3.32854 3.32851C2.93801 3.71903 2.93801 4.3522 3.32854 4.74272L10.6229 12.0371L3.32856 19.3314C2.93803 19.722 2.93803 20.3551 3.32856 20.7457C3.71908 21.1362 4.35225 21.1362 4.74277 20.7457L12.0371 13.4513L19.3315 20.7457C19.722 21.1362 20.3552 21.1362 20.7457 20.7457C21.1362 20.3551 21.1362 19.722 20.7457 19.3315L13.4513 12.0371L20.7457 4.74272C21.1362 4.3522 21.1362 3.71903 20.7457 3.32851Z" fill="currentColor"></path></svg>';
-	closeDiv.classList.add('close-btn');
-	// Close the modal when the close button is clicked
-	closeDiv.addEventListener('click', () => {
-		current_viewed_activity = null;
-		clearAllHighlights();
-		//might be better to put this in its own function
-		modal.style.display = 'none';
-		modal.classList.remove('open'); //transition out
-	});
+	// --- CLOSE BUTTON (top right) ---
+	const closeDiv = document.createElement('button');
+	closeDiv.className = 'close-btn';
+	closeDiv.innerHTML = '&times;';
+	closeDiv.onclick = function() {
+	  modal.style.display = 'none';
+	  modal.classList.remove('open');
+	};
+	modalHeader.appendChild(closeDiv);
 
-	nameDiv.textContent = partner[0].partner_name;
-	addressDiv.textContent =
-		'Latitude, Longitude: ' 
-		+ partner[0].partner_coordinates._lat + ', ' 
-		+ partner[0].partner_coordinates._long;
-
-	// Activities header with add activity button
-	activityHeaderDiv.innerHTML = 'List of activities: ';
-	const addActivity = document.createElement('button');
-	addActivity.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>';
-	addActivity.classList.add('plus-btn');
-
-	// Add button for adding activities
-	addActivity.addEventListener('click', () => {
-		has_existing_partner = true;
-		addForm_geopoint = new GeoPoint(
-			partner[0].partner_coordinates._lat,
-			partner[0].partner_coordinates._long
-		);
-		// show the addLoc.html with some autofilled values
-		var modal = document.getElementById('addModal');
-		var modalHtml = document.getElementById('addModalHTML');
-		var partnerName = modalHtml.contentWindow.document.getElementById('partner_name');
-		var partnerAddress = modalHtml.contentWindow.document.getElementById('partner_address');
-
-		// Display the modal
+	// Show the partner modal
 		modal.style.display = 'flex';
-		// populate the field with current partner values
+	modal.classList.add('open');
+}
 
-		partnerName.value = partner[0].partner_name;
-		partnerName.readOnly = true;
-		partnerName.style.backgroundColor = 'var(--custom-medium-gray';
-		partnerName.style.color = 'var(--custom-dark-gray';
+function showActivityDetailModal(activity, partnerName, coords) {
+	const modal = document.getElementById('partnerModal');
+	const modalHeader = document.getElementById('modalHeader');
+	const modalContent = document.getElementById('modalContent');
 
-		partnerAddress.value = partner[0].partner_address;
-		partnerAddress.readOnly = true;
-		partnerAddress.style.backgroundColor = 'var(--custom-medium-gray';
-		partnerAddress.style.color = 'var(--custom-dark-gray';
-
-		// Close the Add Activity modal when the user clicks anywhere outside of it
-		// window.onclick = function (event) {
-		// 	if (event.target == modal) {
-		// 		modal.style.display = 'none';
-		// 	}
-		// };
-	});
-
-	activityHeaderDiv.appendChild(addActivity);
-	activityHeaderDiv.classList.add('modal-activities-header');
-
-	// Add each activity to the modal content
-	if (partner.length > 0) {
-		// check if list of activities is present, otherwise is skipped to avoid errors
-		partner.forEach((activity) => {
-			// View activity details button
-			const activityButton = document.createElement('div');
-			const activityTitle = document.createElement('button');
-
-			activityTitle.classList.add('modal-activity-title');
-			activityButton.classList.add('modal-activity-button');
-
-			const activityName = document.createElement('div');
-			const arrow = document.createElement('div');
-			arrow.classList.add('arrow');
-			const office = document.createElement('div');
-			office.classList.add('modal-office');
-
-			activityName.textContent = getActivity(activity) + '';
-			arrow.innerHTML = '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
-			office.innerHTML = activity.ADMU_office;
-
-			activityTitle.appendChild(activityName);
-			activityTitle.appendChild(arrow);
-			activityButton.appendChild(activityTitle);
-			activityButton.appendChild(office);
-
-			// Set div content for activity details
-
-			const activityNameDiv = document.createElement('div');
-			const activityAddressDiv = document.createElement('div');
-			const activityContactDiv = document.createElement('div');
-			const activityOrganizationDiv = document.createElement('div');
-			const activityDatesDiv = document.createElement('div');
-			const activityOfficeDiv = document.createElement('div');
-
-			activityNameDiv.innerHTML = getActivity(activity) + '';
-			activityNameDiv.classList.add('modal-activities-header');
-			activityAddressDiv.innerHTML = activity.partner_address;
-			activityAddressDiv.classList.add('modal-address');
-
-			activityContactDiv.innerHTML =
-				'<b>Contact</b>' +
-				'<p class="pm-detailed-info">' +
-				activity.partner_contact_name +
-				'</p>' +
-				'<p class="pm-detailed-info">' +
-				activity.partner_email +
-				'</p>';
-			activityOrganizationDiv.innerHTML =
-				'<b>Organization/Unit</b>' +
-				'<p class="pm-detailed-info">' +
-				activity.organization_unit +
-				'</p>';
-			activityDatesDiv.innerHTML =
-				'<b>Date/s of Partnership</b>' +
-				'<p class="pm-detailed-info">' +
-				(activity.activity_date?.toDate?.()
-					? activity.activity_date.toDate().toLocaleDateString('en-PH', {
-						year: 'numeric',
-						month: 'long',
-						day: 'numeric',
-					})
-					: 'N/A') +
-				'</p>'; //this field might become an array in the future
-
-			activityOfficeDiv.innerHTML =
-				'<b class="ao-header">Ateneo Office Oversight</b>' +
-				'<p class="ao-office">' +
-				activity.ADMU_office +
-				'</p>' +
-				'<p class="ao-details">' +
-				activity.ADMU_contact_name +
-				'</p>' +
-				'<p class="ao-details">' +
-				activity.ADMU_email +
-				'</p>';
-
-			// Executed when the user clicks on an activity listed in the Partner Modal
-			activityButton.addEventListener('click', () => {
-				current_viewed_activity = activity;
-				document.querySelector('.modal-button').style.display = 'flex';
 				modalHeader.innerHTML = '';
 				modalContent.innerHTML = '';
 
-				// Header
-				modalHeader.appendChild(backarrowDiv);
-				modalHeader.appendChild(nameDiv);
-				modalHeader.appendChild(closeDiv);
+	// --- HEADER ---
+	const headerRow = document.createElement('div');
+	headerRow.style.display = 'flex';
+	headerRow.style.alignItems = 'center';
+	headerRow.style.gap = '1rem';
 
-				// Resetting class list to override styles
-				activityNameDiv.classList = '';
-				activityAddressDiv.classList = '';
+	// Back button
+	const backBtn = document.createElement('button');
+	backBtn.className = 'modal-back-btn';
+	backBtn.innerHTML = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 19L8.5 12L15.5 5" stroke="#222b45" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+	backBtn.onclick = function() {
+		// Always show the summary modal for this partner
+		let allPartners = window.partners || {};
+		let partnerArr = null;
+		if (allPartners && allPartners[partnerName]) {
+			partnerArr = allPartners[partnerName];
+		} else if (window.activities) {
+			// fallback: search activities for matching partner name
+			partnerArr = Object.values(window.activities).filter(a => a.partner_name === partnerName);
+		}
+		if (partnerArr && partnerArr.length > 0) {
+			showModal(partnerArr);
+		} else {
+			// fallback: showModal with just this activity
+			showModal([activity]);
+		}
+	};
+	headerRow.appendChild(backBtn);
 
-				activityNameDiv.classList.add('pm-activity-name');
-				modalContent.appendChild(activityNameDiv);
+	const headerTitle = document.createElement('div');
+	headerTitle.className = 'modal-modern-title';
+	headerTitle.innerHTML = `
+	  <span class="modal-modern-activity">${getActivity(activity) || ''}</span><br>
+	  <span class="modal-location-label">${partnerName || ''}</span>
+	`;
+	headerRow.appendChild(headerTitle);
+	modalHeader.appendChild(headerRow);
 
-				activityAddressDiv.classList.add('pm-activity-address');
-				modalContent.appendChild(activityAddressDiv);
+	// --- GENERAL INFORMATION SECTION ---
+	const generalSection = document.createElement('div');
+	generalSection.className = 'modal-section';
+	generalSection.innerHTML = `
+	  <div class="modal-section-header">
+		<span class="modal-section-icon">📄</span>
+		<span>General Information</span>
+	  </div>
+	`;
+	// Contact Information Card
+	const contactCard = document.createElement('div');
+	contactCard.className = 'modal-card';
+	contactCard.innerHTML = `
+	  <div class=\"modal-card-header-information\"><span style=\"display:inline-flex;align-items:center;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"rgba(126,138,152,1)\" width=\"1.2em\" height=\"1.2em\" style=\"vertical-align:middle;margin-right:0.5rem;\"><path d=\"M20 22H6C4.34315 22 3 20.6569 3 19V5C3 3.34315 4.34315 2 6 2H20C20.5523 2 21 2.44772 21 3V21C21 21.5523 20.5523 22 20 22ZM19 20V18H6C5.44772 18 5 18.4477 5 19C5 19.5523 5.44772 20 6 20H19ZM5 16.1707C5.31278 16.0602 5.64936 16 6 16H19V4H6C5.44772 4 5 4.44772 5 5V16.1707ZM12 10C10.8954 10 10 9.10457 10 8C10 6.89543 10.8954 6 12 6C13.1046 6 14 6.89543 14 8C14 9.10457 13.1046 10 12 10ZM9 14C9 12.3431 10.3431 11 12 11C13.6569 11 15 12.3431 15 14H9Z\"></path></svg>Contact Information</span></div>
+	  <div class=\"modal-card-row\">\n        <span class=\"modal-label\">Contact person</span>\n        <span class=\"modal-value\">${activity.partner_contact_name || '—'}</span>\n      </div>\n      <div class=\"modal-card-row\">\n        <span class=\"modal-label\">Email address</span>\n        <span class=\"modal-value\">${activity.partner_email || '—'}</span>\n      </div>\n    `;
+	// Partnership Information Card
+	const partnershipCard = document.createElement('div');
+	partnershipCard.className = 'modal-card';
+	partnershipCard.innerHTML = `
+	  <div class=\"modal-card-header-information\"><span style=\"display:inline-flex;align-items:center;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"rgba(126,138,152,1)\" width=\"1.2em\" height=\"1.2em\" style=\"vertical-align:middle;margin-right:0.5rem;\"><path d=\"M2 22C2 17.5817 5.58172 14 10 14C14.4183 14 18 17.5817 18 22H16C16 18.6863 13.3137 16 10 16C6.68629 16 4 18.6863 4 22H2ZM10 13C6.685 13 4 10.315 4 7C4 3.685 6.685 1 10 1C13.315 1 16 3.685 16 7C16 10.315 13.315 13 10 13ZM10 11C12.21 11 14 9.21 14 7C14 4.79 12.21 3 10 3C7.79 3 6 4.79 6 7C6 9.21 7.79 11 10 11ZM18.2837 14.7028C21.0644 15.9561 23 18.752 23 22H21C21 19.564 19.5483 17.4671 17.4628 16.5271L18.2837 14.7028ZM17.5962 3.41321C19.5944 4.23703 21 6.20361 21 8.5C21 11.3702 18.8042 13.7252 16 13.9776V11.9646C17.6967 11.7222 19 10.264 19 8.5C19 7.11935 18.2016 5.92603 17.041 5.35635L17.5962 3.41321Z\"></path></svg>Partnership Information</span></div>
+	  <div class=\"modal-card-row\">\n        <span class=\"modal-label\">Organization/Unit</span>\n        <span class=\"modal-value\">${activity.organization_unit || '—'}</span>\n      </div>\n      <div class=\"modal-card-row\">\n        <span class=\"modal-label\">Partnership date</span>\n        <span class=\"modal-value\">${activity.activity_date || '—'}</span>\n      </div>\n    `;
+	generalSection.appendChild(contactCard);
+	generalSection.appendChild(partnershipCard);
+	modalContent.appendChild(generalSection);
 
-				activityContactDiv.classList.add('pm-details');
-				modalContent.appendChild(activityContactDiv);
+	// --- ATENEO OFFICE OVERSIGHT SECTION ---
+	const officeSection = document.createElement('div');
+	officeSection.className = 'modal-section';
+	officeSection.innerHTML = `
+	  <div class="modal-section-header">
+		<span class="modal-section-icon">🏢</span>
+		<span>Ateneo Office Oversight</span>
+	  </div>
+	`;
+	const officeCard = document.createElement('div');
+	officeCard.className = 'modal-card';
+	officeCard.innerHTML = `
+	  <div class="modal-card-row">
+		<span class="modal-label">Ateneo Office</span>
+		<span class="modal-value">${activity.ADMU_office || '—'}</span>
+	  </div>
+	  <div class="modal-card-row">
+		<span class="modal-label">Oversight Contact</span>
+		<span class="modal-value">${activity.ADMU_contact_name || '—'}</span>
+	  </div>
+	  <div class="modal-card-row">
+		<span class="modal-label">Email address</span>
+		<span class="modal-value">${activity.ADMU_email || '—'}</span>
+	  </div>
+	`;
+	officeSection.appendChild(officeCard);
+	modalContent.appendChild(officeSection);
 
-				activityOrganizationDiv.classList.add('pm-details');
-				modalContent.appendChild(activityOrganizationDiv);
+	// --- EDIT BUTTON ---
+	const editBtn = document.createElement('button');
+	editBtn.className = 'modal-edit-btn';
+	editBtn.textContent = 'Edit Activity';
+	editBtn.onclick = function() {
+	  const editButtons = document.getElementsByClassName('edit-button');
+	  if (editButtons.length > 0) editButtons[0].click();
+	};
+	modalContent.appendChild(editBtn);
 
-				activityDatesDiv.classList.add('pm-details');
-				modalContent.appendChild(activityDatesDiv);
-
-				activityOfficeDiv.classList.add('pm-activity-office');
-				modalContent.appendChild(activityOfficeDiv);
-			});
-
-			activityDiv.appendChild(activityButton);
-		});
-	}
-
-	activityDiv.classList.add('modal-activities-list');
-
-	admuContactDiv.innerHTML = '<b>AdMU Contact: </b>' + partner.ADMU_contact;
-	admuEmailDiv.innerHTML = '<b>AdMU Email: </b>' + partner.ADMU_email;
-	admuOfficeDiv.innerHTML = '<b>AdMU Office: </b>' + partner.ADMU_office;
-	orgDiv.innerHTML = '<b>Organization: </b>' + partner.organization_unit;
-
-	// Append the div elements to the modal content
-
-	// NOTE: This is where every partner modal content is added
-	modalHeader.appendChild(nameDiv);
+	// --- CLOSE BUTTON (top right) ---
+	const closeDiv = document.createElement('button');
+	closeDiv.className = 'close-btn';
+	closeDiv.innerHTML = '&times;';
+	closeDiv.onclick = function() {
+	  modal.style.display = 'none';
+	  modal.classList.remove('open');
+	};
 	modalHeader.appendChild(closeDiv);
-	modalContent.appendChild(addressDiv);
-	modalContent.appendChild(activityHeaderDiv);
-	modalContent.appendChild(activityDiv);
 
 	// Show the partner modal
 	modal.style.display = 'flex';
+	modal.classList.add('open');
 	modal.classList.add('open'); //transition in
 
 	// Close the modal when the user clicks outside of it
