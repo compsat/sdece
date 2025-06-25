@@ -36,26 +36,16 @@ var partnersArray = getPartnersArray();
 // function to store the html for info display on pin click
 function onPinClick(doc) {
   // Variables for risk levels
-  var earthquake = doc.earthquake_risk;
-  var earthquake_split = earthquake.split(' RISK: ');
-  var earthquake1 = earthquake_split[0];
-  var earthquake2 = earthquake_split[1];
-  var fire = doc.fire_risk;
-  var fire_split = fire.split(' RISK: ');
-  var fire1 = fire_split[0];
-  var fire2 = fire_split[1];
-  var flood = doc.flood_risk;
-  var flood_split = flood.split(' RISK: ');
-  var flood1 = flood_split[0];
-  var flood2 = flood_split[1];
-  var landslide = doc.landslide_risk;
-  var landslide_split = landslide.split(' RISK: ');
-  var landslide1 = landslide_split[0];
-  var landslide2 = landslide_split[1];
-  var storm = doc.storm_risk;
-  var storm_split = storm.split(' RISK: ');
-  var storm1 = storm_split[0];
-  var storm2 = storm_split[1];
+  var earthquake1 = doc.earthquake_risk;
+  var earthquake2 = doc.earthquake_risk_description;
+  var fire1 = doc.fire_risk;
+  var fire2 = doc.fire_risk_description;
+  var flood1 = doc.flood_risk;
+  var flood2 = doc.flood_risk_description;
+  var landslide1 = doc.landslide_risk;
+  var landslide2 = doc.landslide_risk_description;
+  var storm1 = doc.storm_risk;
+  var storm2 = doc.storm_risk_description;
 
   let leaflet_html = `
   <div class="leafletPopupContainer" id="leafletModal">
