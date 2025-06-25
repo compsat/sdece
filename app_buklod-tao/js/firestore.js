@@ -11,8 +11,16 @@ import {
   query,
   where,
   getDoc,
+  GeoPoint,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-import { getCollection, setCollection } from '../../js/firestore_UNIV.js';
+import { 
+  getCollection, 
+  setCollection, 
+  BUKLOD_RULES_TEST, 
+  validateData, 
+  editEntry,
+  getDocIdByPartnerName,
+} from '../../js/firestore_UNIV.js';
 // Your Firestore code here
 console.log("run2");
 // Your web app's Firebase configuration
@@ -26,12 +34,16 @@ const firebaseConfig = {
   appId: '1:601571823960:web:1f1278ecb86aa654e6152d',
   measurementId: 'G-9N9ELDEMX9',
 };
+
+var collection_value = 'buklod-official-TEST'
+
 initializeApp(firebaseConfig);
 const db = getFirestore();
-setCollection('buklod-official');
+setCollection(collection_value);
 const colRef = getCollection();
 let partnersArray = [];
 
+/*
 export function getDocIdByPartnerName(partnerName) {
   const endName = partnerName.replace(/\s/g, '\uf8ff');
   return getDocs(
@@ -56,7 +68,7 @@ export function getDocIdByPartnerName(partnerName) {
       console.error('Error getting documents: ', error);
       return null;
     });
-}
+}*/
 
 export function getDocByID(docId) {
   const docReference = doc(db, 'nstp-3', docId);
@@ -370,6 +382,7 @@ export function addEntry(data) {
 }
 
 export function populateEditForm(partner, editFormModal) {
+  console.log("populating form");
   var iframe = editFormModal.getElementsByClassName('formIframe')[0]
   var editForm = iframe.contentWindow.document
   for (var data in partner) {
@@ -384,6 +397,7 @@ export function populateEditForm(partner, editFormModal) {
       if (partner[data] != null) {
         editForm.getElementById(data.toString()).value = partner[data].toString();
       } else {
+        console.log(data +" blank")
         editForm.getElementById(data.toString()).value = '';
       }
     }
@@ -402,3 +416,111 @@ export function populateEditForm(partner, editFormModal) {
   // console.log(document)
   // console.log(editFormModal.getElementsByClassName('formIframe')[0].contentWindow.document.getElementById('household_name'))
 }
+
+export function submitForm(){
+  console.log("Form is submitting!");
+  var collatedInput = {}; 
+  var validateErrors =[];
+  for(let i = 0; i < BUKLOD_RULES_TEST[2].length; i++){
+    //BUKLOD_RULES_TEST[2] are just the field names of each document
+    // console.log(BUKLOD_RULES_TEST[2][i]);
+    // let q = document.getElementById(BUKLOD_RULES_TEST[2][i]).value;
+    // collatedInput[BUKLOD_RULES_TEST[2][i]] = q;
+    let fieldName = BUKLOD_RULES_TEST[2][i];
+    let inputValue = document.getElementById(fieldName).value;
+
+    if (document.getElementById(fieldName).type == "number"){
+      inputValue = Number(inputValue);
+    }
+
+    // checks if the input is location coord and adjusts it to the proper input
+    if (fieldName === 'location_coordinates'){
+      inputValue = inputValue.split(' ');
+      inputValue = new GeoPoint(inputValue[0],inputValue[1]);
+    }
+
+    collatedInput[fieldName] = inputValue;
+    
+    // this is where data validation will happen
+    // add the if-else statements of edge cases here
+  }
+  
+  validateErrors = validateData(collection_value,collatedInput);
+  
+  if (validateErrors.length > 0){
+    console.log("failed vaildation");
+    for(var i in validateErrors){
+      console.log(validateErrors[i]);
+    }
+  }
+  else{
+    console.log("passed validation");
+    //var householdID = getDocIdByPartnerName(collatedInput['household_name']);
+    const waitForPromise = async() => {
+      const householdID = await getDocIdByPartnerName(collatedInput['household_name']);
+      console.log(householdID);
+      console.log("Updating values");
+      editEntry(collatedInput,householdID);
+    }
+    waitForPromise();
+  }
+ }
+  // TODO:
+  // get docID via  getDocIdByPartnerName/getDocByID
+  // then call editEntry(inp_obj, docId), inp_obj is collatedInput, docID is gotten from getDocIdByPartnerName/getDocByID
+  // so basically editEntry(collatedInput, docID via  getDocIdByPartnerName/getDocByID)
+  /*
+  const partnerName = document.getElementById("household_name").value;
+  getDocIdByPartnerName(partnerName)
+  .then((docId) => {
+    if (docId) {
+      // If a matching docId is found, proceed with updating the document
+      const name = partnerName;
+      const address = document.getElementById("household_address").value;
+      const phase = document.getElementById("household_phase").value;
+      const contactNum = document.getElementById("contact_number").value;
+      const residencyStatus = document.getElementById("residency_status").value;
+      const membership = document.getElementById("is_hoa_noa").value;
+      const locationLink = document.getElementById("location_link").value;
+      const locationCoordinates = document.getElementById("location_coordinates").value;
+      const householdMat = document.getElementById("household_material").value;
+      const nearestEvac = document.getElementById("nearest_evac").value;
+      const status = document.getElementById("status").value;
+      const residentNum = document.getElementById("number_residents").value;
+      const adultNum = document.getElementById("number_adults").value;
+      const minorNum = document.getElementById("number_minors").value;
+      const seniorNum = document.getElementById("number_seniors").value;
+      const pwdNum = document.getElementById("number_pwd").value;
+      const sickNum = document.getElementById("number_sick").value;
+      const sickType = document.getElementById("sickness_present").value;
+      const pregnantNum = document.getElementById("number_pregnant").value;
+      const earthquake = document.getElementById("earthquake").value;
+      const earthquakeRisk = document.getElementById("earthquake_risk").value;
+      const fire = document.getElementById("fire").value;
+      const fireRisk = document.getElementById("fire_risk").value;
+      const flood = document.getElementById("flood").value;
+      const floodRisk = document.getElementById("flood_risk").value;
+      const landslide = document.getElementById("landslide").value;
+      const landslideRisk = document.getElementById("landslide_risk").value;
+      const storm = document.getElementById("storm").value;
+      const stormRisk = document.getElementById("storm_risk").value;                   
+      
+      
+      
+      const name = partnerName;
+      const activity = document.getElementById("nature_of_act").value;
+      const admuContact = document.getElementById("ateneo_contact-person").value;
+      const admuEmail = document.getElementById("ateneo_contact-email").value;
+      const admuOffice = document.getElementById("ateneo_office").value;
+      const org = document.getElementById("organization").value;
+      const partnerContact = document.getElementById("partner_contact-person").value;
+      const dates = document.getElementById("dates_of_partnership").value;
+      
+      
+      editEntry(collatedInput, docId);
+      }
+      else {
+        // Handle case when no matching document is found
+      alert("No matching document found for the partner name: " + partnerName);
+      }
+      });*/

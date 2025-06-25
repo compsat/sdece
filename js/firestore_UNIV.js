@@ -68,8 +68,8 @@ const SECRETS = await SECRETS_RES.json();
 
 export const firebaseConfig = SECRETS.firebaseConfig;
 
-initializeApp(firebaseConfig);
-export const DB = getFirestore();
+var app = initializeApp(firebaseConfig);
+export const DB = getFirestore(app);
 
 var collection_reference = null;
 
@@ -129,9 +129,13 @@ export const DB_RULES_AND_DATA = [
 			'household_phase',
 			'landslide_risk',
 			'earthquake_risk',
+			'earthquake_risk_description',
 			'fire_risk',
+			'fire_risk_description',
 			'flood_risk',
+			'flood_risk_description',
 			'storm_risk',
+			'storm_risk_description',
 			'nearest_evac',
 		],
 	],
@@ -222,12 +226,16 @@ const VALIDATION_RULES = {
 				'Natural',
 			],
 		},
-		landslide_risk: { type: 'string', required: true },
-		household_phase: { type: 'string', required: true },
+
 		earthquake_risk: { type: 'string', required: true },
+		earthquake_risk_description:{type: 'string', required: false},
 		fire_risk: { type: 'string', required: true },
+		fire_risk_description:{type: 'string', required: false},
 		flood_risk: { type: 'string', required: true },
+		flood_risk_description:{type: 'string', required: false},
 		storm_risk: { type: 'string', required: true },
+		storn_risk_description:{type: 'string', required: false},
+
 		nearest_evac: { type: 'string', required: true, maxLength: 255 },
 	},
 	'buklod-official': {
@@ -274,10 +282,16 @@ const VALIDATION_RULES = {
 		},
 		landslide_risk: { type: 'string', required: true },
 		household_phase: { type: 'string', required: true },
+
 		earthquake_risk: { type: 'string', required: true },
+		earthquake_risk_description:{type: 'string', required: false},
 		fire_risk: { type: 'string', required: true },
+		fire_risk_description:{type: 'string', required: false},
 		flood_risk: { type: 'string', required: true },
+		flood_risk_description:{type: 'string', required: false},
 		storm_risk: { type: 'string', required: true },
+		storn_risk_description:{type: 'string', required: false},
+
 		nearest_evac: { type: 'string', required: true, maxLength: 255 },
 	},
 	'sdece-official-TEST': {
@@ -465,9 +479,11 @@ export function addEntry(inp_obj) {
 	}
 }
 
-export function editEntry(inp_obj, docId) {
+export function editEntry(inp_obj,docId) {
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_reference.id) {
+			console.log(inp_obj);
+			console.log("entered");
 			const DOC_REFERENCE = doc(DB, rule[0], docId);
 			updateDoc(DOC_REFERENCE, inp_obj)
 				.then(() => {
@@ -506,7 +522,8 @@ export function validateData(collectionName, data) {
 		const rule = rules[field];
 		const value = data[field];
 		const fieldLabel = fieldLabels[field] || field;
-
+		
+		console.log("entered validation");
 		// Check for required field
 		if (
 			rule.required &&
@@ -528,7 +545,8 @@ export function validateData(collectionName, data) {
 		) {
 			continue;
 		}
-
+		
+		// Temp type check for geolocation here
 		if (rule.type) {
 			if (rule.type === 'date') {
 				const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
@@ -544,11 +562,15 @@ export function validateData(collectionName, data) {
 					errors.push(`${fieldLabel} must be a valid date.`);
 					continue;
 				}
-			} else if (typeof value != rule.type) {
+			} else if (typeof(value) != rule.type) {
 				errors.push(
-					`${fieldLabel} must be of type ${rule.type}. type is ${value}` //checking for the type of value in location coordinates
+					`${fieldLabel} must be of type ${rule.type}. type is ${typeof(value)}` //checking for the type of value in location coordinates
 				);
 				continue;
+			}
+			if (rule.type === 'object' && (isNaN(value._lat) || isNaN(value._long))){
+				console.log(rule.type);
+				errors.push(`${fieldLabel} must be a valid location`)
 			}
 		}
 
