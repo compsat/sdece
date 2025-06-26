@@ -24,7 +24,7 @@ export function signIn(email, password) {
             // Signed in successfully
             const USER = userCredential.user;
             alert("Login Successful");
-            window.location.replace("../html/index.html");
+            window.location.replace("/index.html");
         })
         .catch((error) => {
             // Handle errors
