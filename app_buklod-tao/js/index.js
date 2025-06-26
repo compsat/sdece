@@ -16,6 +16,8 @@ import {
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import evacCenters from '../hardcode/evac-centers.json' with {type: 'json'};
 
+//setCollection("buklod-official-TEST");
+
 var colRef = getCollection();
 
 map.panTo(new L.LatLng(14.673, 121.11215));
