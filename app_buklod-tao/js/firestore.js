@@ -431,57 +431,59 @@ export function populateEditForm(partner, editFormModal) {
 
 export function submitForm(){
   console.log("Form is submitting!");
-  var collatedInput = {}; 
-  var validateErrors =[];
+  var collated_input = {}; 
+  var validate_errors =[];
   for(let i = 0; i < BUKLOD_RULES_TEST[2].length; i++){
     //BUKLOD_RULES_TEST[2] are just the field names of each document
     // console.log(BUKLOD_RULES_TEST[2][i]);
     // let q = document.getElementById(BUKLOD_RULES_TEST[2][i]).value;
-    // collatedInput[BUKLOD_RULES_TEST[2][i]] = q;
-    let fieldName = BUKLOD_RULES_TEST[2][i];
-    let inputValue = document.getElementById(fieldName).value;
+    // collated_input[BUKLOD_RULES_TEST[2][i]] = q;
+    let field_name = BUKLOD_RULES_TEST[2][i];
+    let input_value = document.getElementById(field_name).value;
 
-    if (document.getElementById(fieldName).type == "number"){
-      inputValue = Number(inputValue);
+    if (document.getElementById(field_name).type == "number"){
+      input_value = Number(input_value);
     }
 
     // checks if the input is location coord and adjusts it to the proper input
-    if (fieldName === 'location_coordinates'){
-      inputValue = inputValue.split(' ');
-      inputValue = new GeoPoint(inputValue[0],inputValue[1]);
+    if (field_name === 'location_coordinates'){
+      input_value = input_value.split(' ');
+      input_value = new GeoPoint(input_value[0],input_value[1]);
     }
 
-    collatedInput[fieldName] = inputValue;
+    if (field_name.includes("risk") && !field_name.includes("description")){
+      input_value = input_value.toUpperCase();
+    }
+
+    collated_input[field_name] = input_value;
     
     // this is where data validation will happen
     // add the if-else statements of edge cases here
   }
   
-  validateErrors = validateData(collection_value,collatedInput);
+  validate_errors = validateData(collection_value,collated_input);
   
-  if (validateErrors.length > 0){
+  if (validate_errors.length > 0){
     console.log("failed vaildation");
     alert("Error in validating values. Check console for errors present");
-    for(var i in validateErrors){
-      console.log(validateErrors[i]);
+    for(var i in validate_errors){
+      console.log(validate_errors[i]);
     }
   }
   else{
     console.log("passed validation");
-    //var householdID = getDocIdByPartnerName(collatedInput['household_name']);
+    //var householdID = getDocIdByPartnerName(collated_input['household_name']);
     const waitForPromise = async() => {
-      const householdID = await getDocIdByPartnerName(collatedInput['household_name']);
-      console.log(householdID);
-      console.log("Updating values");
-      editEntry(collatedInput,householdID);
+      const householdID = await getDocIdByPartnerName(collated_input['household_name']);
+      editEntry(collated_input,householdID);
     }
     waitForPromise();
   }
  }
   // TODO:
   // get docID via  getDocIdByPartnerName/getDocByID
-  // then call editEntry(inp_obj, docId), inp_obj is collatedInput, docID is gotten from getDocIdByPartnerName/getDocByID
-  // so basically editEntry(collatedInput, docID via  getDocIdByPartnerName/getDocByID)
+  // then call editEntry(inp_obj, docId), inp_obj is collated_input, docID is gotten from getDocIdByPartnerName/getDocByID
+  // so basically editEntry(collated_input, docID via  getDocIdByPartnerName/getDocByID)
   /*
   const partnerName = document.getElementById("household_name").value;
   getDocIdByPartnerName(partnerName)
@@ -530,7 +532,7 @@ export function submitForm(){
       const dates = document.getElementById("dates_of_partnership").value;
       
       
-      editEntry(collatedInput, docId);
+      editEntry(collated_input, docId);
       }
       else {
         // Handle case when no matching document is found
