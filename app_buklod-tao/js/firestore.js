@@ -35,7 +35,7 @@ const firebaseConfig = {
   measurementId: 'G-9N9ELDEMX9',
 };
 
-var collection_value = 'buklod-official-TEST'
+var collection_value = 'buklod-official'
 
 initializeApp(firebaseConfig);
 const db = getFirestore();
@@ -415,8 +415,8 @@ export function populateEditForm(partner, editFormModal) {
     }
     
     if (data.includes('risk') && !data.includes('description')) {
-      // splits ":" in case its still there (test set curently)
-      // splits " " to keep the number
+      // splits ":" in case its still there (test set only curently)
+      // splits " " to keep the value (this is due to some values in the test set being formatted as "LEVEL RISK")
       var risk = partner[data].split(':')[0].split(' ')[0].toLowerCase()
       editForm.getElementById(data).value = risk;
       
