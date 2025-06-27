@@ -235,6 +235,8 @@ const VALIDATION_RULES = {
 		flood_risk_description:{type: 'string', required: false},
 		storm_risk: { type: 'string', required: true },
 		storn_risk_description:{type: 'string', required: false},
+		landslide_risk: { type: 'string', required: true },
+		landslide_risk_description:{type: 'string', required: false},
 
 		nearest_evac: { type: 'string', required: true, maxLength: 255 },
 	},
@@ -280,9 +282,10 @@ const VALIDATION_RULES = {
 				'Natural',
 			],
 		},
-		landslide_risk: { type: 'string', required: true },
 		household_phase: { type: 'string', required: true },
 
+		landslide_risk: { type: 'string', required: true },
+		landslide_risk_description:{type: 'string', required: false},
 		earthquake_risk: { type: 'string', required: true },
 		earthquake_risk_description:{type: 'string', required: false},
 		fire_risk: { type: 'string', required: true },
