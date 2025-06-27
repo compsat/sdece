@@ -64,7 +64,7 @@ export function getCoordinates(coordinates) {
 	return PARTNER_COORDINATES;
 }
 
-const SECRETS_PATH = "js/secrets.json";
+const SECRETS_PATH = "/js/secrets.json";
 const SECRETS_REQ = new Request(SECRETS_PATH);
 const SECRETS_RES = await fetch(SECRETS_REQ);
 const SECRETS = await SECRETS_RES.json();
