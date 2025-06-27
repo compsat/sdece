@@ -1,5 +1,6 @@
 // FIRESTORE DATABASE
 
+
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 import {
   getFirestore,
@@ -43,33 +44,6 @@ setCollection(collection_value);
 const colRef = getCollection();
 let partnersArray = [];
 
-/*
-export function getDocIdByPartnerName(partnerName) {
-  const endName = partnerName.replace(/\s/g, '\uf8ff');
-  return getDocs(
-    query(
-      colRef,
-      where('household_name', '>=', partnerName),
-      where('household_name', '<=', partnerName + endName)
-    )
-  )
-    .then((querySnapshot) => {
-      console.log(querySnapshot);
-      if (!querySnapshot.empty) {
-        // Assuming there is only one document with the given partner name
-        const doc = querySnapshot.docs[0];
-        return doc.id;
-      } else {
-        console.log('EMPTY: No matching document found.');
-        return null;
-      }
-    })
-    .catch((error) => {
-      console.error('Error getting documents: ', error);
-      return null;
-    });
-}*/
-
 export function getDocByID(docId) {
   const docReference = doc(db, 'nstp-3', docId);
   let docObj = {};
@@ -110,6 +84,7 @@ const loadData = async() => {
 
 			// Set attributes
 			anchor.href = '#';
+      console.log(L)
 			let marker = L.marker([0, 0]);
 
 			Object.defineProperty(partner, "marker", {value:marker, configurable: true});
@@ -150,236 +125,8 @@ const loadData = async() => {
 }
 
 
-// Commented out the loadIndex to place the script to run index.js in the index.html. 
-// This makes the previously written code for index.js to be usable
-/*
-// loadIndex is seperate from the index.html is so that the data (partnersArray) is filled
-// Otherwise, the partnersArray is empty when the index.js is run. This leads to nothing showing
-const loadIndex = async() => {
-	let index = document.createElement("script");
-	index.type = "module";
-	index.src = "./js/index.js";
-	document.body.appendChild(index);
-}*/
-
-// Removed from being async as it is required to be run before the index.js so that pins and data are filled
-/*
-const loadFile = async() => {
-  console.log("entered Loadfile");
-	await loadData();
-	loadIndex();
-  console.log("loaded index");
-}
-
-loadFile();
-*/
 await loadData();
-//loadIndex();
 
-
-function showModal(partner) {
-  const modal = document.getElementById('partnerModal');
-  const modalHeader = document.getElementById('modalHeader');
-  const modalContent = document.getElementById('modalContent');
-
-  // Clear previous content
-  modalHeader.innerHTML = '';
-  modalContent.innerHTML = '';
-
-  // Variables for risk levels
-  var earthquake = partner.earthquake_risk;
-  var earthquake_split = earthquake.split(' RISK: ');
-  var earthquake1 = earthquake_split[0];
-  var earthquake2 = earthquake_split[1];
-  var fire = partner.fire_risk;
-  var fire_split = fire.split(' RISK: ');
-  var fire1 = fire_split[0];
-  var fire2 = fire_split[1];
-  var flood = partner.flood_risk;
-  var flood_split = flood.split(' RISK: ');
-  var flood1 = flood_split[0];
-  var flood2 = flood_split[1];
-  var landslide = partner.landslide_risk;
-  var landslide_split = landslide.split(' RISK: ');
-  var landslide1 = landslide_split[0];
-  var landslide2 = landslide_split[1];
-  var storm = partner.storm_risk;
-  var storm_split = storm.split(' RISK: ');
-  var storm1 = storm_split[0];
-  var storm2 = storm_split[1];
-
-  // Create div elements for each piece of information
-  const nameDiv = document.createElement('div');
-  const partnerContentDiv = document.createElement('div');
-
-  let partner_content = `
-    <br>
-      <div>
-        <p class="modalText" id="entry_contact_number" style="margin-top: -5px;">${partner.contact_number}</p>
-        <p class="modalText" id="entry_address">${partner.household_address}</p>
-      </div>
-      <div class="modalLine">
-        <label class="modalLabel" style="width: 220px;">Residency Status</label>
-        <label class="modalLabel" style="width: 220px;">Part of HOA / NOA</label>
-      </div>
-      <div class="modalLine">
-        <p class="modalText" id="entry_residency_status" style="width: 220px;">${partner.residency_status}</p>
-        <p class="modalText" id="entry_HOA/NOA" style="width: 220px;">${partner.is_hoa_noa}</label>
-      </div>
-      <div>
-        <label class="modalLabel">Nearest Evacuation Area</label>
-        <p class="modalText" id="entry_nearest_evacuation_area">${partner.nearest_evac}</p>
-      </div>
-    <button type="button" class="collapsible">Risk Levels</button>
-      <div class="colContent" style="display: block;">
-        <div class="modalLine">
-          <label class="modalLabel">Earthquake</label>
-          <label class="modalLabel" id="entry_earthquake_risk_level">${earthquake1}</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_earthquake_desc">${earthquake2}</p>
-        </div>
-        <div class="modalLine">
-          <label class="modalLabel">Fire</label>
-          <label class="modalLabel" id="entry_fire_risk_level">${fire1}</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_fire_desc">${fire2}</p>
-        </div>
-        <div class="modalLine">
-          <label class="modalLabel">Flood</label>
-          <label class="modalLabel" id="entry_flood_risk_level">${flood1}</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_flood_desc">${flood2}</p>
-        </div>
-        <div class="modalLine">
-          <label class="modalLabel">Landslide</label>
-          <label class="modalLabel" id="entry_landslide_risk_level">${landslide1}</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_landslide_desc">${landslide2}</p>
-        </div>
-        <div class="modalLine">
-          <label class="modalLabel">Storm</label>
-          <label class="modalLabel" id="entry_storm_risk_level">${storm1}</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_storm_desc">${storm2}</p>
-        </div>
-      </div>
-    <button type="button" class="collapsible">Residents</button>
-      <div class="colContent" style="display: block;">
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">Total</label>
-          <label class="modalLabel" id="entry_number_of_residents">${partner.number_residents}</label>
-        </div>
-        <hr style="border-top: 1px solid #CBD5E0; margin-top:10px;">
-        <div class="modalLine" style="margin-top: 10px;">
-          <label class="modalLabel">Minors</label>
-          <label class="modalLabel" id="entry_number_of_minor_residents">${partner.number_minors}</label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">Adults</label>
-          <label class="modalLabel" id="entry_number_of_adult_residents">${partner.number_adult}</label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">Seniors</label>
-          <label class="modalLabel" id="entry_number_of_senior_residents">${partner.number_seniors}</label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">PWD</label>
-          <label class="modalLabel" id="entry_number_of_pwd_residents">${partner.number_pwd}</label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">Sick</label>
-          <label class="modalLabel" id="entry_number_of_sick_residents">${partner.number_sick}</label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel" >Pregnant</label>
-          <label class="modalLabel" id="entry_number_of_pregnant_residents">${partner.number_pregnant}</label>
-        </div>
-        <br>
-      </div>
-  `;
-
-  // styling
-  nameDiv.classList.add("modal-name");
-
-  // Set the content of each div
-  nameDiv.textContent = partner.household_name;
-  partnerContentDiv.innerHTML = partner_content;
-
-  // Append the div elements to the modal content
-  modalHeader.appendChild(nameDiv);
-  modalContent.appendChild(partnerContentDiv);
-
-  var coll = document.getElementsByClassName("collapsible");
-    var i;
-
-    for (i = 0; i < coll.length; i++) {
-      coll[i].addEventListener("click", function() {
-        this.classList.toggle("active");
-        var colContent = this.nextElementSibling;
-        if (colContent.style.display === "block") {
-          colContent.style.display = "none";
-          coll.style.transform = "none";
-        } else {
-          colContent.style.display = "block";
-          coll.style.transform = "rotate(180deg)";
-        }
-      });
-    }
-
-  // Show the modal
-  modal.style.display = 'block';
-
-  // Close the modal when the close button is clicked
-  const closeButton = document.getElementsByClassName('close')[0];
-  closeButton.addEventListener('click', () => {
-    modal.style.display = 'none';
-  });
-
-  // Close the modal when the user clicks outside of it
-  window.addEventListener('click', (event) => {
-    if (event.target == modal) {
-      modal.style.display = 'none';
-    }
-  });
-
-  //script for edit household modal
-
-  // modal
-  var editFormModal = document.getElementById('editModal');
-
-  // open modal
-  var openEditForm = document.getElementById('editHousehold');
-
-  // Get the <span> element that closes the modal
-  var closeEditForm = document.getElementById('close-btn');
-
-  // When the user clicks the button, open the modal
-  if(openEditForm) {
-    openEditForm.onclick = function () {
-      editFormModal.style.display = 'block';
-      modal.style.display = 'none';
-      populateEditForm(partner, editFormModal)
-    };
-  }
-
-  // When the user clicks on <span> (x), close the modal
-  if(closeEditForm) {
-    closeEditForm.onclick = function () {
-      editFormModal.style.display = 'none';
-    };
-  }
-}
 
 export function addEntry(data) {
   data.forEach((entry) => {
@@ -422,11 +169,6 @@ export function populateEditForm(partner, editFormModal) {
       
     }
   }
-  // partner.forEach(data => {
-  // });
-  // console.log(partner.household_name)
-  // console.log(document)
-  // console.log(editFormModal.getElementsByClassName('formIframe')[0].contentWindow.document.getElementById('household_name'))
 }
 
 export function submitForm(){
@@ -473,7 +215,6 @@ export function submitForm(){
   }
   else{
     console.log("passed validation");
-    //var householdID = getDocIdByPartnerName(collated_input['household_name']);
     const waitForPromise = async() => {
       const householdID = await getDocIdByPartnerName(collated_input['household_name']);
       editEntry(collated_input,householdID);
@@ -499,62 +240,3 @@ export function submitForm(){
         }
     }
  }
-  // TODO:
-  // get docID via  getDocIdByPartnerName/getDocByID
-  // then call editEntry(inp_obj, docId), inp_obj is collated_input, docID is gotten from getDocIdByPartnerName/getDocByID
-  // so basically editEntry(collated_input, docID via  getDocIdByPartnerName/getDocByID)
-  /*
-  const partnerName = document.getElementById("household_name").value;
-  getDocIdByPartnerName(partnerName)
-  .then((docId) => {
-    if (docId) {
-      // If a matching docId is found, proceed with updating the document
-      const name = partnerName;
-      const address = document.getElementById("household_address").value;
-      const phase = document.getElementById("household_phase").value;
-      const contactNum = document.getElementById("contact_number").value;
-      const residencyStatus = document.getElementById("residency_status").value;
-      const membership = document.getElementById("is_hoa_noa").value;
-      const locationLink = document.getElementById("location_link").value;
-      const locationCoordinates = document.getElementById("location_coordinates").value;
-      const householdMat = document.getElementById("household_material").value;
-      const nearestEvac = document.getElementById("nearest_evac").value;
-      const status = document.getElementById("status").value;
-      const residentNum = document.getElementById("number_residents").value;
-      const adultNum = document.getElementById("number_adults").value;
-      const minorNum = document.getElementById("number_minors").value;
-      const seniorNum = document.getElementById("number_seniors").value;
-      const pwdNum = document.getElementById("number_pwd").value;
-      const sickNum = document.getElementById("number_sick").value;
-      const sickType = document.getElementById("sickness_present").value;
-      const pregnantNum = document.getElementById("number_pregnant").value;
-      const earthquake = document.getElementById("earthquake").value;
-      const earthquakeRisk = document.getElementById("earthquake_risk").value;
-      const fire = document.getElementById("fire").value;
-      const fireRisk = document.getElementById("fire_risk").value;
-      const flood = document.getElementById("flood").value;
-      const floodRisk = document.getElementById("flood_risk").value;
-      const landslide = document.getElementById("landslide").value;
-      const landslideRisk = document.getElementById("landslide_risk").value;
-      const storm = document.getElementById("storm").value;
-      const stormRisk = document.getElementById("storm_risk").value;                   
-      
-      
-      
-      const name = partnerName;
-      const activity = document.getElementById("nature_of_act").value;
-      const admuContact = document.getElementById("ateneo_contact-person").value;
-      const admuEmail = document.getElementById("ateneo_contact-email").value;
-      const admuOffice = document.getElementById("ateneo_office").value;
-      const org = document.getElementById("organization").value;
-      const partnerContact = document.getElementById("partner_contact-person").value;
-      const dates = document.getElementById("dates_of_partnership").value;
-      
-      
-      editEntry(collated_input, docId);
-      }
-      else {
-        // Handle case when no matching document is found
-      alert("No matching document found for the partner name: " + partnerName);
-      }
-      });*/
