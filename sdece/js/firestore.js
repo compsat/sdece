@@ -907,7 +907,7 @@ export function populateMainModalList() {
 	mainModalActivityList.innerHTML = '';
 
 	if (Object.keys(temp_activities).length == 0) {
-		mainModalActivityList.innerHTML = '<p> No activities to show </p>';
+		mainModalActivityList.innerHTML = '<p class="main-modal-no-activities-message">No activities to show</p>';
 	} else {
 		for (let i = 0; i < Object.keys(temp_activities).length; i++) {
 			var activity = temp_activities[Object.keys(temp_activities)[i]];
