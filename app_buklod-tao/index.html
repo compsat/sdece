@@ -60,23 +60,22 @@
     <div class="main">
 
       <!-- Navigation bar -->
-      <div class="side-nav">
+      <div class="sideNav">
 
         <!-- Search Bar -->
         <div class="buttons">
-          <input class="search-bar" type="search" placeholder="Search... " oninput="searchEntries()">
+          <input class="searchBar" type="search" placeholder="Search... " oninput="searchEntries()">
         </div>
 
         <!-- List of Entries -->
         <div class="entries">
-          <!-- CHANGE! id name not conforming with naming conventions -->
           <ul id="locationList" class="accordion"></ul>
         </div>
 
       </div>
 
       <!-- Login/Logout header -->
-      <div class="top-bar">
+      <div class="topBar">
 
         <!-- Layer Toggle -->
         <div class="layer-toggle-container">
@@ -87,18 +86,18 @@
         </div>
 
         <!-- Logout Button -->
-        <button class="button-logout"><img class="logout-icon" src="./img/logout.256x256.png" alt="logout"> Logout</button>
+        <button class="buttonLogout"><img class="logoutIcon" src="./img/logout.256x256.png" alt="logout"> Logout</button>
       
       </div>
 
       <!-- Map -->
-      <div id="map" class="map-container"></div>
+      <div id="map" class="mapContainer"></div>
 
     </div>
 
     <!-- MODALS -->
     <!-- Modals of Entries -->
-    <div id="partner-modal" class="modal">
+    <div id="partnerModal" class="modal">
 
       <!-- Modal Header: includes household owner -->
       <div class="modalHeader">
@@ -114,12 +113,12 @@
     </div>
 
     <!-- Modal for add household form -->
-    <div id="add-modal" class="formModal" style="display: none;">
+    <div id="addModal" class="formModal" style="display: none;">
       <iframe src="html/addloc.html" class="formIframe"></iframe>
     </div>
 
     <!-- Modal for edit household form -->
-    <div id="edit-modal" class="formModal" style="display: none;">
+    <div id="editModal" class="formModal" style="display: none;">
       <iframe src="html/editloc.html" class="formIframe"></iframe>
     </div>
   </body>
@@ -177,7 +176,7 @@
           event.preventDefault();
 
           // Get the modal
-          var modal = document.getElementById("add-modal");
+          var modal = document.getElementById("addModal");
 
           // Show the modal
           modal.style.display = "block";
@@ -185,7 +184,7 @@
 
         // Close the modal when the close button is clicked
         if (event.target.matches('.close')) {
-          var modal = document.getElementById("add-modal");
+          var modal = document.getElementById("addModal");
           modal.style.display = "none";
         }
       });
@@ -195,24 +194,33 @@
     window.addEventListener('message', function (event) {
       if (event.data && event.data.type === 'addlocFormSuccess') {
         // Handle successful form submission event here
-        const addModal = document.getElementById('add-modal');
+        const addModal = document.getElementById('addModal');
         addModal.classList.add('hidden'); // Hide the iframe
+
+        const messageModal = document.getElementById('messageModal');
+        messageModal.style.display = 'flex'; //display success message
       }
     });
 
     // Add an event listener to handle messages from the iframe
     window.addEventListener('message', function (event) {
       if (event.data === 'closeAddModal') {
-        hideModalContainer('add-modal');
+        hideModalContainer('addModal');
       }
       if (event.data === 'closeEditModal') {
-        hideModalContainer('edit-modal');
+        hideModalContainer('editModal');
+      }
+      if (event.data === 'closeMainModal') {
+        hideModalContainer('mainModal');
+      }
+      if (event.data === 'closeMessageModal') {
+        hideModalContainer('messageModal');
       }
     });
     
     // Function for search bar
     function searchEntries() {
-      var input = document.querySelector('.search-bar').value.toUpperCase();
+      var input = document.querySelector('.searchBar').value.toUpperCase();
       var ul = document.getElementById("locationList");
       var li = ul.getElementsByTagName('li');
 
