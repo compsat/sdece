@@ -466,6 +466,7 @@ export function submitForm(){
   if (validate_errors.length > 0){
     console.log("failed vaildation");
     alert("Error in validating values. Check console for errors present");
+    displayErrors(validate_errors);
     for(var i in validate_errors){
       console.log(validate_errors[i]);
     }
@@ -479,6 +480,24 @@ export function submitForm(){
     }
     waitForPromise();
   }
+  function displayErrors(errors) {
+    let errorDiv = document.getElementById('error_messages');
+
+    if (errorDiv) {
+
+        errorDiv.innerHTML = '';
+
+        if (errors.length > 0) {
+            for (let error of errors) {
+                let errorParagraph = document.createElement('p');
+                errorParagraph.textContent = error;
+                errorDiv.appendChild(errorParagraph);
+            }
+        }
+        } else {
+            console.error("Error: Couldn't find element with ID 'error_messages'.");
+        }
+    }
  }
   // TODO:
   // get docID via  getDocIdByPartnerName/getDocByID
