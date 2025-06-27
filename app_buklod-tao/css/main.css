@@ -10,7 +10,7 @@ body {
   flex-direction: row;
 }
 
-.mapContainer {
+.map-container {
   flex: 0 0 20%;
   display: flex;
   position: absolute;
@@ -26,7 +26,7 @@ body {
   height: 100%;
 }
 
-.topBar{
+.top-bar{
   background-color: #387181;
   height: 63px;
   width: 100%;
@@ -36,7 +36,7 @@ body {
   justify-content: flex-end;
 }
 
-.sideNav {
+.side-nav {
   display: flex;
   position: fixed;
   width: 380px;
@@ -55,7 +55,7 @@ body {
 }
 
 /* search bar itself */
-.searchBar {
+.search-bar {
   height: 45px;
   margin: -15px -15px -15px -15px;
   padding: 15px 32px;
@@ -74,10 +74,10 @@ body {
   justify-content: right;
 }
 
-.searchBar:hover {
+.search-bar:hover {
   background-color: #e4e3e3;
 }
-.searchBar:focus {
+.search-bar:focus {
   background-image: none;
 }
 
@@ -132,14 +132,14 @@ li {
 }
 
 /* logout icon */
-.logoutIcon {
+.logout-icon {
   height: 15px;
   width: 15px;
   margin: 2px 15px 0px 0px;
 }
 
 /* logout button */
-.buttonLogout {
+.button-logout {
   font-family: Montserrat;
   font-size: 16px;
   font-weight: 700;
@@ -160,7 +160,7 @@ li {
   justify-content: space-between;
 }
 
-.logoutIcon {
+.logout-icon {
   height: 15px;
   width: 15px;
   margin: 2px 15px 0px 0px;
