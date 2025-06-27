@@ -118,9 +118,9 @@ button {
 }
 
 .main-modal-list-heading {
-	font-family: 'Montserrat';
-	font-weight: 700;
-	font-size: 1.5rem /* 24px */;
+	font-family: 'Geist';
+	font-weight: 600;
+	font-size: 1.1rem /* 24px */;
 	line-height: 2rem; /* 32px */
 	color: var(--custom-black);
 }
@@ -160,20 +160,10 @@ button {
 	font-family: 'Montserrat';
 	font-size: 1.5rem /* 24px */;
 	line-height: 2rem;
-	background-color: var(--lightbg);
+	background-color: #1a237e;
 	color: white;
 	font-weight: 700;
 	border-radius: 0.5rem /* 8px */;
-	border-style: solid;
-	border-color: var(--lightbg);
-}
-
-.main-modal-save:hover {
-	transform: scale(1.01);
-	background: none;
-	border-style: solid;
-	border-color: var(--lightbg);
-	color: var(--lightbg);
 }
 /* Partner modal */
 .modal {
@@ -842,4 +832,237 @@ button {
 	border-radius: 0.5rem;
 	padding: 1.3rem 1.5rem 0.7rem 1.5rem;
 	margin-bottom: 1rem;
+}
+
+/* --- Modern Modal Redesign (Add New Partner) --- */
+.main-modal-outer {
+	min-height: 100vh;
+	min-width: 100vw;
+	background: transparent;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	top: 0; left: 0; right: 0; bottom: 0;
+	z-index: 5000;
+}
+.main-modal-modern-card {
+	background: #ffffff;
+	border-radius: 16px;
+	box-shadow: 0 8px 32px #ffffff;
+	max-width: 95vw;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	overflow: visible;
+}
+.main-modal-modern-header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	padding: 2rem 2rem 0.5rem 2rem;
+	border-bottom: none;
+	background: #fff;
+	position: relative;
+}
+.main-modal-modern-title-row {
+	display: flex;
+	align-items: flex-start;
+	gap: 1.25rem;
+}
+.main-modal-modern-title-icon {
+	background: #e8f0fe;
+	border-radius: 12px;
+	width: 48px;
+	height: 48px;
+	min-width: 48px;
+	min-height: 48px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 2px;
+}
+.main-modal-modern-title {
+	font-family: 'Geist', sans-serif;
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: #181c26;
+	margin-bottom: 0.1rem;
+	line-height: 1.2;
+}
+.main-modal-modern-desc {
+	font-family: 'Geist', sans-serif;
+	font-size: 1rem;
+	color: #7E8A98;
+	margin-bottom: 0.2rem;
+	margin-top: 0.1rem;
+}
+.main-modal-modern-form {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	padding: 0 2rem 2rem 2rem;
+}
+.main-modal-modern-field-group {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem
+}
+.main-modal-modern-label {
+	font-family: 'Geist', sans-serif;
+	font-size: 1.05rem;
+	font-weight: 600;
+	color: #181c26;
+	margin-bottom: 0.1rem;
+}
+.main-modal-partner-name {
+	font-family: 'Geist', sans-serif;
+	border: 1.5px solid #d1d5db;
+	border-radius: 8px;
+	font-size: 1.1rem;
+	font-weight: 500;
+	color: #181c26;
+	padding: 0.7rem 1rem;
+	background: #fff;
+	transition: border 0.2s;
+}
+.main-modal-partner-name:focus {
+	border-color: #2563eb;
+	outline: none;
+}
+.main-modal-location-select {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	border: 1.5px solid #d1d5db;
+	border-radius: 8px;
+	background: #fff;
+	padding: 0.5rem 1rem;
+}
+.main-modal-input {
+	font-family: 'Geist', sans-serif;
+	border: none;
+	outline: none;
+	font-size: 1.1rem;
+	color: #181c26;
+	background: transparent;
+	flex: 1;
+	padding: 0.5rem 0;
+}
+.main-modal-input::placeholder {
+	color: #7E8A98;
+	opacity: 1;
+}
+.main-modal-modern-card.main-modal-modern-activities {
+	border: 1.5px solid #e5e7eb;
+	border-radius: 12px;
+	background: #fafbfc;
+	margin: 0.5rem 0 0 0;
+	padding: 1.2rem 1.2rem 1rem 1.2rem;
+	box-shadow: none;
+}
+.main-modal-modern-activities-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 0.7rem;
+}
+.main-modal-modern-activities-title {
+	font-family: 'Geist', sans-serif;
+	font-size: 1.15rem;
+	font-weight: 700;
+	color: #181c26;
+}
+.main-modal-modern-activities-add {
+	background: #f3f4f6;
+	border: 1.5px solid #e5e7eb;
+	border-radius: 8px;
+	padding: 0.3rem 0.7rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: background 0.15s, border 0.15s;
+}
+.main-modal-modern-activities-add:hover {
+	background: #e0f7fa;
+	border-color: #b2ebf2;
+}
+.main-modal-temporary-activities {
+	min-height: 32px;
+	margin: 0.5rem 0 0 0;
+	padding: 0;
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+.main-modal-modern-no-activities {
+	text-align: center;
+	margin: 1.2rem 0 0.5rem 0;
+	color: #7E8A98;
+}
+.main-modal-modern-no-activities-title {
+	font-family: 'Geist', sans-serif;
+	font-size: 1.08rem;
+	font-weight: 600;
+	color: #7E8A98;
+}
+.main-modal-modern-no-activities-desc {
+	font-family: 'Geist', sans-serif;
+	font-size: 0.98rem;
+	color: #b0b0b0;
+	margin-top: 0.2rem;
+}
+.main-modal-modern-footer {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 1rem;
+	margin-top: 2rem;
+}
+.main-modal-modern-cancel {
+	background: #fff;
+	color: #181c26;
+	border: 1.5px solid #d1d5db;
+	border-radius: 8px;
+	font-family: 'Geist', sans-serif;
+	font-size: 1.1rem;
+	font-weight: 600;
+	padding: 0.7rem 1.5rem;
+	cursor: pointer;
+	transition: background 0.15s, border 0.15s;
+}
+.main-modal-modern-cancel:hover {
+	background: #f3f4f6;
+	border-color: #b0b0b0;
+}
+.main-modal-modern-save {
+	background: #1a237e;
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	font-family: 'Geist', sans-serif;
+	font-size: 1rem;
+	font-weight: 700;
+	padding: 0.7rem 1.5rem;
+	cursor: pointer;
+	transition: background 0.15s;
+}
+.main-modal-modern-save:disabled {
+	background: #b0b0b0;
+	color: #fff;
+	cursor: not-allowed;
+}
+.main-modal-modern-save:hover:not(:disabled) {
+	background: #2630a0;
+}
+
+.main-modal-no-activities-message {
+	font-family: 'Geist', sans-serif;
+	font-size: 1rem;
+	color: #7E8A98;
+	font-weight: 400;
+	margin: 0.5rem 0 0 0;
+	text-align: left;
 }
