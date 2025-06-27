@@ -239,8 +239,8 @@ partnersArray.forEach((partner) => {
         editBtns.forEach((btn) => {
           btn.addEventListener('click', function() {
             console.log('Edit button was clicked!');
-            const modal = document.getElementById('partner-modal');
-            var editFormModal = document.getElementById('edit-modal');
+            const modal = document.getElementById('partnerModal');
+            var editFormModal = document.getElementById('editModal');
             editFormModal.style.display = 'block';
             modal.style.display = 'none';
             populateEditForm(doc, editFormModal)

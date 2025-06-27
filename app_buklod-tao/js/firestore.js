@@ -178,7 +178,7 @@ await loadData();
 
 
 function showModal(partner) {
-  const modal = document.getElementById('partner-modal');
+  const modal = document.getElementById('partnerModal');
   const modalHeader = document.getElementById('modalHeader');
   const modalContent = document.getElementById('modalContent');
 
@@ -356,7 +356,7 @@ function showModal(partner) {
   //script for edit household modal
 
   // modal
-  var editFormModal = document.getElementById('edit-modal');
+  var editFormModal = document.getElementById('editModal');
 
   // open modal
   var openEditForm = document.getElementById('editHousehold');
