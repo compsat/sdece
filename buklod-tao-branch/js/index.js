@@ -16,6 +16,9 @@ import {
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import evacCenters from '/hardcode/evac-centers.json' with {type: 'json'};
 
+
+console.log("index");
+
 var colRef = getCollection();
 
 map.panTo(new L.LatLng(14.673, 121.11215));
@@ -77,7 +80,7 @@ function onPinClick(doc) {
         <p class="leafletDetails">${doc.residency_status}</p>
         <p class="leafletDetails">${doc.is_hoa_noa}</p>
       </div>
-      <div style="line-height: 105%; margin-bottom: 2px;">
+      <div style="line-height: 3px; margin-bottom: 2px;">
         <label class="leafletLabel">Nearest Evacuation Area</label>
         <p class="leafletDetails">${doc.nearest_evac}</p>
       </div>
@@ -162,6 +165,7 @@ function onPinClick(doc) {
   return leaflet_html;
 }
 
+/*
 // Loads art the start
 getDocs(colRef)
   .then((querySnapshot) => {
@@ -196,7 +200,7 @@ getDocs(colRef)
   }).catch((error) => {
     console.error('Error getting documents: ', error);
   });
-
+*/
 evacCenters.forEach(center => {
   const marker = L.marker(
     [center.latitude, center.longitude],
@@ -214,7 +218,6 @@ evacCenters.forEach(center => {
       <br>Location: ${center.latitude}, ${center.longitude}
     </div>`);
 });
-console.log("run1");
 
 partnersArray.forEach((partner) => {
     var doc = partner;
@@ -229,6 +232,18 @@ partnersArray.forEach((partner) => {
       // shows partner info on pin click
       var popupContent = onPinClick(doc);
       this_marker.bindPopup(popupContent);
+      this_marker.on('popupopen', function(e) {
+        var editBtn = document.getElementById('editHouseholdPopup')
+        if (editBtn) {
+          editBtn.addEventListener('click', function() {
+            const modal = document.getElementById('partnerModal');
+            var editFormModal = document.getElementById('editModal');
+            editFormModal.style.display = 'block';
+            modal.style.display = 'none';
+            populateEditForm(doc, editFormModal)
+          })
+        }
+      })
       results.addLayer(this_marker);
       Object.defineProperty(partner, "marker", {value:this_marker, configurable: true});
     }
