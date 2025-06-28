@@ -14,7 +14,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import { getCollection, setCollection } from '/js/firestore_UNIV.js';
 // Your Firestore code here
-console.log("run2");
+console.log("firestore");
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -133,24 +133,36 @@ const loadData = async() => {
 		console.error('Error getting documents: ', error);
 	});
 	}
-
 	await getRefs();
+  console.log("loaded data");
 }
 
 
+// Commented out the loadIndex to place the script to run index.js in the index.html. 
+// This makes the previously written code for index.js to be usable
+/*
+// loadIndex is seperate from the index.html is so that the data (partnersArray) is filled
+// Otherwise, the partnersArray is empty when the index.js is run. This leads to nothing showing
 const loadIndex = async() => {
 	let index = document.createElement("script");
 	index.type = "module";
 	index.src = "./js/index.js";
 	document.body.appendChild(index);
-}
+}*/
 
+// Removed from being async as it is required to be run before the index.js so that pins and data are filled
+/*
 const loadFile = async() => {
+  console.log("entered Loadfile");
 	await loadData();
 	loadIndex();
+  console.log("loaded index");
 }
 
 loadFile();
+*/
+await loadData();
+//loadIndex();
 
 
 function showModal(partner) {
