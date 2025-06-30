@@ -56,6 +56,11 @@ var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
+function getActivity(activity) {
+	// Try to return the most descriptive field available
+	return activity.activity_name || activity.activity_nature || 'Activity';
+}
+
 function onMapClick(e) {
 	const lat = e.latlng.lat;
 	const lng = e.latlng.lng;
@@ -191,15 +196,18 @@ getDocs(col_ref)
 				marker.bindPopup(popupContent);
 				results.addLayer(marker);
 
-				marker.on('mouseover', function () {
+				marker.on('click', function () {
 					marker.openPopup();
-
 					var test = document.getElementById(
 						partners[partner][0]['partner_name']
 					);
-					test.addEventListener('click', function () {
-						showModal(partners[partner]);
-					});
+					if (test) {
+						test.addEventListener('click', function () {
+							showModal(partners[partner]);
+						});
+					}
+					// Directly show the modal on marker click
+					showModal(partners[partner]);
 				});
 			}
 
