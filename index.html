@@ -223,10 +223,18 @@
 
         collections.addEventListener("change", function () {
             const SELECTED = collections.options[collections.selectedIndex].value;
-            setCollection(SELECTED);
-            setCurrentBranchCookie("current_branch", SELECTED);
-            location.reload();
+			setCurrentBranchCookie("current_branch", SELECTED);
+
+			if (collections.selectedIndex === 0) {
+				// First layer selected — go to Buklod Tao app
+				window.location.href = "app_buklod-tao/index.html";
+			} else {
+				// Stay in current app
+				setCollection(SELECTED);
+				location.reload();
+			}
         });
+
 
         if (getCurrentBranchCookie() === null) {
             setCollection(DB_RULES_AND_DATA[0][0]);

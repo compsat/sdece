@@ -77,6 +77,14 @@
       <!-- Login/Logout header -->
       <div class="topBar">
 
+        <!-- Map Layer Switching -->
+        <div class="layer-toggle-container">
+          <svg class="bi bi-layers layers-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
+            <path d="M8.235 1.559a.5.5..."/>
+          </svg>
+          <select id="collections" class="layer-toggle" name="collections"></select>
+        </div>
+
         <!-- Logout Button -->
         <button class="buttonLogout"><img class="logoutIcon" src="./img/logout.256x256.png" alt="logout"> Logout</button>
       
@@ -114,6 +122,45 @@
       <iframe src="html/editloc.html" class="formIframe"></iframe>
     </div>
   </body>
+
+  <!-- Script to go back to project level index.html -->
+  <script type="module">
+    import {
+      setCollection,
+      getCollection,
+      DB_RULES_AND_DATA,
+    } from "/js/firestore_UNIV.js";
+    import {
+      getCurrentBranchCookie,
+      setCurrentBranchCookie,
+    } from "/js/cookies.js";
+
+    const collections = document.getElementById("collections");
+
+    for (let rule of DB_RULES_AND_DATA) {
+      collections.innerHTML += `<option value="${rule[0]}">${rule[0]}</option>`;
+    }
+
+    collections.addEventListener("change", function () {
+      const SELECTED = collections.options[collections.selectedIndex].value;
+
+      setCurrentBranchCookie("current_branch", SELECTED);
+
+      if (collections.selectedIndex === 0) {
+        // Stay here and reload
+        setCollection(SELECTED);
+        location.reload();
+      } else {
+        // Second layer (e.g., SDECE) goes to root index
+        window.location.href = "/index.html";
+      }
+    });
+
+    // Set the dropdown to match current cookie
+    const current = getCurrentBranchCookie();
+    collections.value = current ?? DB_RULES_AND_DATA[0][0];
+  </script>
+
 
   <!-- Script for map -->
   <script type="module" src="js/index.js"></script> 
