@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html style="width: 100%; height: 100%">
 	<head>
-		<title>Add Activity</title>
+		<title>Household Information</title>
 
 		<!-- Import CSS file -->
-		<link href="../css/modal.css" rel="stylesheet" />
+		<link href="css/main.css" rel="stylesheet" />
 
 		<!-- Import Fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -28,103 +28,110 @@
 	</head>
 	<body>
 		<div class="leafletPopupContainer" id="leafletModal">
+
 			<div class="leafletHeader">
-			<label>${doc.household_name}</label>
+				<label>${doc.household_name}</label>
 			</div>
+
 			<div class="leafletContent">
-			<br>
-			<br>
-			<div style="line-height: 1px;">
-				<p>${doc.contact_number}</p>
-				<p>${doc.household_address}</p>
-			</div>
-			<div class="modalLine" style="width: 100%">
-				<label class="leafletLabel">Residency Status</label>
-				<label class="leafletLabel">Part of HOA/NOA</label>
-			</div>
-			<div class="modalLine" style="line-height: 3px; margin-bottom: 2px; width: 180px;">
-				<p class="leafletDetails">${doc.residency_status}</p>
-				<p class="leafletDetails">${doc.is_hoa_noa}</p>
-			</div>
-			<div style="line-height: 105%; margin-bottom: 2px;">
-				<label class="leafletLabel">Nearest Evacuation Area</label>
-				<p class="leafletDetails">${doc.nearest_evac}</p>
-			</div>
-			<div>
-			<div class="leafletSubHeader">
-				<label>Risk Levels</label>
-			</div>
-			<div class="modalLine">
-				<label class="leafletLabel">Earthquake</label>
-				<label class="leafletLabel">${earthquake}</label>
-			</div>
-			<div>
-				<p class="leafletDetails">${earthquake_desc}</p>
-			</div>
-			<div class="modalLine">
-				<label class="leafletLabel">Fire</label>
-				<label class="leafletLabel">${fire}</label>
-			</div>
-			<div>
-				<p class="leafletDetails">${fire_desc}</p>
-			</div>
-			<div class="modalLine">
-				<label class="leafletLabel">Flood</label>
-				<label class="leafletLabel">${flood}</label>
-			</div>
-			<div>
-				<p class="leafletDetails">${flood_desc}</p>
-			</div>
-			<div class="modalLine">
-				<label class="leafletLabel">Landslide</label>
-				<label class="leafletLabel">${landslide}</label>
-			</div>
-			<div>
-				<p class="leafletDetails">${landslide_desc}</p>
-			</div>
-			<div class="modalLine">
-				<label class="leafletLabel">Storm</label>
-				<label class="leafletLabel">${storm}</label>
-			</div>
-			<div>
-				<p class="leafletDetails">${storm_desc}</p>
-			</div>
-			</div>
-			<div>
-			<div class="leafletSubHeader">
-				<label>Residents</label>
-			</div>
-			<div class="modalLine">
-				<label class="leafletLabel">Total</label>
-				<label class="leafletLabel">${doc.number_residents}</label>
-			</div>
-			<hr style="border-top: 1px solid #CBD5E0;">
-			<div class="modalLine">
-				<label class="leafletLabel">Minors</label>
-				<label class="leafletLabel">${doc.number_minors}</label>
-			</div>
-			<br>
-			<div class="modalLine">
-				<label class="leafletLabel">Seniors</label>
-				<label class="leafletLabel">${doc.number_seniors}</label>
-			</div>
-			<br>
-			<div class="modalLine">
-				<label class="leafletLabel">PWD</label>
-				<label class="leafletLabel">${doc.number_pwd}</label>
-			</div>
-			<br>
-			<div class="modalLine">
-				<label class="leafletLabel">Sick</label>
-				<label class="leafletLabel">${doc.number_sick}</label>
-			</div>
-			<br>
-			<div class="modalLine">
-				<label class="leafletLabel">Pregnant</label>
-				<label class="leafletLabel">${doc.number_pregnant}</label>
-			</div>
-			<button class="modalButton editHousehold" id="editHouseholdPopup" name="submit_form" style="color:#3D97AF">Edit   &nbsp;&nbsp;<img src="./img/edit.png" alt="edit" style="height: 20px; width: 20px;"></button>
-			</div>
+				<br>
+				<br>
+				<div style="line-height: 1px;">
+					<p>${doc.contact_number}</p>
+					<p>${doc.household_address}</p>
+				</div>
+
+				<div class="modalLine" style="width: 100%">
+					<label class="leafletLabel">Residency Status</label>
+					<label class="leafletLabel">Part of HOA/NOA</label>
+				</div>
+
+				<div class="modalLine" style="line-height: 3px; margin-bottom: 2px; width: 180px;">
+					<p class="leafletDetails">${doc.residency_status}</p>
+					<p class="leafletDetails">${doc.is_hoa_noa}</p>
+				</div>
+
+				<div style="line-height: 105%; margin-bottom: 2px;">
+					<label class="leafletLabel">Nearest Evacuation Area</label>
+					<p class="leafletDetails">${doc.nearest_evac}</p>
+				</div>
+
+				<div>
+					<div class="leafletSubHeader">
+						<label>Risk Levels</label>
+					</div>
+					<div class="modalLine">
+						<label class="leafletLabel">Earthquake</label>
+						<label class="leafletLabel">${earthquake}</label>
+					</div>
+					<div>
+						<p class="leafletDetails">${earthquake_desc}</p>
+					</div>
+					<div class="modalLine">
+						<label class="leafletLabel">Fire</label>
+						<label class="leafletLabel">${fire}</label>
+					</div>
+					<div>
+						<p class="leafletDetails">${fire_desc}</p>
+					</div>
+					<div class="modalLine">
+						<label class="leafletLabel">Flood</label>
+						<label class="leafletLabel">${flood}</label>
+					</div>
+					<div>
+						<p class="leafletDetails">${flood_desc}</p>
+					</div>
+					<div class="modalLine">
+						<label class="leafletLabel">Landslide</label>
+						<label class="leafletLabel">${landslide}</label>
+					</div>
+					<div>
+						<p class="leafletDetails">${landslide_desc}</p>
+					</div>
+					<div class="modalLine">
+						<label class="leafletLabel">Storm</label>
+						<label class="leafletLabel">${storm}</label>
+					</div>
+					<div>
+						<p class="leafletDetails">${storm_desc}</p>
+					</div>
+				</div>
+
+				<div>
+					<div class="leafletSubHeader">
+						<label>Residents</label>
+					</div>
+					<div class="modalLine">
+						<label class="leafletLabel">Total</label>
+						<label class="leafletLabel">${doc.number_residents}</label>
+					</div>
+					<hr style="border-top: 1px solid #CBD5E0;">
+					<div class="modalLine">
+						<label class="leafletLabel">Minors</label>
+						<label class="leafletLabel">${doc.number_minors}</label>
+					</div>
+					<br>
+					<div class="modalLine">
+						<label class="leafletLabel">Seniors</label>
+						<label class="leafletLabel">${doc.number_seniors}</label>
+					</div>
+					<br>
+					<div class="modalLine">
+						<label class="leafletLabel">PWD</label>
+						<label class="leafletLabel">${doc.number_pwd}</label>
+					</div>
+					<br>
+					<div class="modalLine">
+						<label class="leafletLabel">Sick</label>
+						<label class="leafletLabel">${doc.number_sick}</label>
+					</div>
+					<br>
+					<div class="modalLine">
+						<label class="leafletLabel">Pregnant</label>
+						<label class="leafletLabel">${doc.number_pregnant}</label>
+					</div>
+					<button class="modalButton editHousehold" id="editHouseholdPopup" name="submit_form" style="color:#3D97AF">Edit   &nbsp;&nbsp;<img src="./img/edit.png" alt="edit" style="height: 20px; width: 20px;"></button>
+				</div>
 			</div>
 		</div>
 	</body>
