@@ -477,6 +477,7 @@ export function addEntry(inp_obj) {
 				.then((docRef) => {
 					console.log(docRef);
 					alert("You may now reload the page for your addition to reflect on this page");
+					window.parent.location.reload();
 
 				})
 				.catch((error) => {
@@ -570,11 +571,6 @@ export function validateData(collectionName, data) {
 			continue;
 		}
 
-		// else {
-		// 	errors.push("Field is valid!");
-		// }
-
-		// Skip type validation if not required
 		if (
 			!rule.required &&
 			(value == undefined || value == null || value == '')

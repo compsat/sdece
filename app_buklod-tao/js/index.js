@@ -81,35 +81,35 @@ function onPinClick(doc) {
         <label class="leafletLabel">${earthquake}</label>
       </div>
       <div>
-        <p class="leafletDetails">${earthquake_desc}</p>
+        <p class="leafletDetails">${earthquake_desc || 'Undefined'}</p>
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Fire</label>
         <label class="leafletLabel">${fire}</label>
       </div>
       <div>
-        <p class="leafletDetails">${fire_desc}</p>
+        <p class="leafletDetails">${fire_desc || 'Undefined'}</p>
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Flood</label>
         <label class="leafletLabel">${flood}</label>
       </div>
       <div>
-        <p class="leafletDetails">${flood_desc}</p>
+        <p class="leafletDetails">${flood_desc || 'Undefined'}</p>
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Landslide</label>
         <label class="leafletLabel">${landslide}</label>
       </div>
       <div>
-        <p class="leafletDetails">${landslide_desc}</p>
+        <p class="leafletDetails">${landslide_desc || 'Undefined'}</p>
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Storm</label>
         <label class="leafletLabel">${storm}</label>
       </div>
       <div>
-        <p class="leafletDetails">${storm_desc}</p>
+        <p class="leafletDetails">${storm_desc || 'Undefined'}</p>
       </div>
     </div>
     <div>
