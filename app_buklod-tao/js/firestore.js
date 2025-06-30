@@ -127,7 +127,6 @@ const loadData = async() => {
 
 await loadData();
 
-
 export function addEntry(data) {
   data.forEach((entry) => {
     addDoc(colRef, entry)
@@ -202,7 +201,7 @@ export function submitForm(){
     // this is where data validation will happen
     // add the if-else statements of edge cases here
   }
-  
+  //Internal data validation within buklod tao app
   validate_errors = validateData(collection_value,collated_input);
   
   if (validate_errors.length > 0){
@@ -221,6 +220,7 @@ export function submitForm(){
     }
     waitForPromise();
   }
+  //Data Validation Error message display within modal
   function displayErrors(errors) {
     let errorDiv = document.getElementById('error_messages');
 
