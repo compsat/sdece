@@ -386,6 +386,65 @@ export function getCollection() {
 	return collection_reference;
 }
 
+var partnersArray = [];
+export async function loadCollection(reference){
+	var querySnapshot = await getDocs(reference).catch((error) => {
+		console.error('Error getting documents: ', error);
+	});
+	querySnapshot.forEach((doc) => {
+		partnersArray.push(doc.data());
+	})
+	return partnersArray;
+}
+
+export function loadNavBar(){
+	var size = Object.keys(partnersArray).length;
+	for(var i = 0; i<size; i++){
+      var partner = partnersArray[i]
+      // Creating DOM elements
+      const containerDiv = document.createElement('div');
+      const img = document.createElement('svg');
+      const listItem = document.createElement('li');
+      const anchor = document.createElement('a');
+      const nameDiv = document.createElement('div');
+      const addressDiv = document.createElement('div');
+	  
+	  
+	  
+	  anchor.href = '#';
+	  let marker = L.marker([0, 0]);
+	  
+	  Object.defineProperty(partner, "marker", {value:marker, configurable: true});
+	  
+	  anchor.addEventListener('click', () => {
+		  partner.marker.fire('click');
+		});
+		// Set attributes
+		
+      // Adding classes and setting text content
+      nameDiv.classList.add('name');
+      addressDiv.classList.add('address');
+
+      nameDiv.textContent = partner.household_name;
+      addressDiv.textContent =
+        partner.household_address + ' ' + partner.household_phase;
+
+      listItem.classList.add('accordion');
+      anchor.classList.add('accordion', 'link');
+      containerDiv.classList.add('container-entry');
+
+      // Append elements to the DOM
+      anchor.appendChild(nameDiv);
+      anchor.appendChild(addressDiv);
+	  listItem.appendChild(anchor);
+	  containerDiv.appendChild(img);
+	  containerDiv.appendChild(listItem);
+	  locationList.appendChild(containerDiv);
+	};
+	
+}
+
+
 export function getDocIdByPartnerName(partner_name) {
 	const endName = partner_name.replace(/\s/g, '\uf8ff');
 

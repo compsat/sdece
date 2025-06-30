@@ -21,6 +21,8 @@ import {
   validateData, 
   editEntry,
   getDocIdByPartnerName,
+  loadCollection,
+  loadNavBar,
 } from '../../js/firestore_UNIV.js';
 // Your Firestore code here
 console.log("run2");
@@ -42,7 +44,7 @@ initializeApp(firebaseConfig);
 const db = getFirestore();
 setCollection(collection_value);
 const colRef = getCollection();
-let partnersArray = [];
+var partnersArray = [];
 
 export function getDocByID(docId) {
   const docReference = doc(db, 'nstp-3', docId);
@@ -59,21 +61,14 @@ export function getPartnersArray() {
   return partnersArray;
 }
 
-const loadData = async() => {
-	const getRefs = async() => {
-		await getDocs(colRef)
-	.then((querySnapshot) => {
-		querySnapshot.forEach((doc) => {
-			if (
-				doc.data().name !== 'Test 2' ||
-				doc.data().name !== 'Test2'
-			) {
-				partnersArray.push(doc.data());
-			}
-		});
-
+/*
+function getRefs() {
     // populate ul with partners
-    partnersArray.forEach((partner) => {
+    console.log("getrefs");
+
+    var size = Object.keys(partnersArray).length;
+    for(var i = 0; i<size; i++){
+      var partner = partnersArray[i]
       // Creating DOM elements
       const containerDiv = document.createElement('div');
       const img = document.createElement('svg');
@@ -83,12 +78,12 @@ const loadData = async() => {
       const addressDiv = document.createElement('div');
 
 			// Set attributes
+
+
 			anchor.href = '#';
-      console.log(L)
 			let marker = L.marker([0, 0]);
 
 			Object.defineProperty(partner, "marker", {value:marker, configurable: true});
-
 
 			anchor.addEventListener('click', () => {
 				partner.marker.fire('click');
@@ -114,18 +109,11 @@ const loadData = async() => {
 			containerDiv.appendChild(img);
 			containerDiv.appendChild(listItem);
 			locationList.appendChild(containerDiv);
-		});
-	})
-	.catch((error) => {
-		console.error('Error getting documents: ', error);
-	});
-	}
+		};
+}*/
 
-	await getRefs();
-}
-
-
-await loadData();
+partnersArray = await loadCollection(colRef);
+loadNavBar();
 
 
 export function addEntry(data) {

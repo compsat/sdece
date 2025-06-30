@@ -19,7 +19,7 @@ import evacCenters from '../hardcode/evac-centers.json' with {type: 'json'};
 //setCollection("buklod-official-TEST");
 
 var colRef = getCollection();
-var partnersArray = getPartnersArray();
+var partnersArray = await getPartnersArray();
 
 // Pans map to Banaba area upon loading the page
 map.panTo(new L.LatLng(14.673, 121.11215));
@@ -225,6 +225,7 @@ partnersArray.forEach((partner) => {
     var doc = partner;
     var this_marker = partner.marker;
     //console.log(doc);
+    
     if (doc.location_coordinates != null) {
       this_marker = L.marker([
         parseFloat(doc.location_coordinates._lat),
