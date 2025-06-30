@@ -180,6 +180,7 @@ export function createJsCssFiles(file_path) {
 		fileref.setAttribute('type', 'text/css');
 		fileref.setAttribute('href', file_path + '?');
 	}
+
 	return fileref;
 }
 

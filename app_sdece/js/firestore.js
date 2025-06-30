@@ -11,6 +11,7 @@ import {
 	where,
 	getDoc,
 	GeoPoint,
+	Timestamp
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import {
 	getCollection,
@@ -34,6 +35,7 @@ import { showMainModal, showAddModal } from './index.js';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
 var col_ref = null;
 col_ref = getCollection();
 
@@ -137,6 +139,24 @@ newButton.addEventListener('click', () => {
 	// Set autofill or reset field
 });
 
+//If activity name is empty, used activity nature	
+function getActivity(activity) {
+	const name = activity['activity_name'];
+	const nature = activity['activity_nature'];
+
+	if (!name || name.trim() === '') {
+		return nature;
+	}
+	return name;
+}
+
+function clearAllHighlights() {
+	const sidebarItems = document.querySelectorAll('.partnerDiv');
+	sidebarItems.forEach((item) => {
+		item.classList.remove('highlight');
+	});
+}
+
 getDocs(col_ref)
 	.then((querySnapshot) => {
 		// Populate activities
@@ -197,23 +217,10 @@ getDocs(col_ref)
 					var test = document.getElementById(
 						partners[partner][0]['partner_name']
 					);
-					test.addEventListener('click', function () {
-						showModal(partners[partner]);
-					});
 				});
-			}
 
-			const containerDiv = document.createElement('div');
-			const img = document.createElement('svg');
-			const listItem = document.createElement('li');
-			const anchor = document.createElement('a');
-			const nameDiv = document.createElement('div');
-			const addressDiv = document.createElement('div');
-			const activityDiv = document.createElement('div');
-
-			containerDiv.addEventListener('click', function () {
-				marker.openPopup();
-				map.panTo(
+				marker.on('click', function () {
+					map.panTo(
 					new L.LatLng(
 						parseFloat(
 							partners[partner][0]['partner_coordinates']
@@ -225,6 +232,43 @@ getDocs(col_ref)
 						)
 					)
 				);
+
+					clearAllHighlights();
+
+					const sidebarItems = document.querySelectorAll('.partnerDiv');
+					sidebarItems.forEach((item) => {
+						const nameDiv = item.querySelector('.name');
+						if (nameDiv && nameDiv.textContent === partner) {
+							item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+							item.classList.add('highlight');
+						}
+					});
+					showModal(partners[partner]);
+				});
+			}
+
+			const containerDiv = document.createElement('div');
+			const img = document.createElement('svg');
+			const listItem = document.createElement('li');
+			const anchor = document.createElement('a');
+			const nameDiv = document.createElement('div');
+			const addressDiv = document.createElement('div');
+			const activityDiv = document.createElement('div');
+			const sidebarItems = document.querySelectorAll('.partnerDiv');
+
+			containerDiv.addEventListener('click', function () {
+				marker.openPopup();
+				map.panTo(
+					new L.LatLng(
+						parseFloat(partners[partner][0]['partner_coordinates'].latitude),
+						parseFloat(partners[partner][0]['partner_coordinates'].longitude)
+					)
+				);
+
+				clearAllHighlights();
+
+				containerDiv.classList.add('highlight');
+
 				showModal(partners[partner]);
 			});
 
@@ -237,7 +281,7 @@ getDocs(col_ref)
 				// check if list of activities is present, otherwise is skipped to avoid errors
 				Object.keys(activities).forEach((activity) => {
 					activityDiv.innerHTML +=
-						activities[activity].activity_name + '<br/>'; // there might be a better way to display multiple activities
+						getActivity + '<br/>'; // there might be a better way to display multiple activities
 				});
 			}
 
@@ -251,7 +295,7 @@ getDocs(col_ref)
 			let activities_string = '';
 
 			for (let activity of partners[partner]) {
-				activities_string += activity['activity_nature'] + '<br>';
+				activities_string += getActivity(activity)+ '<br>';
 			}
 
 			activityDiv.innerHTML = activities_string;
@@ -340,6 +384,7 @@ export function showModal(partner) {
 	// Close the modal when the close button is clicked
 	closeDiv.addEventListener('click', () => {
 		current_viewed_activity = null;
+		clearAllHighlights();
 		//might be better to put this in its own function
 		modal.style.display = 'none';
 		modal.classList.remove('open'); //transition out
@@ -446,7 +491,7 @@ export function showModal(partner) {
 			const office = document.createElement('div');
 			office.classList.add('modal-office');
 
-			activityName.textContent = activity.activity_nature + '';
+			activityName.textContent = getActivity(activity) + '';
 			arrow.innerHTML =
 				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
 			office.innerHTML = activity.ADMU_office;
@@ -465,7 +510,7 @@ export function showModal(partner) {
 			const activityDatesDiv = document.createElement('div');
 			const activityOfficeDiv = document.createElement('div');
 
-			activityNameDiv.innerHTML = activity.activity_nature + '';
+			activityNameDiv.innerHTML = getActivity(activity) + '';
 			activityNameDiv.classList.add('modal-activities-header');
 			activityAddressDiv.innerHTML = activity.partner_address;
 			activityAddressDiv.classList.add('modal-address');
@@ -665,6 +710,14 @@ addFormSubmitButton.addEventListener('click', function () {
 	} else {
 		if (has_existing_partner) {
 			//upload it straight to the firebase db
+			if (
+				typeof info_from_forms.activity_date === 'string' &&
+				!isNaN(Date.parse(info_from_forms.activity_date))
+			) {
+				const parsedDate = new Date(info_from_forms.activity_date);
+				parsedDate.setHours(0, 0, 0, 0);
+				info_from_forms.activity_date = Timestamp.fromDate(new Date(info_from_forms.activity_date));
+			}
 			addEntry(info_from_forms);
 			// alert(
 			// 	'Reload the page for the new additions to reflect on your browser'
@@ -744,6 +797,14 @@ export function handleEdit() {
 		displayErrors(errors);
 		event.preventDefault();
 	} else {
+		if (
+			typeof collated_inp.activity_date === 'string' &&
+			!isNaN(Date.parse(collated_inp.activity_date))
+		) {
+			const dateOnly = new Date(collated_inp.activity_date);
+			dateOnly.setHours(0, 0, 0, 0);
+			collated_inp.activity_date = Timestamp.fromDate(dateOnly);
+		}
 		editEntry(collated_inp, current_viewed_activity['identifier']);
 		document.getElementById('editModal').style = "display: 'none'";
 		//alert('Reload the page for the new edits to reflect on your browser');
@@ -789,6 +850,14 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 				mainModalDocument.getElementById('address-input').value;
 			current_temp_activity['partner_name'] = new_partner_name;
 			current_temp_activity['partner_address'] = new_partner_address;
+			if (
+				typeof current_temp_activity.activity_date === 'string' &&
+				!isNaN(Date.parse(current_temp_activity.activity_date))
+			) {
+				const dateOnly = new Date(current_temp_activity.activity_date);
+				dateOnly.setHours(0, 0, 0, 0);
+				current_temp_activity.activity_date = Timestamp.fromDate(dateOnly);
+			}
 			addEntry(current_temp_activity);
 		});
 
@@ -858,7 +927,7 @@ export function populateMainModalList() {
 			const activityName = document.createElement('div');
 			const arrow = document.createElement('div');
 
-			activityName.textContent = activity.activity_nature + '';
+			activityName.textContent = getActivity(activity) + '';
 
 			arrow.innerHTML =
 				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
