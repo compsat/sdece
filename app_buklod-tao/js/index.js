@@ -152,55 +152,7 @@ function onPinClick(doc) {
   `;
   return leaflet_html;
 } 
-/*
-// Loads art the start
-getDocs(colRef)
-  .then((querySnapshot) => {
-    querySnapshot.forEach((entry) => {
-      var doc = entry.data();
-      
-      if (doc.location_coordinates != null) {
-        var marker = L.marker([0, 0]);
-        marker = L.marker([
-          parseFloat(doc.location_coordinates._lat),
-          parseFloat(doc.location_coordinates._long),
-        ]);
-        // shows partner info on pin click
-      var popupContent = onPinClick(doc);
-      marker.bindPopup(popupContent);
-      marker.on('popupopen', function(e) {
-        const editBtns = document.querySelectorAll('.editHousehold');
-        editBtns.forEach((btn) => {
-          btn.addEventListener('click', function() {
-            console.log('Edit button was clicked!');
-            const modal = document.getElementById('partnerModal');
-            var editFormModal = document.getElementById('editModal');
-            editFormModal.style.display = 'block';
-            modal.style.display = 'none';
-            populateEditForm(doc, editFormModal)
-          });
-        });
 
-        //var editBtn = document.getElementById('editHouseholdPopup')
-        //if (editBtn) {
-          //editBtn.addEventListener('click', function() {
-            //console.log('Edit button was clicked!');
-            //const modal = document.getElementById('partnerModal');
-            //var editFormModal = document.getElementById('editModal');
-            //editFormModal.style.display = 'block';
-            //modal.style.display = 'none';
-            //populateEditForm(doc, editFormModal)
-          //})
-        //}
-      })
-      results.addLayer(marker);
-      }
-      
-    });
-  }).catch((error) => {
-    console.error('Error getting documents: ', error);
-  });
-*/
 // Pin display
 evacCenters.forEach(center => {
   const marker = L.marker(
@@ -277,15 +229,6 @@ function onMapClick(e) {
     const lng = this.getAttribute('data-lng');
 
     var modal = document.getElementById('addModal');
-
-    // TODO: Integrate this functionality into the modal instead
-    // var partnerName = this.getAttribute("data-loc");
-    // window.open(
-    //   `addloc.html?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(
-    //     lng
-    //   )}`,
-    //   "_blank"
-    // );
 
     // Display the modal
     modal.classList.remove('hidden');
