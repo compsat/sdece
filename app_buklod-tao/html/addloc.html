@@ -17,10 +17,6 @@
                 var collatedInput = {};
 
                 for (let i = 0; i < BUKLOD_RULES_TEST[2].length; i++) {
-                    //BUKLOD_RULES_TEST[2] are just the field names of each document
-                    // console.log(BUKLOD_RULES_TEST[2][i]);
-                    // let q = document.getElementById(BUKLOD_RULES_TEST[2][i]).value;
-                    // collatedInput[BUKLOD_RULES_TEST[2][i]] = q;
 
                     let fieldName = BUKLOD_RULES_TEST[2][i];
                     let inputValue = document.getElementById(fieldName).value;
@@ -35,8 +31,6 @@
                     } else {
                         collatedInput[fieldName] = inputValue;
                     }
-                    // this is where data validation will happen
-                    // add the if-else statements of edge cases here
                 }
                 
                 const errors = validateData("buklod-official-TEST", collatedInput);
@@ -45,7 +39,8 @@
                     displayErrors(errors);
                 } else {
                     addEntry(collatedInput);
-                }
+                    window.parent.document.getElementById('addModal').style.display = 'none';
+                };
 
                 function displayErrors(errors) {
                 let errorDiv = document.getElementById('error_messages');
@@ -65,6 +60,7 @@
                         console.error("Error: Couldn't find element with ID 'error_messages'.");
                     }
                 }
+
             }
         </script>
     </head>
@@ -267,15 +263,23 @@
             function resetForm() {
                 let messageText = "Are you sure you want to clear the form?";
                 if (confirm(messageText) == true) {
+                    // Clear input fields
                     var inputFields = document.getElementsByTagName('input');
                     for (var i = 0; i < inputFields.length; i++) {
-                        var field = inputFields[i];
-                        if (!field.readOnly && field.type !== 'button') {
-                            field.value = '';
-                        }
+                    var field = inputFields[i];
+                    if (!field.readOnly && field.type !== 'button') {
+                        field.value = '';
+                    }
+                    }
+
+                    // Clear select dropdowns
+                    var selectFields = document.getElementsByTagName('select');
+                    for (var i = 0; i < selectFields.length; i++) {
+                    selectFields[i].selectedIndex = 0; 
                     }
                 }
-            }
+                }
+
 
             function closeModal() {
 				window.parent.postMessage('closeAddModal', '*');

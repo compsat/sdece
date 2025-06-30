@@ -100,10 +100,15 @@ export const DB_RULES_AND_DATA = [
 			'household_material',
 			'household_phase',
 			'landslide_risk',
+			'landslide_risk_description',
 			'earthquake_risk',
+			'earthquake_risk_description',
 			'fire_risk',
+			'fire_risk_description',
 			'flood_risk',
+			'flood_risk_description',
 			'storm_risk',
+			'storm_risk_description',
 			'nearest_evac',
 		],
 	],
@@ -128,6 +133,7 @@ export const DB_RULES_AND_DATA = [
 			'household_material',
 			'household_phase',
 			'landslide_risk',
+			'landslide_risk_description',
 			'earthquake_risk',
 			'earthquake_risk_description',
 			'fire_risk',
@@ -471,6 +477,7 @@ export function addEntry(inp_obj) {
 				.then((docRef) => {
 					console.log(docRef);
 					alert("You may now reload the page for your addition to reflect on this page");
+					window.parent.location.reload();
 
 				})
 				.catch((error) => {
@@ -518,7 +525,34 @@ export function validateData(collectionName, data) {
 		'partner_coordinates': 'Partner Coordinates',
 		'ADMU_office': 'Name of Office',
 		'ADMU_contact_name': 'Name of Ateneo Contact Person',
-		'ADMU_email': 'Email of Ateneo Contact Person'
+		'ADMU_email': 'Email of Ateneo Contact Person',
+		'household_name': 'Household Name',
+		'contact_number': 'Contact Number',
+		'number_residents': 'Number of Residents',
+		'number_minors': 'Number of Minor Residents',
+		'number_seniors': 'Number of Senior Residents' ,
+		'number_pregnant': 'Number of Pregnant Residents',
+		'number_pwd': 'Number of PWD Residents',
+		'number_sick': 'Number of Sick Residents',
+		'sickness_present': 'Sickness Present',
+		'residency_status': 'Residency Status',
+		'is_hoa_noa': 'Is HOA/NOA',
+		'location_coordinates': 'Location Coordinates',
+		'location_link': 'Location Link',
+		'household_address': 'Household Address',
+		'household_material': 'Household Material',
+		'household_phase': 'Household Phase',
+		'landslide_risk': 'Landslide Risk',
+		'landslide_risk_description': 'Landslide Risk Description',
+		'earthquake_risk': 'Earthquake Risk',
+		'earthquake_risk_description': 'Earthquake Risk Description',
+		'fire_risk': 'Fire Risk',
+		'fire_risk_description': 'Fire Risk Description',
+		'flood_risk': 'Flood Risk',
+		'flood_risk_description': 'Flood Risk Description',
+		'storm_risk': 'Storm Risk',
+		'storm_risk_description': 'Storm Risk Description',
+		'nearest_evac': 'Nearest Evacuation Center',
 	};
 
 	for (const field in rules) {
@@ -537,11 +571,6 @@ export function validateData(collectionName, data) {
 			continue;
 		}
 
-		// else {
-		// 	errors.push("Field is valid!");
-		// }
-
-		// Skip type validation if not required
 		if (
 			!rule.required &&
 			(value == undefined || value == null || value == '')
