@@ -137,6 +137,20 @@ select.attribs {
     padding-inline: 5px;
 }
 
+/* CSS for select elements that should be long */
+select.longAttribs {
+    display: block;
+    width: 400px;
+    height: 40px;
+    box-sizing: border-box;
+    font-family: 'Hind'; font-size: 18px;
+    border-style: double;
+    border-color: rgb(196, 196, 196);
+    border-width: 0.5px;
+    border-radius: 4px;
+    padding-inline: 5px;
+}
+
 /* when hovering over input field */
 select.attribs:hover {
     border-color: #000000;
