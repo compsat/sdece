@@ -62,9 +62,22 @@
       <!-- Navigation bar -->
       <div class="sideNav">
 
-        <!-- Search Bar -->
+        <!-- Search Bar container -->
         <div class="buttons">
+
+          <!-- Search Bar -->
           <input class="searchBar" type="search" placeholder="Search... " oninput="searchEntries()">
+
+          <!-- Pin color change toggle -->
+          <br>
+          <select name="risk" id="risk-sort">
+            <option value="earthquake-sort">Earthquake</option>
+            <option value="fire-sort">Fire</option>
+            <option value="flood-sort">Flood</option>
+            <option value="landslide-sort">Landslide</option>
+            <option value="storm-sort">Storm</option>
+          </select>
+
         </div>
 
         <!-- List of Entries -->
