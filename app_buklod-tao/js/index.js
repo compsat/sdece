@@ -158,7 +158,7 @@ evacCenters.forEach(center => {
   const marker = L.marker(
     [center.latitude, center.longitude],
     {icon: L.icon({
-      iconUrl: "/app_buklod-tao/hardcode/evac.svg",
+      iconUrl: "/app_buklod-tao/hardcode/evac_center_v1.svg",
       iconSize: [39,39],
       popupAnchor: [0.5, -15]
     })}
