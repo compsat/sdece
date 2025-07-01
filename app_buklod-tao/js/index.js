@@ -18,21 +18,12 @@ import evacCenters from '../hardcode/evac-centers.json' with {type: 'json'};
 
 //setCollection("buklod-official-TEST");
 
-var colRef = getCollection();
-var partnersArray = getPartnersArray();
-
 // Pans map to Banaba area upon loading the page
 map.panTo(new L.LatLng(14.673, 121.11215));
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution:
-    '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
-  }).addTo(map);
+var colRef = getCollection();
+var partnersArray = getPartnersArray();
 
-var searchControl = L.esri.Geocoding.geosearch().addTo(map);
-
-var results = L.layerGroup().addTo(map);
-var popup = L.popup();
 
 // Function to store the html for info display on pin click
 function onPinClick(doc) {
@@ -153,58 +144,70 @@ function onPinClick(doc) {
   return leaflet_html;
 } 
 
-// Pin display
-evacCenters.forEach(center => {
-  const marker = L.marker(
-    [center.latitude, center.longitude],
-    {icon: L.icon({
-      iconUrl: "/app_buklod-tao/hardcode/evac_center_v1.svg",
-      iconSize: [39,39],
-      popupAnchor: [0.5, -15]
-    })}
-  ).addTo(map);
 
-  marker.bindPopup(`
-    <div class = "evac-marker-header">${center.type}</div>
-    <div style = "text-align:center;">
-      <b>${center.name}</b>
-      <br>Location: ${center.latitude}, ${center.longitude}
-    </div>`);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution:
+    '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
+
+var searchControl = L.esri.Geocoding.geosearch().addTo(map);
+
+var results = L.layerGroup().addTo(map);
+var popup = L.popup();
+
+
+//// Event Listeners
+searchControl.on('results', function (data) {
+  console.log(data);
+  results.clearLayers();
+  for (var i = data.results.length - 1; i >= 0; i--) {
+    var marker = L.marker(data.results[i].latlng);
+    //console.log(marker);
+    results.addLayer(marker);
+  }
 });
-console.log("run1");
 
-partnersArray.forEach((partner) => {
-    var doc = partner;
-    var this_marker = partner.marker;
-    //console.log(doc);
-    if (doc.location_coordinates != null) {
-      this_marker = L.marker([
-        parseFloat(doc.location_coordinates._lat),
-        parseFloat(doc.location_coordinates._long),
-      ]);
-    }
-    // shows partner info on pin click
-    var popupContent = onPinClick(doc);
-    this_marker.bindPopup(popupContent);
-    this_marker.on('popupopen', function(e) {
-        const editBtns = document.querySelectorAll('.editHousehold');
-        editBtns.forEach((btn) => {
-          btn.addEventListener('click', function() {
-            console.log('Edit button was clicked!');
-            const modal = document.getElementById('partnerModal');
-            var editFormModal = document.getElementById('editModal');
-            editFormModal.style.display = 'block';
-            modal.style.display = 'none';
-            populateEditForm(doc, editFormModal)
-          });
-        });
-      });
-    results.addLayer(this_marker);
-    Object.defineProperty(partner, "marker", {value:this_marker, configurable: true});
+// Script for add household modal
+
+// Modal
+var formModal = document.getElementById('addModal');
+
+// Open modal
+var openForm = document.getElementById('mainButton');
+
+// Get the <span> element that closes the modal
+var closeForm = document.getElementsByClassName('closeForm')[0];
+
+// When the user clicks the button, open the modal
+if(openForm) {
+  openForm.onclick = function() {
+    formModal.style.display = "block";
+  }
+
+  openForm.addEventListener('click', function () {
+    formModal.style.display = 'block';
   });
+}
 
-addListeners();
+if(closeForm) {
+  closeForm.addEventListener('click', function () {
+    formModal.style.display = 'none';
+  });
+}
 
+// Closing the modal if the user clicks outside of it
+window.onclick = function (event) {
+  if (event.target == formModal) {
+    formModal.style.display = 'none';
+  }
+  if (event.target == partnerModal) {
+    partnerModal.style.display = 'none';
+  }
+};
+
+
+
+// CODE LOGIC FOR ADD HOUSEHOLD MODAL TO OPEN ADD HOUSEHOLD FORM
 // When user clicks on the map to add household and open Add Household form
 function onMapClick(e) {
   const lat = e.latlng.lat;
@@ -288,57 +291,7 @@ function onMapClick(e) {
   });
 }
 
-map.on('click', onMapClick);
-
-//// Event Listeners
-searchControl.on('results', function (data) {
-  console.log(data);
-  results.clearLayers();
-  for (var i = data.results.length - 1; i >= 0; i--) {
-    var marker = L.marker(data.results[i].latlng);
-    //console.log(marker);
-    results.addLayer(marker);
-  }
-});
-
-// Script for add household modal
-
-// Modal
-var formModal = document.getElementById('addModal');
-
-// Open modal
-var openForm = document.getElementById('mainButton');
-
-// Get the <span> element that closes the modal
-var closeForm = document.getElementsByClassName('closeForm')[0];
-
-// When the user clicks the button, open the modal
-if(openForm) {
-  openForm.onclick = function() {
-    formModal.style.display = "block";
-  }
-
-  openForm.addEventListener('click', function () {
-    formModal.style.display = 'block';
-  });
-}
-
-if(closeForm) {
-  closeForm.addEventListener('click', function () {
-    formModal.style.display = 'none';
-  });
-}
-
-// Closing the modal if the user clicks outside of it
-window.onclick = function (event) {
-  if (event.target == formModal) {
-    formModal.style.display = 'none';
-  }
-  if (event.target == partnerModal) {
-    partnerModal.style.display = 'none';
-  }
-};
-
+// Function for Add Household button
 function addMainButtonText() {
   var mainButtonText = document.getElementById('mainButtonText');
   if(mainButtonText) {
@@ -346,4 +299,129 @@ function addMainButtonText() {
   }
 }
 
+map.on('click', onMapClick);
 addMainButtonText();
+
+
+
+// CODE LOGIC FOR DISPLAYING OF PINS
+// Pin display for Evacuation Centers
+evacCenters.forEach(center => {
+  const marker = L.marker(
+    [center.latitude, center.longitude],
+    {icon: L.icon({
+      iconUrl: "/app_buklod-tao/hardcode/evac_center_v2.svg",
+      iconSize: [39,39],
+      popupAnchor: [0.5, -15]
+    })}
+  ).addTo(map);
+
+  marker.bindPopup(`
+    <div class = "evac-marker-header">${center.type}</div>
+    <div style = "text-align:center;">
+      <b>${center.name}</b>
+      <br>Location: ${center.latitude}, ${center.longitude}
+    </div>`);
+});
+
+/*
+// Pin display for Households
+partnersArray.forEach((partner) => {
+    var doc = partner;
+    var this_marker = partner.marker;
+    //console.log(doc);
+    if (doc.location_coordinates != null) {
+      this_marker = L.marker([
+        parseFloat(doc.location_coordinates._lat),
+        parseFloat(doc.location_coordinates._long),
+      ]);
+    }
+    // shows partner info on pin click
+    var popupContent = onPinClick(doc);
+    this_marker.bindPopup(popupContent);
+    this_marker.on('popupopen', function(e) {
+        const editBtns = document.querySelectorAll('.editHousehold');
+        editBtns.forEach((btn) => {
+          btn.addEventListener('click', function() {
+            console.log('Edit button was clicked!');
+            const modal = document.getElementById('partnerModal');
+            var editFormModal = document.getElementById('editModal');
+            editFormModal.style.display = 'block';
+            modal.style.display = 'none';
+            populateEditForm(doc, editFormModal)
+          });
+        });
+      });
+    results.addLayer(this_marker);
+    Object.defineProperty(partner, "marker", {value:this_marker, configurable: true});
+  });
+
+  */
+addListeners();
+
+
+
+// CODE LOGIC FOR PIN COLOR CHANGE FEATURE
+// Function for getting svg file according to risk type
+function getRiskIcon(riskLevel) {
+  const basePath = '/app_buklod-tao/hardcode/';
+  switch (riskLevel.toUpperCase()) {
+    case 'HIGH RISK':
+      return `${basePath}high_risk.svg`;
+    case 'MEDIUM RISK':
+      return `${basePath}mid_risk.svg`;
+    case 'LOW RISK':
+      return `${basePath}low_risk.svg`;
+    default:
+      return `${basePath}low_risk.svg`; // fallback
+  }
+}
+
+// Function for code logic of switching between risk types
+function updateRiskIcons() {
+  const riskType = document.getElementById('risk-sort').value.replace('-sort', '');
+
+  // Remove all current markers
+  results.clearLayers();
+
+  partnersArray.forEach((partner) => {
+    const coord = partner.location_coordinates;
+    if (!coord) return;   // Skip household entry if no coordinates were listed
+
+    const riskLevel = partner[`${riskType}_risk`];
+    const iconPath = getRiskIcon(riskLevel || 'LOW RISK');
+
+    // Icon class standards
+    const icon = L.icon({
+      iconUrl: iconPath,
+      iconSize: [39, 39],
+      popupAnchor: [0.5, -15]
+    });
+
+    // Place pin accordingly on map according to icon class standards
+    const marker = L.marker([coord._lat, coord._long], { icon });
+
+    // Shows partner info on pin click
+    const popupContent = onPinClick(partner);
+    marker.bindPopup(popupContent);
+
+    marker.on('popupopen', () => {
+      const editBtns = document.querySelectorAll('.editHousehold');
+      editBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const modal = document.getElementById('partnerModal');
+          var editFormModal = document.getElementById('editModal');
+          editFormModal.style.display = 'block';
+          modal.style.display = 'none';
+          populateEditForm(partner, editFormModal);
+        });
+      });
+    });
+
+    results.addLayer(marker);
+    Object.defineProperty(partner, "marker", { value: marker, configurable: true });
+  });
+}
+
+document.getElementById('risk-sort').addEventListener('change', updateRiskIcons);
+updateRiskIcons();
