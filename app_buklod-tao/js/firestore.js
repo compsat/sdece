@@ -397,10 +397,18 @@ export function populateEditForm(partner, editFormModal) {
   console.log("populating form");
   var iframe = editFormModal.getElementsByClassName('formIframe')[0]
   var editForm = iframe.contentWindow.document
-  for (var data in partner) {
-    // console.log(data.toString()+ " '" + partner[data] + "'")
-    // console.log(partner[data])``
 
+  console.log("Original name:", partner.household_name);
+
+  // ✅ Store original in hidden input
+  const originalField = editForm.createElement('input');
+  originalField.type = 'hidden';
+  originalField.id = 'original_household_name';
+  originalField.value = partner.household_name;
+  editForm.body.appendChild(originalField);
+
+
+  for (var data in partner) {
     if (partner[data] instanceof Object){
       editForm.getElementById(data.toString()).value = partner[data]._lat + " " + partner[data]._long
     } 
@@ -462,80 +470,52 @@ export function submitForm(){
   }
   
   validate_errors = validateData(collection_value,collated_input);
+
   
   if (validate_errors.length > 0){
     console.log("failed vaildation");
+    displayErrors(validate_errors);
     alert("Error in validating values. Check console for errors present");
     for(var i in validate_errors){
       console.log(validate_errors[i]);
     }
   }
-  else{
+  else {
     console.log("passed validation");
-    //var householdID = getDocIdByPartnerName(collated_input['household_name']);
+
+    const original_household_name = document.getElementById('original_household_name').value;
+
     const waitForPromise = async() => {
-      const householdID = await getDocIdByPartnerName(collated_input['household_name']);
-      editEntry(collated_input,householdID);
+      const householdID = await getDocIdByPartnerName(original_household_name);
+      console.log("Resolved householdID to editEntry:", householdID);
+
+      if (householdID) {
+        editEntry(collated_input, householdID);
+      } else {
+        console.error("No householdID found for the given household_name!");
+        alert("Error: Unable to find household ID for original name.");
+      }
     }
+
     waitForPromise();
   }
+
+  function displayErrors(validate_errors) {
+    let errorDiv = document.getElementById('error_messages');
+
+    if (errorDiv) {
+
+        errorDiv.innerHTML = '';
+
+        if (validate_errors.length > 0) {
+            for (let error of validate_errors) {
+                let errorParagraph = document.createElement('p');
+                errorParagraph.textContent = error;
+                errorDiv.appendChild(errorParagraph);
+            }
+        }
+        } else {
+            console.error("Error: Couldn't find element with ID 'error_messages'.");
+        }
+    }
  }
-  // TODO:
-  // get docID via  getDocIdByPartnerName/getDocByID
-  // then call editEntry(inp_obj, docId), inp_obj is collated_input, docID is gotten from getDocIdByPartnerName/getDocByID
-  // so basically editEntry(collated_input, docID via  getDocIdByPartnerName/getDocByID)
-  /*
-  const partnerName = document.getElementById("household_name").value;
-  getDocIdByPartnerName(partnerName)
-  .then((docId) => {
-    if (docId) {
-      // If a matching docId is found, proceed with updating the document
-      const name = partnerName;
-      const address = document.getElementById("household_address").value;
-      const phase = document.getElementById("household_phase").value;
-      const contactNum = document.getElementById("contact_number").value;
-      const residencyStatus = document.getElementById("residency_status").value;
-      const membership = document.getElementById("is_hoa_noa").value;
-      const locationLink = document.getElementById("location_link").value;
-      const locationCoordinates = document.getElementById("location_coordinates").value;
-      const householdMat = document.getElementById("household_material").value;
-      const nearestEvac = document.getElementById("nearest_evac").value;
-      const status = document.getElementById("status").value;
-      const residentNum = document.getElementById("number_residents").value;
-      const adultNum = document.getElementById("number_adults").value;
-      const minorNum = document.getElementById("number_minors").value;
-      const seniorNum = document.getElementById("number_seniors").value;
-      const pwdNum = document.getElementById("number_pwd").value;
-      const sickNum = document.getElementById("number_sick").value;
-      const sickType = document.getElementById("sickness_present").value;
-      const pregnantNum = document.getElementById("number_pregnant").value;
-      const earthquake = document.getElementById("earthquake").value;
-      const earthquakeRisk = document.getElementById("earthquake_risk").value;
-      const fire = document.getElementById("fire").value;
-      const fireRisk = document.getElementById("fire_risk").value;
-      const flood = document.getElementById("flood").value;
-      const floodRisk = document.getElementById("flood_risk").value;
-      const landslide = document.getElementById("landslide").value;
-      const landslideRisk = document.getElementById("landslide_risk").value;
-      const storm = document.getElementById("storm").value;
-      const stormRisk = document.getElementById("storm_risk").value;                   
-      
-      
-      
-      const name = partnerName;
-      const activity = document.getElementById("nature_of_act").value;
-      const admuContact = document.getElementById("ateneo_contact-person").value;
-      const admuEmail = document.getElementById("ateneo_contact-email").value;
-      const admuOffice = document.getElementById("ateneo_office").value;
-      const org = document.getElementById("organization").value;
-      const partnerContact = document.getElementById("partner_contact-person").value;
-      const dates = document.getElementById("dates_of_partnership").value;
-      
-      
-      editEntry(collated_input, docId);
-      }
-      else {
-        // Handle case when no matching document is found
-      alert("No matching document found for the partner name: " + partnerName);
-      }
-      });*/
