@@ -25,28 +25,28 @@
             <!-- Form -->
             <div class="inputContainer">
                 <label class="form" for="household_name">Household Name</label>
-                <input type="text" id="household_name" name="household_name" class="attribs" required/>
+                <input type="text" id="household_name" name="household_name" class="attribs" placeholder="Ex. Juan Cruz" required/>
             </div>
             <br>
             <div class="inputContainer">
                 <label class="form" for="household_address">Address</label>
-                <input type="text" id="household_address" name="household_address" class="attribs" required/>    
+                <input type="text" id="household_address" name="household_address" class="attribs" placeholder="Ex. 1 Sampaguita St. Banaba" required/>    
             </div>
             <br>
             <div class="inputContainer">
                 <label class="form" for="household_phase">Phase</label>
-                <input type="text" id="household_phase" name="household_phase" class="attribs"/>    
+                <input type="text" id="household_phase" name="household_phase" class="attribs" placeholder="Ex. Phase 1"/>    
             </div>
             <br>
             <div class="inputContainer">
                 <label class="form" for="contact_number">Contact Number</label>
-                <input type="tel" id="contact_number" name="contact_number" class="attribs" placeholder="09XXXXXXXXX" pattern="[0-9]{11}" required/>    
+                <input type="tel" id="contact_number" name="contact_number" class="attribs" placeholder="Ex. 09XXXXXXXXX" pattern="[0-9]{11}" required/>    
             </div>
             <br>
             <div class="inputContainer">
                 <label class="form" for="residency_status">Residency Status</label>
-                <select name="residency_status" id="residency_status" class="longAttribs" required>
-                    <option value="" disabled selected hidden></option>
+                <select name="residency_status" id="residency_status" class="long-attribs" required>
+                    <option value="" disabled selected hidden>----</option>
                     <option value="May-Ari">May-Ari</option>
                     <option value="Umuupa">Umuupa</option>
                 </select>
@@ -54,8 +54,8 @@
             <br>
             <div class="inputContainer">
                 <label class="form" for="HOA/NOA">Part of HOA/NOA</label>
-                <select name="is_hoa_noa" id="is_hoa_noa" class="longAttribs" required>
-                    <option value="" disabled selected hidden></option>
+                <select name="is_hoa_noa" id="is_hoa_noa" class="long-attribs" required>
+                    <option value="" disabled selected hidden>----</option>
                     <option value="HOA">HOA</option>
                     <option value="NOA">NOA</option>
                     <option value="N/A">N/A</option>
@@ -75,8 +75,8 @@
             <br>
             <div class="inputContainer">
                 <label class="form" for="household_material">Materials Used for House</label>
-                <select name="household_material" id="household_material" class="longAttribs" required>
-                    <option value="" disabled selected hidden></option>
+                <select name="household_material" id="household_material" class="long-attribs" required>
+                    <option value="" disabled selected hidden>----</option>
                     <option value="Concrete">Concrete</option>
                     <option value="Semi-Concrete">Semi-Concrete</option>
                     <option value="Light materials">Light materials</option>
@@ -87,7 +87,7 @@
             <br>
             <div class="inputContainer">
                 <label class="form" for="nearest_evac">Nearest Evactuation Area</label>
-                <input type="text" id="nearest_evac" name="nearest_evac" class="attribs" required>    
+                <input type="text" id="nearest_evac" name="nearest_evac" class="attribs" placeholder="Ex. Doña Pepeng Elementary School" required>    
             </div>
 
             <br>
@@ -95,37 +95,37 @@
             <br>
             <div class="inputContainer">
                 <label class="form" for="number_residents">Number of Residents</label>
-                <input type="number" id="number_residents" name="number_residents"class="attribs" min="1" required/>    
+                <input type="number" id="number_residents" name="number_residents"class="attribs" min="1" placeholder="Ex. 5" required/>    
             </div>
             <br>
             <div class="inputContainer">
                 <label class="form" for="number_minors">Number of Minor Residents</label>
-                <input type="number" id="number_minors" name="number_minors" class="attribs" min="0"/>
+                <input type="number" id="number_minors" name="number_minors" class="attribs" min="0" placeholder="Ex. 1"/>
             </div>
             <br>
             <div class="inputContainer">
                 <label class="form" for="number_seniors">Number of Senior Citizen Residents</label>
-                <input type="number" id="number_seniors" name="number_seniors" class="attribs" min="0"/>
+                <input type="number" id="number_seniors" name="number_seniors" class="attribs" min="0" placeholder="Ex. 1"/>
             </div>
             <br>
             <div class="inputContainer">
                 <label class="form" for="number_pwd">Number of PWD Residents</label>
-                <input type="number" id="number_pwd" name="number_pwd" class="attribs" min="0"/>
+                <input type="number" id="number_pwd" name="number_pwd" class="attribs" min="0" placeholder="Ex. 1"/>
             </div>
             <br>
             <div class="inputContainer">
                 <label class="form" for="number_pregnant">Number of Pregnant Residents</label>
-                <input type="number" id="number_pregnant" name="number_pregnant" class="attribs" min="0"/>
+                <input type="number" id="number_pregnant" name="number_pregnant" class="attribs" min="0" placeholder="Ex. 1"/>
             </div>
             <br>
             <div class="inputContainer">
                 <label class="form" for="number_sick">Number of Sick Residents</label>
-                <input type="number" id="number_sick" name="number_sick" class="attribs" min="0"/>
+                <input type="number" id="number_sick" name="number_sick" class="attribs" min="0" placeholder="Ex. 1"/>
             </div>
             <br>
             <div class="inputContainer">
                 <label class="form" for="sickness_present">Sickness Present</label>
-                <input type="text" id="sickness_present" name="sickness_present" class="attribs"/>
+                <input type="text" id="sickness_present" name="sickness_present" class="attribs" placeholder="Ex. Diabetes, asthma"/>
             </div>
             <br>
             <h2 class="subHeader">RISK LEVELS</h2>
@@ -133,56 +133,56 @@
             <div class="inputContainer">
                 <label class="disasterForm" for="earthquake">Earthquake</label>
                 <select name="earthquake_risk" id="earthquake_risk" class="attribs" required>
-                    <option value="" disabled selected hidden></option>
+                    <option value="" disabled selected hidden>----</option>
                     <option value="HIGH RISK">HIGH</option>
                     <option value="MEDIUM RISK">MEDIUM</option>
                     <option value="LOW RISK">LOW</option>
                 </select>
-                <input type="text" id="earthquake_risk_description" name="earthquake_risk_description" class="attribs"/>
+                <input type="text" id="earthquake_risk_description" name="earthquake_risk_description" class="attribs" placeholder="Ex. Adobe structure have been check by engineers/ far away from any water ways"/>
             </div>
             <br>
             <div class="inputContainer">
                 <label class="disasterForm" for="fire">Fire</label>
                 <select name="fire_risk" id="fire_risk" class="attribs" required>
-                    <option value="" disabled selected hidden></option>
+                    <option value="" disabled selected hidden>----</option>
                     <option value="HIGH RISK">HIGH</option>
                     <option value="MEDIUM RISK">MEDIUM</option>
                     <option value="LOW RISK">LOW</option>
                 </select>
-                <input type="text" id="fire_risk_description" name="fire_risk_description" class="attribs"/>
+                <input type="text" id="fire_risk_description" name="fire_risk_description" class="attribs" placeholder="Ex. Concrete House/ Approved by engineers/ Have access road and fire hydrant/ House plan approve by engineers"/>
             </div>
             <br>  
             <div class="inputContainer">
                 <label class="disasterForm" for="flood">Flood</label>
                 <select name="flood_risk" id="flood_risk" class="attribs" required>
-                    <option value="" disabled selected hidden></option>
+                    <option value="" disabled selected hidden>----</option>
                     <option value="HIGH RISK">HIGH</option>
                     <option value="MEDIUM RISK">MEDIUM</option>
                     <option value="LOW RISK">LOW</option>
                 </select>
-                <input type="email" id="flood_risk_description" name="flood_risk_description" class="attribs"/>
+                <input type="email" id="flood_risk_description" name="flood_risk_description" class="attribs" placeholder="Ex. Alarm Level (1st Alarm), 50.00-M away from water ways"/>
             </div>
             <br>
             <div class="inputContainer">
                 <label class="disasterForm" for="landslide">Landslide</label>
                 <select name="landslide_risk" id="landslide_risk" class="attribs" required>
-                    <option value="" disabled selected hidden></option>
+                    <option value="" disabled selected hidden>----</option>
                     <option value="HIGH RISK">HIGH</option>
                     <option value="MEDIUM RISK">MEDIUM</option>
                     <option value="LOW RISK">LOW</option>
                 </select>
-                <input type="email" id="landslide_risk_description" name="landslide_risk_description" class="attribs"/>
+                <input type="email" id="landslide_risk_description" name="landslide_risk_description" class="attribs" placeholder="Ex. House built check and approved by engineers/ House built far away from the sloped area, river and mountain area"/>
             </div>
             <br>
             <div class="inputContainer">
                 <label class="disasterForm" for="storm">Storm</label>
                 <select name="storm_risk" id="storm_risk" class="attribs" required>
-                    <option value="" disabled selected hidden></option>
+                    <option value="" disabled selected hidden>----</option>
                     <option value="HIGH RISK">HIGH</option>
                     <option value="MEDIUM RISK">MEDIUM</option>
                     <option value="LOW RISK">LOW</option>
                 </select>
-                <input type="email" id="storm_risk_description" name="storm_risk_description" class="attribs"/>
+                <input type="email" id="storm_risk_description" name="storm_risk_description" class="attribs" placeholder="Ex. Concrete House/Checked by engineers/ Far away from sea shore, river, or any slope land area"/>
             </div>
             <br>
             <br><br>

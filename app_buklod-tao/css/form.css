@@ -138,7 +138,7 @@ select.attribs {
 }
 
 /* CSS for select elements that should be long */
-select.longAttribs {
+select.long-attribs {
     display: block;
     width: 400px;
     height: 40px;

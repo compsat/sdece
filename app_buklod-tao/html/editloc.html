@@ -1,231 +1,213 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <title>Edit Location</title>
-    <link rel="stylesheet" href="../css/form.css">
-    <link rel="stylesheet" href="../css/main.css">
-    <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
-</head>
+    <head>
+        <title>Edit Location</title>
+        <link rel="stylesheet" href="../css/form.css">
+        <link rel="stylesheet" href="../css/main.css">
+        <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
+    </head>
 
-<body>
-    <!-- Modal Header: includes title and address -->
-    <div class="formModalHeader">
-        <button type="button" class="closeForm" id="close-btn">
-            <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd"
-                    d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z"
-                    fill="#0F1729" />
-            </svg>
-        </button>
-        <h1 class="formHeader">Edit Household</h1>
-    </div>
-    <div class="formModalContent">
-        <h2 class="subHeader">HOUSEHOLD INFORMATION</h2>
-        <br>
-        <!-- Form -->
-        <div class="inputContainer">
-            <label class="form" for="household_name">Household Name
-            </label>
-            <input type="text" id="household_name" name="household_name" class="attribs" />
+    <body>
+        <!-- Modal Header: includes title and address -->
+        <div class="formModalHeader">
+            <button type="button" class="closeForm" id="close-btn">
+                <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z"
+                        fill="#0F1729" />
+                </svg>
+            </button>
+            <h1 class="formHeader">Edit Household</h1>
         </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="household_address">Address
-            </label>
-            <input type="text" id="household_address" name="household_address" class="attribs" />
+        <div class="formModalContent">
+            <h2 class="subHeader">HOUSEHOLD INFORMATION</h2>
+            <br>
+            <!-- Form -->
+            <div class="inputContainer">
+                <label class="form" for="household_name">Household Name</label>
+                <input type="text" id="household_name" name="household_name" class="attribs" placeholder="Ex. Juan Cruz" required/>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="household_address">Address</label>
+                <input type="text" id="household_address" name="household_address" class="attribs" placeholder="Ex. 1 Sampaguita St. Banaba" required/>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="household_phase">Phase</label>
+                <input type="text" id="household_phase" name="household_phase" class="attribs" placeholder="Ex. Phase 1"/>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="contact_number">Contact Number</label>
+                <input type="tel" id="contact_number" name="contact_number" class="attribs" placeholder="Ex. 09XXXXXXXXX" pattern="[0-9]{11}" required/>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="residency_status">Residency Status</label>
+                <select name="residency_status" id="residency_status" class="long-attribs" required>
+                    <option value="" disabled selected hidden>----</option>
+                    <option value="May-Ari">May-Ari</option>
+                    <option value="Umuupa">Umuupa</option>
+                </select>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="HOA/NOA">Part of HOA/NOA</label>
+                <select name="HOA/NOA" id="is_hoa_noa" class="long-attribs" required>
+                    <option value="" disabled selected hidden>----</option>
+                    <option value="HOA">HOA</option>
+                    <option value="NOA">NOA</option>
+                    <option value="N/A">N/A</option>
+                </select>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="location_link">Location link</label>
+                <input type="text" id="location_link" name="location_link" class="attribs" placeholder="https://www.openstreetmap.org/ss">
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="location_coordinates">Location Coordinates</label>
+                <input type="text" id="location_coordinates" name="location_coordinates" class="attribs" readonly/>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="household_material">Materials Used for House</label>
+                <select name="household_material" id="household_material" class="long-attribs" required>
+                    <option value="" disabled selected hidden>----</option>
+                    <option value="Concrete">Concrete</option>
+                    <option value="Semi-Concrete">Semi-Concrete</option>
+                    <option value="Light materials">Light materials</option>
+                    <option value="Makeshift">Makeshift</option>
+                    <option value="Natural">Natural</option>
+                </select>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="nearest_evac">Nearest Evactuation Area</label>
+                <input type="text" id="nearest_evac" name="nearest_evac" class="attribs" placeholder="Ex. Doña Pepeng Elementary School" required/>
+            </div>
+            <br>
+            <h2 class="subHeader">RESIDENT INFORMATION</h2>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="number_residents">Number of Residents</label>
+                <input type="number" id="number_residents" name="number_residents" class="attribs" min="1" placeholder="Ex. 5" required/>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="number_minors">Number of Minor Residents</label>
+                <input type="number" id="number_minors" name="number_minors" class="attribs" min="0" placeholder="Ex. 1"/>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="number_seniors">Number of Senior Citizen Residents</label>
+                <input type="number" id="number_seniors" name="number_seniors" class="attribs" min="0" placeholder="Ex. 1"/>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="number_pwd">Number of PWD Residents</label>
+                <input type="number" id="number_pwd" name="number_pwd" class="attribs" min="0" placeholder="Ex. 1"/>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="number_pregnant">Number of Pregnant Residents</label>
+                <input type="number" id="number_pregnant" name="number_pregnant" class="attribs" min="0" placeholder="Ex. 1"/>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="number_sick">Number of Sick Residents</label>
+                <input type="number" id="number_sick" name="number_sick" class="attribs" min="0" placeholder="Ex. 1"/>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="sickness_present">Sickness Present</label>
+                <input type="number" id="sickness_present" name="sickness_present" class="attribs" placeholder="Ex. Diabetes, asthma"/>
+            </div>
+            <br>
+            <h2 class="subHeader">RISK LEVELS</h2>
+            <br>
+            <div class="inputContainer">
+                <label class="disasterForm" for="earthquake">Earthquake</label>
+                <select name="earthquake_level" id="earthquake_risk" class="attribs">
+                    <option value="" disabled selected hidden>----</option>
+                    <option value="HIGH RISK">HIGH</option>
+                    <option value="MEDIUM RISK">MEDIUM</option>
+                    <option value="LOW RISK">LOW</option>
+                </select>
+                <input type="text" id="earthquake_risk_description" name="earthquake_risk" class="attribs" placeholder="Ex. Adobe structure have been check by engineers/ far away from any water ways"/>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="disasterForm" for="fire">Fire</label>
+                <select name="fire_level" id="fire_risk" class="attribs">
+                    <option value="" disabled selected hidden>----</option>
+                    <option value="HIGH RISK">HIGH</option>
+                    <option value="MEDIUM RISK">MEDIUM</option>
+                    <option value="LOW RISK">LOW</option>
+                </select>
+                <input type="text" id="fire_risk_description" name="fire_risk" class="attribs" placeholder="Ex. Concrete House/ Approved by engineers/ Have access road and fire hydrant/ House plan approve by engineers"/>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="disasterForm" for="flood">Flood</label>
+                <select name="flood_level" id="flood_risk" class="attribs">
+                    <option value="" disabled selected hidden></option>
+                    <option value="HIGH RISK">HIGH</option>
+                    <option value="MEDIUM RISK">MEDIUM</option>
+                    <option value="LOW RISK">LOW</option>
+                </select>
+                <input type="email" id="flood_risk_description" name="flood" class="attribs" placeholder="Ex. Alarm Level (1st Alarm), 50.00-M away from water ways"/>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="disasterForm" for="landslide">Landslide</label>
+                <select name="landslide_level" id="landslide_risk" class="attribs">
+                    <option value="" disabled selected hidden></option>
+                    <option value="HIGH RISK">HIGH</option>
+                    <option value="MEDIUM RISK">MEDIUM</option>
+                    <option value="LOW RISK">LOW</option>
+                </select>
+                <input type="email" id="landslide_risk_description" name="landslide" class="attribs" placeholder="Ex. House built check and approved by engineers/ House built far away from the sloped area, river and mountain area"/>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="disasterForm" for="storm">Storm</label>
+                <select name="storm_level" id="storm_risk" class="attribs">
+                    <option value="" disabled selected hidden></option>
+                    <option value="HIGH RISK">HIGH</option>
+                    <option value="MEDIUM RISK">MEDIUM</option>
+                    <option value="LOW RISK">LOW</option>
+                </select>
+                <input type="email" id="storm_risk_description" name="storm_risk_description" class="attribs" placeholder="Ex. Concrete House/Checked by engineers/ Far away from sea shore, river, or any slope land area"/>
+            </div>
+            <br>
+            <br><br>
+            <!-- Error Messages -->
+            <div id="error_messages"></div>
+            <br><br>
+            <!-- Buttons -->
+            <div>
+                <!-- Submits contents of the form -->
+                <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save</button>
+            </div>
+            <br>
+            <div>
+                <!-- Clears all contents of the form -->
+                <button onclick="resetForm()" class="clear form">Clear</button>
+            </div>
         </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="household_phase">Phase
-            </label>
-            <input type="text" id="household_phase" name="household_phase" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="contact_number">Contact Number
-            </label>
-            <input type="text" id="contact_number" name="contact_number" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="residency_status">Residency Status
-            </label>
-            <input type="text" id="residency_status" name="residency_status" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="HOA/NOA">Part of HOA/NOA
-            </label>
-            <input type="text" id="is_hoa_noa" name="HOA/NOA" class="attribs" value="HOA" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="location_link">Location link
-            </label>
-            <input type="text" id="location_link" name="location_link" class="attribs">
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="location_coordinates">Location Coordinates
-            </label>
-            <input type="text" id="location_coordinates" name="location_coordinates" class="attribs"/>
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="household_material">Materials Used for House
-            </label>
-            <input type="text" id="household_material" name="household_material" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="nearest_evac">Nearest Evactuation Area
-            </label>
-            <input type="text" id="nearest_evac" name="nearest_evac" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="status">Status
-            </label>
-            <input type="text" id="status" name="status" class="attribs" />
-        </div>
-        <br>
-        <h2 class="subHeader">RESIDENT INFORMATION</h2>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="number_residents">Number of Residents
-            </label>
-            <input type="number" id="number_residents" name="number_residents" class="attribs" />
-        </div>
-        <br>
-        <!--<div class="inputContainer">
-            <label class="form" for="number_adults">Number of Adults
-            </label>
-            <input type="number" id="number_adults" name="number_adults" class="attribs" />
-        </div>-->
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="number_minors">Number of Minor Residents
-            </label>
-            <input type="number" id="number_minors" name="number_minors" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="number_seniors">Number of Senior Citizen Residents
-            </label>
-            <input type="number" id="number_seniors" name="number_seniors" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="number_pwd">Number of PWD Residents
-            </label>
-            <input type="number" id="number_pwd" name="number_pwd" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="number_sick">Number of Sick Residents
-            </label>
-            <input type="number" id="number_sick" name="number_sick" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="sickness_present">Sickness Present
-            </label>
-            <input type="number" id="sickness_present" name="sickness_present" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="number_pregnant">Number of Pregnant Residents
-            </label>
-            <input type="number" id="number_pregnant" name="number_pregnant" class="attribs" />
-        </div>
-        <br>
-        <h2 class="subHeader">RISK LEVELS</h2>
-        <br>
-        <div class="inputContainer">
-            <label class="disasterForm" for="earthquake">Earthquake
-            </label>
-            <select name="earthquake_level" id="earthquake_risk" class="attribs">
-                <option value="" disabled selected hidden></option>
-                <option value="high">HIGH</option>
-                <option value="medium">MEDIUM</option>
-                <option value="low">LOW</option>
-            </select>
-            <input type="text" id="earthquake_risk_description" name="earthquake_risk" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="disasterForm" for="fire">Fire
-            </label>
-            <select name="fire_level" id="fire_risk" class="attribs">
-                <option value="" disabled selected hidden></option>
-                <option value="high">HIGH</option>
-                <option value="medium">MEDIUM</option>
-                <option value="low">LOW</option>
-            </select>
-            <input type="text" id="fire_risk_description" name="fire_risk" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="disasterForm" for="flood">Flood
-            </label>
-            <select name="flood_level" id="flood_risk" class="attribs">
-                <option value="" disabled selected hidden></option>
-                <option value="high">HIGH</option>
-                <option value="medium">MEDIUM</option>
-                <option value="low">LOW</option>
-            </select>
-            <input type="email" id="flood_risk_description" name="flood" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="disasterForm" for="landslide">Landslide
-            </label>
-            <select name="landslide_level" id="landslide_risk" class="attribs">
-                <option value="" disabled selected hidden></option>
-                <option value="high">HIGH</option>
-                <option value="medium">MEDIUM</option>
-                <option value="low">LOW</option>
-            </select>
-            <input type="email" id="landslide_risk_description" name="landslide" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="disasterForm" for="storm">Storm
-            </label>
-            <select name="storm_level" id="storm_risk" class="attribs">
-                <option value="" disabled selected hidden></option>
-                <option value="high">HIGH</option>
-                <option value="medium">MEDIUM</option>
-                <option value="low">LOW</option>
-            </select>
-            <input type="email" id="storm_risk_description" name="storm_risk_description" class="attribs" />
-        </div>
-        <br>
-        <br><br>
-        <!-- Error Messages -->
-        <div id="error_messages"></div>
-        <br><br>
-        <!-- Buttons -->
-        <div>
-            <!-- Submits contents of the form -->
-            <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save</button>
-        </div>
-        <br>
-        <div>
-            <!-- Clears all contents of the form -->
-            <button onclick="resetForm()" class="clear form">Clear</button>
-        </div>
-    </div>
-    <div class="formModalFooter"></div>
+        <div class="formModalFooter"></div>
+    </body>
 
     <script type="module">
 
-        
         import { editEntry, setCollection, BUKLOD_RULES_TEST, getDocIdByPartnerName, getDocByID } from "/js/firestore_UNIV.js";
         import {submitForm} from '../js/firestore.js';
-        //setCollection("buklod-official-TEST");
         
+        //setCollection("buklod-official-TEST");
 
         document.getElementById("submit_form").addEventListener("click", submitForm);
         
@@ -235,12 +217,19 @@
         function resetForm() {
             let messageText = "Are you sure you want to clear the form?";
             if (confirm(messageText) == true) {
+                // Clear input fields
                 var inputFields = document.getElementsByTagName('input');
                 for (var i = 0; i < inputFields.length; i++) {
                     var field = inputFields[i];
                     if (!field.readOnly && field.type !== 'button') {
-                        field.value = '';
+                            field.value = '';
                     }
+                }
+
+                // Clear select dropdowns
+                var selectFields = document.getElementsByTagName('select');
+                for (var i = 0; i < selectFields.length; i++) {
+                    selectFields[i].selectedIndex = 0; 
                 }
             }
         }
@@ -260,6 +249,5 @@
             });
 
     </script>
-</body>
 
 </html>
