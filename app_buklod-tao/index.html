@@ -109,10 +109,19 @@
 <body>
   <!-- Side bar, Top Bar, and Map -->
   <div class="main">
-    <div class="sideNav">
-      <!-- Search Bar -->
-      <div class="buttons">
-        <input class="searchBar" type="search" placeholder="Search... " oninput="searchEntries()">
+    <div class="side-nav">
+      <div class="side-nav-header">
+        <div class="side-nav-header-top">
+          <h1 class="map-title">Buklod Tao</h1>
+        </div>
+        <div class="actions-container">
+          <button class="action-btn">Filter</button>
+          <button class="action-btn">Sort</button>
+          <button class="action-btn">Export data</button>
+        </div>
+      </div>
+      <div class="partners-header">
+        <span id="partners-count">PARTNERS</span>
           <br>
           <button class="action-btn" id="download-report">Export data</button>
           <br>
@@ -124,10 +133,8 @@
             <option value="storm-sort">Storm</option>
           </select>
       </div>
-      <!-- List of Entries -->
       <div class="entries">
-        <ul id="locationList" class="accordion">
-        </ul>
+        <ul id="locationList"></ul>
       </div>
 
       <!-- Login/Logout header -->
