@@ -5,78 +5,21 @@
         <link rel="stylesheet" href="../css/form.css">
         <link rel="stylesheet" href="../css/main.css">
         <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
-    
-            
-        <script type="module">
-            //import { addLocation } from "./js/firestore.js";
-            import { addEntry, BUKLOD_RULES_TEST, setCollection, validateData, getCoordinates } from "/js/firestore_UNIV.js";
-            setCollection("buklod-official-TEST");
-            document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
-
-            function handleFormSubmit_v2(){
-                var collatedInput = {};
-
-                for (let i = 0; i < BUKLOD_RULES_TEST[2].length; i++) {
-
-                    let fieldName = BUKLOD_RULES_TEST[2][i];
-                    let inputValue = document.getElementById(fieldName).value;
-
-                    if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick' || fieldName == 'number_seniors') {
-                        collatedInput[fieldName] = Number(inputValue);
-                    } else if (fieldName == 'location_coordinates') {
-                        console.log(inputValue)
-                        console.log(typeof inputValue)
-                        const geoPoint = getCoordinates(inputValue);
-                        collatedInput['location_coordinates'] = geoPoint;
-                    } else {
-                        collatedInput[fieldName] = inputValue;
-                    }
-                }
-                
-                const errors = validateData("buklod-official-TEST", collatedInput);
-
-                if (errors.length > 0) {
-                    displayErrors(errors);
-                } else {
-                    addEntry(collatedInput);
-                    window.parent.document.getElementById('addModal').style.display = 'none';
-                };
-
-                function displayErrors(errors) {
-                let errorDiv = document.getElementById('error_messages');
-
-                if (errorDiv) {
-
-                    errorDiv.innerHTML = '';
-
-                    if (errors.length > 0) {
-                        for (let error of errors) {
-                            let errorParagraph = document.createElement('p');
-                            errorParagraph.textContent = error;
-                            errorDiv.appendChild(errorParagraph);
-                        }
-                    }
-                    } else {
-                        console.error("Error: Couldn't find element with ID 'error_messages'.");
-                    }
-                }
-
-            }
-        </script>
     </head>
     
     <body>
-      <!-- Modal Header: includes title and address -->
-      <div class="formModalHeader">
-        <button type="button" class="closeForm" id="close-btn">
-            <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" fill="#0F1729"/>
-            </svg>
-        </button>
-        <h1 class="formHeader">Add Household</h1>
+        <!-- Modal Header -->
+        <div class="formModalHeader">
+            <button type="button" class="closeForm" id="close-btn">
+                <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" fill="#0F1729"/>
+                </svg>
+            </button>
+            <h1 class="formHeader">Add Household</h1>
+        </div>
 
-      </div>
-          <div class="formModalContent">
+        <!-- Modal Content -->
+        <div class="formModalContent">
             <h2 class="subHeader">HOUSEHOLD INFORMATION</h2>
             <br>
             <!-- Form -->
@@ -256,50 +199,109 @@
                 <!-- Clears all contents of the form -->
                 <button onclick="resetForm()" class="clear form">Clear</button>
             </div>
-          </div>
-          <div class="formModalFooter"></div>
+        </div>
+          
+        <div class="formModalFooter"></div>
 
-        <script>
-            function resetForm() {
-                let messageText = "Are you sure you want to clear the form?";
-                if (confirm(messageText) == true) {
-                    // Clear input fields
-                    var inputFields = document.getElementsByTagName('input');
-                    for (var i = 0; i < inputFields.length; i++) {
+    </body>  
+                
+    <script type="module">
+        //import { addLocation } from "./js/firestore.js";
+        import { addEntry, BUKLOD_RULES_TEST, setCollection, validateData, getCoordinates } from "/js/firestore_UNIV.js";
+        
+        setCollection("buklod-official-TEST");
+        document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
+
+        function handleFormSubmit_v2(){
+            var collatedInput = {};
+
+            for (let i = 0; i < BUKLOD_RULES_TEST[2].length; i++) {
+
+                let fieldName = BUKLOD_RULES_TEST[2][i];
+                let inputValue = document.getElementById(fieldName).value;
+
+                if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick' || fieldName == 'number_seniors') {
+                    collatedInput[fieldName] = Number(inputValue);
+                } else if (fieldName == 'location_coordinates') {
+                    console.log(inputValue)
+                    console.log(typeof inputValue)
+                    const geoPoint = getCoordinates(inputValue);
+                    collatedInput['location_coordinates'] = geoPoint;
+                } else {
+                    collatedInput[fieldName] = inputValue;
+                }
+            }
+                
+            const errors = validateData("buklod-official-TEST", collatedInput);
+
+            if (errors.length > 0) {
+                displayErrors(errors);
+            } else {
+                addEntry(collatedInput);
+                window.parent.document.getElementById('addModal').style.display = 'none';
+            };
+
+            function displayErrors(errors) {
+                let errorDiv = document.getElementById('error_messages');
+
+                if (errorDiv) {
+
+                    errorDiv.innerHTML = '';
+
+                    if (errors.length > 0) {
+                        for (let error of errors) {
+                            let errorParagraph = document.createElement('p');
+                            errorParagraph.textContent = error;
+                            errorDiv.appendChild(errorParagraph);
+                        }
+                    }
+                    } else {
+                        console.error("Error: Couldn't find element with ID 'error_messages'.");
+                }
+            }
+
+        }
+    </script>
+
+    <script>
+        function resetForm() {
+            let messageText = "Are you sure you want to clear the form?";
+            if (confirm(messageText) == true) {
+                // Clear input fields
+                var inputFields = document.getElementsByTagName('input');
+                for (var i = 0; i < inputFields.length; i++) {
                     var field = inputFields[i];
                     if (!field.readOnly && field.type !== 'button') {
-                        field.value = '';
+                            field.value = '';
                     }
-                    }
+                }
 
-                    // Clear select dropdowns
-                    var selectFields = document.getElementsByTagName('select');
-                    for (var i = 0; i < selectFields.length; i++) {
+                // Clear select dropdowns
+                var selectFields = document.getElementsByTagName('select');
+                for (var i = 0; i < selectFields.length; i++) {
                     selectFields[i].selectedIndex = 0; 
-                    }
                 }
-                }
+            }
+        }
 
 
-            function closeModal() {
-				window.parent.postMessage('closeAddModal', '*');
-			}
+        function closeModal() {
+			window.parent.postMessage('closeAddModal', '*');
+		}
 
-			document
-				.getElementsByClassName('closeForm')[0]
-				.addEventListener('click', function (event) {
-					event.preventDefault();
-					console.log('The user has closed the Add Activity modal.');
-					closeModal();
-				});
+		document
+			.getElementsByClassName('closeForm')[0]
+			.addEventListener('click', function (event) {
+				event.preventDefault();
+				console.log('The user has closed the Add Activity modal.');
+				closeModal();
+			});
 
-			document.getElementById('close-btn').addEventListener('click', function (event) {
-					event.preventDefault();
-					console.log(
-						'The user has closed the Add Activity modal.'
-					);
-					closeModal();
-				});
-        </script>
-    </body>  
+		document.getElementById('close-btn').addEventListener('click', function (event) {
+			event.preventDefault();
+			console.log('The user has closed the Add Activity modal.');
+			closeModal();
+		});
+    </script>
+
 </html>
