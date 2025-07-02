@@ -187,7 +187,7 @@ const VALIDATION_RULES = {
 			required: true,
 			minLength: 11,
 			maxLength: 11,
-			regex: /^[0-9]+$/,
+			regex: /^09\d*/,
 		},
 		number_residents: { type: 'number', required: true , 'minimum': 1},
 		number_minors: { type: 'number', 'minimum': 0 },
@@ -237,7 +237,7 @@ const VALIDATION_RULES = {
 			required: true,
 			minLength: 11,
 			maxLength: 11,
-			regex: /^[0-9]+$/,
+			regex: /^09\d*/,
 		},
 		number_residents: { type: 'number', required: true , 'minimum': 1},
 		number_minors: { type: 'number', 'minimum': 0 },
@@ -294,7 +294,7 @@ const VALIDATION_RULES = {
 			required: true,
 			minLength: 13,
 			maxLength: 13,
-			regex: /^[0-9 ]+$/,
+			regex: /^[0-9]+$/,
 		},
 		partner_email: { type: 'string', required: true, maxLength: 127 },
 		activity_name: { type: 'string', required: true },
@@ -506,106 +506,88 @@ export function validateData(collectionName, data) {
 		const rule = rules[field];
 		const value = data[field];
 		const fieldLabel = fieldLabels[field] || field;
+    console.log(fieldLabel);
 
-		// Check for required field
-		if (
-			rule.required &&
-			(value == undefined || value == null || value == '' || 
-				value == ' RISK: ' || String(value).startsWith(' RISK:') ) // checks if risk for buklod tao is empty
-		) {
-			errors.push(`${fieldLabel} is required.`);
-			continue;
-		}
+    // Defining Test Types
+    const IS_EMPTY = value == undefined || value == null || value == ''
+    const MIN_LENGTH_TEST = rule.minLength && typeof value == 'string' && value.length < rule.minLength
+    const MIN_VALUE_TEST = rule.minimum !== undefined && typeof value === 'number' && value < rule.minimum
+    const MAX_LENGTH_TEST = rule.maxLength && typeof value == 'string' && value.length > rule.maxLength
+    const REGEX_TEST = rule.regex && !rule.regex.test(value)
+    const ENUM_TEST = rule.enum && !rule.enum.includes(value)
 
-		// else {
-		// 	errors.push("Field is valid!");
-		// }
 
-		// Skip type validation if not required
-		if (
-			!rule.required &&
-			(value == undefined || value == null || value == '')
-		) {
-			continue;
-		}
+    // Map of Error Messages
+    const ERROR_MESSAGES = new Map([
+      ["min_length_test", `${fieldLabel} must be at least ${rule.minLength} characters long.`],
+      ["min_value_test", `${fieldLabel} must be at least ${rule.minimum}.`],
+      ["max_length_test", `${fieldLabel} cannot exceed ${rule.maxLength} characters.`],
+      ["regex_test",  `${fieldLabel} is invalid.`],
+      ["required_test", `${fieldLabel} is required.`]
+    ])
+    // Map of Validation Tests
+    const VALIDATION_TEST = new Map([
+      ["regex_test", REGEX_TEST],
+      ["min_length_test", MIN_LENGTH_TEST],
+      ["min_value_test", MIN_VALUE_TEST], 
+      ["max_length_test", MAX_LENGTH_TEST], 
+    ]);
+    console.log(VALIDATION_TEST);
 
-		if (rule.type) {
-			if (rule.type === 'date') {
+    // Required Testes
+    if ( 
+      (rule.required && IS_EMPTY)|| 
+      (!rule.required && IS_EMPTY)
+    ) {
+      if (rule.required) {
+        errors.push(ERROR_MESSAGES.get("required_test"));
+      }
+      continue;
+    }
+
+    // backend type validation 
+    // Currently date is being validated in the frontend. This is just a back up, just
+    // in case
+    // switch statement is used to allow for future definition of type definitions
+    switch(rule.type) {
+      case 'date':
 				const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-				if (!dateRegex.test(value)) {
-					errors.push(
-						`${fieldLabel} must be a valid date in YYYY-MM-DD format.`
-					);
-					continue;
-				}
+        if (dateRegex.test(value)) {
+            errors.push(`${fieldLabel} must be a valid date in YYYY-MM-DD format.`);
+            continue;
+        } else {
+            if (isNaN(new Date(value).getTime())) {
+              errors.push(`${fieldLabel} must be a valid date.`);
+              continue;
+              }
+        }
+        break;
+      default:
+        if (typeof value != rule.type) {//checking for the type of value in location coordinates
+          errors.push(`${fieldLabel} must be of type ${rule.type}. type is ${value}`);
+          }
+    }
 
-				const date = new Date(value);
-				if (isNaN(date.getTime())) {
-					errors.push(`${fieldLabel} must be a valid date.`);
-					continue;
-				}
-			} else if (typeof value != rule.type) {
-				errors.push(
-					`${fieldLabel} must be of type ${rule.type}. type is ${value}` //checking for the type of value in location coordinates
-				);
-				continue;
-			}
-		}
 
-		// Check for minimum length
-		if (
-			rule.minLength &&
-			typeof value == 'string' &&
-			value.length < rule.minLength
-		) {
+    for (const x of VALIDATION_TEST.keys()) {
+      if (VALIDATION_TEST.get(x)) {
+        errors.push(ERROR_MESSAGES.get(x));
+        break;
+      }
+    }
+
+    // This is holdover code until the sdece team can implement frontend validation
+		if (MIN_LENGTH_TEST) {
 			if (field === 'partner_contact_number') {
 				errors.push(
-					`${fieldLabel} must be at least ${rule.minLength} characters long and in the form 09XX XXX XXXX.`
+					`${fieldLabel} must be at least ${rule.minLength} characters long and in the form 09XXXXXXXXX.`
 				);
-
-			} else {
-				errors.push(
-					`${fieldLabel} must be at least ${rule.minLength} characters long.`
-				);
-			}
-
+			} 
 			continue;
 		}
 
-		// Check for minimum value
-		if (
-			rule.minimum !== undefined &&
-			typeof value === 'number' &&
-			value < rule.minimum
-		) {
-			errors.push(`${fieldLabel} must be at least ${rule.minimum}.`);
-			continue;
-		}
-
-
-		// Check for maximum length
-		if (
-			rule.maxLength &&
-			typeof value == 'string' &&
-			value.length > rule.maxLength
-		) {
-			errors.push(
-				`${fieldLabel} cannot exceed ${rule.maxLength} characters.`
-			);
-			continue;
-		}
-
-		// Check for regular expression pattern
-		if (rule.regex && !rule.regex.test(value)) {
-			errors.push(`${fieldLabel} is invalid.`);
-			continue;
-		}
-
-		// Check for enumerated values
-		if (rule.enum && !rule.enum.includes(value)) {
-			errors.push(
-				`${fieldLabel}' must be one of ${rule.enum.join(',')}.`
-			);
+		if (ENUM_TEST) {
+			errors.push(`${fieldLabel}' must be one of ${rule.enum.join(', ')}.`);
 			continue;
 		}
 
