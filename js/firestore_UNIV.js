@@ -508,8 +508,22 @@ export function validateData(collectionName, data) {
 		const fieldLabel = fieldLabels[field] || field;
     console.log(fieldLabel);
 
-    // Defining Test Types
+    // Required Test
     const IS_EMPTY = value == undefined || value == null || value == ''
+    if ( 
+      (rule.required && IS_EMPTY)|| 
+      (!rule.required && IS_EMPTY)
+    ) {
+      if (rule.required) {
+        errors.push(`${fieldLabel} is required.`);
+      }
+      continue;
+    } 
+
+    // this is at the beginning so that if it's not required, it doesn't check the rest of
+    // the rules. 
+
+    // Defining Test Conditions
     const MIN_LENGTH_TEST = rule.minLength && typeof value == 'string' && value.length < rule.minLength
     const MIN_VALUE_TEST = rule.minimum !== undefined && typeof value === 'number' && value < rule.minimum
     const MAX_LENGTH_TEST = rule.maxLength && typeof value == 'string' && value.length > rule.maxLength
@@ -523,8 +537,8 @@ export function validateData(collectionName, data) {
       ["min_value_test", `${fieldLabel} must be at least ${rule.minimum}.`],
       ["max_length_test", `${fieldLabel} cannot exceed ${rule.maxLength} characters.`],
       ["regex_test",  `${fieldLabel} is invalid.`],
-      ["required_test", `${fieldLabel} is required.`]
     ])
+
     // Map of Validation Tests
     const VALIDATION_TEST = new Map([
       ["regex_test", REGEX_TEST],
@@ -532,18 +546,6 @@ export function validateData(collectionName, data) {
       ["min_value_test", MIN_VALUE_TEST], 
       ["max_length_test", MAX_LENGTH_TEST], 
     ]);
-    console.log(VALIDATION_TEST);
-
-    // Required Testes
-    if ( 
-      (rule.required && IS_EMPTY)|| 
-      (!rule.required && IS_EMPTY)
-    ) {
-      if (rule.required) {
-        errors.push(ERROR_MESSAGES.get("required_test"));
-      }
-      continue;
-    }
 
     // backend type validation 
     // Currently date is being validated in the frontend. This is just a back up, just
