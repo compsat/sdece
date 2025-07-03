@@ -377,7 +377,7 @@ document.getElementById('download-csv').addEventListener('click', async () => {
 		csvContent += `\n=== ${riskLabels[riskType]} Risk ===\n`;
 		csvContent += `Household Name,Address,Contact,Risk Level,Number of Residents\n`;
 
-		['HIGH', 'MEDIUM', 'LOW'].forEach(level => {
+		['HIGH RISK', 'MEDIUM RISK', 'LOW RISK'].forEach(level => {
 			allHouseholds
 				.filter(h => h[riskType] === level)
 				.forEach(h => {
