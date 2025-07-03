@@ -1,200 +1,278 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDECE Activity Mapping</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SDECE Activity Mapping</title>
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-  <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
+    <!--Load Leaflet from CDN-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+      integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+      crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+      integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+      crossorigin=""></script>
 
-  <!--Load Leaflet from CDN-->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-    crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
-    integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
-    crossorigin=""></script>
+    <!--Load Esri Leaflet from CDN-->
+    <script src="https://unpkg.com/esri-leaflet@2.4.1/dist/esri-leaflet.js"
+      integrity="sha512-xY2smLIHKirD03vHKDJ2u4pqeHA7OQZZ27EjtqmuhDguxiUvdsOuXMwkg16PQrm9cgTmXtoxA6kwr8KBy3cdcw=="
+      crossorigin=""></script>
 
-  <!--Load Esri Leaflet from CDN-->
-  <script src="https://unpkg.com/esri-leaflet@2.4.1/dist/esri-leaflet.js"
-    integrity="sha512-xY2smLIHKirD03vHKDJ2u4pqeHA7OQZZ27EjtqmuhDguxiUvdsOuXMwkg16PQrm9cgTmXtoxA6kwr8KBy3cdcw=="
-    crossorigin=""></script>
+    <!--Load Esri Leaflet Geocoder from CDN-->
+    <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.css"
+      integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+      crossorigin="">
+    <script src="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.js"
+      integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
+      crossorigin=""></script>
 
-  <!--Load Esri Leaflet Geocoder from CDN-->
-  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.css"
-    integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
-    crossorigin="">
-  <script src="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.js"
-    integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
-    crossorigin=""></script>
+    <!--Load CSS sheets and Firestore Database-->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- <link rel="stylesheet" href="css/form.css"> -->
+    <link rel="stylesheet" href="css/modal.css">
+    <script type="module" src="js/firestore.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
 
-  <!--Load CSS sheets and Firestore Database-->
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/form.css">
-  <script type="module" src="js/firestore.js"></script>
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
-
-<body>
-  <!-- Side bar, Top Bar, and Map -->
-  <div class="main">
-    <div class="sideNav">
-      <!-- Search Bar -->
-      <div class="buttons">
-        <input class="searchBar" type="search" placeholder="Search... " oninput="searchEntries()">
+  <body>
+    <div class="main">
+      <div class="side-nav">
+        <div class="side-nav-header">
+          <div class="search-bar-container">
+            <div class="search-bar">
+              <input  
+                onkeyup="onSearchInput()"
+                type="text"
+                id="search-input"
+                placeholder="Search..."               
+                class="search-input-field"
+              />
+              <div class="search-bar-btn-container">
+                <button>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    class="search-btn"
+                  > 
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                    />
+                  </svg>
+                </button>
+                <button
+                  id="searchClear"
+                  onclick="clearSearch()"
+                  style="padding-left: 1.25 rem; display: none"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    class="search-btn"
+                  >                  
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 18 18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="entries">
+          <ul id="locationList" class="accordion"></ul>
+        </div>
       </div>
-      <!-- List of Entries -->
-      <div class="entries">
-        <ul id="locationList" class="accordion">
-        </ul>
+      <div class="main-container">
+        <div class="main-header">
+          <button class="logout-btn">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"              
+              stroke="currentColor"
+              class="logout-icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+              />
+            </svg>
+            Logout
+          </button>
+        </div>
+          <div id="map" class="map-container">
+          </div>
       </div>
     </div>
-    <!-- Logout Button -->
-    <div class="topBar">
-      <button class="buttonLogout"><img class="logoutIcon" src="./static/logout.256x256.png" alt="logout"> Logout</button>
-    </div>
-    <!-- Map -->
-    <div class="mapContainer">
-      <div id="map">
+
+    <div id="partnerModal" class="modal">
+      <div class="modal-header">
+        <p id="modalHeader"></p>
       </div>
+      <div class="modal-content">
+        <p id="modalContent"></p>
+      </div>      
+      <span class="modal-button">
+        <button class="edit-button partner-hover">
+          Edit
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="modal-button-icon"
+            >
+              <path
+                d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8"
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2">
+              </path>
+                  <polygon
+                    fill="none"
+                    points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></polygon>
+            </svg>
+        </button>
+      </span>
     </div>
-  </div>
 
-  <!-- Modals of Entries -->
-  <div id="partnerModal" class="modal">
-    <!-- Modal Header: includes household owner -->
-    <div class="modalHeader">
-      <h1 id="modalHeader" class="modalName"></h1>
-      <span class="close">&times;</span>
+  <!-- Main Modal: This is the modal that shows up when pressing the main button in the side navigation panel. -->
+    <div class="modal-screen" id="mainModal">
+      <iframe        
+        src="/app_sdece/html/main_modal.html"
+        class="main-modal"
+        id="mainModalIframe"
+        >
+      </iframe>
     </div>
-    <!-- Modal Content: content of the entries -->
-    <div class="modalContent">
-      <p id="modalContent"></p>
+
+  <!-- Add Modal: This is the modal that shows up when clicking on the '+' sign that is nested inside the Main Modal. This allows the user to add a new activity to the SDECE collections. -->
+    <div class="modal-screen" id="addModal">
+      <iframe
+        class="form-modal"
+        id="addModalHTML"
+        src="/app_sdece/html/addloc.html"
+        >
+      </iframe>
     </div>
-    <!-- Modal footer: contains edit and delete buttons -->
-    <div class="modalFooter">
-      <div class="modalLine">
-        <button class="modalButton" type="submit" id="submit_form" name="submit_form" style="color:#D64747">Delete &nbsp;&nbsp;<img src="./static/delete.png" alt="delete" style="height: 20px; width: 20px;"></button>
-        <button class="modalButton" id="editHousehold" name="submit_form" style="color:#3D97AF">Edit   &nbsp;&nbsp;<img src="./static/edit.png" alt="edit" style="height: 20px; width: 20px;"></button>
-      </div>
+
+  <!-- Edit Modal: This is the modal that shows up when clicking on the Edit button that is nested within Partner Modal. This allows the user to edit an existing activity within the SDECE Collections. -->
+    <div class="modal-screen" id="editModal">
+      <iframe
+        id="editModal_iframe"
+        src="/app_sdece/html/editloc.html"
+        class="form-modal"        
+        id="editModalHTML"
+        >
+      </iframe>
     </div>
-  </div>
 
-  <div id="mainModal" class="mainModal">
-    <iframe
-            src="/app_sdece/html/main_modal.html"
-            class="main-modal"
-            id="mainModalIframe"
-          ></iframe>
-  </div>
+  <!-- Message Modal: This is the modal that displays a message. Used to indicate form submission/deletion success -->
+    <div class="modal-screen" id="messageModal">
+      <iframe
+        src="/app_sdece/html/message_modal.html"
+        class="message-modal"
+        >
+      </iframe>
+    </div>
 
-  <!-- Modal for add household form -->
-  <div id="addModal" class="formModal" style="display: none;">
-    <iframe src="./html/addloc.html" class="formIframe"></iframe>
-  </div>
+    <script>
+        // This hides the Add Activity modal when the user submits the form
+        window.addEventListener("message", function (event) {
+          if (event.data && event.data.type === "addlocFormSuccess") {
+            // Handle successful form submission event here
+            const addModal = document.getElementById("addModal");
+            addModal.classList.add("hidden"); // Hide the iframe
+          }
 
-  <!-- Modal for edit household form -->
-  <div id="editModal" class="formModal" style="display: none;">
-    <iframe src="./html/editloc.html" class="formIframe"></iframe>
-  </div>
+          if (event.data && event.data.type === "mainModalFormSuccess") {
+            // Handle successful form submission event here
+            const messageModal = document.getElementById("messageModal");
+            messageModal.style.display = "flex"; //display success message
 
-  <!--script for map-->
-  <!-- <script type="module" src="js/index.js"></script> -->
+            setTimeout(() => {messageModal.style.display = "none";}, 3000);
+          }
+        });
 
-  <!--script for search bar-->
-  <script>
-    function searchEntries() {
-      var input = document.querySelector('.searchBar').value.toUpperCase();
-      var ul = document.getElementById("locationList");
-      var li = ul.getElementsByTagName('li');
-      for (var i = 0; i < li.length; i++) {
-        var a = li[i].getElementsByTagName("a")[0];
-        var txtValue = a.textContent || a.innerText;
-        if (txtValue.toUpperCase().indexOf(input) > -1) {
-          li[i].style.display = "";
-        } else {
-          li[i].style.display = "none";
+        function onSearchInput() {
+          let input = document.getElementById("search-input").value.toLowerCase();
+          var button = document.getElementById("searchClear");
+
+          // Show the button if input is not empty, hide it otherwise
+          if (input !== "") {
+            button.style.display = "flex";
+          } else {
+            button.style.display = "none";
+          }
+
+          let container = document.getElementById("locationList");
+          let partnerContainers =
+            container.getElementsByClassName("partnerDiv");
+
+          for (let i = 0; i < partnerContainers.length; i++) {
+            let nameElement =
+              partnerContainers[i].getElementsByClassName("name")[0];
+            let name = nameElement.textContent.toLowerCase();
+
+            let current_container = partnerContainers[i];
+            if (name.includes(input)) {
+              partnerContainers[i].style.display = "flex";
+            } else {
+              partnerContainers[i].style.display = "none";
+            }
+          }
         }
-      }
-    }
 
-					// This hides the Add Activity modal when the user submits the form
-					window.addEventListener('message', function (event) {
-						if (
-							event.data &&
-							event.data.type === 'addlocFormSuccess'
-						) {
-							// Handle successful form submission event here
-							const addModal =
-								document.getElementById('addModal');
-							addModal.classList.add('hidden'); // Hide the iframe
+        function clearSearch() {
+          var input = document.getElementById("search-input");
+          input.value = "";
+          onSearchInput();
+        }
 
-							const messageModal =
-								document.getElementById('messageModal');
-							messageModal.style.display = 'flex'; //display success message
-						}
-					});
+        // Function to hide the div containing the iframe
+        function hideModalContainer(modal) {
+          var iframe = document.getElementById(modal);
+          if (iframe) {
+            iframe.style.display = "none";
+          }
+        }
 
-					// Function to hide the div containing the iframe
-					function hideModalContainer(modal) {
-						var iframe = document.getElementById(modal);
-						if (iframe) {
-							iframe.style.display = 'none';
-						}
-					}
-
-					// Add an event listener to handle messages from the iframe
-					window.addEventListener('message', function (event) {
-						if (event.data === 'closeAddModal') {
-							hideModalContainer('addModal');
-						}
-						if (event.data === 'closeEditModal') {
-							hideModalContainer('editModal');
-						}
-						if (event.data === 'closeMainModal') {
-							hideModalContainer('mainModal');
-						}
-						if (event.data === 'closeMessageModal') {
-							hideModalContainer('messageModal');
-						}
-						// TEST: remove later
-						if (event.data === 'testMessageModal') {
-							console.log('testing message modal');
-							const messageModal =
-								document.getElementById('messageModal');
-							messageModal.style.display = 'flex';
-						}
-					});
-  </script>
-
-
-<!--script for add a location on map click-->
-<script>
-  document.addEventListener('DOMContentLoaded', (event) => {
-    document.body.addEventListener('click', function(event) {
-      if (event.target.matches('.addButton')) {
-        // Prevent default behavior if necessary
-        event.preventDefault();
-
-        // Get the modal
-        var modal = document.getElementById("addModal");
-
-        // Show the modal
-        modal.style.display = "block";
-      }
-
-      // Close the modal when the close button is clicked
-      if (event.target.matches('.close')) {
-        var modal = document.getElementById("addModal");
-        modal.style.display = "none";
-      }
-    });
-  });
-</script>
-
-</body>
-
+        // Add an event listener to handle messages from the iframe
+        window.addEventListener("message", function (event) {
+          if (event.data === "closeAddModal") {
+            hideModalContainer("addModal");
+          }
+          if (event.data === "closeEditModal") {
+            hideModalContainer("editModal");
+          }
+          if (event.data === "closeMainModal") {
+            hideModalContainer("mainModal");
+          }
+          if (event.data === "closeMessageModal") {
+            hideModalContainer("messageModal");
+          }
+        });
+    </script>
+  </body>
 </html>
