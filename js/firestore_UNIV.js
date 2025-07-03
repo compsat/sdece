@@ -521,15 +521,19 @@ export function validateData(collectionName, data) {
     // this is at the beginning so that if it's not required, it doesn't check the rest of
     // the rules. 
 
-    // Defining Test Conditions
-    const DATE_TEST = rule.type === "date" && isNaN(new Date(value).getTime())
-    const TYPE_TEST = rule.type && typeof value != rule.type 
     const MIN_LENGTH_TEST = rule.minLength && typeof value == 'string' && value.length < rule.minLength
-    const MIN_VALUE_TEST = rule.minimum !== undefined && typeof value === 'number' && value < rule.minimum
-    const MAX_LENGTH_TEST = rule.maxLength && typeof value == 'string' && value.length > rule.maxLength
-    const REGEX_TEST = rule.regex && !rule.regex.test(value)
-    const ENUM_TEST = rule.enum && !rule.enum.includes(value)
+    // this will stay here until sdece team implements front-end validation of phone
+    // number
 
+    // Map of Validation Tests
+    const VALIDATION_TEST = new Map([
+      ["date_test", rule.type === "date" && isNaN(new Date(value).getTime())],
+      ["type_test", rule.type && typeof value != rule.type],
+      ["min_length_test", MIN_LENGTH_TEST],
+      ["min_value_test", rule.minimum !== undefined && typeof value === 'number' && value < rule.minimum], 
+      ["max_length_test", rule.maxLength && typeof value == 'string' && value.length > rule.maxLength], 
+      ["regex_test", rule.regex && !rule.regex.test(value)],
+    ]);
 
     // Map of Error Messages
     const ERROR_MESSAGES = new Map([
@@ -541,15 +545,6 @@ export function validateData(collectionName, data) {
       ["regex_test",  `${fieldLabel} is invalid.`],
     ])
 
-    // Map of Validation Tests
-    const VALIDATION_TEST = new Map([
-      ["date_test", DATE_TEST],
-      ["type_test", TYPE_TEST],
-      ["min_length_test", MIN_LENGTH_TEST],
-      ["min_value_test", MIN_VALUE_TEST], 
-      ["max_length_test", MAX_LENGTH_TEST], 
-      ["regex_test", REGEX_TEST],
-    ]);
 
 
     for (const x of VALIDATION_TEST.keys()) {
@@ -567,7 +562,7 @@ export function validateData(collectionName, data) {
 			continue;
 		}
 
-		if (ENUM_TEST) {
+		if (rule.enum && !rule.enum.includes(value)) {
 			errors.push(`${fieldLabel}' must be one of ${rule.enum.join(', ')}.`);
 			continue;
 		}
