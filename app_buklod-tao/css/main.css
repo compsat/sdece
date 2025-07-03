@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
 
 body {
   margin: 0;
@@ -118,7 +118,7 @@ body {
 }
 
 .name {
-	font-family: 'Geist', 'Montserrat', sans-serif;
+	font-family: 'Geist', sans-serif;
 	font-weight: 600;
 	font-size: 1rem;
 	line-height: 1.5rem;
@@ -126,7 +126,7 @@ body {
 }
 
 .address {
-	font-family: 'Geist', 'Montserrat', sans-serif;
+	font-family: 'Geist', sans-serif;
 	font-weight: normal;
 	font-size: 0.875rem;
 	color: #6b7280;
@@ -151,7 +151,7 @@ body {
   background-color: #F6F6F6;
   border: transparent;
   background-position: calc(100% - 16px) center;
-  font-family: 'Montserrat';
+  font-family: 'Geist';
   font-size: 18px;
   letter-spacing: 0.5px;
   background-image: url("../img/search-icon.png");
@@ -199,7 +199,7 @@ li {
 .label {
   padding-left: 10px;
   text-align: left;
-  font-family: "Montserrat";
+  font-family: "Geist";
   font-style: normal;
   font-weight: 600;
   font-size: 18px;
@@ -253,7 +253,7 @@ li {
 
 /* logout button */
 .buttonLogout {
-  font-family: Montserrat;
+  font-family: Geist;
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -291,7 +291,7 @@ button.container {
 }
 
 button.labelFont {
-  font-family: Montserrat;
+  font-family: Geist;
   padding-top: 30px;
   padding-left: 30px;
   padding-bottom: 30px;
@@ -336,7 +336,7 @@ div.buttons {
 a.accordion {
   overflow: hidden;
   text-overflow: ellipsis;
-  font-family: Montserrat;
+  font-family: Geist;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -378,7 +378,7 @@ a.accordion {
 }
 h1.entries {
   color: #000;
-  font-family: Montserrat;
+  font-family: Geist;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -450,7 +450,7 @@ h1.entries {
 
 /* modal text */
 .modalLabel {
-  font-family: 'Montserrat';
+  font-family: 'Geist';
   font-size: 16px;
   color: #000;
   font-weight: 750;
@@ -461,7 +461,7 @@ h1.entries {
 .modalName {
   position: relative;
   color: #387181;
-  font-family: Montserrat;
+  font-family: Geist;
   font-size: 24px;
   font-style: normal;
   font-weight: 750;
@@ -474,7 +474,7 @@ h1.entries {
   display: flex;
   position: relative;
   justify-content: center;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Geist", sans-serif;
   font-size: 16px;
   font-weight: 750;
   cursor: pointer;
@@ -511,7 +511,7 @@ button.collapsible {
   width: 100%;
   height: 50px;
   color: #3D97AF;
-  font-family: 'Montserrat';
+  font-family: 'Geist';
   font-size: 20px;
   font-style: normal;
   font-weight: 750;
@@ -566,7 +566,7 @@ button.collapsible {
 }
 
 .leafletHeader {
-  font-family: Montserrat;
+  font-family: Geist;
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.1px;
@@ -580,7 +580,7 @@ button.collapsible {
 }
 
 .leafletSubHeader {
-  font-family: Montserrat;
+  font-family: Geist;
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.1px;
@@ -589,7 +589,7 @@ button.collapsible {
 }
 
 .leafletLabel {
-  font-family: Montserrat;
+  font-family: Geist;
   font-size: 14px;
   font-weight: 700;
   color: #000000;
@@ -636,7 +636,7 @@ button.collapsible {
   gap: 8px;
   border-radius: 8px;
   border: 0;
-  font-family: Montserrat;
+  font-family: Geist;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -842,17 +842,39 @@ button.collapsible {
   max-width: 460px;
 }
 
+/* Restore global popup width to not affect household detail popups */
 .leaflet-popup-content-wrapper {
   min-width: 400px;
   max-width: 480px;
 }
 
-/* Add more space between Residency Status, HOA/NOA, and Evacuation Area */
-.popup-section .popup-label + .popup-value {
-  margin-bottom: 1.1em;
+/* Specific styling only for Add Household popups using the custom class */
+.leaflet-popup.add-household-popup-compact .leaflet-popup-content-wrapper {
+  min-width: 200px !important;
+  max-width: 300px !important;
 }
 
-/* Remove extra margin for the last value in the section to avoid too much space before risk section */
-.popup-section .popup-value:last-of-type {
-  margin-bottom: 0.2em;
+.partner-geolocation {
+  font-family: 'Geist', sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.addButton {
+  background: #1a357b;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 5px;
+  width: 100%;
+}
+
+.addButton:hover {
+  background: #2542a3;
 }
