@@ -1,5 +1,4 @@
-// FIRESTORE DATABASE
-
+// FIRESTORE DATABASE\
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 import {
 	getFirestore,
@@ -14,6 +13,7 @@ import {
 	GeoPoint,
 	Timestamp
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+
 import {
 	getCollection,
 	setCollection,
@@ -21,10 +21,13 @@ import {
 	SDECE_RULES_TEST,
 	getDocIdByPartnerName,
 	validateData,
-	editEntry
+	editEntry,
+	addEntry
 } from '/js/firestore_UNIV.js';
+
 import { addListeners, map, getDivContent } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
+
 // Your Firestore code here
 const firebaseConfig = {
   apiKey: 'AIzaSyA8QWgic_hjbDL-EYIkvSRRII_yfTRdtOQ',
@@ -270,8 +273,7 @@ getDocs(col_ref)
 			const nameDiv = document.createElement('div');
 			const addressDiv = document.createElement('div');
 			const activityDiv = document.createElement('div');
-			const sidebarItems = document.querySelectorAll('.partnerDiv');
-
+			
 			containerDiv.addEventListener('click', function () {
 				marker.openPopup();
 				map.panTo(
@@ -755,7 +757,7 @@ addFormSubmitButton.addEventListener('click', function () {
 		}
 
 		// close the save modal
-		addFormiframeDocument.style.display = 'none';
+		addFormiframe.style.display = 'none';
 	}
 
 	function displayErrors(errors) {
