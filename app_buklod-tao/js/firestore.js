@@ -409,9 +409,6 @@ export function populateEditForm(partner, editFormModal) {
 
 
   for (var data in partner) {
-    // console.log(data.toString()+ " '" + partner[data] + "'")
-    // console.log(partner[data])``
-
     if (partner[data] instanceof Object){
       editForm.getElementById(data.toString()).value = partner[data]._lat + " " + partner[data]._long
     } 
@@ -473,9 +470,11 @@ export function submitForm(){
   }
   
   validate_errors = validateData(collection_value,collated_input);
+
   
   if (validate_errors.length > 0){
     console.log("failed vaildation");
+    displayErrors(validate_errors);
     alert("Error in validating values. Check console for errors present");
     for(var i in validate_errors){
       console.log(validate_errors[i]);
@@ -501,4 +500,22 @@ export function submitForm(){
     waitForPromise();
   }
 
+  function displayErrors(validate_errors) {
+    let errorDiv = document.getElementById('error_messages');
+
+    if (errorDiv) {
+
+        errorDiv.innerHTML = '';
+
+        if (validate_errors.length > 0) {
+            for (let error of validate_errors) {
+                let errorParagraph = document.createElement('p');
+                errorParagraph.textContent = error;
+                errorDiv.appendChild(errorParagraph);
+            }
+        }
+        } else {
+            console.error("Error: Couldn't find element with ID 'error_messages'.");
+        }
+    }
  }
