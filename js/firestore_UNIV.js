@@ -299,7 +299,7 @@ const VALIDATION_RULES = {
 		partner_email: { type: 'string', required: true, maxLength: 127 },
 		activity_name: { type: 'string', required: true },
 		activity_nature: { type: 'string', required: true, maxLength: 255 },
-		activity_date: { type: 'date', required: true },
+		activity_date: { type: 'date', required: true, regex: /^\d{4}-\d{2}-\d{2}$/, },
 		additional_partnership: { type: 'string', maxLength: 255 },
 		organization_unit: { type: 'string', maxLength: 127 },
 		ADMU_office: { type: 'string', required: true, maxLength: 127 },
@@ -330,7 +330,7 @@ const VALIDATION_RULES = {
 		partner_email: { type: 'string', required: true, maxLength: 127 },
 		activity_name: { type: 'string', required: true },
 		activity_nature: { type: 'string', required: true, maxLength: 255 },
-		activity_date: { type: 'date', required: true },
+		activity_date: { type: 'date', required: true, regex: /^\d{4}-\d{2}-\d{2}$/, },
 		additional_partnership: { type: 'string', maxLength: 255 },
 		organization_unit: { type: 'string', maxLength: 127 },
 		ADMU_office: { type: 'string', required: true, maxLength: 127 },
@@ -524,6 +524,8 @@ export function validateData(collectionName, data) {
     // the rules. 
 
     // Defining Test Conditions
+    const DATE_TEST = rule.type === "date" && isNaN(new Date(value).getTime())
+    const TYPE_TEST = rule.type && typeof value != rule.type 
     const MIN_LENGTH_TEST = rule.minLength && typeof value == 'string' && value.length < rule.minLength
     const MIN_VALUE_TEST = rule.minimum !== undefined && typeof value === 'number' && value < rule.minimum
     const MAX_LENGTH_TEST = rule.maxLength && typeof value == 'string' && value.length > rule.maxLength
@@ -533,6 +535,8 @@ export function validateData(collectionName, data) {
 
     // Map of Error Messages
     const ERROR_MESSAGES = new Map([
+      ["date_test", `${fieldLabel} must be a valid date.`],
+      ["type_test", `${fieldLabel} must be of type ${rule.type}. type is ${value}`],
       ["min_length_test", `${fieldLabel} must be at least ${rule.minLength} characters long.`],
       ["min_value_test", `${fieldLabel} must be at least ${rule.minimum}.`],
       ["max_length_test", `${fieldLabel} cannot exceed ${rule.maxLength} characters.`],
@@ -541,34 +545,13 @@ export function validateData(collectionName, data) {
 
     // Map of Validation Tests
     const VALIDATION_TEST = new Map([
-      ["regex_test", REGEX_TEST],
+      ["date_test", DATE_TEST],
+      ["type_test", TYPE_TEST],
       ["min_length_test", MIN_LENGTH_TEST],
       ["min_value_test", MIN_VALUE_TEST], 
       ["max_length_test", MAX_LENGTH_TEST], 
+      ["regex_test", REGEX_TEST],
     ]);
-
-    // backend type validation 
-    // Currently date is being validated in the frontend. This is just a back up, just
-    // in case
-    // switch statement is used to allow for future definition of type definitions
-    switch(rule.type) {
-      case 'date':
-				const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-        if (dateRegex.test(value)) {
-            errors.push(`${fieldLabel} must be a valid date in YYYY-MM-DD format.`);
-            continue;
-        } else {
-            if (isNaN(new Date(value).getTime())) {
-              errors.push(`${fieldLabel} must be a valid date.`);
-              continue;
-              }
-        }
-        break;
-      default:
-        if (typeof value != rule.type) {//checking for the type of value in location coordinates
-          errors.push(`${fieldLabel} must be of type ${rule.type}. type is ${value}`);
-          }
-    }
 
 
     for (const x of VALIDATION_TEST.keys()) {
@@ -579,12 +562,10 @@ export function validateData(collectionName, data) {
     }
 
     // This is holdover code until the sdece team can implement frontend validation
-		if (MIN_LENGTH_TEST) {
-			if (field === 'partner_contact_number') {
+		if (MIN_LENGTH_TEST && field === 'partner_contact_number') {
 				errors.push(
 					`${fieldLabel} must be at least ${rule.minLength} characters long and in the form 09XXXXXXXXX.`
 				);
-			} 
 			continue;
 		}
 
