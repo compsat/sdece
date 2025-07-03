@@ -40,13 +40,14 @@ const lng = getUrlParameter('lng');
 
 
 export function getCoordinates(coordinates) {
-	var arr = coordinates.split('+');
+	// Handle both comma and plus-separated formats
+	var arr = coordinates.includes(',') ? coordinates.split(',') : coordinates.split('+');
 	var lat = arr[0], lng = arr[1];
+	
 	// Ensure lat and lng are numbers
 	const latNum = parseFloat(lat);
 	const lngNum = parseFloat(lng);
 	
-
 	// Round the numbers to 5 decimal places
 	var roundLat = parseFloat(latNum.toFixed(5));
 	var roundLon = parseFloat(lngNum.toFixed(5));
@@ -442,7 +443,6 @@ export function getDocByID(docId) {
 }
 
 export function addEntry(inp_obj) {
-
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_reference.id) {
 			let input = {}; // contents depend on the rule engine
@@ -450,19 +450,22 @@ export function addEntry(inp_obj) {
 				input[rule[2][i]] = inp_obj[rule[2][i]];
 				console.log(input);
 			}
-			addDoc(collection_reference, input)
+			
+			// Return the Promise so the form can handle success/error
+			return addDoc(collection_reference, input)
 				.then((docRef) => {
 					console.log(docRef);
-					alert("You may now reload the page for your addition to reflect on this page");
-
+					return docRef; // Return the document reference for success handling
 				})
 				.catch((error) => {
 					console.error('Error adding document: ', error);
-					alert("Error uploading new activity. Please try again");
+					throw error; // Re-throw the error so the form can catch it
 				});
-			break;
 		}
 	}
+	
+	// Return a rejected Promise if no matching collection found
+	return Promise.reject(new Error('Collection not found'));
 }
 
 export function editEntry(inp_obj, docId) {

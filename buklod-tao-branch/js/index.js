@@ -185,16 +185,21 @@ function onMapClick(e) {
   // This is the popup for when the user clicks on a spot on the map
   var popupContent = `
     <div class="partner-geolocation">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C11.337 11.5 10.7011 11.2366 10.2322 10.7678C9.76339 10.2989 9.5 9.66304 9.5 9C9.5 8.33696 9.76339 7.70107 10.2322 7.23223C10.7011 6.76339 11.337 6.5 12 6.5C12.663 6.5 13.2989 6.76339 13.7678 7.23223C14.2366 7.70107 14.5 8.33696 14.5 9C14.5 9.66304 14.2366 10.2989 13.7678 10.7678C13.2989 11.2366 12.663 11.5 12 11.5Z" fill="#91C9DB"/>
-          </svg>
-          ${lat} + ${lng}
-          <br>
+      Latitude: ${lat}<br>
+      Longitude: ${lng}
     </div>
-    <button id="mainButton" class="addButton p-5" data-lat="${lat}" data-lng="${lng}">Add Household</button>`;
+    <button class="addButton" data-lat="${lat}" data-lng="${lng}">Add Household</button>
+  `;
 
-  popup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
+  // Custom popup for add household
+  var customPopup = L.popup({
+    className: 'add-household-popup-compact'
+  });
+  
+  customPopup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
+  popup = customPopup;
 
+  // Event listener for the Add Household button
   var addButton = document.querySelector('.addButton');
   addButton.addEventListener('click', function () {
     const lat = this.getAttribute('data-lat');
@@ -202,72 +207,45 @@ function onMapClick(e) {
 
     var modal = document.getElementById('addModal');
 
-    // TODO: Integrate this functionality into the modal instead
-    // var partnerName = this.getAttribute("data-loc");
-    // window.open(
-    //   `addloc.html?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(
-    //     lng
-    //   )}`,
-    //   "_blank"
-    // );
-
     // Display the modal
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
+    modal.style.display = 'block';
 
-    // Set the coordinates based on the pin drop
-    modal.getElementsByTagName('iframe')[0].contentWindow.document.getElementById('location_coordinates').value = lat + '+' + lng;
-
- // Handle form submission
-  var addHouseholdFrom = document.getElementById('addHouseholdForm')
-  if (addHouseholdFrom) {
-    addHouseholdFrom.addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      const householdData = {
-        household_name: document.getElementById('household_name').value,
-        contact_number: document.getElementById('contact_number').value,
-        household_address: document.getElementById('household_address').value,
-        residency_status: document.getElementById('residency_status').value,
-        is_hoa_noa: document.getElementById('is_hoa_noa').value,
-        nearest_evac: document.getElementById('nearest_evac').value,
-        earthquake_risk: document.getElementById('earthquake_risk').value,
-        fire_risk: document.getElementById('fire_risk').value,
-        flood_risk: document.getElementById('flood_risk').value,
-        landslide_risk: document.getElementById('landslide_risk').value,
-        storm_risk: document.getElementById('storm_risk').value,
-        number_residents: document.getElementById('number_residents').value,
-        number_minors: document.getElementById('number_minors').value,
-        number_seniors: document.getElementById('number_seniors').value,
-        number_pwd: document.getElementById('number_pwd').value,
-        number_sick: document.getElementById('number_sick').value,
-        number_pregnant: document.getElementById('number_pregnant').value,
-        location_coordinates: new firebase.firestore.GeoPoint(parseFloat(lat), parseFloat(lng))
-      };
-
-      addDoc(colRef, householdData)
-        .then(() => {
-          alert('Household added successfully!');
-          modal.classList.add('hidden');
-          modal.classList.remove('flex');
-          location.reload(); // Reload the map to show the new marker
-        })
-        .catch((error) => {
-          console.error('Error adding document: ', error);
-        });
-    });
-  }
-
-
-    // Close the modal when the user clicks anywhere outside of it
-    window.onclick = function (event) {
-      if (event.target == modal) {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
+    // Set the coordinates in the iframe form
+    var iframe = modal.getElementsByTagName('iframe')[0];
+    var iframeDocument = iframe.contentWindow.document;
+    
+    // Wait for iframe to load then set coordinates
+    iframe.onload = function() {
+      var locationField = iframeDocument.getElementById('location_coordinates');
+      if (locationField) {
+        locationField.value = lat + ',' + lng;
       }
     };
+    
+    // If iframe is already loaded, set coordinates immediately
+    if (iframe.contentWindow.document.readyState === 'complete') {
+      var locationField = iframeDocument.getElementById('location_coordinates');
+      if (locationField) {
+        locationField.value = lat + ',' + lng;
+      }
+    }
+
+    // Close the popup after opening modal
+    map.closePopup();
   });
 }
+
+// Add message listener for iframe communication
+window.addEventListener('message', function(event) {
+  if (event.data === 'closeAddModal') {
+    var modal = document.getElementById('addModal');
+    modal.style.display = 'none';
+  }
+  if (event.data === 'closeEditModal') {
+    var modal = document.getElementById('editModal');
+    modal.style.display = 'none';
+  }
+});
 
 map.on('click', onMapClick);
 

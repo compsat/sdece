@@ -14,6 +14,12 @@
             document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
 
             function handleFormSubmit_v2(){
+                // Prevent double submission
+                const submitButton = document.getElementById("submit_form");
+                if (submitButton.disabled) {
+                    return;
+                }
+                
                 var collatedInput = {};
 
                 for (let i = 0; i < BUKLOD_RULES_TEST[2].length; i++) {
@@ -65,7 +71,29 @@
                 if (errors.length > 0) {
                     displayErrors(errors);
                 } else {
-                    addEntry(collatedInput);
+                    // Show loading state
+                    document.getElementById("submit_form").disabled = true;
+                    document.getElementById("submit_form").textContent = "Saving...";
+                    
+                    addEntry(collatedInput)
+                        .then(() => {
+                            // Success feedback
+                            alert('Household added successfully!');
+                            
+                            // Close the modal
+                            window.parent.postMessage('closeAddModal', '*');
+                            
+                            // Reload the page to show the new marker
+                            window.parent.location.reload();
+                        })
+                        .catch((error) => {
+                            console.error('Error adding household: ', error);
+                            alert('Error adding household. Please try again.');
+                            
+                            // Reset button state
+                            document.getElementById("submit_form").disabled = false;
+                            document.getElementById("submit_form").textContent = "Save";
+                        });
                 }
 
                 function displayErrors(errors) {
