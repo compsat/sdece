@@ -45,19 +45,29 @@
         <div class="inputContainer">
             <label class="form" for="contact_number">Contact Number
             </label>
-            <input type="text" id="contact_number" name="contact_number" class="attribs" />
+            <input type="text" id="contact_number" name="contact_number" class="attribs" maxlength="11"/>
         </div>
         <br>
         <div class="inputContainer">
             <label class="form" for="residency_status">Residency Status
             </label>
-            <input type="text" id="residency_status" name="residency_status" class="attribs" />
+            <select name="residency_status" id="residency_status" class="longAttribs">
+                <option value="" disabled selected hidden></option>
+                <option value="May-Ari">May-Ari</option>
+                <option value="Umuupa">Umuupa</option>
+           </select>
+
         </div>
         <br>
         <div class="inputContainer">
             <label class="form" for="HOA/NOA">Part of HOA/NOA
             </label>
-            <input type="text" id="is_hoa_noa" name="HOA/NOA" class="attribs" value="HOA" />
+            <select name="is_hoa_noa" id="is_hoa_noa" class="longAttribs">
+                    <option value="" disabled selected hidden></option>
+                    <option value="HOA">HOA</option>
+                    <option value="NOA">NOA</option>
+                    <option value="N/A">N/A</option>
+            </select>
         </div>
         <br>
         <div class="inputContainer">
@@ -69,13 +79,20 @@
         <div class="inputContainer">
             <label class="form" for="location_coordinates">Location Coordinates
             </label>
-            <input type="text" id="location_coordinates" name="location_coordinates" class="attribs"/>
+            <input type="text" id="location_coordinates" name="location_coordinates" class="attribs" readonly/>
         </div>
         <br>
         <div class="inputContainer">
             <label class="form" for="household_material">Materials Used for House
             </label>
-            <input type="text" id="household_material" name="household_material" class="attribs" />
+            <select name="household_material" id="household_material" class="longAttribs">
+                    <option value="" disabled selected hidden></option>
+                    <option value="Concrete">Concrete</option>
+                    <option value="Semi-Concrete">Semi-Concrete</option>
+                    <option value="Light materials">Light materials</option>
+                    <option value="Makeshift">Makeshift</option>
+                    <option value="Natural">Natural</option>
+                </select>
         </div>
         <br>
         <div class="inputContainer">
@@ -84,60 +101,48 @@
             <input type="text" id="nearest_evac" name="nearest_evac" class="attribs" />
         </div>
         <br>
-        <div class="inputContainer">
-            <label class="form" for="status">Status
-            </label>
-            <input type="text" id="status" name="status" class="attribs" />
-        </div>
-        <br>
         <h2 class="subHeader">RESIDENT INFORMATION</h2>
         <br>
         <div class="inputContainer">
             <label class="form" for="number_residents">Number of Residents
             </label>
-            <input type="number" id="number_residents" name="number_residents" class="attribs" />
+            <input type="number" id="number_residents" name="number_residents" class="attribs" min="1"/>
         </div>
-        <br>
-        <!--<div class="inputContainer">
-            <label class="form" for="number_adults">Number of Adults
-            </label>
-            <input type="number" id="number_adults" name="number_adults" class="attribs" />
-        </div>-->
         <br>
         <div class="inputContainer">
             <label class="form" for="number_minors">Number of Minor Residents
             </label>
-            <input type="number" id="number_minors" name="number_minors" class="attribs" />
+            <input type="number" id="number_minors" name="number_minors" class="attribs" min="0"/>
         </div>
         <br>
         <div class="inputContainer">
             <label class="form" for="number_seniors">Number of Senior Citizen Residents
             </label>
-            <input type="number" id="number_seniors" name="number_seniors" class="attribs" />
+            <input type="number" id="number_seniors" name="number_seniors" class="attribs" min="0"/>
         </div>
         <br>
         <div class="inputContainer">
             <label class="form" for="number_pwd">Number of PWD Residents
             </label>
-            <input type="number" id="number_pwd" name="number_pwd" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="number_sick">Number of Sick Residents
-            </label>
-            <input type="number" id="number_sick" name="number_sick" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="sickness_present">Sickness Present
-            </label>
-            <input type="number" id="sickness_present" name="sickness_present" class="attribs" />
+            <input type="number" id="number_pwd" name="number_pwd" class="attribs" min="0"/>
         </div>
         <br>
         <div class="inputContainer">
             <label class="form" for="number_pregnant">Number of Pregnant Residents
             </label>
-            <input type="number" id="number_pregnant" name="number_pregnant" class="attribs" />
+            <input type="number" id="number_pregnant" name="number_pregnant" class="attribs" min="0"/>
+        </div>
+        <br>
+        <div class="inputContainer">
+            <label class="form" for="number_sick">Number of Sick Residents
+            </label>
+            <input type="number" id="number_sick" name="number_sick" class="attribs" min="0"/>
+        </div>
+        <br>
+        <div class="inputContainer">
+            <label class="form" for="sickness_present">Sickness Present
+            </label>
+            <input type="text" id="sickness_present" name="sickness_present" class="attribs" />
         </div>
         <br>
         <h2 class="subHeader">RISK LEVELS</h2>
@@ -224,23 +229,30 @@
         
         import { editEntry, setCollection, BUKLOD_RULES_TEST, getDocIdByPartnerName, getDocByID } from "/js/firestore_UNIV.js";
         import {submitForm} from '../js/firestore.js';
-        //setCollection("buklod-official-TEST");
-        
 
         document.getElementById("submit_form").addEventListener("click", submitForm);
         
     </script>
 
     <script>
+        
         function resetForm() {
             let messageText = "Are you sure you want to clear the form?";
             if (confirm(messageText) == true) {
                 var inputFields = document.getElementsByTagName('input');
                 for (var i = 0; i < inputFields.length; i++) {
                     var field = inputFields[i];
-                    if (!field.readOnly && field.type !== 'button') {
+                    if (field.type == "hidden"){
+                        break;
+                    }
+                    else if (!field.readOnly && field.type !== 'button') {
                         field.value = '';
                     }
+                }
+
+                var selectFields = document.getElementsByTagName('select');
+                for (var i = 0; i < selectFields.length; i++) {
+                selectFields[i].selectedIndex = 0; 
                 }
             }
         }
@@ -258,7 +270,6 @@
                 );
                 closeModal();
             });
-
     </script>
 </body>
 

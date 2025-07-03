@@ -1,6 +1,5 @@
 // FIRESTORE DATABASE
 
-
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 import {
   getFirestore,
@@ -44,6 +43,33 @@ setCollection(collection_value);
 const colRef = getCollection();
 let partnersArray = [];
 
+/*
+export function getDocIdByPartnerName(partnerName) {
+  const endName = partnerName.replace(/\s/g, '\uf8ff');
+  return getDocs(
+    query(
+      colRef,
+      where('household_name', '>=', partnerName),
+      where('household_name', '<=', partnerName + endName)
+    )
+  )
+    .then((querySnapshot) => {
+      console.log(querySnapshot);
+      if (!querySnapshot.empty) {
+        // Assuming there is only one document with the given partner name
+        const doc = querySnapshot.docs[0];
+        return doc.id;
+      } else {
+        console.log('EMPTY: No matching document found.');
+        return null;
+      }
+    })
+    .catch((error) => {
+      console.error('Error getting documents: ', error);
+      return null;
+    });
+}*/
+
 export function getDocByID(docId) {
   const docReference = doc(db, 'nstp-3', docId);
   let docObj = {};
@@ -84,7 +110,6 @@ const loadData = async() => {
 
 			// Set attributes
 			anchor.href = '#';
-      console.log(L)
 			let marker = L.marker([0, 0]);
 
 			Object.defineProperty(partner, "marker", {value:marker, configurable: true});
@@ -143,10 +168,18 @@ export function populateEditForm(partner, editFormModal) {
   console.log("populating form");
   var iframe = editFormModal.getElementsByClassName('formIframe')[0]
   var editForm = iframe.contentWindow.document
-  for (var data in partner) {
-    // console.log(data.toString()+ " '" + partner[data] + "'")
-    // console.log(partner[data])``
 
+  console.log("Original name:", partner.household_name);
+
+
+  const originalField = editForm.createElement('input');
+  originalField.type = 'hidden';
+  originalField.id = 'original_household_name';
+  originalField.value = partner.household_name;
+  editForm.body.appendChild(originalField);
+
+
+  for (var data in partner) {
     if (partner[data] instanceof Object){
       editForm.getElementById(data.toString()).value = partner[data]._lat + " " + partner[data]._long
     } 
@@ -168,6 +201,11 @@ export function populateEditForm(partner, editFormModal) {
       
     }
   }
+  // partner.forEach(data => {
+  // });
+  // console.log(partner.household_name)
+  // console.log(document)
+  // console.log(editFormModal.getElementsByClassName('formIframe')[0].contentWindow.document.getElementById('household_name'))
 }
 
 export function submitForm(){
@@ -203,21 +241,33 @@ export function submitForm(){
   }
   //Internal data validation within buklod tao app
   validate_errors = validateData(collection_value,collated_input);
+
   
   if (validate_errors.length > 0){
     console.log("failed vaildation");
-    alert("Error in validating values. Check console for errors present");
     displayErrors(validate_errors);
+    alert("Error in validating values. Check console for errors present");
     for(var i in validate_errors){
       console.log(validate_errors[i]);
     }
   }
-  else{
+  else {
     console.log("passed validation");
+
+    const original_household_name = document.getElementById('original_household_name').value;
+
     const waitForPromise = async() => {
-      const householdID = await getDocIdByPartnerName(collated_input['household_name']);
-      editEntry(collated_input,householdID);
+      const householdID = await getDocIdByPartnerName(original_household_name);
+      console.log("Resolved householdID to editEntry:", householdID);
+
+      if (householdID) {
+        editEntry(collated_input, householdID);
+      } else {
+        console.error("No householdID found for the given household_name!");
+        alert("Error: Unable to find household ID for original name.");
+      }
     }
+
     waitForPromise();
   }
   //Data Validation Error message display within modal
@@ -228,8 +278,8 @@ export function submitForm(){
 
         errorDiv.innerHTML = '';
 
-        if (errors.length > 0) {
-            for (let error of errors) {
+        if (validate_errors.length > 0) {
+            for (let error of validate_errors) {
                 let errorParagraph = document.createElement('p');
                 errorParagraph.textContent = error;
                 errorDiv.appendChild(errorParagraph);
