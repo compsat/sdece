@@ -347,3 +347,52 @@ function addMainButtonText() {
 }
 
 addMainButtonText();
+
+
+// EXPORT DATA CODE LOGIC
+document.getElementById('download-csv').addEventListener('click', async () => {
+	const colRef = getCollection();
+	const snapshot = await getDocs(colRef);
+
+	// Load all household documents
+	const allHouseholds = [];
+	snapshot.forEach(doc => {
+		const data = doc.data();
+		allHouseholds.push(data);
+	});
+
+	// Define risk categories and their priority
+	const riskTypes = ['earthquake_risk', 'fire_risk', 'flood_risk', 'landslide_risk', 'storm_risk'];
+	const riskLabels = {
+		earthquake_risk: 'Earthquake',
+		fire_risk: 'Fire',
+		flood_risk: 'Flood',
+		landslide_risk: 'Landslide',
+		storm_risk: 'Storm'
+	};
+
+	let csvContent = '';
+
+	for (const riskType of riskTypes) {
+		csvContent += `\n=== ${riskLabels[riskType]} Risk ===\n`;
+		csvContent += `Household Name,Address,Contact,Risk Level,Number of Residents\n`;
+
+		['HIGH', 'MEDIUM', 'LOW'].forEach(level => {
+			allHouseholds
+				.filter(h => h[riskType] === level)
+				.forEach(h => {
+					csvContent += `"${h.household_name}","${h.household_address}","${h.contact_number}",${level},${h.number_residents}\n`;
+				});
+		});
+	}
+
+	// Download CSV
+	const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+	const url = URL.createObjectURL(blob);
+	const link = document.createElement('a');
+	link.setAttribute('href', url);
+	link.setAttribute('download', 'Household_Risk_Report.csv');
+	document.body.appendChild(link);
+	link.click();
+	document.body.removeChild(link);
+});
