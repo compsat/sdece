@@ -254,7 +254,7 @@ function onMapClick(e) {
     var modal = document.getElementById('addModal');
 
     // Display the modal
-    modal.style.display = 'block';
+    modal.style.display = 'flex';
 
     // Set the coordinates in the iframe form
     var iframe = modal.getElementsByTagName('iframe')[0];
