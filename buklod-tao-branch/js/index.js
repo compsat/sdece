@@ -129,6 +129,11 @@ function onPinClick(doc) {
         </div>
       </div>
     </div>
+    <div class="popup-edit-section">
+      <button id="editHouseholdPopup" class="popup-edit-btn">
+        Edit
+      </button>
+    </div>
   </div>`;
   return leaflet_html;
 }

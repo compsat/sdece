@@ -842,6 +842,32 @@ button.collapsible {
   margin: 0.4em 0;
 }
 
+.popup-edit-section {
+  margin-top: 1.5rem;
+  text-align: center;
+  padding-bottom: 0.5rem;
+}
+
+.popup-edit-btn {
+  background: transparent;
+  border: none;
+  color: #1a357b;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: 'Geist', sans-serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+.popup-edit-btn:hover {
+  background-color: #f0f9ff;
+}
+
 .popup-card {
   min-width: 370px;
   max-width: 460px;
