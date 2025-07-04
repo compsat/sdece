@@ -350,16 +350,13 @@ addMainButtonText();
 
 
 // EXPORT DATA CODE LOGIC
-document.getElementById('download-csv').addEventListener('click', async () => {
-	const colRef = getCollection();
+document.getElementById('download-report').addEventListener('click', async () => {
+  const colRef = getCollection();
 	const snapshot = await getDocs(colRef);
 
 	// Load all household documents
 	const allHouseholds = [];
-	snapshot.forEach(doc => {
-		const data = doc.data();
-		allHouseholds.push(data);
-	});
+	snapshot.forEach(doc => {allHouseholds.push(doc.data());});
 
 	// Define risk categories and their priority
 	const riskTypes = ['earthquake_risk', 'fire_risk', 'flood_risk', 'landslide_risk', 'storm_risk'];
@@ -371,28 +368,31 @@ document.getElementById('download-csv').addEventListener('click', async () => {
 		storm_risk: 'Storm'
 	};
 
-	let csvContent = '';
+	// Prepare workbook and worksheets
+	const workbook = XLSX.utils.book_new();
 
 	for (const riskType of riskTypes) {
-		csvContent += `\n=== ${riskLabels[riskType]} Risk ===\n`;
-		csvContent += `Household Name,Address,Contact,Risk Level,Number of Residents\n`;
+		const data = [];
+		data.push(['Household Name', 'Address', 'Contact', 'Risk Level', 'Number of Residents']);
 
 		['HIGH RISK', 'MEDIUM RISK', 'LOW RISK'].forEach(level => {
 			allHouseholds
 				.filter(h => h[riskType] === level)
 				.forEach(h => {
-					csvContent += `"${h.household_name}","${h.household_address}","${h.contact_number}",${level},${h.number_residents}\n`;
+					data.push([
+						h.household_name || '',
+						h.household_address || '',
+						h.contact_number || '',
+						level,
+						h.number_residents || 0
+					]);
 				});
 		});
+
+		const worksheet = XLSX.utils.aoa_to_sheet(data);
+		XLSX.utils.book_append_sheet(workbook, worksheet, riskLabels[riskType]);
 	}
 
-	// Download CSV
-	const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-	const url = URL.createObjectURL(blob);
-	const link = document.createElement('a');
-	link.setAttribute('href', url);
-	link.setAttribute('download', 'Household_Risk_Report.csv');
-	document.body.appendChild(link);
-	link.click();
-	document.body.removeChild(link);
+	// Trigger Excel file download
+	XLSX.writeFile(workbook, 'Household_Risk_Report.xlsx');
 });
