@@ -181,37 +181,41 @@ export const DB_RULES_AND_DATA = [
 const VALIDATION_RULES = {
 	//Rules for Validating Data
 	'buklod-official-TEST': {
-		household_name: { type: 'string', required: true, maxLength: 127 },
+    household_name: { label: "Household Name", type: 'string', required: true, maxLength: 127 },
 		contact_number: {
+      label: "Contact Number",
 			type: 'string',
 			required: true,
 			minLength: 11,
 			maxLength: 11,
-			regex: /^[0-9]+$/,
+			regex: /^09\d*/,
 		},
-		number_residents: { type: 'number', required: true , 'minimum': 1},
-		number_minors: { type: 'number', 'minimum': 0 },
-		number_seniors: { type: 'number' , 'minimum': 0 },
-		number_pregnant: { type: 'number' , 'minimum': 0 },
-		number_pwd: { type: 'number' , 'minimum': 0 },
-		number_sick: { type: 'number' , 'minimum': 0 },
-		sickness_present: { type: 'string' },
+    number_residents: { label: "Number of Residents", type: 'number', required: true , 'minimum': 1},
+		number_minors: { label: "Number of Minor Residents", type: 'number', 'minimum': 0 },
+		number_seniors: { label: "Number of Senior Residents", type: 'number' , 'minimum': 0 },
+		number_pregnant: { label: "Number of Pregnant Residents", type: 'number' , 'minimum': 0 },
+		number_pwd: { label: "Number of Persons with Disabilities", type: 'number' , 'minimum': 0 },
+		number_sick: { label: "Number of Sick Residents", type: 'number' , 'minimum': 0 },
+		sickness_present: { label: "Sicknesses Present", type: 'string' },
 		residency_status: {
+      label: "Residency Status",
 			type: 'string',
 			required: true,
 			enum: ['May-Ari', 'Umuupa'],
 		},
 		is_hoa_noa: {
+      label: "HOA Status",
 			type: 'string',
 			required: true,
 			minLength: 3,
 			maxLength: 3,
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
-		location_coordinates: { type: 'object', required: true },
-		location_link: { type: 'string', required: true, regex: /^https:\/\/www\.openstreetmap\.org\/.+/ }, // data validation for link
-		household_address: { type: 'string', required: true, maxLength: 100 },
+    location_coordinates: {label: "Location Coordinates", type: 'object', required: true },
+		location_link: { label: "Location Link", type: 'string', required: true, regex: /^https:\/\/www\.openstreetmap\.org\/.+/ }, // data validation for link
+		household_address: { label: "Household Address", type: 'string', required: true, maxLength: 100 },
 		household_material: {
+      label: "Household Material",
 			type: 'string',
 			required: true,
 			enum: [
@@ -222,46 +226,50 @@ const VALIDATION_RULES = {
 				'Natural',
 			],
 		},
-		landslide_risk: { type: 'string', required: true },
-		household_phase: { type: 'string', required: true },
-		earthquake_risk: { type: 'string', required: true },
-		fire_risk: { type: 'string', required: true },
-		flood_risk: { type: 'string', required: true },
-		storm_risk: { type: 'string', required: true },
-		nearest_evac: { type: 'string', required: true, maxLength: 255 },
+    landslide_risk: { label: "Landslide Risk", type: 'string', required: true },
+		household_phase: { label: "Household Phase", type: 'string', required: true },
+		earthquake_risk: { label: "Earthquake Risk", type: 'string', required: true },
+		fire_risk: { label: "Fire Risk", type: 'string', required: true },
+		flood_risk: { label: "Flood Risk", type: 'string', required: true },
+		storm_risk: { label: "Storm Risk", type: 'string', required: true },
+		nearest_evac: { label: "Nearest Evacuation", type: 'string', required: true, maxLength: 255 },
 	},
 	'buklod-official': {
-		household_name: { type: 'string', required: true, maxLength: 127 },
+    household_name: { label: "Household Name", type: 'string', required: true, maxLength: 127 },
 		contact_number: {
+      label: "Contact Number",
 			type: 'string',
 			required: true,
 			minLength: 11,
 			maxLength: 11,
-			regex: /^[0-9]+$/,
+			regex: /^09\d*/,
 		},
-		number_residents: { type: 'number', required: true , 'minimum': 1},
-		number_minors: { type: 'number', 'minimum': 0 },
-		number_seniors: { type: 'number' , 'minimum': 0 },
-		number_pregnant: { type: 'number' , 'minimum': 0 },
-		number_pwd: { type: 'number' , 'minimum': 0 },
-		number_sick: { type: 'number' , 'minimum': 0 },
-		sickness_present: { type: 'string' },
+    number_residents: { label: "Number of Residents", type: 'number', required: true , 'minimum': 1},
+		number_minors: { label: "Number of Minor Residents", type: 'number', 'minimum': 0 },
+		number_seniors: { label: "Number of Senior Residents", type: 'number' , 'minimum': 0 },
+		number_pregnant: { label: "Number of Pregnant Residents", type: 'number' , 'minimum': 0 },
+		number_pwd: { label: "Number of Persons with Disabilities", type: 'number' , 'minimum': 0 },
+		number_sick: { label: "Number of Sick Residents", type: 'number' , 'minimum': 0 },
+		sickness_present: { label: "Sicknesses Present", type: 'string' },
 		residency_status: {
+      label: "Residency Status",
 			type: 'string',
 			required: true,
 			enum: ['May-Ari', 'Umuupa'],
 		},
 		is_hoa_noa: {
+      label: "HOA Status",
 			type: 'string',
 			required: true,
 			minLength: 3,
 			maxLength: 3,
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
-		location_coordinates: { type: 'object', required: true },
-		location_link: { type: 'string', required: true },
-		household_address: { type: 'string', required: true, maxLength: 100 },
+    location_coordinates: { label: "Location Coordinates", type: 'object', required: true },
+		location_link: { label: "Location Link", type: 'string', required: true },
+		household_address: { label: "Household Address", type: 'string', required: true, maxLength: 100 },
 		household_material: {
+      label: "Household Material",
 			type: 'string',
 			required: true,
 			enum: [
@@ -272,39 +280,42 @@ const VALIDATION_RULES = {
 				'Natural',
 			],
 		},
-		landslide_risk: { type: 'string', required: true },
-		household_phase: { type: 'string', required: true },
-		earthquake_risk: { type: 'string', required: true },
-		fire_risk: { type: 'string', required: true },
-		flood_risk: { type: 'string', required: true },
-		storm_risk: { type: 'string', required: true },
-		nearest_evac: { type: 'string', required: true, maxLength: 255 },
+    landslide_risk: { label: "Landslide Risk", type: 'string', required: true },
+		household_phase: { label: "Household Phase", type: 'string', required: true },
+		earthquake_risk: { label: "Earthquake Risk", type: 'string', required: true },
+		fire_risk: { label: "Fire Risk", type: 'string', required: true },
+		flood_risk: { label: "Flood Risk", type: 'string', required: true },
+		storm_risk: { label: "Storm Risk", type: 'string', required: true },
+		nearest_evac: { label: "Nearest Evacuation", type: 'string', required: true, maxLength: 255 },
 	},
 	'sdece-official-TEST': {
-		partner_name: { type: 'string', required: true, maxLength: 255 },
-		partner_address: { type: 'string', required: true, maxLength: 255 },
-		partner_coordinates: { required: true },
+    partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
+		partner_address: { label: "Address of Host Partner", type: 'string', required: true, maxLength: 255 },
+		partner_coordinates: { label: "Partner Coordinates", required: true },
 		partner_contact_name: {
+      label: "Name of Contact Person",
 			type: 'string',
 			required: true,
 			maxLength: 255,
 		},
 		partner_contact_number: {
+      label: "Number of Contact Person",
 			type: 'string',
 			required: true,
 			minLength: 13,
 			maxLength: 13,
-			regex: /^[0-9 ]+$/,
+			regex: /^[0-9]+$/,
 		},
-		partner_email: { type: 'string', required: true, maxLength: 127 },
-		activity_name: { type: 'string', required: true },
-		activity_nature: { type: 'string', required: true, maxLength: 255 },
-		activity_date: { type: 'date', required: true },
-		additional_partnership: { type: 'string', maxLength: 255 },
-		organization_unit: { type: 'string', maxLength: 127 },
-		ADMU_office: { type: 'string', required: true, maxLength: 127 },
-		ADMU_contact_name: { type: 'string', required: true, maxLength: 255 },
+    partner_email: { label: "Email of Contact Person / Partner", type: 'string', required: true, maxLength: 127 },
+		activity_name: { label: "Activity Name", type: 'string', required: true },
+		activity_nature: { label: "Nature of Activity", type: 'string', required: true, maxLength: 255 },
+		activity_date: { label: "Date of Partnership", type: 'date', required: true, regex: /^\d{4}-\d{2}-\d{2}$/, },
+		additional_partnership: { label: "Additional Partnership", type: 'string', maxLength: 255 },
+		organization_unit: { label: "Organization Unit", type: 'string', maxLength: 127 },
+		ADMU_office: { label: "Name of ADMU Office", type: 'string', required: true, maxLength: 127 },
+		ADMU_contact_name: { label: "Name of Ateneo Contact Person", type: 'string', required: true, maxLength: 255 },
 		ADMU_email: {
+      label: "Email of Ateneo Contact Person",
 			type: 'string',
 			required: true,
 			required: true,
@@ -312,30 +323,33 @@ const VALIDATION_RULES = {
 		},
 	},
 	'sdece-official': {
-		partner_name: { type: 'string', required: true, maxLength: 255 },
-		partner_address: { type: 'string', required: true, maxLength: 255 },
-		partner_coordinates: { required: true },
+    partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
+		partner_address: { label: "Address of Host Partner", type: 'string', required: true, maxLength: 255 },
+		partner_coordinates: { label: "Partner Coordinates", required: true },
 		partner_contact_name: {
+      label: "Name of Contact Person",
 			type: 'string',
 			required: true,
 			maxLength: 255,
 		},
 		partner_contact_number: {
+      label: "Number of Contact Person",
 			type: 'string',
 			required: true,
 			minLength: 13,
 			maxLength: 13,
-			regex: /^[0-9 ]+$/,
+			regex: /^[0-9]+$/,
 		},
-		partner_email: { type: 'string', required: true, maxLength: 127 },
-		activity_name: { type: 'string', required: true },
-		activity_nature: { type: 'string', required: true, maxLength: 255 },
-		activity_date: { type: 'date', required: true },
-		additional_partnership: { type: 'string', maxLength: 255 },
-		organization_unit: { type: 'string', maxLength: 127 },
-		ADMU_office: { type: 'string', required: true, maxLength: 127 },
-		ADMU_contact_name: { type: 'string', required: true, maxLength: 255 },
+    partner_email: { label: "Email of Contact Person / Partner", type: 'string', required: true, maxLength: 127 },
+		activity_name: { label: "Activity Name", type: 'string', required: true },
+		activity_nature: { label: "Nature of Activity", type: 'string', required: true, maxLength: 255 },
+		activity_date: { label: "Date of Partnership", type: 'date', required: true, regex: /^\d{4}-\d{2}-\d{2}$/, },
+		additional_partnership: { label: "Additional Partnership", type: 'string', maxLength: 255 },
+		organization_unit: { label: "Organization Unit", type: 'string', maxLength: 127 },
+		ADMU_office: { label: "Name of ADMU Office", type: 'string', required: true, maxLength: 127 },
+		ADMU_contact_name: { label: "Name of Ateneo Contact Person", type: 'string', required: true, maxLength: 255 },
 		ADMU_email: {
+      label: "Email of Ateneo Contact Person",
 			type: 'string',
 			required: true,
 			required: true,
@@ -485,127 +499,71 @@ export function editEntry(inp_obj, docId) {
 export function validateData(collectionName, data) {
 	const rules = VALIDATION_RULES[collectionName];
 	var errors = [];
-	const fieldLabels = {
-		'activity_name': 'Activity Name',
-		'activity_nature': 'Nature of Activity',
-		'activity_date': 'Date of Partnership',
-		'additional_partnership': 'Additional Partnership',
-		'organization_unit': 'Organization Unit',
-		'partner_name': 'Name of Host Partner',
-		'partner_address': 'Address of Host Partner',
-		'partner_contact_name': 'Name of Contact Person',
-		'partner_contact_number': 'Number of Contact Person',
-		'partner_email': 'Email of Contact Person / Partner',
-		'partner_coordinates': 'Partner Coordinates',
-		'ADMU_office': 'Name of Office',
-		'ADMU_contact_name': 'Name of Ateneo Contact Person',
-		'ADMU_email': 'Email of Ateneo Contact Person'
-	};
 
 	for (const field in rules) {
 		const rule = rules[field];
 		const value = data[field];
-		const fieldLabel = fieldLabels[field] || field;
+		const fieldLabel = rule.label;
+    console.log(fieldLabel);
 
-		// Check for required field
-		if (
-			rule.required &&
-			(value == undefined || value == null || value == '' || 
-				value == ' RISK: ' || String(value).startsWith(' RISK:') ) // checks if risk for buklod tao is empty
-		) {
-			errors.push(`${fieldLabel} is required.`);
-			continue;
-		}
+    // Required Test
+    const IS_EMPTY = value == undefined || value == null || value == ''
+    if ( 
+      (rule.required && IS_EMPTY)|| 
+      (!rule.required && IS_EMPTY)
+    ) {
+      if (rule.required) {
+        errors.push(`${fieldLabel} is required.`);
+      }
+      continue;
+    } 
 
-		// else {
-		// 	errors.push("Field is valid!");
-		// }
+    // this is at the beginning so that if it's not required, it doesn't check the rest of
+    // the rules. 
 
-		// Skip type validation if not required
-		if (
-			!rule.required &&
-			(value == undefined || value == null || value == '')
-		) {
-			continue;
-		}
+    const MIN_LENGTH_TEST = rule.minLength && typeof value == 'string' && value.length < rule.minLength
+    // this will stay here until sdece team implements front-end validation of phone
+    // number
 
-		if (rule.type) {
-			if (rule.type === 'date') {
-				const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-				if (!dateRegex.test(value)) {
-					errors.push(
-						`${fieldLabel} must be a valid date in YYYY-MM-DD format.`
-					);
-					continue;
-				}
+    // Map of Validation Tests
+    const VALIDATION_TEST = new Map([
+      ["date_test", rule.type === "date" && isNaN(new Date(value).getTime())],
+      ["type_test", rule.type && typeof value != rule.type],
+      ["min_length_test", MIN_LENGTH_TEST],
+      ["min_value_test", rule.minimum !== undefined && typeof value === 'number' && value < rule.minimum], 
+      ["max_length_test", rule.maxLength && typeof value == 'string' && value.length > rule.maxLength], 
+      ["regex_test", rule.regex && !rule.regex.test(value)],
+    ]);
 
-				const date = new Date(value);
-				if (isNaN(date.getTime())) {
-					errors.push(`${fieldLabel} must be a valid date.`);
-					continue;
-				}
-			} else if (typeof value != rule.type) {
+    // Map of Error Messages
+    const ERROR_MESSAGES = new Map([
+      ["date_test", `${fieldLabel} must be a valid date.`],
+      ["type_test", `${fieldLabel} must be of type ${rule.type}. type is ${value}`],
+      ["min_length_test", `${fieldLabel} must be at least ${rule.minLength} characters long.`],
+      ["min_value_test", `${fieldLabel} must be at least ${rule.minimum}.`],
+      ["max_length_test", `${fieldLabel} cannot exceed ${rule.maxLength} characters.`],
+      ["regex_test",  `${fieldLabel} is invalid.`],
+    ])
+
+
+
+    for (const x of VALIDATION_TEST.keys()) {
+      if (VALIDATION_TEST.get(x)) {
+        errors.push(ERROR_MESSAGES.get(x));
+        break;
+      }
+    }
+
+    // This is holdover code until the sdece team can implement frontend validation
+		if (MIN_LENGTH_TEST && field === 'partner_contact_number') {
 				errors.push(
-					`${fieldLabel} must be of type ${rule.type}. type is ${value}` //checking for the type of value in location coordinates
+					`${fieldLabel} must be at least ${rule.minLength} characters long and in the form 09XXXXXXXXX.`
 				);
-				continue;
-			}
-		}
-
-		// Check for minimum length
-		if (
-			rule.minLength &&
-			typeof value == 'string' &&
-			value.length < rule.minLength
-		) {
-			if (field === 'partner_contact_number') {
-				errors.push(
-					`${fieldLabel} must be at least ${rule.minLength} characters long and in the form 09XX XXX XXXX.`
-				);
-
-			} else {
-				errors.push(
-					`${fieldLabel} must be at least ${rule.minLength} characters long.`
-				);
-			}
-
 			continue;
 		}
 
-		// Check for minimum value
-		if (
-			rule.minimum !== undefined &&
-			typeof value === 'number' &&
-			value < rule.minimum
-		) {
-			errors.push(`${fieldLabel} must be at least ${rule.minimum}.`);
-			continue;
-		}
-
-
-		// Check for maximum length
-		if (
-			rule.maxLength &&
-			typeof value == 'string' &&
-			value.length > rule.maxLength
-		) {
-			errors.push(
-				`${fieldLabel} cannot exceed ${rule.maxLength} characters.`
-			);
-			continue;
-		}
-
-		// Check for regular expression pattern
-		if (rule.regex && !rule.regex.test(value)) {
-			errors.push(`${fieldLabel} is invalid.`);
-			continue;
-		}
-
-		// Check for enumerated values
 		if (rule.enum && !rule.enum.includes(value)) {
-			errors.push(
-				`${fieldLabel}' must be one of ${rule.enum.join(',')}.`
-			);
+			errors.push(`${fieldLabel}' must be one of ${rule.enum.join(', ')}.`);
 			continue;
 		}
 
