@@ -211,7 +211,7 @@ partnersArray.forEach((partner) => {
           editBtn.addEventListener('click', function() {
             const modal = document.getElementById('partnerModal');
             var editFormModal = document.getElementById('editModal');
-            editFormModal.style.display = 'block';
+            editFormModal.style.display = 'flex';
             modal.style.display = 'none';
             populateEditForm(doc, editFormModal)
           })

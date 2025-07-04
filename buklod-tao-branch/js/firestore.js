@@ -355,7 +355,7 @@ function showModal(partner) {
   // When the user clicks the button, open the modal
   if(openEditForm) {
     openEditForm.onclick = function () {
-      editFormModal.style.display = 'block';
+      editFormModal.style.display = 'flex';
       modal.style.display = 'none';
       populateEditForm(partner, editFormModal)
     };
