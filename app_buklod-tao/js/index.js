@@ -55,6 +55,8 @@ function onPinClick(doc) {
       ${doc.contact_number||''}
     </div>
     <div class="popup-section">
+      <div class="popup-label">Number of Residents</div>
+      <div class="popup-value">${doc.number_residents||doc.num_residents||0}</div>
       <div class="popup-label">Residency Status</div>
       <div class="popup-value">${doc.residency_status||''}</div>
       <div class="popup-label">Part of HOA/NOA</div>
@@ -64,9 +66,6 @@ function onPinClick(doc) {
     </div>
     <div class="popup-section" style="margin-top:1.2rem;">
       <div class="popup-label risk-header">
-        <span style="display:inline-flex;align-items:center;">
-          <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"currentColor\" style=\"width:1.1em;height:1.1em;color:#181c26;fill:#181c26;vertical-align:middle;\"><path d=\"M11.9999 13.1714L16.9497 8.22168L18.3639 9.63589L11.9999 15.9999L5.63599 9.63589L7.0502 8.22168L11.9999 13.1714Z\"></path></svg>
-        </span>
         Risk Levels
       </div>
       <div class="risk-cards">
@@ -75,6 +74,48 @@ function onPinClick(doc) {
         <div class="risk-card ${flood.level ? 'risk-'+flood.level.toLowerCase() : ''}"><div class="risk-type">Flood</div><div>${riskBadge(flood.level)}</div><div class="risk-desc">${flood.desc}</div></div>
         <div class="risk-card ${landslide.level ? 'risk-'+landslide.level.toLowerCase() : ''}"><div class="risk-type">Landslide</div><div>${riskBadge(landslide.level)}</div><div class="risk-desc">${landslide.desc}</div></div>
         <div class="risk-card ${storm.level ? 'risk-'+storm.level.toLowerCase() : ''}"><div class="risk-type">Storm</div><div>${riskBadge(storm.level)}</div><div class="risk-desc">${storm.desc}</div></div>
+      </div>
+    </div>
+    <div class="popup-section" style="margin-top:1.2rem;">
+      <div class="popup-label risk-header">
+        Residents
+      </div>
+      <div class="residents-breakdown">
+        <div class="resident-item">
+          <div class="resident-label">Total</div>
+          <div class="resident-count">${doc.number_residents||doc.num_residents||0}</div>
+        </div>
+        <div class="resident-divider"></div>
+        <div class="resident-item">
+          <div class="resident-label">Minors</div>
+          <div class="resident-count">${doc.number_minors||doc.num_residents_minor||0}</div>
+        </div>
+        <div class="resident-item">
+          <div class="resident-label">Adults</div>
+          <div class="resident-count">${doc.number_adult || (() => {
+            const total = doc.num_residents || doc.number_residents || 0;
+            const minors = doc.num_residents_minor || doc.number_minors || 0;
+            const seniors = doc.num_residents_senior || doc.number_seniors || 0;
+            const adults = total - minors - seniors;
+            return adults >= 0 ? adults : 0;
+          })()}</div>
+        </div>
+        <div class="resident-item">
+          <div class="resident-label">Seniors</div>
+          <div class="resident-count">${doc.number_seniors||doc.num_residents_senior||0}</div>
+        </div>
+        <div class="resident-item">
+          <div class="resident-label">PWD</div>
+          <div class="resident-count">${doc.number_pwd||doc.num_residents_pwd||0}</div>
+        </div>
+        <div class="resident-item">
+          <div class="resident-label">Sick</div>
+          <div class="resident-count">${doc.number_sick||doc.num_residents_sick||0}</div>
+        </div>
+        <div class="resident-item">
+          <div class="resident-label">Pregnant</div>
+          <div class="resident-count">${doc.number_pregnant||doc.num_residents_preg||0}</div>
+        </div>
       </div>
     </div>
   </div>`;

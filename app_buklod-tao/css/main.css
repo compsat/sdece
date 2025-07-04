@@ -837,9 +837,43 @@ button.collapsible {
   margin-left: 0.1em;
 }
 
+.residents-breakdown {
+  margin-top: 0.8em;
+}
+
+.resident-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6em 0;
+  font-family: 'Geist', sans-serif;
+}
+
+.resident-label {
+  font-size: 1.05em;
+  font-weight: 600;
+  color: #888ea8;
+}
+
+.resident-count {
+  font-size: 1.1em;
+  font-weight: 700;
+  color: #181c26;
+  min-width: 2em;
+  text-align: right;
+}
+
+.resident-divider {
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 0.4em 0;
+}
+
 .popup-card {
   min-width: 370px;
   max-width: 460px;
+  max-height: 500px;
+  overflow-y: auto;
 }
 
 /* Restore global popup width to not affect household detail popups */
