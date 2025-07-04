@@ -402,7 +402,7 @@ document.getElementById('download-report').addEventListener('click', async () =>
 				h.residency_status || '',
 				h[riskType] || '',
 				h[riskType + '_description'] || '',
-				h.house_material || ''
+				h.household_material || ''
 			]);
 		});
 
@@ -455,6 +455,7 @@ document.getElementById('download-report').addEventListener('click', async () =>
 	const masterData = [masterHeaders];
 
 	allHouseholds.forEach(h => {
+    debugger;
 		const row = [
 			h.household_name || '',
 			h.household_address || '',
@@ -470,7 +471,7 @@ document.getElementById('download-report').addEventListener('click', async () =>
 			h.number_pregnant || 0,
 			...riskTypes.map(r => h[r] || ''),
 			...riskTypes.map(r => h[r + '_description'] || ''),
-			h.house_material || ''
+			h.household_material || ''
 		];
 		masterData.push(row);
 	});
