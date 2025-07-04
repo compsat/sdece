@@ -1,0 +1,208 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('globals.css');
+
+.main {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	height: 100vh;
+	position: relative;
+}
+
+.side-nav {
+	background-color: var(--custom-light-gray);
+	width: 480px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	position: relative;
+}
+
+.side-nav-header {
+	position: sticky;
+	top: 0;
+	width: 100%;
+	background-color: var(--custom-medium-gray);
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+		0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.search-bar-container {
+	height: 5rem;
+	padding-left: 0.75rem;
+	padding-right: 0.75rem;
+	background-color: white;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+/* search bar itself */
+.search-bar {
+	background-color: var(--custom-medium-gray);
+	font-size: 1.5rem;
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	border-radius: 1rem;
+	overflow: hidden;
+	padding-top: 0.75rem;
+	padding-bottom: 0.75rem;
+	padding-left: 2rem;
+	padding-right: 2rem;
+}
+
+.search-input-field {
+	border: none;
+	background-color: var(--custom-medium-gray);
+	outline: none;
+	box-shadow: none;
+	width: 100%;
+	font-family: 'Hind';
+	font-size: 1.25rem;
+}
+
+.search-bar-btn-container {
+	background: none;
+	display: flex;
+	flex-direction: row;
+	justify-content: end;
+	align-items: center;
+}
+
+.search-btn {
+	width: 2rem;
+	height: 2rem;
+	stroke: var(--custom-dark-gray);
+	border: none;
+}
+
+.main-container {
+	width: 100%;
+	height: 100vh;
+	overflow-y: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+.main-header {
+	height: 5rem;
+	padding-left: 2.25rem;
+	padding-right: 2.25rem;
+	background-color: var(--darkbg);
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+/* logout icon */
+.logout-btn {
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+	padding-top: 0.75rem;
+	padding-bottom: 0.75rem;
+	padding-left: 1.5rem;
+	padding-right: 1.5rem;
+	background-color: var(--lightbg);
+	font-family: 'Montserrat';
+	font-weight: bold;
+	font-size: 1.25rem;
+	color: white;
+	border-radius: 0.5rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  margin-left: auto;
+}
+
+.logout-btn:hover {
+	transform: scale(1.01);
+}
+
+.logout-icon {
+	width: 1.5rem;
+	height: 1.5rem;
+	margin-right: 0.5rem;
+}
+
+.map-container {
+	display: flex;
+	flex: 1 1 0%;
+}
+
+.entries {
+	background-color: var(--custom-light-gray);
+	width: 100%;
+}
+
+li.accordion {
+	cursor: pointer;
+	padding-top: 1.5rem;
+	padding-bottom: 1.5rem;
+	padding-left: 2rem;
+	padding-right: 2rem;
+	border-bottom: 1px solid var(--custom-gray);
+	width: 100%;
+}
+
+li.accordion:hover {
+	background-color: #f0f0f0;
+}
+
+.partnerDiv.highlight {
+	background-color: #dbdbdb;
+}
+
+.partner-popup {
+	font-family: 'Montserrat';
+	cursor: pointer;
+  font-weight: 700;
+	width: 100%;
+	text-align: center;
+	font-size: medium;
+	border: none;
+	outline: none;
+	color: var(--darkbg);
+	align-items: center;
+}
+
+.leaflet-popup-close-button {
+	display: none !important;
+}
+
+.name {                           /* Name of each entry in list [Partner Name] */
+  text-decoration: none;
+  color: #387181;
+  font-family: Montserrat;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 750;
+  line-height: 110%;
+  letter-spacing: 0.36px;
+}
+
+.address {                        /* Address of each entry in list [Partner Address] */
+  color: #a0a0a0;
+  margin-top: 10px;
+  text-overflow: ellipsis;
+  font-family: Hind;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%; /* 16.8px */
+  letter-spacing: 0.28px;
+}
+
+.activity {
+  color: #2f2f2f;
+  text-overflow: ellipsis;
+  font-family: Hind;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 110%;
+  letter-spacing: 0.28px;
+}

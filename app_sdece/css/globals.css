@@ -1,0 +1,14 @@
+/* Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Hind:wght@300;400;500;600;700&display=swap");
+
+/* Color Definition */
+:root {
+	--darkbg: #387181;
+	--lightbg: #3d97af;
+	--custom-black: #2f2f2f;
+	--custom-gray: #a0a0a0;
+	--custom-dark-gray: #979797;
+	--custom-medium-gray: #f6f6f6;
+	--custom-light-gray: #fcfcfc;
+	--custom-red: #d64747;
+}
