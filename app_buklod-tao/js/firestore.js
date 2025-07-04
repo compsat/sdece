@@ -161,10 +161,11 @@ export function populateEditForm(partner, editFormModal) {
     }
     
     if (data.includes('risk') && !data.includes('description')) {
-      // splits ":" in case its still there (test set only curently)
-      // splits " " to keep the value (this is due to some values in the test set being formatted as "LEVEL RISK")
-      var risk = partner[data].split(':')[0].split(' ')[0].toLowerCase()
-      editForm.getElementById(data).value = risk;
+      const risk = partner[data]?.toUpperCase().trim();
+      const selectField = editForm.getElementById(data);
+      if (selectField) {
+        selectField.value = risk;
+      }
       
     }
   }
