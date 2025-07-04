@@ -1,5 +1,5 @@
-// FIRESTORE DATABASE
-
+// FIRESTORE DATABASE\
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 import {
 	getFirestore,
 	collection,
@@ -13,6 +13,7 @@ import {
 	GeoPoint,
 	Timestamp
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+
 import {
 	getCollection,
 	setCollection,
@@ -20,12 +21,30 @@ import {
 	SDECE_RULES_TEST,
 	getDocIdByPartnerName,
 	validateData,
-	addEntry,
-	editEntry
+	editEntry,
+	addEntry
 } from '/js/firestore_UNIV.js';
+
 import { addListeners, map, getDivContent } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
+
 // Your Firestore code here
+const firebaseConfig = {
+  apiKey: 'AIzaSyA8QWgic_hjbDL-EYIkvSRRII_yfTRdtOQ',
+  authDomain: 'discs-osci-prj.firebaseapp.com',
+  projectId: 'discs-osci-prj',
+  storageBucket: 'discs-osci-prj.appspot.com',
+  messagingSenderId: '601571823960',
+  appId: '1:601571823960:web:1f1278ecb86aa654e6152d',
+  measurementId: 'G-9N9ELDEMX9',
+};
+var collection_value = 'sdece-official'
+
+initializeApp(firebaseConfig);
+const db = getFirestore();
+setCollection(collection_value);
+const colRef = getCollection();
+let partnersArray = [];
 
 // Import the functions you need from the SDKs you need
 //import { initializeApp } from "firebase/app";
@@ -214,7 +233,7 @@ getDocs(col_ref)
 			const nameDiv = document.createElement('div');
 			const addressDiv = document.createElement('div');
 			const activityDiv = document.createElement('div');
-
+			
 			containerDiv.addEventListener('click', function () {
 				marker.openPopup();
 				map.panTo(
@@ -448,8 +467,14 @@ export function showModal(partner) {
 			activityDatesDiv.innerHTML =
 				'<b>Date/s of Partnership</b>' +
 				'<p class="pm-detailed-info">' +
-				activity.activity_date +
-				'</p>'; 
+				(activity.activity_date?.toDate?.()
+					? activity.activity_date.toDate().toLocaleDateString('en-PH', {
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric',
+					})
+					: 'N/A') +
+				'</p>'; //this field might become an array in the future
 
 			activityOfficeDiv.innerHTML =
 				'<b class="ao-header">Ateneo Office Oversight</b>' +
@@ -638,7 +663,7 @@ addFormSubmitButton.addEventListener('click', function () {
 		}
 
 		// close the save modal
-		addFormiframeDocument.style.display = 'none';
+		addFormiframe.style.display = 'none';
 	}
 
 	function displayErrors(errors) {
