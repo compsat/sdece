@@ -112,21 +112,38 @@
           }
 
         collections.addEventListener("change", function () {
-            const SELECTED = collections.options[collections.selectedIndex].value;
-            setCollection(SELECTED);
-            setCurrentBranchCookie("current_branch", SELECTED);
-            location.reload();
-        });
+        const SELECTED = collections.value;
+        console.log(SELECTED)
 
-          if (getCurrentBranchCookie() === null) {
-            setCollection(DB_RULES_AND_DATA[0][0]);
-            setCurrentBranchCookie("current_branch", DB_RULES_AND_DATA[0][0]);
-            loadJsCssFiles(getCurrentBranchCookie());
+        setCurrentBranchCookie("current_branch", SELECTED);
+
+        if (
+            SELECTED.includes("buklod-official") ||  // Map switching between root index and app_buklod_tao
+            SELECTED.includes("buklod-official-TEST")
+          ) {
+            window.location.href = "app_buklod-tao/index.html";
+            console.log("switched");
           } else {
-            setCollection(getCurrentBranchCookie());
-            collections.value = getCurrentBranchCookie();
-            loadJsCssFiles(getCurrentBranchCookie());
+            setCollection(SELECTED);
+            location.reload();
           }
+
+      });
+
+
+      const DEFAULT_BRANCH = "sdece-official";
+
+      if (getCurrentBranchCookie() === null) {
+        setCollection(DEFAULT_BRANCH);
+        setCurrentBranchCookie("current_branch", DEFAULT_BRANCH);
+        loadJsCssFiles(DEFAULT_BRANCH);
+        collections.value = DEFAULT_BRANCH; // Keep dropdown in sync
+      } else {
+        setCollection(getCurrentBranchCookie());
+        collections.value = getCurrentBranchCookie();
+        loadJsCssFiles(getCurrentBranchCookie());
+      }
+
         </script>
       </head>
 
