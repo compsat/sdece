@@ -185,7 +185,7 @@ export function createJsCssFiles(file_path) {
 }
 
 // Loads the JS CSS Files
-export function loadJsCssFiles(file_path) {
+export function loadJsCssFiles() {
 	// script if javascript, css if link or none;
 	for (let rule of JS_CS_ENGINE) {
 		if (rule[0] == getCollection().id) {

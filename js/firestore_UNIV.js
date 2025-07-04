@@ -389,7 +389,6 @@ export const BUKLOD_RULES_TEST = DB_RULES_AND_DATA[1];
 export const SDECE_RULES = DB_RULES_AND_DATA[2];
 export const SDECE_RULES_TEST = DB_RULES_AND_DATA[3];
 
-
 export function setCollection(collection_name) {
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_name) {
