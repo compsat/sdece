@@ -72,6 +72,7 @@ initializeApp(firebaseConfig);
 export const DB = getFirestore();
 
 var collection_reference = null;
+var rule_reference = null;
 
 //export let partnersArray = [];
 
@@ -363,18 +364,12 @@ export const BUKLOD_RULES_TEST = DB_RULES_AND_DATA[1];
 export const SDECE_RULES = DB_RULES_AND_DATA[2];
 export const SDECE_RULES_TEST = DB_RULES_AND_DATA[3];
 
-// export function setCollection(collection_name){
-//     for(let rule of DB_RULES_AND_DATA ){
-//         if (rule[0] === collection_name){
-//             collection_reference = collection( DB, collection_name );
-//         }
-//     }
-// }
 
 export function setCollection(collection_name) {
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_name) {
 			collection_reference = collection(DB, collection_name);
+      rule_reference = rule
 		}
 	}
 }
@@ -386,131 +381,108 @@ export function getCollection() {
 export function getDocIdByPartnerName(partner_name) {
 	const endName = partner_name.replace(/\s/g, '\uf8ff');
 
-	//rule loop
-	for (let rule of DB_RULES_AND_DATA) {
-		if (collection_reference.id === rule[0]) {
-			return getDocs(
-				query(
-					collection_reference,
-					where(rule[1], '>=', partner_name), // let's wait for Luigi's standardization. IF_ELSE nalang muna
-					where(rule[1], '<=', partner_name + endName)
-				)
-			)
-				.then((querySnapshot) => {
-					if (!querySnapshot.empty) {
-						// Assuming there is only one document with the given partner name
-						const doc = querySnapshot.docs[0];
-						return doc.id;
-					} else {
-						return null;
-					}
+  return getDocs(
+    query(
+      collection_reference,
+      where(rule_reference[1], '>=', partner_name), // let's wait for Luigi's standardization. IF_ELSE nalang muna
+      where(rule_reference[1], '<=', partner_name + endName)
+    )
+  )
+    .then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        // Assuming there is only one document with the given partner name
+        const doc = querySnapshot.docs[0];
+        console.log(doc);
+        return doc.id;
+      } else {
+        return null;
+      }
 				})
 				.catch((error) => {
 					console.error('Error getting documents: ', error);
 					return null;
 				});
 		}
-	}
-}
 
 export function getDocsByPartnerName(partner_name) {
 	const endName = partner_name.replace(/\s/g, '\uf8ff');
 
-	//rule loop
-	for (let rule of DB_RULES_AND_DATA) {
-		if (collection_reference.id === rule[0]) {
-			return getDocs(
-				query(
-					collection_reference,
-					where(rule[1], '>=', partner_name),
-					where(rule[1], '<=', partner_name + endName)
-				)
-			)
-				.then((querySnapshot) => {
-					if (!querySnapshot.empty) {
-						const docs = querySnapshot.docs;
-						return docs;
-					} else {
-						return null;
-					}
-				})
-				.catch((error) => {
-					console.error('Error getting documents: ', error);
-					return null;
-				});
-		}
-	}
+  return getDocs(
+    query(
+      collection_reference,
+      where(rule_reference[1], '>=', partner_name),
+      where(rule_reference[1], '<=', partner_name + endName)
+    )
+  )
+    .then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        const docs = querySnapshot.docs;
+        console.log(docs);
+        return docs;
+      } else {
+        return null;
+      }
+    })
+    .catch((error) => {
+      console.error('Error getting documents: ', error);
+      return null;
+    });
 }
 
 export function getDocByID(docId) {
-	for (let rule of DB_RULES_AND_DATA) {
-		if (collection_reference.id === rule[0]) {
-			const DOC_REFERENCE = doc(DB, rule[0], docId);
-			let docObj = {};
-			return getDoc(DOC_REFERENCE).then((doc) => {
-				docObj = doc;
-				return docObj;
-			});
-		}
-	}
+  const DOC_REFERENCE = doc(DB, rule_reference[0], docId); let docObj = {};
+  return getDoc(DOC_REFERENCE).then((doc) => {
+    docObj = doc;
+    return docObj;
+  });
 }
 
 export function addEntry(inp_obj) {
 
-	for (let rule of DB_RULES_AND_DATA) {
-		if (rule[0] === collection_reference.id) {
-			let input = {}; // contents depend on the rule engine
-			for (let i = 0; i < Object.keys(inp_obj).length; i++) {
-				input[rule[2][i]] = inp_obj[rule[2][i]];
-				console.log(input);
-			}
-			addDoc(collection_reference, input)
-				.then((docRef) => {
-					console.log(docRef);
-					alert("You may now reload the page for your addition to reflect on this page");
+  let input = {}; // contents depend on the rule engine
+  for (let i = 0; i < Object.keys(inp_obj).length; i++) {
+    input[rule_reference[2][i]] = inp_obj[rule_reference[2][i]];
+    console.log(input);
+  }
+  addDoc(collection_reference, input)
+    .then((docRef) => {
+      console.log(docRef);
+      alert("You may now reload the page for your addition to reflect on this page");
 
-				})
-				.catch((error) => {
-					console.error('Error adding document: ', error);
-					alert("Error uploading new activity. Please try again");
-				});
-			break;
-		}
-	}
+    })
+    .catch((error) => {
+      console.error('Error adding document: ', error);
+      alert("Error uploading new activity. Please try again");
+    });
 }
 
 export function editEntry(inp_obj, docId) {
-	for (let rule of DB_RULES_AND_DATA) {
-		if (rule[0] === collection_reference.id) {
-			const DOC_REFERENCE = doc(DB, rule[0], docId);
-			updateDoc(DOC_REFERENCE, inp_obj)
-				.then(() => {
-					alert("You may now reload the page for your edit to reflect on this page");
-				})
-				.catch((error) => {
-					console.error('Error adding document: ', error);
-					alert("Error uploading the edited activity. Please try again");
-				});
-			break;
-		}
-	}
+  const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
+  updateDoc(DOC_REFERENCE, inp_obj)
+    .then(() => {
+      alert("You may now reload the page for your edit to reflect on this page");
+    })
+    .catch((error) => {
+      console.error('Error adding document: ', error);
+      alert("Error uploading the edited activity. Please try again");
+    });
 }
 
 export function validateData(collectionName, data) {
-	const rules = VALIDATION_RULES[collectionName];
-	var errors = [];
+  const rules = VALIDATION_RULES[collectionName];
+  var errors = [];
 
-	for (const field in rules) {
-		const rule = rules[field];
-		const value = data[field];
-		const fieldLabel = rule.label;
+  for (const field in rules) {
+    const rule = rules[field];
+    const value = data[field];
+    const fieldLabel = rule.label;
     console.log(fieldLabel);
 
     // Required Test
     const IS_EMPTY = value == undefined || value == null || value == ''
     if ( 
       (rule.required && IS_EMPTY)|| 
-      (!rule.required && IS_EMPTY)
+        (!rule.required && IS_EMPTY)
     ) {
       if (rule.required) {
         errors.push(`${fieldLabel} is required.`);
