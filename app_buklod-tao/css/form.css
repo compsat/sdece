@@ -1,284 +1,462 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+/* Modern Form Design System - Buklod Tao */
+/* Uses Geist font family and clean, professional styling */
 
-div.container {
-    margin: auto;
-    width: 50%;
-}
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
 
-/* container for each input field */
-div.inputContainer {
-    margin-top: 2px;
-    margin-bottom: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-
-/* Specific to the checkbox container for the HOA / NOA option */
-div.inputContainer.checkboxContainer {
-    display: flex;
-}
-
-/* Specific to the select input for residency status */
-#residencyStatus {
-    width: 400px;
-}
-
-/* Styling for the label column specific for the HOA / NOA option */
-div.labelColumn {
-    flex: 1;
-    display: flex;
-    justify-content: flex-start;
-}
-
-/* Styling for the checkbox column specific for the HOA / NOA option */
-div.checkboxColumn {
-    display: flex;
-    justify-content: left;
-    padding-right: 180px;
-}
-
-/* CSS for "Add Household" modal */
-.formModal {
-    background-color: rgb(107, 106, 106, 0.4);
-    align-items: center;
-    position: fixed;
-    z-index: 9990;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-    padding: 20px;
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
-.formModalHeader {
-    position: fixed;
-    z-index: 9991;
-    padding: 1px 18.3px;
-    width: 95%;
-    background-color: #fcfcfc;
-    border-radius: 8px 0px 0px 0px;
+body {
+    font-family: 'Geist', sans-serif;
+    background: white;
+    color: #1f2937;
+    line-height: 1.5;
+}
+
+/* Modal Container */
+.modal-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Modal Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px;
+    border-bottom: 1px solid #e5e7eb;
+    background: white;
+}
+
+.modal-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.modal-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 4px 0 0 0;
+}
+
+/* Close Button */
+.close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.close-btn:hover {
+    background-color: #f3f4f6;
+}
+
+.close-btn svg {
+    width: 24px;
+    height: 24px;
+    color: #6b7280;
+}
+
+/* Modal Content */
+.modal-content {
+    padding: 32px;
+    max-height: 70vh;
     overflow-y: auto;
-    position: relative;
+}
+
+/* Sections */
+.section {
+    margin-bottom: 40px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 28px;
+    gap: 12px;
+}
+
+.section-icon {
+    width: 20px;
+    height: 20px;
+    color: #374151;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.section-description {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 8px 0 0 0;
+}
+
+/* Form Layout */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.form-grid.single {
+    grid-template-columns: 1fr;
+}
+
+.form-grid.triple {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.form-grid.quad {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Form Elements */
+.form-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 12px;
+}
+
+.form-input, .form-select, .form-textarea {
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Geist', sans-serif;
+    background: white;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 40px;
+    appearance: none;
+}
+
+.form-input[readonly] {
+    background-color: #f9fafb;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+/* Risk Assessment Grid */
+.risk-grid {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 20px;
+    align-items: end;
+    margin-bottom: 20px;
+}
+
+.risk-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    padding-bottom: 8px;
+}
+
+/* Modal Footer */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 24px 32px;
+    border-top: 1px solid #e5e7eb;
+    background: #fafbfc;
+}
+
+/* Buttons */
+.btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Geist', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.btn-secondary {
+    background: white;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+
+.btn-secondary:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.btn-primary {
+    background: #1f2937;
+    color: white;
+    border: 1px solid #1f2937;
+}
+
+.btn-primary:hover {
+    background: #111827;
+    border-color: #111827;
+}
+
+.btn-primary:disabled {
+    background: #9ca3af;
+    border-color: #9ca3af;
+    cursor: not-allowed;
+}
+
+/* Error Messages */
+.error-messages {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 16px;
+    display: none;
+}
+
+.error-messages p {
+    color: #dc2626;
+    font-size: 14px;
+    margin: 4px 0;
+}
+
+.error-messages.show {
+    display: block;
+}
+
+/* Legacy Support for Old Form Elements */
+/* Keep some compatibility with existing forms */
+.formModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px;
+    border-bottom: 1px solid #e5e7eb;
+    background: white;
+}
+
+.formHeader {
+    font-size: 24px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+    font-family: 'Geist', sans-serif;
 }
 
 .formModalContent {
-    padding: 10px 32px;
-    padding-bottom: 32px;
-    height: calc(97% - 140px);
-    max-width: 100%;
-    max-height: 73%;
-    background-color: #fcfcfc;
-    font-family: Hind;
-    font-size: 16px;
-    font-style: normal;
+    padding: 32px;
+    max-height: 70vh;
     overflow-y: auto;
+    font-family: 'Geist', sans-serif;
 }
 
-/* form footer (empty) */
 .formModalFooter {
-    height: 8px;
-    max-width: 100%;
-    background-color: #fcfcfc;
-    border-radius: 0px 0px 8px 8px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 24px 32px;
+    border-top: 1px solid #e5e7eb;
+    background: #fafbfc;
 }
 
-/* form header */
-.formHeader {
-    font-family: "Montserrat";
-    font-weight: 700;
-    font-size: 32px;
-    letter-spacing: 0.5px;
-    color: #387181;
-}
-
-/* form sub-headers */
 .subHeader {
-    font-family: "Montserrat";
-    font-weight: 700;
-    font-size: 20px;
-    color: #3D97AF;
-    letter-spacing: 0.5px;
-}
-
-/* input field labels */
-label.form {
-    font-family: "Montserrat";
-    font-weight: 400;
     font-size: 18px;
-    letter-spacing: 0.5px;
-    color: #979797;
+    font-weight: 600;
+    color: #111827;
+    margin: 32px 0 24px 0;
+    font-family: 'Geist', sans-serif;
 }
 
-/* specific to disaster risk level (uses both selects and inputs) labels */
-label.disasterForm {
-    font-family: "Montserrat", sans-serif;
-    font-weight: 400;
-    font-size: 18px;
-    letter-spacing: 0.5px;
-    color: #979797;
-    width: 100px;
+/* Legacy form elements - updated to match new design */
+.inputContainer {
+    margin-bottom: 20px;
 }
 
-/* CSS for select elements */
-select.attribs {
+label.form, label.disasterForm {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 8px;
     display: block;
-    width: 125px;
-    height: 40px;
-    box-sizing: border-box;
-    font-family: 'Hind'; font-size: 18px;
-    border-style: double;
-    border-color: rgb(196, 196, 196);
-    border-width: 0.5px;
-    border-radius: 4px;
-    padding-inline: 5px;
+    font-family: 'Geist', sans-serif;
 }
 
-/* CSS for select elements that should be long */
-select.longAttribs {
-    display: block;
-    width: 400px;
-    height: 40px;
-    box-sizing: border-box;
-    font-family: 'Hind'; font-size: 18px;
-    border-style: double;
-    border-color: rgb(196, 196, 196);
-    border-width: 0.5px;
-    border-radius: 4px;
-    padding-inline: 5px;
+input.attribs, select.attribs, select.longAttribs {
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Geist', sans-serif;
+    background: white;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+    max-width: 400px;
 }
 
-/* when hovering over input field */
-select.attribs:hover {
-    border-color: #000000;
-}
-
-/* CSS for input elements */
-input.attribs {
-    display: block;
-    width: 400px;
-    height: 40px;
-    box-sizing: border-box;
-    font-family: 'Hind'; font-size: 18px;
-    border-style: double;
-    border-color: rgb(196, 196, 196);
-    border-width: 0.5px;
-    border-radius: 4px;
-    padding-inline: 15px;
-}
-
-/* when hovering over input field */
-input.attribs:hover {
-    border-color: #000000;
-}
-
-/* when typing in an input field */
-input.attribs:focus {
+input.attribs:focus, select.attribs:focus, select.longAttribs:focus {
     outline: none;
-    border-bottom: 3px solid #3D97AF;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* for placeholders in input fields */
-input.attribs::placeholder {
-    font-family: "Source Sans Pro";
-    font-style: italic;
+input.attribs:hover, select.attribs:hover, select.longAttribs:hover {
+    border-color: #9ca3af;
 }
 
-/* container for Save and Delete buttons */
-.buttonContainer {
-    margin-top: 20px;
-    width: 100%;
-    text-align: center;
-}
-
-/* CSS for buttons */
-button.form {
-    align-items: center;
-    width: 100%;
-    height: 48px;
-    font-family: "Montserrat";
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+select.attribs, select.longAttribs {
     cursor: pointer;
-    outline: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 40px;
+    appearance: none;
 }
 
-/* specific to delete button */
-button.clear {
-    background-color: white;
-    color: #D64747;
-    border-width: 1px;
+button.form, button.confirm, button.clear {
+    padding: 12px 24px;
     border-radius: 8px;
-    border-color: #D64747;
-    transition: transform 0.1s ease-out;
-}
-
-/* when hovering cursor over delete button */
-button.clear:hover {
-    background-color: #ededed;
-    transform: translateY(-2px);
-}
-
-/* specific to save button */
-button.confirm {
-    background-color: #49A2BB;
-    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Geist', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
     border: none;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    transition: transform 0.1s ease-out;
+    margin: 8px 0;
 }
 
-/* when hovering over save button */
+button.confirm {
+    background: #1f2937;
+    color: white;
+    border: 1px solid #1f2937;
+}
+
 button.confirm:hover {
-    background-color: #2d839b;
-    transform: translateY(-2px);
+    background: #111827;
+    border-color: #111827;
 }
 
-/* for close button */
-.closeForm {
+button.clear {
+    background: white;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+
+button.clear:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.closeForm, .closeEditForm {
     background: none;
     border: none;
-    padding: 0;
     cursor: pointer;
-    display: inline-flex;
+    padding: 8px;
+    border-radius: 6px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    z-index: 9992;
-    margin-right: 10px;
-    margin-top: 10px;
+    transition: background-color 0.2s;
 }
 
-.closeForm svg {
-    width: 40px;
-    height: 40px;
-    fill: #aaaaaa;
-    transition: fill 0.2s;
+.closeForm:hover, .closeEditForm:hover {
+    background-color: #f3f4f6;
 }
 
-.closeForm:hover svg,
-.closeForm:focus svg {
-    fill: #000000;
+.closeForm svg, .closeEditForm svg {
+    width: 24px;
+    height: 24px;
+    color: #6b7280;
 }
 
-.closeEditForm {
-    color: #aaaaaa;
-    float: right;
-    padding-top: 15px;
-    font-size: 40px;
-    font-weight: bold;
+/* Responsive Design */
+@media (max-width: 768px) {
+    .modal-content {
+        padding: 24px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .risk-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .modal-footer {
+        padding: 16px 24px;
+        flex-direction: column-reverse;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .modal-header {
+        padding: 16px 24px;
+    }
+
+    .modal-title {
+        font-size: 20px;
+    }
 }
 
-.closeEditForm:hover,
-.closeEditForm:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }

@@ -6,8 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NSTP Hazard Mapping</title>
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-  <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
+
+  <!-- Import Geist from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
 
   <!--Load Leaflet from CDN-->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
@@ -34,6 +37,7 @@
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/form.css">
   <script type="module" src="js/firestore.js"></script>
+  <script type="module" src="/components/SearchBar.js"></script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -113,6 +117,7 @@
         <div class="side-nav-header-top">
           <h1 class="map-title">Buklod Tao</h1>
         </div>
+        <search-bar id="search-bar-component"></search-bar>
         <div class="actions-container">
           <button class="action-btn">Filter</button>
           <button class="action-btn">Sort</button>
@@ -120,70 +125,79 @@
         </div>
       </div>
       <div class="partners-header">
-        <span id="partners-count">PARTNERS</span>
+        <span id="partners-count">HOUSEHOLDS</span>
       </div>
       <div class="entries">
-        <ul id="locationList"></ul>
+        <ul id="locationList" style="width: 100%"></ul>
       </div>
-
-      <!-- Login/Logout header -->
-      <div class="topBar">
-        <!-- Map Switching -->
-         <div class="layer-toggle-container">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  class="bi bi-layers layers-icon"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M8.235 1.559a.5.5 0 0 0-.47 0l-7.5 4a.5.5 0 0 0 0 .882L3.188 8 .264 9.559a.5.5 0 0 0 0 .882l7.5 4a.5.5 0 0 0 .47 0l7.5-4a.5.5 0 0 0 0-.882L12.813 8l2.922-1.559a.5.5 0 0 0 0-.882zm3.515 7.008L14.438 10 8 13.433 1.562 10 4.25 8.567l3.515 1.874a.5.5 0 0 0 .47 0zM8 9.433 1.562 6 8 2.567 14.438 6z"
-                  />
-                </svg>
-                <select
-                  name="collections"
-                  id="collections"
-                  class="layer-toggle"
-                ></select>
-              </div>
-        <!-- Logout Button -->
-        <button class="buttonLogout"><img class="logoutIcon" src="./img/logout.256x256.png" alt="logout"> Logout</button>
-      
-      </div>
+    </div>
+    <!-- Right container containing map -->
+    <div class="main-container">
+      <div id="map" class="map-container"></div>
     </div>
   </div>
 
-  <!-- Modals of Entries -->
+  <!-- MODALS -->
+
+  <!-- Partner Modal: This is the modal that shows up when clicking on a household entry in the side navigation panel OR the pop-up of a map marker pin. -->
   <div id="partnerModal" class="modal">
-    <!-- Modal Header: includes household owner -->
-    <div class="modalHeader">
-      <h1 id="modalHeader" class="modalName"></h1>
-      <span class="close">&times;</span>
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <p id="modalHeader"></p>
     </div>
-    <!-- Modal Content: content of the entries -->
-    <div class="modalContent">
-      <p id="modalContent"></p>
+
+    <!-- Modal Content -->
+    <div class="modal-content" id="modalContent">
+      <!-- NOTE: This is where all household modal content should go -->
     </div>
-    <!-- Modal footer: contains edit and delete buttons -->
-    <div class="modalFooter">
-      <div class="modalLine">
-        <!--
-        <button class="modalButton" type="submit" id="submit_form" name="submit_form" style="color:#D64747">Delete &nbsp;&nbsp;<img src="./img/delete.png" alt="delete" style="height: 20px; width: 20px;"></button>
-        <button class="modalButton" id="editHousehold" name="submit_form" style="color:#3D97AF">Edit   &nbsp;&nbsp;<img src="./img/edit.png" alt="edit" style="height: 20px; width: 20px;"></button>
-        -->
-      </div>
-    </div>
+
+    <!-- Buttons -->
+    <span class="modal-button">
+      <!-- Edit -->
+      <button class="edit-button partner-hover">
+        Edit
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="modal-button-icon"
+        >
+          <path
+            d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          ></path>
+          <polygon
+            fill="none"
+            points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          ></polygon>
+        </svg>
+      </button>
+    </span>
   </div>
 
-  <!-- Modal for add household form -->
-  <div id="addModal" class="formModal" style="display: none;">
-    <iframe src="html/addloc.html" class="formIframe"></iframe>
+  <!-- Add Modal: This is the modal that shows up when adding a new household -->
+  <div class="modal-screen" id="addModal">
+    <iframe src="./addloc.html" class="form-modal"></iframe>
   </div>
 
-  <!-- Modal for edit household form -->
-  <div id="editModal" class="formModal" style="display: none;">
-    <iframe src="html/editloc.html" class="formIframe"></iframe>
+  <!-- Edit Modal: This is the modal that shows up when clicking on the Edit button -->
+  <div class="modal-screen" id="editModal">
+    <iframe src="./editloc.html" class="form-modal"></iframe>
+  </div>
+
+  <!-- Message Modal: This is the modal that displays a message. Used to indicate form submission success -->
+  <div class="modal-screen" id="messageModal">
+    <iframe src="./sdece/html/message_modal.html" class="message-modal"></iframe>
   </div>
 
   <!--script for map-->
@@ -192,95 +206,92 @@
 
   <!--script for search bar-->
   <script>
-    function searchEntries() {
-      var input = document.querySelector('.searchBar').value.toUpperCase();
-      var ul = document.getElementById("locationList");
-      var li = ul.getElementsByTagName('li');
-      for (var i = 0; i < li.length; i++) {
-        var a = li[i].getElementsByTagName("a")[0];
-        var txtValue = a.textContent || a.innerText;
-        if (txtValue.toUpperCase().indexOf(input) > -1) {
-          li[i].style.display = "";
-        } else {
-          li[i].style.display = "none";
+    // This hides the Add Activity modal when the user submits the form
+    window.addEventListener('message', function (event) {
+      if (
+        event.data &&
+        event.data.type === 'addlocFormSuccess'
+      ) {
+        // Handle successful form submission event here
+        const addModal =
+          document.getElementById('addModal');
+        addModal.classList.add('hidden'); // Hide the iframe
+
+        const messageModal =
+          document.getElementById('messageModal');
+        messageModal.style.display = 'flex'; //display success message
+      }
+
+      if (
+        event.data &&
+        event.data.type === 'mainModalFormSuccess'
+      ) {
+        // Handle successful form submission event here
+        const messageModal =
+          document.getElementById('messageModal');
+        messageModal.style.display = 'flex'; //display success message
+
+        setTimeout(() => {
+          messageModal.style.display = 'none';
+        }, 3000);
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchBar = document.getElementById('search-bar-component');
+      searchBar.addEventListener('search', (e) => {
+        const searchTerm = e.detail;
+        
+        let container = document.getElementById('locationList');
+        let partnerContainers = container.getElementsByClassName('partnerDiv');
+
+        for (let i = 0; i < partnerContainers.length; i++) {
+          let nameElement = partnerContainers[i].getElementsByClassName('name')[0];
+          let name = nameElement.textContent.toLowerCase();
+
+          if (name.includes(searchTerm)) {
+            partnerContainers[i].style.display = 'flex';
+          } else {
+            partnerContainers[i].style.display = 'none';
+          }
         }
+      });
+    });
+
+    // Function to hide the div containing the iframe
+    function hideModalContainer(modal) {
+      var iframe = document.getElementById(modal);
+      if (iframe) {
+        iframe.style.display = 'none';
       }
     }
 
-					// This hides the Add Activity modal when the user submits the form
-					window.addEventListener('message', function (event) {
-						if (
-							event.data &&
-							event.data.type === 'addlocFormSuccess'
-						) {
-							// Handle successful form submission event here
-							const addModal =
-								document.getElementById('addModal');
-							addModal.classList.add('hidden'); // Hide the iframe
-
-							const messageModal =
-								document.getElementById('messageModal');
-							messageModal.style.display = 'flex'; //display success message
-						}
-					});
-
-					// Function to hide the div containing the iframe
-					function hideModalContainer(modal) {
-						var iframe = document.getElementById(modal);
-						if (iframe) {
-							iframe.style.display = 'none';
-						}
-					}
-
-					// Add an event listener to handle messages from the iframe
-					window.addEventListener('message', function (event) {
-						if (event.data === 'closeAddModal') {
-							hideModalContainer('addModal');
-						}
-						if (event.data === 'closeEditModal') {
-							hideModalContainer('editModal');
-						}
-						if (event.data === 'closeMainModal') {
-							hideModalContainer('mainModal');
-						}
-						if (event.data === 'closeMessageModal') {
-							hideModalContainer('messageModal');
-						}
-						// TEST: remove later
-						if (event.data === 'testMessageModal') {
-							console.log('testing message modal');
-							const messageModal =
-								document.getElementById('messageModal');
-							messageModal.style.display = 'flex';
-						}
-					});
-  </script>
-
-
-<!--script for add a location on map click-->
-<script>
-  document.addEventListener('DOMContentLoaded', (event) => {
-    document.body.addEventListener('click', function(event) {
-      if (event.target.matches('.addButton')) {
-        // Prevent default behavior if necessary
-        event.preventDefault();
-
-        // Get the modal
-        var modal = document.getElementById("addModal");
-
-        // Show the modal
-        modal.style.display = "block";
+    // Add an event listener to handle messages from the iframe
+    window.addEventListener('message', function (event) {
+      if (event.data === 'closeAddModal') {
+        hideModalContainer('addModal');
       }
-
-      // Close the modal when the close button is clicked
-      if (event.target.matches('.close')) {
-        var modal = document.getElementById("addModal");
-        modal.style.display = "none";
+      if (event.data === 'closeEditModal') {
+        hideModalContainer('editModal');
+      }
+      if (event.data === 'closeMainModal') {
+        hideModalContainer('mainModal');
+      }
+      if (event.data === 'closeMessageModal') {
+        hideModalContainer('messageModal');
+      }
+      // TEST: remove later
+      if (event.data === 'testMessageModal') {
+        console.log('testing message modal');
+        const messageModal =
+          document.getElementById('messageModal');
+        messageModal.style.display = 'flex';
       }
     });
-  });
-</script>
+  </script>
 
+  <!--script for map-->
+  <script type="module" src="js/index.js"></script>
 </body>
 
 </html>

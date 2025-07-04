@@ -3,6 +3,7 @@
 body {
   margin: 0;
   padding: 0;
+  font-family: 'Geist', sans-serif;
 }
 
 .main {
@@ -38,7 +39,8 @@ body {
 
 .side-nav {
 	background-color: #ffffff;
-	width: 400px;
+	max-width: 320px;
+	width: 100%;
 	overflow-y: scroll;
 	overflow-x: hidden;
 	position: relative;
@@ -51,19 +53,21 @@ body {
 	width: 100%;
 	background-color: #ffffff;
 	padding: 1.5rem;
+	box-sizing: border-box;
 	z-index: 10;
 }
 
 .side-nav-header-top {
 	display: flex;
 	align-items: center;
-	margin-bottom: 1.5rem;
+	margin-bottom: 1rem;
 }
 
 .map-title {
 	font-size: 1.25rem;
 	font-weight: 500;
 	color: #111827;
+	font-family: 'Geist', sans-serif;
 }
 
 .actions-container {
@@ -80,6 +84,7 @@ body {
 	font-size: 0.875rem;
 	color: #374151;
 	cursor: pointer;
+	font-family: 'Geist', sans-serif;
 }
 
 .action-btn:hover {
@@ -89,6 +94,8 @@ body {
 .partners-header {
 	padding: 0 1.5rem 0.75rem;
 	border-bottom: 1px solid #eeeeee;
+	max-width: 100%;
+	box-sizing: border-box;
 }
 
 #partners-count {
@@ -96,6 +103,7 @@ body {
 	color: #6b7280;
 	font-weight: 500;
 	letter-spacing: 0.05em;
+	font-family: 'Geist', sans-serif;
 }
 
 .entries {
@@ -105,11 +113,10 @@ body {
 
 .accordion {
 	cursor: pointer;
-	padding-top: 0.5rem;
-	padding-bottom: 1rem;
-	padding-left: 2rem;
-	padding-right: 2rem;
+	padding: 0.5rem 1rem 1rem;
+	max-width: 75%;
 	width: 100%;
+	box-sizing: border-box;
 	/* border-bottom: 1px solid #eeeeee; */
 }
 
@@ -143,15 +150,16 @@ body {
 /* search bar itself */
 .searchBar {
   height: 45px;
-  margin: -15px -15px -15px -15px;
-  padding: 15px 32px;
-  width: 107%;
+  margin: 0;
+  padding: 15px 1rem;
+  max-width: 100%;
+  width: 100%;
   box-sizing: border-box;
   border-radius: 12px;
   background-color: #F6F6F6;
   border: transparent;
   background-position: calc(100% - 16px) center;
-  font-family: 'Geist';
+  font-family: 'Geist', sans-serif;
   font-size: 18px;
   letter-spacing: 0.5px;
   background-image: url("../img/search-icon.png");
@@ -185,7 +193,7 @@ li {
 
 .heading {
   color: #387181;
-  font-family: Garamond;
+  font-family: 'Geist', sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 700;
@@ -358,7 +366,9 @@ ul.accordion {
 
 li.accordion {
   display: flex;
-  padding: 24px 32px;
+  padding: 0.75rem;
+  max-width: 100%;
+  box-sizing: border-box;
   /* border-bottom: 0.5px solid #bdbdbd; */
 }
 
@@ -369,7 +379,7 @@ a.accordion {
 .activity {
   color: #2f2f2f;
   text-overflow: ellipsis;
-  font-family: Hind;
+  font-family: 'Geist', sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -378,7 +388,7 @@ a.accordion {
 }
 h1.entries {
   color: #000;
-  font-family: Geist;
+  font-family: 'Geist', sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -423,7 +433,7 @@ h1.entries {
   width: 100%;
   padding: 0px 24px;
   background-color: #fcfcfc;
-  font-family: Hind;
+  font-family: 'Geist', sans-serif;
   font-size: 16px;
   font-style: normal;
   max-height: calc(80% - 140px);
@@ -450,7 +460,7 @@ h1.entries {
 
 /* modal text */
 .modalLabel {
-  font-family: 'Geist';
+  font-family: 'Geist', sans-serif;
   font-size: 16px;
   color: #000;
   font-weight: 750;
@@ -461,7 +471,7 @@ h1.entries {
 .modalName {
   position: relative;
   color: #387181;
-  font-family: Geist;
+  font-family: 'Geist', sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 750;
@@ -489,7 +499,7 @@ h1.entries {
 
 .modalText {
   color: #a0a0a0;
-  font-family: Hind;
+  font-family: 'Geist', sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -511,7 +521,7 @@ button.collapsible {
   width: 100%;
   height: 50px;
   color: #3D97AF;
-  font-family: 'Geist';
+  font-family: 'Geist', sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 750;
@@ -596,7 +606,7 @@ button.collapsible {
 }
 
 .leafletContent {
-  font-family: Hind;
+  font-family: 'Geist', sans-serif;
   font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.32px;
@@ -636,7 +646,7 @@ button.collapsible {
   gap: 8px;
   border-radius: 8px;
   border: 0;
-  font-family: Geist;
+  font-family: 'Geist', sans-serif;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -653,7 +663,7 @@ button.collapsible {
 .partnerValue {
   overflow: hidden;
   text-overflow: ellipsis;
-  font-family: Hind;
+  font-family: 'Geist', sans-serif;
   font-size: 12px;
   font-style: normal;
   line-height: 110%;
@@ -663,7 +673,7 @@ button.collapsible {
 
 .partnerLabel {
   color: #3d97af;
-  font-family: Hind;
+  font-family: 'Geist', sans-serif;
   font-style: normal;
   font-weight: 600;
   line-height: 110%;
@@ -674,7 +684,7 @@ button.collapsible {
 
 .partnerActivity {
   color: #2f2f2f;
-  font-family: Hind;
+  font-family: 'Geist', sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -696,6 +706,32 @@ button.collapsible {
 
 .modal-screen {
 	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 9999;
+	justify-content: center;
+	align-items: center;
+}
+
+.form-modal {
+	width: 90%;
+	max-width: 600px;
+	height: 80%;
+	border: none;
+	border-radius: 8px;
+	background-color: white;
+}
+
+.message-modal {
+	width: 400px;
+	height: 200px;
+	border: none;
+	border-radius: 8px;
+	background-color: white;
 }
 
 .evac-marker {
