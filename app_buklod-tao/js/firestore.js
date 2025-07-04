@@ -19,6 +19,8 @@ import {
   BUKLOD_RULES_TEST, 
   validateData, 
   editEntry,
+  addEntry,
+  getCoordinates,
   getDocIdByPartnerName,
 } from '../../js/firestore_UNIV.js';
 // Your Firestore code here
@@ -152,18 +154,6 @@ const loadData = async() => {
 
 await loadData();
 
-export function addEntry(data) {
-  data.forEach((entry) => {
-    addDoc(colRef, entry)
-      .then((docRef) => {
-        console.log('Document written with ID: ', docRef.id);
-      })
-      .catch((error) => {
-        console.error('Error adding document: ', error);
-      });
-  });
-}
-
 export function populateEditForm(partner, editFormModal) {
   console.log("populating form");
   var iframe = editFormModal.getElementsByClassName('formIframe')[0]
@@ -208,7 +198,7 @@ export function populateEditForm(partner, editFormModal) {
   // console.log(editFormModal.getElementsByClassName('formIframe')[0].contentWindow.document.getElementById('household_name'))
 }
 
-export function submitForm(){
+export function submitEditForm(){
   console.log("Form is submitting!");
   var collated_input = {}; 
   var validate_errors =[];
@@ -290,3 +280,52 @@ export function submitForm(){
         }
     }
  }
+export function submitAddForm(){
+  var collatedInput = {};
+
+  for (let i = 0; i < BUKLOD_RULES_TEST[2].length; i++) {
+
+      let fieldName = BUKLOD_RULES_TEST[2][i];
+      let inputValue = document.getElementById(fieldName).value;
+
+      if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick' || fieldName == 'number_seniors') {
+          collatedInput[fieldName] = Number(inputValue);
+      } else if (fieldName == 'location_coordinates') {
+          console.log(inputValue)
+          console.log(typeof inputValue)
+          const geoPoint = getCoordinates(inputValue);
+          collatedInput['location_coordinates'] = geoPoint;
+      } else {
+          collatedInput[fieldName] = inputValue;
+      }
+  }
+
+  const errors = validateData("buklod-official-TEST", collatedInput);
+
+  if (errors.length > 0) {
+      displayErrors(errors);
+  } else {
+      addEntry(collatedInput);
+      window.parent.document.getElementById('addModal').style.display = 'none';
+  };
+
+  function displayErrors(errors) {
+  let errorDiv = document.getElementById('error_messages');
+
+  if (errorDiv) {
+
+      errorDiv.innerHTML = '';
+
+      if (errors.length > 0) {
+          for (let error of errors) {
+              let errorParagraph = document.createElement('p');
+              errorParagraph.textContent = error;
+              errorDiv.appendChild(errorParagraph);
+          }
+      }
+      } else {
+          console.error("Error: Couldn't find element with ID 'error_messages'.");
+      }
+  }
+
+}

@@ -225,17 +225,13 @@
     <div class="formModalFooter"></div>
 
     <script type="module">
-
-        
-        import { editEntry, setCollection, BUKLOD_RULES_TEST, getDocIdByPartnerName, getDocByID } from "/js/firestore_UNIV.js";
-        import {submitForm} from '../js/firestore.js';
-
-        document.getElementById("submit_form").addEventListener("click", submitForm);
-        
+        //Call function from firestore.js to edit household values from input fields after pressing submit button
+        import {editEntry, setCollection, BUKLOD_RULES_TEST, getDocIdByPartnerName, getDocByID} from "/js/firestore_UNIV.js";
+        import {submitEditForm} from '../js/firestore.js';
+        document.getElementById("submit_form").addEventListener("click", submitEditForm);
     </script>
 
     <script>
-        
         function resetForm() {
             let messageText = "Are you sure you want to clear the form?";
             if (confirm(messageText) == true) {
@@ -249,7 +245,6 @@
                         field.value = '';
                     }
                 }
-
                 var selectFields = document.getElementsByTagName('select');
                 for (var i = 0; i < selectFields.length; i++) {
                 selectFields[i].selectedIndex = 0; 
