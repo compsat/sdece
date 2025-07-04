@@ -170,7 +170,7 @@ partnersArray.forEach((partner) => {
     var popupContent = onPinClick(doc);
     this_marker.bindPopup(popupContent);
     this_marker.on('popupopen', function(e) {
-        const editBtns = document.querySelectorAll('.editHousehold');
+        const editBtns = document.querySelectorAll('.popup-edit-btn');
         editBtns.forEach((btn) => {
           btn.addEventListener('click', function() {
             console.log('Edit button was clicked!');

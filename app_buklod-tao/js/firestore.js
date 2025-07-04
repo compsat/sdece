@@ -156,8 +156,12 @@ await loadData();
 
 export function populateEditForm(partner, editFormModal) {
   console.log("populating form");
-  var iframe = editFormModal.getElementsByClassName('formIframe')[0]
+  console.log(partner)
+  var iframe = editFormModal.getElementsByClassName('form-modal')[0]
+
   var editForm = iframe.contentWindow.document
+
+  console.log(editForm)
 
   console.log("Original name:", partner.household_name);
 
@@ -170,6 +174,7 @@ export function populateEditForm(partner, editFormModal) {
 
 
   for (var data in partner) {
+    console.log(data, ": ", partner[data])
     if (partner[data] instanceof Object){
       editForm.getElementById(data.toString()).value = partner[data]._lat + " " + partner[data]._long
     } 
@@ -191,11 +196,6 @@ export function populateEditForm(partner, editFormModal) {
       
     }
   }
-  // partner.forEach(data => {
-  // });
-  // console.log(partner.household_name)
-  // console.log(document)
-  // console.log(editFormModal.getElementsByClassName('formIframe')[0].contentWindow.document.getElementById('household_name'))
 }
 
 export function submitEditForm(){
