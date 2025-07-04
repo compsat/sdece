@@ -1,12 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8" />
-		<title>SDECE Activity Mapping</title>
-		<meta
-			name="viewport"
-			content="initial-scale=1,maximum-scale=1,user-scalable=no"
-		/>
+  <head>
+    <meta charset="utf-8" />
+    <title>SDECE Activity Mapping</title>
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
 
 		<!-- Import Geist from Google Fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -49,32 +49,46 @@
 		<link href="./main.css" rel="stylesheet" />
 		<script type="module" src="/components/SearchBar.js"></script>
 		<!-- <link href="./src/output.css" rel="stylesheet" /> -->
+        <!-- Load Esri Leaflet Geocoder from CDN -->
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.css"
+          integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+          crossorigin=""
+        />
+        <script
+          src="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.js"
+          integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
+          crossorigin=""
+        ></script>
+        <link href="./css/main.css" rel="stylesheet" />
+        <!-- <link href="./src/output.css" rel="stylesheet" /> -->
 
-		<!--<script type="module" src="js/firestore.js"></script>-->
+        <!--<script type="module" src="js/firestore.js"></script>-->
 
-		<!--  Module for the implementation of the Rules Engine for switching maps -->
-		<script type="module">
-			import {
-				setCollection,
-				getCollection,
-				DB_RULES_AND_DATA,
-			} from '/js/firestore_UNIV.js';
-			import {
-				readyField,
-				clearMarkers,
-				clearLocationList,
-				map,
-				loadJsCssFiles,
-				createJsCssFiles,
-			} from '/js/index_UNIV.js';
-			import {
-				getDocs,
-				query,
-			} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-			import {
-				getCurrentBranchCookie,
-				setCurrentBranchCookie,
-			} from '/cookies.js';
+        <!--  Module for the implementation of the Rules Engine for switching maps -->
+        <script type="module">
+          import {
+            setCollection,
+            getCollection,
+            DB_RULES_AND_DATA,
+          } from "/js/firestore_UNIV.js";
+          import {
+            readyField,
+            clearMarkers,
+            clearLocationList,
+            map,
+            loadJsCssFiles,
+            createJsCssFiles,
+          } from "/js/index_UNIV.js";
+          import {
+            getDocs,
+            query,
+          } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
+          import {
+            getCurrentBranchCookie,
+            setCurrentBranchCookie,
+          } from "/js/cookies.js";
 
 			const collections = document.getElementById('collections');
 			if (collections) collections.style.display = 'none';
@@ -274,41 +288,41 @@
 			</span>
 		</div>
 
-		<!-- Main Modal: This is the modal that shows up when pressing the main button in the side navigation panel. -->
-		<div class="modal-screen" id="mainModal">
-			<iframe
-				src="./sdece/html/main_modal.html"
-				class="main-modal"
-				id="mainModalIframe"
-			></iframe>
-		</div>
+        <!-- Main Modal: This is the modal that shows up when pressing the main button in the side navigation panel. -->
+        <div class="modal-screen" id="mainModal">
+          <iframe
+            src="/app_sdece/html/main_modal.html"
+            class="main-modal"
+            id="mainModalIframe"
+          ></iframe>
+        </div>
 
-		<!-- Add Modal: This is the modal that shows up when clicking on the '+' sign that is nested inside the Main Modal. This allows the user to add a new activity to the SDECE collections. -->
-		<div class="modal-screen" id="addModal">
-			<iframe
-				class="form-modal"
-				id="addModalHTML"
-				src="./sdece/html/addloc.html"
-			></iframe>
-		</div>
+        <!-- Add Modal: This is the modal that shows up when clicking on the '+' sign that is nested inside the Main Modal. This allows the user to add a new activity to the SDECE collections. -->
+        <div class="modal-screen" id="addModal">
+          <iframe
+            class="form-modal"
+            id="addModalHTML"
+            src="/app_sdece/html/addloc.html"
+          ></iframe>
+        </div>
 
-		<!-- Edit Modal: This is the modal that shows up when clicking on the Edit button that is nested within Partner Modal. This allows the user to edit an existing activity within the SDECE Collections. -->
-		<div class="modal-screen" id="editModal">
-			<iframe
-				id="editModal_iframe"
-				src="./sdece/html/editloc.html"
-				class="form-modal"
-				id="editModalHTML"
-			></iframe>
-		</div>
+        <!-- Edit Modal: This is the modal that shows up when clicking on the Edit button that is nested within Partner Modal. This allows the user to edit an existing activity within the SDECE Collections. -->
+        <div class="modal-screen" id="editModal">
+          <iframe
+            id="editModal_iframe"
+            src="/app_sdece/html/editloc.html"
+            class="form-modal"
+            id="editModalHTML"
+          ></iframe>
+        </div>
 
-		<!-- Message Modal: This is the modal that displays a message. Used to indicate form submission/deletion success -->
-		<div class="modal-screen" id="messageModal">
-			<iframe
-				src="./sdece/html/message_modal.html"
-				class="message-modal"
-			></iframe>
-		</div>
+        <!-- Message Modal: This is the modal that displays a message. Used to indicate form submission/deletion success -->
+        <div class="modal-screen" id="messageModal">
+          <iframe
+            src="/app_sdece/html/message_modal.html"
+            class="message-modal"
+          ></iframe>
+        </div>
 
 		<!-- SCRIPTS -->
 		<script>

@@ -217,6 +217,33 @@ li {
   color: #387181; /* Calypso */
 }
 
+.layer-toggle-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: start;
+	align-items: center;
+}
+
+.layer-toggle {
+	display: block;
+	width: auto;
+	font-family: 'Montserrat';
+	font-size: 1.125rem;
+	font-weight: bold;
+	border: none;
+	background-color: #387181;
+	color: #fcfcfc;
+	outline: none;
+	border: none;
+	box-shadow: none;
+	margin-left: 0.75rem;
+}
+
+.layers-icon {
+	fill: var(--custom-light-gray);
+}
+
+
 /* logout icon */
 .logoutIcon {
   height: 15px;

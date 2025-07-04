@@ -42,6 +42,9 @@ button {                                          /* Style for Buttons */
 button:hover {                                    /* Style for when cursor hovers over button */
   opacity: 0.8;
 }
+img {
+  height: 100px;
+}
 #error {                                          /* Style for error message [to be implemented] */
   color: red;
   margin-top: 10px;

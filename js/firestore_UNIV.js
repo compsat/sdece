@@ -62,15 +62,15 @@ export function getCoordinates(coordinates) {
 	return PARTNER_COORDINATES;
 }
 
-const SECRETS_PATH = "/secrets.json";
+const SECRETS_PATH = "../../js/secrets.json";
 const SECRETS_REQ = new Request(SECRETS_PATH);
 const SECRETS_RES = await fetch(SECRETS_REQ);
 const SECRETS = await SECRETS_RES.json();
 
 export const firebaseConfig = SECRETS.firebaseConfig;
 
-initializeApp(firebaseConfig);
-export const DB = getFirestore();
+var app = initializeApp(firebaseConfig);
+export const DB = getFirestore(app);
 
 var collection_reference = null;
 
@@ -101,10 +101,15 @@ export const DB_RULES_AND_DATA = [
 			'household_material',
 			'household_phase',
 			'landslide_risk',
+			'landslide_risk_description',
 			'earthquake_risk',
+			'earthquake_risk_description',
 			'fire_risk',
+			'fire_risk_description',
 			'flood_risk',
+			'flood_risk_description',
 			'storm_risk',
+			'storm_risk_description',
 			'nearest_evac',
 		],
 	],
@@ -129,10 +134,15 @@ export const DB_RULES_AND_DATA = [
 			'household_material',
 			'household_phase',
 			'landslide_risk',
+			'landslide_risk_description',
 			'earthquake_risk',
+			'earthquake_risk_description',
 			'fire_risk',
+			'fire_risk_description',
 			'flood_risk',
+			'flood_risk_description',
 			'storm_risk',
+			'storm_risk_description',
 			'nearest_evac',
 		],
 	],
@@ -188,7 +198,7 @@ const VALIDATION_RULES = {
 			required: true,
 			minLength: 11,
 			maxLength: 11,
-			regex: /^[0-9]+$/,
+			regex: /^09[0-9]{9}$/,
 		},
 		number_residents: { type: 'number', required: true , 'minimum': 1},
 		number_minors: { type: 'number', 'minimum': 0 },
@@ -223,12 +233,18 @@ const VALIDATION_RULES = {
 				'Natural',
 			],
 		},
+		
 		landslide_risk: { type: 'string', required: true },
-		household_phase: { type: 'string', required: true },
+		landslide_risk_description:{type: 'string', required: false},
 		earthquake_risk: { type: 'string', required: true },
+		earthquake_risk_description:{type: 'string', required: false},
 		fire_risk: { type: 'string', required: true },
+		fire_risk_description:{type: 'string', required: false},
 		flood_risk: { type: 'string', required: true },
+		flood_risk_description:{type: 'string', required: false},
 		storm_risk: { type: 'string', required: true },
+		storn_risk_description:{type: 'string', required: false},
+
 		nearest_evac: { type: 'string', required: true, maxLength: 255 },
 	},
 	'buklod-official': {
@@ -238,7 +254,7 @@ const VALIDATION_RULES = {
 			required: true,
 			minLength: 11,
 			maxLength: 11,
-			regex: /^[0-9]+$/,
+			regex: /^09[0-9]{9}$/,
 		},
 		number_residents: { type: 'number', required: true , 'minimum': 1},
 		number_minors: { type: 'number', 'minimum': 0 },
@@ -273,12 +289,19 @@ const VALIDATION_RULES = {
 				'Natural',
 			],
 		},
-		landslide_risk: { type: 'string', required: true },
 		household_phase: { type: 'string', required: true },
+
+		landslide_risk: { type: 'string', required: true },
+		landslide_risk_description:{type: 'string', required: false},
 		earthquake_risk: { type: 'string', required: true },
+		earthquake_risk_description:{type: 'string', required: false},
 		fire_risk: { type: 'string', required: true },
+		fire_risk_description:{type: 'string', required: false},
 		flood_risk: { type: 'string', required: true },
+		flood_risk_description:{type: 'string', required: false},
 		storm_risk: { type: 'string', required: true },
+		storn_risk_description:{type: 'string', required: false},
+
 		nearest_evac: { type: 'string', required: true, maxLength: 255 },
 	},
 	'sdece-official-TEST': {
@@ -293,11 +316,11 @@ const VALIDATION_RULES = {
 		partner_contact_number: {
 			type: 'string',
 			required: true,
-			minLength: 13,
-			maxLength: 13,
-			regex: /^[0-9 ]+$/,
+			minLength: 11,
+			maxLength: 11,
+			regex: /^09\d{9}$/
 		},
-		partner_email: { type: 'string', required: true, maxLength: 127 },
+		partner_email: { type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
 		activity_name: { type: 'string', required: true },
 		activity_nature: { type: 'string', required: true, maxLength: 255 },
 		activity_date: { type: 'date', required: true },
@@ -308,8 +331,9 @@ const VALIDATION_RULES = {
 		ADMU_email: {
 			type: 'string',
 			required: true,
-			required: true,
+			// required: true					redundant declaration
 			maxLength: 127,
+			regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/
 		},
 	},
 	'sdece-official': {
@@ -324,11 +348,11 @@ const VALIDATION_RULES = {
 		partner_contact_number: {
 			type: 'string',
 			required: true,
-			minLength: 13,
-			maxLength: 13,
-			regex: /^[0-9 ]+$/,
+			minLength: 11,
+			maxLength: 11,
+			regex: /^09\d{9}$/,
 		},
-		partner_email: { type: 'string', required: true, maxLength: 127 },
+		partner_email: { type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
 		activity_name: { type: 'string', required: true },
 		activity_nature: { type: 'string', required: true, maxLength: 255 },
 		activity_date: { type: 'date', required: true },
@@ -339,8 +363,9 @@ const VALIDATION_RULES = {
 		ADMU_email: {
 			type: 'string',
 			required: true,
-			required: true,
+			// required: true					redundant declaration
 			maxLength: 127,
+			regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/
 		},
 	},
 };
@@ -455,7 +480,9 @@ export function addEntry(inp_obj) {
 			return addDoc(collection_reference, input)
 				.then((docRef) => {
 					console.log(docRef);
-					return docRef; // Return the document reference for success handling
+					alert("You may now reload the page for your addition to reflect on this page");
+					window.parent.location.reload();
+
 				})
 				.catch((error) => {
 					console.error('Error adding document: ', error);
@@ -468,9 +495,11 @@ export function addEntry(inp_obj) {
 	return Promise.reject(new Error('Collection not found'));
 }
 
-export function editEntry(inp_obj, docId) {
+export function editEntry(inp_obj,docId) {
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_reference.id) {
+			console.log(inp_obj);
+			console.log("entered");
 			const DOC_REFERENCE = doc(DB, rule[0], docId);
 			updateDoc(DOC_REFERENCE, inp_obj)
 				.then(() => {
@@ -502,14 +531,42 @@ export function validateData(collectionName, data) {
 		'partner_coordinates': 'Partner Coordinates',
 		'ADMU_office': 'Name of Office',
 		'ADMU_contact_name': 'Name of Ateneo Contact Person',
-		'ADMU_email': 'Email of Ateneo Contact Person'
+		'ADMU_email': 'Email of Ateneo Contact Person',
+		'household_name': 'Household Name',
+		'contact_number': 'Contact Number',
+		'number_residents': 'Number of Residents',
+		'number_minors': 'Number of Minor Residents',
+		'number_seniors': 'Number of Senior Residents' ,
+		'number_pregnant': 'Number of Pregnant Residents',
+		'number_pwd': 'Number of PWD Residents',
+		'number_sick': 'Number of Sick Residents',
+		'sickness_present': 'Sickness Present',
+		'residency_status': 'Residency Status',
+		'is_hoa_noa': 'Is HOA/NOA',
+		'location_coordinates': 'Location Coordinates',
+		'location_link': 'Location Link',
+		'household_address': 'Household Address',
+		'household_material': 'Household Material',
+		'household_phase': 'Household Phase',
+		'landslide_risk': 'Landslide Risk',
+		'landslide_risk_description': 'Landslide Risk Description',
+		'earthquake_risk': 'Earthquake Risk',
+		'earthquake_risk_description': 'Earthquake Risk Description',
+		'fire_risk': 'Fire Risk',
+		'fire_risk_description': 'Fire Risk Description',
+		'flood_risk': 'Flood Risk',
+		'flood_risk_description': 'Flood Risk Description',
+		'storm_risk': 'Storm Risk',
+		'storm_risk_description': 'Storm Risk Description',
+		'nearest_evac': 'Nearest Evacuation Center',
 	};
 
 	for (const field in rules) {
 		const rule = rules[field];
 		const value = data[field];
 		const fieldLabel = fieldLabels[field] || field;
-
+		
+		console.log("entered validation");
 		// Check for required field
 		if (
 			rule.required &&
@@ -520,18 +577,14 @@ export function validateData(collectionName, data) {
 			continue;
 		}
 
-		// else {
-		// 	errors.push("Field is valid!");
-		// }
-
-		// Skip type validation if not required
 		if (
 			!rule.required &&
 			(value == undefined || value == null || value == '')
 		) {
 			continue;
 		}
-
+		
+		// Temp type check for geolocation here
 		if (rule.type) {
 			if (rule.type === 'date') {
 				const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
@@ -547,11 +600,15 @@ export function validateData(collectionName, data) {
 					errors.push(`${fieldLabel} must be a valid date.`);
 					continue;
 				}
-			} else if (typeof value != rule.type) {
+			} else if (typeof(value) != rule.type) {
 				errors.push(
-					`${fieldLabel} must be of type ${rule.type}. type is ${value}` //checking for the type of value in location coordinates
+					`${fieldLabel} must be of type ${rule.type}. type is ${typeof(value)}` //checking for the type of value in location coordinates
 				);
 				continue;
+			}
+			if (rule.type === 'object' && (isNaN(value._lat) || isNaN(value._long))){
+				console.log(rule.type);
+				errors.push(`${fieldLabel} must be a valid location`)
 			}
 		}
 
@@ -563,16 +620,10 @@ export function validateData(collectionName, data) {
 		) {
 			if (field === 'partner_contact_number') {
 				errors.push(
-					`${fieldLabel} must be at least ${rule.minLength} characters long and in the form 09XX XXX XXXX.`
+					`${fieldLabel} must be ${rule.minLength} characters long.`
 				);
 
-			} else {
-				errors.push(
-					`${fieldLabel} must be at least ${rule.minLength} characters long.`
-				);
-			}
-
-			continue;
+			} continue;
 		}
 
 		// Check for minimum value

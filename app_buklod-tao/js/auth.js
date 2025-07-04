@@ -7,7 +7,7 @@ import {
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
 
-const SECRETS_PATH = "./secrets.json";
+const SECRETS_PATH = "../js/secrets.json";
 const SECRETS_REQ = new Request(SECRETS_PATH);
 const SECRETS_RES = await fetch(SECRETS_REQ);
 const SECRETS = await SECRETS_RES.json();
