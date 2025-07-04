@@ -245,40 +245,44 @@ function onMapClick(e) {
   customPopup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
   popup = customPopup;
 
-  // Event listener for the Add Household button
-  var addButton = document.querySelector('.addButton');
-  addButton.addEventListener('click', function () {
-    const lat = this.getAttribute('data-lat');
-    const lng = this.getAttribute('data-lng');
+  // Event listener for the Add Household button using event delegation
+  setTimeout(() => {
+    var addButton = document.querySelector('.addButton');
+    if (addButton) {
+      addButton.addEventListener('click', function () {
+        const lat = this.getAttribute('data-lat');
+        const lng = this.getAttribute('data-lng');
 
-    var modal = document.getElementById('addModal');
+        var modal = document.getElementById('addModal');
 
-    // Display the modal
-    modal.style.display = 'flex';
+        // Display the modal
+        modal.style.display = 'flex';
 
-    // Set the coordinates in the iframe form
-    var iframe = modal.getElementsByTagName('iframe')[0];
-    var iframeDocument = iframe.contentWindow.document;
-    
-    // Wait for iframe to load then set coordinates
-    iframe.onload = function() {
-      var locationField = iframeDocument.getElementById('location_coordinates');
-      if (locationField) {
-        locationField.value = lat + ',' + lng;
-      }
-    };
-    
-    // If iframe is already loaded, set coordinates immediately
-    if (iframe.contentWindow.document.readyState === 'complete') {
-      var locationField = iframeDocument.getElementById('location_coordinates');
-      if (locationField) {
-        locationField.value = lat + ',' + lng;
-      }
+        // Set the coordinates in the iframe form
+        var iframe = modal.getElementsByTagName('iframe')[0];
+        var iframeDocument = iframe.contentWindow.document;
+        
+        // Wait for iframe to load then set coordinates
+        iframe.onload = function() {
+          var locationField = iframeDocument.getElementById('location_coordinates');
+          if (locationField) {
+            locationField.value = lat + ',' + lng;
+          }
+        };
+        
+        // If iframe is already loaded, set coordinates immediately
+        if (iframe.contentWindow.document.readyState === 'complete') {
+          var locationField = iframeDocument.getElementById('location_coordinates');
+          if (locationField) {
+            locationField.value = lat + ',' + lng;
+          }
+        }
+
+        // Close the popup after opening modal
+        map.closePopup();
+      });
     }
-
-    // Close the popup after opening modal
-    map.closePopup();
-  });
+  }, 100);
 }
 
 // Add message listener for iframe communication
