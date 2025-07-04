@@ -45,44 +45,9 @@ setCollection(collection_value);
 const colRef = getCollection();
 let partnersArray = [];
 
-/*
-export function getDocIdByPartnerName(partnerName) {
-  const endName = partnerName.replace(/\s/g, '\uf8ff');
-  return getDocs(
-    query(
-      colRef,
-      where('household_name', '>=', partnerName),
-      where('household_name', '<=', partnerName + endName)
-    )
-  )
-    .then((querySnapshot) => {
-      console.log(querySnapshot);
-      if (!querySnapshot.empty) {
-        // Assuming there is only one document with the given partner name
-        const doc = querySnapshot.docs[0];
-        return doc.id;
-      } else {
-        console.log('EMPTY: No matching document found.');
-        return null;
-      }
-    })
-    .catch((error) => {
-      console.error('Error getting documents: ', error);
-      return null;
-    });
-}*/
 
-export function getDocByID(docId) {
-  const docReference = doc(db, 'nstp-3', docId);
-  let docObj = {};
-  return getDoc(docReference).then((doc) => {
-    docObj = doc.data();
-    return docObj;
-  });
-}
 
-// get docs from firestore
-
+//Retrieve docs from firestore
 export function getPartnersArray() {
   return partnersArray;
 }
@@ -191,13 +156,9 @@ export function populateEditForm(partner, editFormModal) {
       
     }
   }
-  // partner.forEach(data => {
-  // });
-  // console.log(partner.household_name)
-  // console.log(document)
-  // console.log(editFormModal.getElementsByClassName('formIframe')[0].contentWindow.document.getElementById('household_name'))
 }
 
+// Retrieving, validating & storing changes made in addloc.html
 export function submitEditForm(){
   console.log("Form is submitting!");
   var collated_input = {}; 
@@ -279,7 +240,9 @@ export function submitEditForm(){
             console.error("Error: Couldn't find element with ID 'error_messages'.");
         }
     }
- }
+}
+
+// Retrieving, validating & storing changes made in editloc.html
 export function submitAddForm(){
   var collatedInput = {};
 
