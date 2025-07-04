@@ -174,7 +174,8 @@ export function populateEditForm(partner, editFormModal) {
 
 
   for (var data in partner) {
-    console.log(data, ": ", partner[data])
+    console.log(data)
+    console.log(partner[data])
     if (partner[data] instanceof Object){
       editForm.getElementById(data.toString()).value = partner[data]._lat + " " + partner[data]._long
     } 
@@ -188,12 +189,13 @@ export function populateEditForm(partner, editFormModal) {
       }
     }
     
-    if (data.includes('risk') && !data.includes('description')) {
+    if (data.includes('risk')) {
+      if (partner[data].includes('RISK')) {
       // splits ":" in case its still there (test set only curently)
       // splits " " to keep the value (this is due to some values in the test set being formatted as "LEVEL RISK")
-      var risk = partner[data].split(':')[0].split(' ')[0].toLowerCase()
+      var risk = partner[data].split(' ')[0]
       editForm.getElementById(data).value = risk;
-      
+      }     
     }
   }
 }

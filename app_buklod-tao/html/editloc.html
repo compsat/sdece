@@ -140,7 +140,7 @@
 
                     <div class="form-group">
                         <label class="form-label" for="contact_number">Contact Number</label>
-                        <input type="text" id="contact_number" name="contact_number" class="form-input" />
+                        <input type="text" id="contact_number" name="contact_number" class="form-input" maxlength="11"/>
                     </div>
 
                     <div class="form-group full-width">
@@ -156,10 +156,9 @@
                     <div class="form-group">
                         <label class="form-label" for="residency_status">Residency Status</label>
                         <select id="residency_status" name="residency_status" class="form-select">
-                            <option value="">Select status</option>
-                            <option value="Owner">Owner</option>
-                            <option value="Renter">Renter</option>
-                            <option value="Caretaker">Caretaker</option>
+                            <option value="" disabled selected>Select status</option>
+                            <option value="May-Ari">May-Ari</option>
+                            <option value="Umuupa">Umuupa</option>
                         </select>
                     </div>
 
@@ -175,17 +174,14 @@
 
                     <div class="form-group">
                         <label class="form-label" for="household_material">House Materials</label>
-                        <input type="text" id="household_material" name="household_material" class="form-input" placeholder="e.g., Concrete, Wood, Mixed" />
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="status">Status</label>
-                        <select id="status" name="status" class="form-select">
-                            <option value="">Select status</option>
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
-                            <option value="Relocated">Relocated</option>
-                        </select>
+                        <select name="household_material" id="household_material" class="form-select">
+                            <option value="" disabled selected hidden></option>
+                            <option value="Concrete">Concrete</option>
+                            <option value="Semi-Concrete">Semi-Concrete</option>
+                            <option value="Light materials">Light materials</option>
+                            <option value="Makeshift">Makeshift</option>
+                            <option value="Natural">Natural</option>
+                        </select>    
                     </div>
 
                     <div class="form-group">
@@ -200,7 +196,7 @@
 
                     <div class="form-group full-width">
                         <label class="form-label" for="location_coordinates">Location Coordinates</label>
-                        <input type="text" id="location_coordinates" name="location_coordinates" class="form-input" placeholder="Latitude, Longitude" />
+                        <input type="text" id="location_coordinates" name="location_coordinates" class="form-input" placeholder="Latitude, Longitude" readonly/>
                     </div>
                 </div>
             </div>
@@ -220,7 +216,7 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label" for="number_residents">Total Residents</label>
-                        <input type="number" id="number_residents" name="number_residents" class="form-input" min="0" />
+                        <input type="number" id="number_residents" name="number_residents" class="form-input" min="1" />
                     </div>
 
                     <div class="form-group">
@@ -270,65 +266,65 @@
                 <div class="risk-grid">
                     <label class="risk-label">Earthquake</label>
                     <div style="display: flex; gap: 12px;">
-                        <select name="earthquake_level" id="earthquake" class="form-select" style="width: 120px;">
+                        <select name="earthquake_risk" id="earthquake_risk" class="form-select" style="width: 120px;">
                             <option value="">Level</option>
                             <option value="HIGH">HIGH</option>
                             <option value="MEDIUM">MEDIUM</option>
                             <option value="LOW">LOW</option>
                         </select>
-                        <input type="text" id="earthquake_risk" name="earthquake_risk" class="form-input" placeholder="Risk description" style="flex: 1;" />
+                        <input type="text" id="earthquake_risk_description" name="earthquake_risk_description" class="form-input" placeholder="Risk description" style="flex: 1;" />
                     </div>
                 </div>
 
                 <div class="risk-grid">
                     <label class="risk-label">Fire</label>
                     <div style="display: flex; gap: 12px;">
-                        <select name="fire_level" id="fire" class="form-select" style="width: 120px;">
+                        <select name="fire_risk" id="fire_risk" class="form-select" style="width: 120px;">
                             <option value="">Level</option>
                             <option value="HIGH">HIGH</option>
                             <option value="MEDIUM">MEDIUM</option>
                             <option value="LOW">LOW</option>
                         </select>
-                        <input type="text" id="fire_risk" name="fire_risk" class="form-input" placeholder="Risk description" style="flex: 1;" />
+                        <input type="text" id="fire_risk_description" name="fire_risk_description" class="form-input" placeholder="Risk description" style="flex: 1;" />
                     </div>
                 </div>
 
                 <div class="risk-grid">
                     <label class="risk-label">Flood</label>
                     <div style="display: flex; gap: 12px;">
-                        <select name="flood_level" id="flood" class="form-select" style="width: 120px;">
+                        <select name="flood_risk" id="flood_risk" class="form-select" style="width: 120px;">
                             <option value="">Level</option>
                             <option value="HIGH">HIGH</option>
                             <option value="MEDIUM">MEDIUM</option>
                             <option value="LOW">LOW</option>
                         </select>
-                        <input type="text" id="flood_risk" name="flood_risk" class="form-input" placeholder="Risk description" style="flex: 1;" />
+                        <input type="text" id="flood_risk_description" name="flood_risk_description" class="form-input" placeholder="Risk description" style="flex: 1;" />
                     </div>
                 </div>
 
                 <div class="risk-grid">
                     <label class="risk-label">Landslide</label>
                     <div style="display: flex; gap: 12px;">
-                        <select name="landslide_level" id="landslide" class="form-select" style="width: 120px;">
+                        <select name="landslide_risk" id="landslide_risk" class="form-select" style="width: 120px;">
                             <option value="">Level</option>
                             <option value="HIGH">HIGH</option>
                             <option value="MEDIUM">MEDIUM</option>
                             <option value="LOW">LOW</option>
                         </select>
-                        <input type="text" id="landslide_risk" name="landslide_risk" class="form-input" placeholder="Risk description" style="flex: 1;" />
+                        <input type="text" id="landslide_risk_description" name="landslide_risk_description" class="form-input" placeholder="Risk description" style="flex: 1;" />
                     </div>
                 </div>
 
                 <div class="risk-grid">
                     <label class="risk-label">Storm</label>
                     <div style="display: flex; gap: 12px;">
-                        <select name="storm_level" id="storm" class="form-select" style="width: 120px;">
+                        <select name="storm_risk" id="storm_risk" class="form-select" style="width: 120px;">
                             <option value="">Level</option>
                             <option value="HIGH">HIGH</option>
                             <option value="MEDIUM">MEDIUM</option>
                             <option value="LOW">LOW</option>
                         </select>
-                        <input type="text" id="storm_risk" name="storm_risk" class="form-input" placeholder="Risk description" style="flex: 1;" />
+                        <input type="text" id="storm_risk_description" name="storm_risk_description" class="form-input" placeholder="Risk description" style="flex: 1;" />
                     </div>
                 </div>
 
