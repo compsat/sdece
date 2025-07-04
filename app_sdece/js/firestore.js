@@ -549,11 +549,13 @@ export function showModal(partner) {
 			activityDatesDiv.innerHTML =
 				'<b>Date/s of Partnership</b>' +
 				'<p class="pm-detailed-info">' +
-				activity.activity_date.toDate().toLocaleDateString('en-PH', {
-					year: 'numeric',
-					month: 'long',
-					day: 'numeric',
-					}) +
+				(activity.activity_date?.toDate?.()
+					? activity.activity_date.toDate().toLocaleDateString('en-PH', {
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric',
+					})
+					: 'N/A') +
 				'</p>'; //this field might become an array in the future
 
 			activityOfficeDiv.innerHTML =
