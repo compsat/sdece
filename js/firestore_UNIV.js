@@ -61,17 +61,18 @@ export function getCoordinates(coordinates) {
 	return PARTNER_COORDINATES;
 }
 
-const SECRETS_PATH = "/secrets.json";
+const SECRETS_PATH = "/js/secrets.json";
 const SECRETS_REQ = new Request(SECRETS_PATH);
 const SECRETS_RES = await fetch(SECRETS_REQ);
 const SECRETS = await SECRETS_RES.json();
 
 export const firebaseConfig = SECRETS.firebaseConfig;
 
-initializeApp(firebaseConfig);
-export const DB = getFirestore();
+var app = initializeApp(firebaseConfig);
+export const DB = getFirestore(app);
 
 var collection_reference = null;
+var rule_reference = null;
 
 //export let partnersArray = [];
 
@@ -100,10 +101,15 @@ export const DB_RULES_AND_DATA = [
 			'household_material',
 			'household_phase',
 			'landslide_risk',
+			'landslide_risk_description',
 			'earthquake_risk',
+			'earthquake_risk_description',
 			'fire_risk',
+			'fire_risk_description',
 			'flood_risk',
+			'flood_risk_description',
 			'storm_risk',
+			'storm_risk_description',
 			'nearest_evac',
 		],
 	],
@@ -128,10 +134,15 @@ export const DB_RULES_AND_DATA = [
 			'household_material',
 			'household_phase',
 			'landslide_risk',
+			'landslide_risk_description',
 			'earthquake_risk',
+			'earthquake_risk_description',
 			'fire_risk',
+			'fire_risk_description',
 			'flood_risk',
+			'flood_risk_description',
 			'storm_risk',
+			'storm_risk_description',
 			'nearest_evac',
 		],
 	],
@@ -181,37 +192,41 @@ export const DB_RULES_AND_DATA = [
 const VALIDATION_RULES = {
 	//Rules for Validating Data
 	'buklod-official-TEST': {
-		household_name: { type: 'string', required: true, maxLength: 127 },
+    household_name: { label: "Household Name", type: 'string', required: true, maxLength: 127 },
 		contact_number: {
+      label: "Contact Number",
 			type: 'string',
 			required: true,
 			minLength: 11,
 			maxLength: 11,
-			regex: /^[0-9]+$/,
+			regex: /^09[0-9]{9}$/,
 		},
-		number_residents: { type: 'number', required: true , 'minimum': 1},
-		number_minors: { type: 'number', 'minimum': 0 },
-		number_seniors: { type: 'number' , 'minimum': 0 },
-		number_pregnant: { type: 'number' , 'minimum': 0 },
-		number_pwd: { type: 'number' , 'minimum': 0 },
-		number_sick: { type: 'number' , 'minimum': 0 },
-		sickness_present: { type: 'string' },
+    number_residents: { label: "Number of Residents", type: 'number', required: true , 'minimum': 1},
+		number_minors: { label: "Number of Minor Residents", type: 'number', 'minimum': 0 },
+		number_seniors: { label: "Number of Senior Residents", type: 'number' , 'minimum': 0 },
+		number_pregnant: { label: "Number of Pregnant Residents", type: 'number' , 'minimum': 0 },
+		number_pwd: { label: "Number of Persons with Disabilities", type: 'number' , 'minimum': 0 },
+		number_sick: { label: "Number of Sick Residents", type: 'number' , 'minimum': 0 },
+		sickness_present: { label: "Sicknesses Present", type: 'string' },
 		residency_status: {
+      label: "Residency Status",
 			type: 'string',
 			required: true,
 			enum: ['May-Ari', 'Umuupa'],
 		},
 		is_hoa_noa: {
+      label: "HOA Status",
 			type: 'string',
 			required: true,
 			minLength: 3,
 			maxLength: 3,
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
-		location_coordinates: { type: 'object', required: true },
-		location_link: { type: 'string', required: true, regex: /^https:\/\/www\.openstreetmap\.org\/.+/ }, // data validation for link
-		household_address: { type: 'string', required: true, maxLength: 100 },
+    location_coordinates: {label: "Location Coordinates", type: 'object', required: true },
+		location_link: { label: "Location Link", type: 'string', required: true, regex: /^https:\/\/www\.openstreetmap\.org\/.+/ }, // data validation for link
+		household_address: { label: "Household Address", type: 'string', required: true, maxLength: 100 },
 		household_material: {
+      label: "Household Material",
 			type: 'string',
 			required: true,
 			enum: [
@@ -222,46 +237,56 @@ const VALIDATION_RULES = {
 				'Natural',
 			],
 		},
+		
 		landslide_risk: { type: 'string', required: true },
-		household_phase: { type: 'string', required: true },
+		landslide_risk_description:{type: 'string', required: false},
 		earthquake_risk: { type: 'string', required: true },
+		earthquake_risk_description:{type: 'string', required: false},
 		fire_risk: { type: 'string', required: true },
+		fire_risk_description:{type: 'string', required: false},
 		flood_risk: { type: 'string', required: true },
+		flood_risk_description:{type: 'string', required: false},
 		storm_risk: { type: 'string', required: true },
+		storn_risk_description:{type: 'string', required: false},
+
 		nearest_evac: { type: 'string', required: true, maxLength: 255 },
 	},
 	'buklod-official': {
-		household_name: { type: 'string', required: true, maxLength: 127 },
+    household_name: { label: "Household Name", type: 'string', required: true, maxLength: 127 },
 		contact_number: {
+      label: "Contact Number",
 			type: 'string',
 			required: true,
 			minLength: 11,
 			maxLength: 11,
-			regex: /^[0-9]+$/,
+			regex: /^09[0-9]{9}$/,
 		},
-		number_residents: { type: 'number', required: true , 'minimum': 1},
-		number_minors: { type: 'number', 'minimum': 0 },
-		number_seniors: { type: 'number' , 'minimum': 0 },
-		number_pregnant: { type: 'number' , 'minimum': 0 },
-		number_pwd: { type: 'number' , 'minimum': 0 },
-		number_sick: { type: 'number' , 'minimum': 0 },
-		sickness_present: { type: 'string' },
+    number_residents: { label: "Number of Residents", type: 'number', required: true , 'minimum': 1},
+		number_minors: { label: "Number of Minor Residents", type: 'number', 'minimum': 0 },
+		number_seniors: { label: "Number of Senior Residents", type: 'number' , 'minimum': 0 },
+		number_pregnant: { label: "Number of Pregnant Residents", type: 'number' , 'minimum': 0 },
+		number_pwd: { label: "Number of Persons with Disabilities", type: 'number' , 'minimum': 0 },
+		number_sick: { label: "Number of Sick Residents", type: 'number' , 'minimum': 0 },
+		sickness_present: { label: "Sicknesses Present", type: 'string' },
 		residency_status: {
+      label: "Residency Status",
 			type: 'string',
 			required: true,
 			enum: ['May-Ari', 'Umuupa'],
 		},
 		is_hoa_noa: {
+      label: "HOA Status",
 			type: 'string',
 			required: true,
 			minLength: 3,
 			maxLength: 3,
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
-		location_coordinates: { type: 'object', required: true },
-		location_link: { type: 'string', required: true },
-		household_address: { type: 'string', required: true, maxLength: 100 },
+    location_coordinates: { label: "Location Coordinates", type: 'object', required: true },
+		location_link: { label: "Location Link", type: 'string', required: true },
+		household_address: { label: "Household Address", type: 'string', required: true, maxLength: 100 },
 		household_material: {
+      label: "Household Material",
 			type: 'string',
 			required: true,
 			enum: [
@@ -272,31 +297,40 @@ const VALIDATION_RULES = {
 				'Natural',
 			],
 		},
-		landslide_risk: { type: 'string', required: true },
 		household_phase: { type: 'string', required: true },
+
+		landslide_risk: { type: 'string', required: true },
+		landslide_risk_description:{type: 'string', required: false},
 		earthquake_risk: { type: 'string', required: true },
+		earthquake_risk_description:{type: 'string', required: false},
 		fire_risk: { type: 'string', required: true },
+		fire_risk_description:{type: 'string', required: false},
 		flood_risk: { type: 'string', required: true },
+		flood_risk_description:{type: 'string', required: false},
 		storm_risk: { type: 'string', required: true },
+		storn_risk_description:{type: 'string', required: false},
+
 		nearest_evac: { type: 'string', required: true, maxLength: 255 },
 	},
 	'sdece-official-TEST': {
-		partner_name: { type: 'string', required: true, maxLength: 255 },
-		partner_address: { type: 'string', required: true, maxLength: 255 },
-		partner_coordinates: { required: true },
+    partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
+		partner_address: { label: "Address of Host Partner", type: 'string', required: true, maxLength: 255 },
+		partner_coordinates: { label: "Partner Coordinates", required: true },
 		partner_contact_name: {
+      label: "Name of Contact Person",
 			type: 'string',
 			required: true,
 			maxLength: 255,
 		},
 		partner_contact_number: {
+      label: "Number of Contact Person",
 			type: 'string',
 			required: true,
-			minLength: 13,
-			maxLength: 13,
-			regex: /^[0-9 ]+$/,
+			minLength: 11,
+			maxLength: 11,
+			regex: /^09\d{9}$/
 		},
-		partner_email: { type: 'string', required: true, maxLength: 127 },
+		partner_email: { type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
 		activity_name: { type: 'string', required: true },
 		activity_nature: { type: 'string', required: true, maxLength: 255 },
 		activity_date: { type: 'date', required: true },
@@ -305,29 +339,33 @@ const VALIDATION_RULES = {
 		ADMU_office: { type: 'string', required: true, maxLength: 127 },
 		ADMU_contact_name: { type: 'string', required: true, maxLength: 255 },
 		ADMU_email: {
+      label: "Email of Ateneo Contact Person",
 			type: 'string',
 			required: true,
-			required: true,
+			// required: true					redundant declaration
 			maxLength: 127,
+			regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/
 		},
 	},
 	'sdece-official': {
-		partner_name: { type: 'string', required: true, maxLength: 255 },
-		partner_address: { type: 'string', required: true, maxLength: 255 },
-		partner_coordinates: { required: true },
+    partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
+		partner_address: { label: "Address of Host Partner", type: 'string', required: true, maxLength: 255 },
+		partner_coordinates: { label: "Partner Coordinates", required: true },
 		partner_contact_name: {
+      label: "Name of Contact Person",
 			type: 'string',
 			required: true,
 			maxLength: 255,
 		},
 		partner_contact_number: {
+      label: "Number of Contact Person",
 			type: 'string',
 			required: true,
-			minLength: 13,
-			maxLength: 13,
-			regex: /^[0-9 ]+$/,
+			minLength: 11,
+			maxLength: 11,
+			regex: /^09\d{9}$/,
 		},
-		partner_email: { type: 'string', required: true, maxLength: 127 },
+		partner_email: { type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
 		activity_name: { type: 'string', required: true },
 		activity_nature: { type: 'string', required: true, maxLength: 255 },
 		activity_date: { type: 'date', required: true },
@@ -336,10 +374,12 @@ const VALIDATION_RULES = {
 		ADMU_office: { type: 'string', required: true, maxLength: 127 },
 		ADMU_contact_name: { type: 'string', required: true, maxLength: 255 },
 		ADMU_email: {
+      label: "Email of Ateneo Contact Person",
 			type: 'string',
 			required: true,
-			required: true,
+			// required: true					redundant declaration
 			maxLength: 127,
+			regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/
 		},
 	},
 };
@@ -349,18 +389,12 @@ export const BUKLOD_RULES_TEST = DB_RULES_AND_DATA[1];
 export const SDECE_RULES = DB_RULES_AND_DATA[2];
 export const SDECE_RULES_TEST = DB_RULES_AND_DATA[3];
 
-// export function setCollection(collection_name){
-//     for(let rule of DB_RULES_AND_DATA ){
-//         if (rule[0] === collection_name){
-//             collection_reference = collection( DB, collection_name );
-//         }
-//     }
-// }
 
 export function setCollection(collection_name) {
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_name) {
 			collection_reference = collection(DB, collection_name);
+      rule_reference = rule
 		}
 	}
 }
@@ -372,73 +406,60 @@ export function getCollection() {
 export function getDocIdByPartnerName(partner_name) {
 	const endName = partner_name.replace(/\s/g, '\uf8ff');
 
-	//rule loop
-	for (let rule of DB_RULES_AND_DATA) {
-		if (collection_reference.id === rule[0]) {
-			return getDocs(
-				query(
-					collection_reference,
-					where(rule[1], '>=', partner_name), // let's wait for Luigi's standardization. IF_ELSE nalang muna
-					where(rule[1], '<=', partner_name + endName)
-				)
-			)
-				.then((querySnapshot) => {
-					if (!querySnapshot.empty) {
-						// Assuming there is only one document with the given partner name
-						const doc = querySnapshot.docs[0];
-						return doc.id;
-					} else {
-						return null;
-					}
+  return getDocs(
+    query(
+      collection_reference,
+      where(rule_reference[1], '>=', partner_name), // let's wait for Luigi's standardization. IF_ELSE nalang muna
+      where(rule_reference[1], '<=', partner_name + endName)
+    )
+  )
+    .then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        // Assuming there is only one document with the given partner name
+        const doc = querySnapshot.docs[0];
+        console.log(doc);
+        return doc.id;
+      } else {
+        return null;
+      }
 				})
 				.catch((error) => {
 					console.error('Error getting documents: ', error);
 					return null;
 				});
 		}
-	}
-}
 
 export function getDocsByPartnerName(partner_name) {
 	const endName = partner_name.replace(/\s/g, '\uf8ff');
 
-	//rule loop
-	for (let rule of DB_RULES_AND_DATA) {
-		if (collection_reference.id === rule[0]) {
-			return getDocs(
-				query(
-					collection_reference,
-					where(rule[1], '>=', partner_name),
-					where(rule[1], '<=', partner_name + endName)
-				)
-			)
-				.then((querySnapshot) => {
-					if (!querySnapshot.empty) {
-						const docs = querySnapshot.docs;
-						return docs;
-					} else {
-						return null;
-					}
-				})
-				.catch((error) => {
-					console.error('Error getting documents: ', error);
-					return null;
-				});
-		}
-	}
+  return getDocs(
+    query(
+      collection_reference,
+      where(rule_reference[1], '>=', partner_name),
+      where(rule_reference[1], '<=', partner_name + endName)
+    )
+  )
+    .then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        const docs = querySnapshot.docs;
+        console.log(docs);
+        return docs;
+      } else {
+        return null;
+      }
+    })
+    .catch((error) => {
+      console.error('Error getting documents: ', error);
+      return null;
+    });
 }
 
 export function getDocByID(docId) {
-	for (let rule of DB_RULES_AND_DATA) {
-		if (collection_reference.id === rule[0]) {
-			const DOC_REFERENCE = doc(DB, rule[0], docId);
-			let docObj = {};
-			return getDoc(DOC_REFERENCE).then((doc) => {
-				docObj = doc;
-				return docObj;
-			});
-		}
-	}
+  const DOC_REFERENCE = doc(DB, rule_reference[0], docId); let docObj = {};
+  return getDoc(DOC_REFERENCE).then((doc) => {
+    docObj = doc;
+    return docObj;
+  });
 }
 
 export function addEntry(inp_obj) {
@@ -454,20 +475,22 @@ export function addEntry(inp_obj) {
 				.then((docRef) => {
 					console.log(docRef);
 					alert("You may now reload the page for your addition to reflect on this page");
+					window.parent.location.reload();
 
-				})
-				.catch((error) => {
-					console.error('Error adding document: ', error);
-					alert("Error uploading new activity. Please try again");
-				});
-			break;
-		}
+    })
+    .catch((error) => {
+      console.error('Error adding document: ', error);
+      alert("Error uploading new activity. Please try again");
+    });
+}
 	}
 }
 
-export function editEntry(inp_obj, docId) {
+export function editEntry(inp_obj,docId) {
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_reference.id) {
+			console.log(inp_obj);
+			console.log("entered");
 			const DOC_REFERENCE = doc(DB, rule[0], docId);
 			updateDoc(DOC_REFERENCE, inp_obj)
 				.then(() => {
@@ -499,14 +522,42 @@ export function validateData(collectionName, data) {
 		'partner_coordinates': 'Partner Coordinates',
 		'ADMU_office': 'Name of Office',
 		'ADMU_contact_name': 'Name of Ateneo Contact Person',
-		'ADMU_email': 'Email of Ateneo Contact Person'
+		'ADMU_email': 'Email of Ateneo Contact Person',
+		'household_name': 'Household Name',
+		'contact_number': 'Contact Number',
+		'number_residents': 'Number of Residents',
+		'number_minors': 'Number of Minor Residents',
+		'number_seniors': 'Number of Senior Residents' ,
+		'number_pregnant': 'Number of Pregnant Residents',
+		'number_pwd': 'Number of PWD Residents',
+		'number_sick': 'Number of Sick Residents',
+		'sickness_present': 'Sickness Present',
+		'residency_status': 'Residency Status',
+		'is_hoa_noa': 'Is HOA/NOA',
+		'location_coordinates': 'Location Coordinates',
+		'location_link': 'Location Link',
+		'household_address': 'Household Address',
+		'household_material': 'Household Material',
+		'household_phase': 'Household Phase',
+		'landslide_risk': 'Landslide Risk',
+		'landslide_risk_description': 'Landslide Risk Description',
+		'earthquake_risk': 'Earthquake Risk',
+		'earthquake_risk_description': 'Earthquake Risk Description',
+		'fire_risk': 'Fire Risk',
+		'fire_risk_description': 'Fire Risk Description',
+		'flood_risk': 'Flood Risk',
+		'flood_risk_description': 'Flood Risk Description',
+		'storm_risk': 'Storm Risk',
+		'storm_risk_description': 'Storm Risk Description',
+		'nearest_evac': 'Nearest Evacuation Center',
 	};
 
 	for (const field in rules) {
 		const rule = rules[field];
 		const value = data[field];
 		const fieldLabel = fieldLabels[field] || field;
-
+		
+		console.log("entered validation");
 		// Check for required field
 		if (
 			rule.required &&
@@ -517,18 +568,14 @@ export function validateData(collectionName, data) {
 			continue;
 		}
 
-		// else {
-		// 	errors.push("Field is valid!");
-		// }
-
-		// Skip type validation if not required
 		if (
 			!rule.required &&
 			(value == undefined || value == null || value == '')
 		) {
 			continue;
 		}
-
+		
+		// Temp type check for geolocation here
 		if (rule.type) {
 			if (rule.type === 'date') {
 				const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
@@ -544,11 +591,15 @@ export function validateData(collectionName, data) {
 					errors.push(`${fieldLabel} must be a valid date.`);
 					continue;
 				}
-			} else if (typeof value != rule.type) {
+			} else if (typeof(value) != rule.type) {
 				errors.push(
-					`${fieldLabel} must be of type ${rule.type}. type is ${value}` //checking for the type of value in location coordinates
+					`${fieldLabel} must be of type ${rule.type}. type is ${typeof(value)}` //checking for the type of value in location coordinates
 				);
 				continue;
+			}
+			if (rule.type === 'object' && (isNaN(value._lat) || isNaN(value._long))){
+				console.log(rule.type);
+				errors.push(`${fieldLabel} must be a valid location`)
 			}
 		}
 
@@ -560,52 +611,14 @@ export function validateData(collectionName, data) {
 		) {
 			if (field === 'partner_contact_number') {
 				errors.push(
-					`${fieldLabel} must be at least ${rule.minLength} characters long and in the form 09XX XXX XXXX.`
+					`${fieldLabel} must be ${rule.minLength} characters long.`
 				);
 
-			} else {
-				errors.push(
-					`${fieldLabel} must be at least ${rule.minLength} characters long.`
-				);
-			}
-
-			continue;
+			} continue;
 		}
 
-		// Check for minimum value
-		if (
-			rule.minimum !== undefined &&
-			typeof value === 'number' &&
-			value < rule.minimum
-		) {
-			errors.push(`${fieldLabel} must be at least ${rule.minimum}.`);
-			continue;
-		}
-
-
-		// Check for maximum length
-		if (
-			rule.maxLength &&
-			typeof value == 'string' &&
-			value.length > rule.maxLength
-		) {
-			errors.push(
-				`${fieldLabel} cannot exceed ${rule.maxLength} characters.`
-			);
-			continue;
-		}
-
-		// Check for regular expression pattern
-		if (rule.regex && !rule.regex.test(value)) {
-			errors.push(`${fieldLabel} is invalid.`);
-			continue;
-		}
-
-		// Check for enumerated values
 		if (rule.enum && !rule.enum.includes(value)) {
-			errors.push(
-				`${fieldLabel}' must be one of ${rule.enum.join(',')}.`
-			);
+			errors.push(`${fieldLabel}' must be one of ${rule.enum.join(', ')}.`);
 			continue;
 		}
 
