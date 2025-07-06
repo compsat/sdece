@@ -346,3 +346,138 @@ function addMainButtonText() {
 }
 
 addMainButtonText();
+
+
+// EXPORT DATA CODE LOGIC
+document.getElementById('download-report').addEventListener('click', async () => {
+  const colRef = getCollection();
+	const snapshot = await getDocs(colRef);
+
+	const allHouseholds = [];
+	snapshot.forEach(doc => allHouseholds.push(doc.data()));
+
+	// Sort by household name (for later use)
+	const sortByHouseholdName = (a, b) =>
+		(a.household_name || '').localeCompare(b.household_name || '');
+
+	// Sort risk levels HIGH > MEDIUM > LOW
+	const sortByRiskLevel = level => {
+		if (level === 'HIGH RISK') return 0;
+		if (level === 'MEDIUM RISK') return 1;
+		if (level === 'LOW RISK') return 2;
+		return 3; // unknown
+	};
+
+	const workbook = XLSX.utils.book_new();
+
+	const riskTypes = ['earthquake_risk', 'fire_risk', 'flood_risk', 'landslide_risk', 'storm_risk'];
+	const riskLabels = {
+		earthquake_risk: 'Earthquake',
+		fire_risk: 'Fire',
+		flood_risk: 'Flood',
+		landslide_risk: 'Landslide',
+		storm_risk: 'Storm'
+	};
+
+	// Generate risk sheets
+	for (const riskType of riskTypes) {
+		const sheetData = [['Household Name', 'Address', 'Phase', 'Contact Number', 'Number of Residents', 'Residency Status', 'Risk Level', 'Risk Description', 'House Material']];
+
+		const households = [...allHouseholds].sort((a, b) => sortByHouseholdName(a, b));
+
+		const sortedHouseholds = households.sort((a, b) => {
+			const riskA = a[riskType];
+			const riskB = b[riskType];
+			return sortByRiskLevel(riskA) - sortByRiskLevel(riskB);
+		});
+
+		sortedHouseholds.forEach(h => {
+			sheetData.push([
+				h.household_name || '',
+				h.household_address || '',
+				h.phase || '',
+				h.contact_number || '',
+				h.number_residents || 0,
+				h.residency_status || '',
+				h[riskType] || '',
+				h[riskType + '_description'] || '',
+				h.household_material || ''
+			]);
+		});
+
+		const ws = XLSX.utils.aoa_to_sheet(sheetData);
+		XLSX.utils.book_append_sheet(workbook, ws, riskLabels[riskType]);
+	}
+
+	// Residency Demographic Sheet
+	const residencyData = [['Household Name', 'Address', 'Phase', 'Contact Number', 'Residency Status', 'HOA/NOA/Others', 'Total Residents', 'Minors', 'Seniors', 'PWD', 'Sick', 'Pregnant']];
+
+	allHouseholds.sort(sortByHouseholdName).forEach(h => {
+		residencyData.push([
+			h.household_name || '',
+			h.household_address || '',
+			h.phase || '',
+			h.contact_number || '',
+			h.residency_status || '',
+			h.is_hoa_noa || '',
+			h.number_residents || 0,
+			h.number_minors || 0,
+			h.number_seniors || 0,
+			h.number_pwd || 0,
+			h.number_sick || 0,
+			h.number_pregnant || 0
+		]);
+	});
+
+	const residencySheet = XLSX.utils.aoa_to_sheet(residencyData);
+	XLSX.utils.book_append_sheet(workbook, residencySheet, 'Residency Demographics');
+
+	// Master Sheet
+	const masterHeaders = [
+		'Household Name',
+		'Address',
+		'Phase',
+		'Contact Number',
+		'Residency Status',
+		'HOA/NOA/Others',
+		'Number of Residents',
+		'Minors',
+		'Seniors',
+		'PWD',
+		'Sick',
+		'Pregnant',
+		// Risk levels and descriptions
+		...riskTypes.flatMap(r => [r, r + '_description']),
+		'House Material'
+	];
+
+	const masterData = [masterHeaders];
+
+	allHouseholds.forEach(h => {
+    debugger;
+		const row = [
+			h.household_name || '',
+			h.household_address || '',
+			h.phase || '',
+			h.contact_number || '',
+			h.residency_status || '',
+			h.is_hoa_noa || '',
+			h.number_residents || 0,
+			h.number_minors || 0,
+			h.number_seniors || 0,
+			h.number_pwd || 0,
+			h.number_sick || 0,
+			h.number_pregnant || 0,
+			...riskTypes.map(r => h[r] || ''),
+			...riskTypes.map(r => h[r + '_description'] || ''),
+			h.household_material || ''
+		];
+		masterData.push(row);
+	});
+
+	const masterSheet = XLSX.utils.aoa_to_sheet(masterData);
+	XLSX.utils.book_append_sheet(workbook, masterSheet, 'Master Sheet');
+
+	// Export
+	XLSX.writeFile(workbook, 'Buklod_Tao_Household_Report.xlsx');
+});
