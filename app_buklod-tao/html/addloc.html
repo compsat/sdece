@@ -2,93 +2,9 @@
 <html>
     <head>
         <title>Add Location</title>
-        <link rel="stylesheet" href="./css/form.css">
-        <link rel="stylesheet" href="./css/main.css">
+        <link rel="stylesheet" href="../css/form.css">
+        <link rel="stylesheet" href="../css/main.css">
         <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
-    
-            
-        <script type="module">
-            //import { addLocation } from "./js/firestore.js";
-            import { addEntry, BUKLOD_RULES_TEST, setCollection, validateData, getCoordinates } from "/js/firestore_UNIV.js";
-            setCollection("buklod-official");
-            document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
-
-            function handleFormSubmit_v2(){
-                var collatedInput = {};
-
-                for (let i = 0; i < BUKLOD_RULES_TEST[2].length; i++) {
-                    //BUKLOD_RULES_TEST[2] are just the field names of each document
-                    // console.log(BUKLOD_RULES_TEST[2][i]);
-                    // let q = document.getElementById(BUKLOD_RULES_TEST[2][i]).value;
-                    // collatedInput[BUKLOD_RULES_TEST[2][i]] = q;
-
-                    let fieldName = BUKLOD_RULES_TEST[2][i];
-                    let inputValue = document.getElementById(fieldName).value;
-
-                    if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick') {
-                        collatedInput[fieldName] = Number(inputValue);
-                    } else if (fieldName == 'earthquake_risk') {
-                        collatedInput['earthquake_risk'] = inputValue;
-                    } else if (fieldName == 'fire_risk') {
-                        collatedInput['fire_risk'] = inputValue;
-                    } else if (fieldName == 'flood_risk') {
-                        collatedInput['flood_risk'] = inputValue;
-                    } else if (fieldName == 'landslide_risk') {
-                        collatedInput['landslide_risk'] = inputValue;
-                    } else if (fieldName == 'storm_risk') {
-                        collatedInput['storm_risk'] = inputValue;
-                    } else if (fieldName == 'location_coordinates') {
-                        var inputValueSplit = inputValue.split('+');
-                        collatedInput['location_coordinates'] = {
-                            _lat: Number(inputValueSplit[0]),
-                            _long: Number(inputValueSplit[1])
-                        };
-                    } else {
-                        collatedInput[fieldName] = inputValue;
-                    }
-                    // this is where data validation will happen
-                    // add the if-else statements of edge cases here
-                }
-                collatedInput['earthquake_risk'] = document.getElementById("earthquake_level").value + " RISK: " + collatedInput['earthquake_risk'];
-                collatedInput['fire_risk'] = document.getElementById("fire_level").value + " RISK: " + collatedInput['fire_risk'];
-                collatedInput['flood_risk'] = document.getElementById("flood_level").value + " RISK: " + collatedInput['flood_risk'];
-                collatedInput['landslide_risk'] = document.getElementById("landslide_level").value + " RISK: " + collatedInput['landslide_risk'];
-                collatedInput['storm_risk'] = document.getElementById("storm_level").value + " RISK: " + collatedInput['storm_risk'];
-                
-                // if (isLoggedIn == true) {
-                //     const errors = validateData("buklod-official-TEST", collatedInput);
-                // } else {
-                //     const errors = `You do not have permissions to perform this action. Please login to proceed.`;
-                // }
-
-                const errors = validateData("buklod-official-TEST", collatedInput);
-
-                if (errors.length > 0) {
-                    displayErrors(errors);
-                } else {
-                    addEntry(collatedInput);
-                }
-
-                function displayErrors(errors) {
-                let errorDiv = document.getElementById('error_messages');
-
-                if (errorDiv) {
-
-                    errorDiv.innerHTML = '';
-
-                    if (errors.length > 0) {
-                        for (let error of errors) {
-                            let errorParagraph = document.createElement('p');
-                            errorParagraph.textContent = error;
-                            errorDiv.appendChild(errorParagraph);
-                        }
-                    }
-                    } else {
-                        console.error("Error: Couldn't find element with ID 'error_messages'.");
-                    }
-                }
-            }
-        </script>
     </head>
     
     <body>
@@ -123,22 +39,31 @@
             <br>
             <div class="inputContainer">
                 <label class="form" for="contact_number">Contact Number</label>
-                <input type="text" id="contact_number" name="contact_number" class="attribs"/>    
+                <input type="text" id="contact_number" name="contact_number" class="attribs" maxlength="11"/>    
             </div>
             <br>
             <div class="inputContainer">
                 <label class="form" for="residency_status">Residency Status</label>
-                <input type="text" id="residency_status" name="residency_status" class="attribs"/> 
+                <select name="residency_status" id="residency_status" class="longAttribs">
+                    <option value="" disabled selected hidden></option>
+                    <option value="May-Ari">May-Ari</option>
+                    <option value="Umuupa">Umuupa</option>
+                </select>
             </div>
             <br>
             <div class="inputContainer">
                 <label class="form" for="HOA/NOA">Part of HOA/NOA</label>
-                <input type="text" id="is_hoa_noa" name="HOA/NOA" class="attribs" value="HOA"/> 
+                <select name="is_hoa_noa" id="is_hoa_noa" class="longAttribs">
+                    <option value="" disabled selected hidden></option>
+                    <option value="HOA">HOA</option>
+                    <option value="NOA">NOA</option>
+                    <option value="N/A">N/A</option>
+                </select>
             </div>
 
             <div class="inputContainer">
                 <label class="form" for="location_link">Location link</label>
-                <input type="text" id="location_link" name="location_link" class="attribs"> 
+                <input type="text" id="location_link" name="location_link" class="attribs" value="https://www.openstreetmap.org/ss">  
             </div>
             
             <div class="inputContainer">
@@ -149,7 +74,14 @@
             <br>
             <div class="inputContainer">
                 <label class="form" for="household_material">Materials Used for House</label>
-                <input type="text" id="household_material" name="household_material" class="attribs"/> 
+                <select name="household_material" id="household_material" class="longAttribs">
+                    <option value="" disabled selected hidden></option>
+                    <option value="Concrete">Concrete</option>
+                    <option value="Semi-Concrete">Semi-Concrete</option>
+                    <option value="Light materials">Light materials</option>
+                    <option value="Makeshift">Makeshift</option>
+                    <option value="Natural">Natural</option>
+                </select>
             </div>
             <br>
             <div class="inputContainer">
@@ -157,102 +89,99 @@
                 <input type="text" id="nearest_evac" name="nearest_evac" class="attribs"/>    
             </div>
 
-            <div class="inputContainer">
-                <label class="form" for="status">Status</label>
-                <input type="text" id="status" name="status" class="attribs"/>    
-            </div>
             <br>
             <h2 class="subHeader">RESIDENT INFORMATION</h2>
             <br>
             <div class="inputContainer">
                 <label class="form" for="number_residents">Number of Residents</label>
-                <input type="number" id="number_residents" name="number_residents"class="attribs"/>    
+                <input type="number" id="number_residents" name="number_residents"class="attribs" min="1"/>    
             </div>
             <br>
             <div class="inputContainer">
                 <label class="form" for="number_minors">Number of Minor Residents</label>
-                <input type="text" id="number_minors" name="number_minors" class="attribs"/>
+                <input type="number" id="number_minors" name="number_minors" class="attribs" min="0"/>
             </div>
             <br>
             <div class="inputContainer">
                 <label class="form" for="number_seniors">Number of Senior Citizen Residents</label>
-                <input type="text" id="number_seniors" name="number_seniors" class="attribs"/>
+                <input type="number" id="number_seniors" name="number_seniors" class="attribs" min="0"/>
             </div>
             <br>
             <div class="inputContainer">
                 <label class="form" for="number_pwd">Number of PWD Residents</label>
-                <input type="text" id="number_pwd" name="number_pwd" class="attribs"/>
-            </div>
-            <br>
-            <div class="inputContainer">
-                <label class="form" for="number_sick">Number of Sick Residents</label>
-                <input type="text" id="number_sick" name="number_sick" class="attribs"/>
-            </div>
-            <div class="inputContainer">
-                <label class="form" for="sickness_present">Sickness Present</label>
-                <input type="text" id="sickness_present" name="sickness_present" class="attribs"/>
+                <input type="number" id="number_pwd" name="number_pwd" class="attribs" min="0"/>
             </div>
             <br>
             <div class="inputContainer">
                 <label class="form" for="number_pregnant">Number of Pregnant Residents</label>
-                <input type="text" id="number_pregnant" name="number_pregnant" class="attribs"/>
+                <input type="number" id="number_pregnant" name="number_pregnant" class="attribs" min="0"/>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="number_sick">Number of Sick Residents</label>
+                <input type="number" id="number_sick" name="number_sick" class="attribs" min="0"/>
+            </div>
+            <br>
+            <div class="inputContainer">
+                <label class="form" for="sickness_present">Sickness Present</label>
+                <input type="text" id="sickness_present" name="sickness_present" class="attribs"/>
             </div>
             <br>
             <h2 class="subHeader">RISK LEVELS</h2>
             <br>
             <div class="inputContainer">
                 <label class="disasterForm" for="earthquake">Earthquake</label>
-                <select name="earthquake_level" id="earthquake_level" class="attribs">
+                <select name="earthquake_risk" id="earthquake_risk" class="attribs">
                     <option value="" disabled selected hidden></option>
                     <option value="HIGH">HIGH</option>
                     <option value="MEDIUM">MEDIUM</option>
                     <option value="LOW">LOW</option>
                 </select>
-                <input type="text" id="earthquake_risk" name="earthquake_risk" class="attribs"/>
+                <input type="text" id="earthquake_risk_description" name="earthquake_risk_description" class="attribs"/>
             </div>
             <br>
             <div class="inputContainer">
                 <label class="disasterForm" for="fire">Fire</label>
-                <select name="fire_level" id="fire_level" class="attribs">
+                <select name="fire_risk" id="fire_risk" class="attribs">
                     <option value="" disabled selected hidden></option>
                     <option value="HIGH">HIGH</option>
                     <option value="MEDIUM">MEDIUM</option>
                     <option value="LOW">LOW</option>
                 </select>
-                <input type="text" id="fire_risk" name="fire_risk" class="attribs"/>
+                <input type="text" id="fire_risk_description" name="fire_risk_description" class="attribs"/>
             </div>
             <br>  
             <div class="inputContainer">
                 <label class="disasterForm" for="flood">Flood</label>
-                <select name="flood_level" id="flood_level" class="attribs">
+                <select name="flood_risk" id="flood_risk" class="attribs">
                     <option value="" disabled selected hidden></option>
                     <option value="HIGH">HIGH</option>
                     <option value="MEDIUM">MEDIUM</option>
                     <option value="LOW">LOW</option>
                 </select>
-                <input type="email" id="flood_risk" name="flood" class="attribs"/>
+                <input type="text" id="flood_risk_description" name="flood_risk_description" class="attribs"/>
             </div>
             <br>
             <div class="inputContainer">
                 <label class="disasterForm" for="landslide">Landslide</label>
-                <select name="landslide_level" id="landslide_level" class="attribs">
+                <select name="landslide_risk" id="landslide_risk" class="attribs">
                     <option value="" disabled selected hidden></option>
                     <option value="HIGH">HIGH</option>
                     <option value="MEDIUM">MEDIUM</option>
                     <option value="LOW">LOW</option>
                 </select>
-                <input type="email" id="landslide_risk" name="landslide" class="attribs"/>
+                <input type="text" id="landslide_risk_description" name="landslide_risk_description" class="attribs"/>
             </div>
             <br>
             <div class="inputContainer">
                 <label class="disasterForm" for="storm">Storm</label>
-                <select name="storm_level" id="storm_level" class="attribs">
+                <select name="storm_risk" id="storm_risk" class="attribs">
                     <option value="" disabled selected hidden></option>
                     <option value="HIGH">HIGH</option>
                     <option value="MEDIUM">MEDIUM</option>
                     <option value="LOW">LOW</option>
                 </select>
-                <input type="email" id="storm_risk" name="storm_risk" class="attribs"/>
+                <input type="text" id="storm_risk_description" name="storm_risk_description" class="attribs"/>
             </div>
             <br>
             <br><br>
@@ -272,19 +201,34 @@
           </div>
           <div class="formModalFooter"></div>
 
+        <script type="module">
+            //Call function from firestore.js to add new household from input fields after pressing submit button
+            import {addEntry, BUKLOD_RULES_TEST, setCollection, validateData, getCoordinates } from "/js/firestore_UNIV.js";
+            import {submitAddForm} from '../js/firestore.js';
+            document.getElementById("submit_form").addEventListener("click", submitAddForm);
+        </script>
+
         <script>
             function resetForm() {
                 let messageText = "Are you sure you want to clear the form?";
                 if (confirm(messageText) == true) {
+                    // Clear input fields
                     var inputFields = document.getElementsByTagName('input');
                     for (var i = 0; i < inputFields.length; i++) {
-                        var field = inputFields[i];
-                        if (!field.readOnly && field.type !== 'button') {
-                            field.value = '';
-                        }
+                    var field = inputFields[i];
+                    if (!field.readOnly && field.type !== 'button') {
+                        field.value = '';
+                    }
+                    }
+
+                    // Clear select dropdowns
+                    var selectFields = document.getElementsByTagName('select');
+                    for (var i = 0; i < selectFields.length; i++) {
+                    selectFields[i].selectedIndex = 0; 
                     }
                 }
             }
+
 
             function closeModal() {
 				window.parent.postMessage('closeAddModal', '*');

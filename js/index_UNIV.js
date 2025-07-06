@@ -131,18 +131,17 @@ export const JS_CS_ENGINE = [
 			'app_buklod-tao/js/index.js',
 			'app_buklod-tao/js/firestore.js',
 			'app_buklod-tao/css/form.css',
-			//   'buklod-tao-branch/css/login.css',
 			'app_buklod-tao/css/main.css',
 		],
 	],
 	[
 		'buklod-official-TEST',
 		[
-			'app_buklod-tao/js/index.js',
-			'app_buklod-tao/js/firestore.js',
-			'app_buklod-tao/css/form.css',
+			'buklod-tao-branch/js/index.js',
+			'buklod-tao-branch/js/firestore.js',
+			'buklod-tao-branch/css/form.css',
 			//   'buklod-tao-branch/css/login.css',
-			'app_buklod-tao/css/main.css',
+			'buklod-tao-branch/css/main.css',
 		],
 	],
 	[
@@ -180,6 +179,7 @@ export function createJsCssFiles(file_path) {
 		fileref.setAttribute('type', 'text/css');
 		fileref.setAttribute('href', file_path + '?');
 	}
+
 	return fileref;
 }
 

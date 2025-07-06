@@ -7,8 +7,8 @@ import {
   DB,
   addEntry,
   BUKLOD_RULES_TEST,
-} from '/js/firestore_UNIV.js';
-import { addListeners, map } from '/js/index_UNIV.js';
+} from '../../js/firestore_UNIV.js';
+import { addListeners, map } from '../../js/index_UNIV.js';
 import {
   getFirestore,
   collection,
@@ -16,7 +16,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import evacCenters from '../hardcode/evac-centers.json' with {type: 'json'};
 
-setCollection("buklod-official");
+//setCollection("buklod-official-TEST");
 
 var colRef = getCollection();
 var partnersArray = getPartnersArray();
@@ -38,25 +38,15 @@ var popup = L.popup();
 function onPinClick(doc) {
   // Variables for risk levels
   var earthquake = doc.earthquake_risk;
-  var earthquake_split = earthquake.split(' RISK: ');
-  var earthquake1 = earthquake_split[0];
-  var earthquake2 = earthquake_split[1];
+  var earthquake_desc = doc.earthquake_risk_description;
   var fire = doc.fire_risk;
-  var fire_split = fire.split(' RISK: ');
-  var fire1 = fire_split[0];
-  var fire2 = fire_split[1];
+  var fire_desc = doc.fire_risk_description;
   var flood = doc.flood_risk;
-  var flood_split = flood.split(' RISK: ');
-  var flood1 = flood_split[0];
-  var flood2 = flood_split[1];
+  var flood_desc = doc.flood_risk_description;
   var landslide = doc.landslide_risk;
-  var landslide_split = landslide.split(' RISK: ');
-  var landslide1 = landslide_split[0];
-  var landslide2 = landslide_split[1];
+  var landslide_desc = doc.landslide_risk_description;
   var storm = doc.storm_risk;
-  var storm_split = storm.split(' RISK: ');
-  var storm1 = storm_split[0];
-  var storm2 = storm_split[1];
+  var storm_desc = doc.storm_risk_description;
 
   let leaflet_html = `
   <div class="leafletPopupContainer" id="leafletModal">
@@ -88,38 +78,38 @@ function onPinClick(doc) {
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Earthquake</label>
-        <label class="leafletLabel">${earthquake1}</label>
+        <label class="leafletLabel">${earthquake}</label>
       </div>
       <div>
-        <p class="leafletDetails">${earthquake2}</p>
+        <p class="leafletDetails">${earthquake_desc || 'N/A'}</p>
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Fire</label>
-        <label class="leafletLabel">${fire1}</label>
+        <label class="leafletLabel">${fire}</label>
       </div>
       <div>
-        <p class="leafletDetails">${fire2}</p>
+        <p class="leafletDetails">${fire_desc || 'N/A' }</p>
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Flood</label>
-        <label class="leafletLabel">${flood1}</label>
+        <label class="leafletLabel">${flood}</label>
       </div>
       <div>
-        <p class="leafletDetails">${flood2}</p>
+        <p class="leafletDetails">${flood_desc || 'N/A' }</p>
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Landslide</label>
-        <label class="leafletLabel">${landslide1}</label>
+        <label class="leafletLabel">${landslide}</label>
       </div>
       <div>
-        <p class="leafletDetails">${landslide2}</p>
+        <p class="leafletDetails">${landslide_desc || 'N/A' }</p>
       </div>
       <div class="modalLine">
         <label class="leafletLabel">Storm</label>
-        <label class="leafletLabel">${storm1}</label>
+        <label class="leafletLabel">${storm}</label>
       </div>
       <div>
-        <p class="leafletDetails">${storm2}</p>
+        <p class="leafletDetails">${storm_desc || 'N/A'}</p>
       </div>
     </div>
     <div>
@@ -162,61 +152,12 @@ function onPinClick(doc) {
   `;
   return leaflet_html;
 } 
-/*
-// Loads art the start
-getDocs(colRef)
-  .then((querySnapshot) => {
-    querySnapshot.forEach((entry) => {
-      var doc = entry.data();
-      
-      if (doc.location_coordinates != null) {
-        var marker = L.marker([0, 0]);
-        marker = L.marker([
-          parseFloat(doc.location_coordinates._lat),
-          parseFloat(doc.location_coordinates._long),
-        ]);
-        // shows partner info on pin click
-      var popupContent = onPinClick(doc);
-      marker.bindPopup(popupContent);
-      marker.on('popupopen', function(e) {
-        const editBtns = document.querySelectorAll('.editHousehold');
-        editBtns.forEach((btn) => {
-          btn.addEventListener('click', function() {
-            console.log('Edit button was clicked!');
-            const modal = document.getElementById('partnerModal');
-            var editFormModal = document.getElementById('editModal');
-            editFormModal.style.display = 'block';
-            modal.style.display = 'none';
-            populateEditForm(doc, editFormModal)
-          });
-        });
-
-        //var editBtn = document.getElementById('editHouseholdPopup')
-        //if (editBtn) {
-          //editBtn.addEventListener('click', function() {
-            //console.log('Edit button was clicked!');
-            //const modal = document.getElementById('partnerModal');
-            //var editFormModal = document.getElementById('editModal');
-            //editFormModal.style.display = 'block';
-            //modal.style.display = 'none';
-            //populateEditForm(doc, editFormModal)
-          //})
-        //}
-      })
-      results.addLayer(marker);
-      }
-      
-    });
-  }).catch((error) => {
-    console.error('Error getting documents: ', error);
-  });
-*/
 // Pin display
 evacCenters.forEach(center => {
   const marker = L.marker(
     [center.latitude, center.longitude],
     {icon: L.icon({
-      iconUrl: "app_buklod-tao/hardcode/evac.svg",
+      iconUrl: "/app_buklod-tao/hardcode/evac.svg",
       iconSize: [39,39],
       popupAnchor: [0.5, -15]
     })}
@@ -287,15 +228,6 @@ function onMapClick(e) {
     const lng = this.getAttribute('data-lng');
 
     var modal = document.getElementById('addModal');
-
-    // TODO: Integrate this functionality into the modal instead
-    // var partnerName = this.getAttribute("data-loc");
-    // window.open(
-    //   `addloc.html?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(
-    //     lng
-    //   )}`,
-    //   "_blank"
-    // );
 
     // Display the modal
     modal.classList.remove('hidden');

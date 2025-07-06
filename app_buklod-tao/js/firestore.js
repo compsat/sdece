@@ -11,8 +11,18 @@ import {
   query,
   where,
   getDoc,
+  GeoPoint,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-import { getCollection, setCollection } from '/js/firestore_UNIV.js';
+import { 
+  getCollection, 
+  setCollection, 
+  BUKLOD_RULES_TEST, 
+  validateData, 
+  editEntry,
+  addEntry,
+  getCoordinates,
+  getDocIdByPartnerName,
+} from '../../js/firestore_UNIV.js';
 // Your Firestore code here
 console.log("run2");
 // Your web app's Firebase configuration
@@ -26,12 +36,16 @@ const firebaseConfig = {
   appId: '1:601571823960:web:1f1278ecb86aa654e6152d',
   measurementId: 'G-9N9ELDEMX9',
 };
+
+var collection_value = 'buklod-official-TEST'
+
 initializeApp(firebaseConfig);
 const db = getFirestore();
-setCollection('buklod-official');
+setCollection(collection_value);
 const colRef = getCollection();
 let partnersArray = [];
 
+/*
 export function getDocIdByPartnerName(partnerName) {
   const endName = partnerName.replace(/\s/g, '\uf8ff');
   return getDocs(
@@ -56,7 +70,7 @@ export function getDocIdByPartnerName(partnerName) {
       console.error('Error getting documents: ', error);
       return null;
     });
-}
+}*/
 
 export function getDocByID(docId) {
   const docReference = doc(db, 'nstp-3', docId);
@@ -138,270 +152,43 @@ const loadData = async() => {
 }
 
 
-// Commented out the loadIndex to place the script to run index.js in the index.html. 
-// This makes the previously written code for index.js to be usable
-/*
-// loadIndex is seperate from the index.html is so that the data (partnersArray) is filled
-// Otherwise, the partnersArray is empty when the index.js is run. This leads to nothing showing
-const loadIndex = async() => {
-	let index = document.createElement("script");
-	index.type = "module";
-	index.src = "./js/index.js";
-	document.body.appendChild(index);
-}*/
-
-// Removed from being async as it is required to be run before the index.js so that pins and data are filled
-/*
-const loadFile = async() => {
-  console.log("entered Loadfile");
-	await loadData();
-	loadIndex();
-  console.log("loaded index");
-}
-
-loadFile();
-*/
 await loadData();
-//loadIndex();
-
-
-function showModal(partner) {
-  const modal = document.getElementById('partnerModal');
-  const modalHeader = document.getElementById('modalHeader');
-  const modalContent = document.getElementById('modalContent');
-
-  // Clear previous content
-  modalHeader.innerHTML = '';
-  modalContent.innerHTML = '';
-
-  // Variables for risk levels
-  var earthquake = partner.earthquake_risk;
-  var earthquake_split = earthquake.split(' RISK: ');
-  var earthquake1 = earthquake_split[0];
-  var earthquake2 = earthquake_split[1];
-  var fire = partner.fire_risk;
-  var fire_split = fire.split(' RISK: ');
-  var fire1 = fire_split[0];
-  var fire2 = fire_split[1];
-  var flood = partner.flood_risk;
-  var flood_split = flood.split(' RISK: ');
-  var flood1 = flood_split[0];
-  var flood2 = flood_split[1];
-  var landslide = partner.landslide_risk;
-  var landslide_split = landslide.split(' RISK: ');
-  var landslide1 = landslide_split[0];
-  var landslide2 = landslide_split[1];
-  var storm = partner.storm_risk;
-  var storm_split = storm.split(' RISK: ');
-  var storm1 = storm_split[0];
-  var storm2 = storm_split[1];
-
-  // Create div elements for each piece of information
-  const nameDiv = document.createElement('div');
-  const partnerContentDiv = document.createElement('div');
-
-  let partner_content = `
-    <br>
-      <div>
-        <p class="modalText" id="entry_contact_number" style="margin-top: -5px;">${partner.contact_number}</p>
-        <p class="modalText" id="entry_address">${partner.household_address}</p>
-      </div>
-      <div class="modalLine">
-        <label class="modalLabel" style="width: 220px;">Residency Status</label>
-        <label class="modalLabel" style="width: 220px;">Part of HOA / NOA</label>
-      </div>
-      <div class="modalLine">
-        <p class="modalText" id="entry_residency_status" style="width: 220px;">${partner.residency_status}</p>
-        <p class="modalText" id="entry_HOA/NOA" style="width: 220px;">${partner.is_hoa_noa}</label>
-      </div>
-      <div>
-        <label class="modalLabel">Nearest Evacuation Area</label>
-        <p class="modalText" id="entry_nearest_evacuation_area">${partner.nearest_evac}</p>
-      </div>
-    <button type="button" class="collapsible">Risk Levels</button>
-      <div class="colContent" style="display: block;">
-        <div class="modalLine">
-          <label class="modalLabel">Earthquake</label>
-          <label class="modalLabel" id="entry_earthquake_risk_level">${earthquake1}</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_earthquake_desc">${earthquake2}</p>
-        </div>
-        <div class="modalLine">
-          <label class="modalLabel">Fire</label>
-          <label class="modalLabel" id="entry_fire_risk_level">${fire1}</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_fire_desc">${fire2}</p>
-        </div>
-        <div class="modalLine">
-          <label class="modalLabel">Flood</label>
-          <label class="modalLabel" id="entry_flood_risk_level">${flood1}</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_flood_desc">${flood2}</p>
-        </div>
-        <div class="modalLine">
-          <label class="modalLabel">Landslide</label>
-          <label class="modalLabel" id="entry_landslide_risk_level">${landslide1}</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_landslide_desc">${landslide2}</p>
-        </div>
-        <div class="modalLine">
-          <label class="modalLabel">Storm</label>
-          <label class="modalLabel" id="entry_storm_risk_level">${storm1}</label>
-        </div>
-        <div>
-          <p class="modalText" id="entry_storm_desc">${storm2}</p>
-        </div>
-      </div>
-    <button type="button" class="collapsible">Residents</button>
-      <div class="colContent" style="display: block;">
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">Total</label>
-          <label class="modalLabel" id="entry_number_of_residents">${partner.number_residents}</label>
-        </div>
-        <hr style="border-top: 1px solid #CBD5E0; margin-top:10px;">
-        <div class="modalLine" style="margin-top: 10px;">
-          <label class="modalLabel">Minors</label>
-          <label class="modalLabel" id="entry_number_of_minor_residents">${partner.number_minors}</label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">Adults</label>
-          <label class="modalLabel" id="entry_number_of_adult_residents">${partner.number_adult}</label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">Seniors</label>
-          <label class="modalLabel" id="entry_number_of_senior_residents">${partner.number_seniors}</label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">PWD</label>
-          <label class="modalLabel" id="entry_number_of_pwd_residents">${partner.number_pwd}</label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel">Sick</label>
-          <label class="modalLabel" id="entry_number_of_sick_residents">${partner.number_sick}</label>
-        </div>
-        <br>
-        <div class="modalLine">
-          <label class="modalLabel" >Pregnant</label>
-          <label class="modalLabel" id="entry_number_of_pregnant_residents">${partner.number_pregnant}</label>
-        </div>
-        <br>
-      </div>
-  `;
-
-  // styling
-  nameDiv.classList.add("modal-name");
-
-  // Set the content of each div
-  nameDiv.textContent = partner.household_name;
-  partnerContentDiv.innerHTML = partner_content;
-
-  // Append the div elements to the modal content
-  modalHeader.appendChild(nameDiv);
-  modalContent.appendChild(partnerContentDiv);
-
-  var coll = document.getElementsByClassName("collapsible");
-    var i;
-
-    for (i = 0; i < coll.length; i++) {
-      coll[i].addEventListener("click", function() {
-        this.classList.toggle("active");
-        var colContent = this.nextElementSibling;
-        if (colContent.style.display === "block") {
-          colContent.style.display = "none";
-          coll.style.transform = "none";
-        } else {
-          colContent.style.display = "block";
-          coll.style.transform = "rotate(180deg)";
-        }
-      });
-    }
-
-  // Show the modal
-  modal.style.display = 'block';
-
-  // Close the modal when the close button is clicked
-  const closeButton = document.getElementsByClassName('close')[0];
-  closeButton.addEventListener('click', () => {
-    modal.style.display = 'none';
-  });
-
-  // Close the modal when the user clicks outside of it
-  window.addEventListener('click', (event) => {
-    if (event.target == modal) {
-      modal.style.display = 'none';
-    }
-  });
-
-  //script for edit household modal
-
-  // modal
-  var editFormModal = document.getElementById('editModal');
-
-  // open modal
-  var openEditForm = document.getElementById('editHousehold');
-
-  // Get the <span> element that closes the modal
-  var closeEditForm = document.getElementById('close-btn');
-
-  // When the user clicks the button, open the modal
-  if(openEditForm) {
-    openEditForm.onclick = function () {
-      editFormModal.style.display = 'block';
-      modal.style.display = 'none';
-      populateEditForm(partner, editFormModal)
-    };
-  }
-
-  // When the user clicks on <span> (x), close the modal
-  if(closeEditForm) {
-    closeEditForm.onclick = function () {
-      editFormModal.style.display = 'none';
-    };
-  }
-}
-
-export function addEntry(data) {
-  data.forEach((entry) => {
-    addDoc(colRef, entry)
-      .then((docRef) => {
-        console.log('Document written with ID: ', docRef.id);
-      })
-      .catch((error) => {
-        console.error('Error adding document: ', error);
-      });
-  });
-}
 
 export function populateEditForm(partner, editFormModal) {
+  console.log("populating form");
   var iframe = editFormModal.getElementsByClassName('formIframe')[0]
   var editForm = iframe.contentWindow.document
+
+  console.log("Original name:", partner.household_name);
+
+
+  const originalField = editForm.createElement('input');
+  originalField.type = 'hidden';
+  originalField.id = 'original_household_name';
+  originalField.value = partner.household_name;
+  editForm.body.appendChild(originalField);
+
+
   for (var data in partner) {
-    // console.log(data.toString()+ " '" + partner[data] + "'")
-    // console.log(partner[data])``
-    if (data.includes('risk')) {
-      var assessment = partner[data].split(':')
-      var risk = assessment[0].split(' ')[0].toLowerCase()
-      var details = assessment[1].slice(1)
-      var riskType = data.split('_')
-      editForm.getElementById(riskType[0]).value = risk
-      editForm.getElementById(data.toString()).value = details
-    } else if (partner[data] instanceof Object){
+    if (partner[data] instanceof Object){
       editForm.getElementById(data.toString()).value = partner[data]._lat + " " + partner[data]._long
-    } else {
+    } 
+    
+    else {
       if (partner[data] != null) {
         editForm.getElementById(data.toString()).value = partner[data].toString();
       } else {
+        console.log(data +" blank")
         editForm.getElementById(data.toString()).value = '';
       }
+    }
+    
+    if (data.includes('risk') && !data.includes('description')) {
+      // splits ":" in case its still there (test set only curently)
+      // splits " " to keep the value (this is due to some values in the test set being formatted as "LEVEL RISK")
+      var risk = partner[data].split(':')[0].split(' ')[0].toLowerCase()
+      editForm.getElementById(data).value = risk;
+      
     }
   }
   // partner.forEach(data => {
@@ -409,4 +196,136 @@ export function populateEditForm(partner, editFormModal) {
   // console.log(partner.household_name)
   // console.log(document)
   // console.log(editFormModal.getElementsByClassName('formIframe')[0].contentWindow.document.getElementById('household_name'))
+}
+
+export function submitEditForm(){
+  console.log("Form is submitting!");
+  var collated_input = {}; 
+  var validate_errors =[];
+  for(let i = 0; i < BUKLOD_RULES_TEST[2].length; i++){
+    //BUKLOD_RULES_TEST[2] are just the field names of each document
+    // console.log(BUKLOD_RULES_TEST[2][i]);
+    // let q = document.getElementById(BUKLOD_RULES_TEST[2][i]).value;
+    // collated_input[BUKLOD_RULES_TEST[2][i]] = q;
+    let field_name = BUKLOD_RULES_TEST[2][i];
+    let input_value = document.getElementById(field_name).value;
+
+    if (document.getElementById(field_name).type == "number"){
+      input_value = Number(input_value);
+    }
+
+    // checks if the input is location coord and adjusts it to the proper input
+    if (field_name === 'location_coordinates'){
+      input_value = input_value.split(' ');
+      input_value = new GeoPoint(input_value[0],input_value[1]);
+    }
+
+    if (field_name.includes("risk") && !field_name.includes("description")){
+      input_value = input_value.toUpperCase();
+    }
+
+    collated_input[field_name] = input_value;
+    
+    // this is where data validation will happen
+    // add the if-else statements of edge cases here
+  }
+  //Internal data validation within buklod tao app
+  validate_errors = validateData(collection_value,collated_input);
+
+  
+  if (validate_errors.length > 0){
+    console.log("failed vaildation");
+    displayErrors(validate_errors);
+    alert("Error in validating values. Check console for errors present");
+    for(var i in validate_errors){
+      console.log(validate_errors[i]);
+    }
+  }
+  else {
+    console.log("passed validation");
+
+    const original_household_name = document.getElementById('original_household_name').value;
+
+    const waitForPromise = async() => {
+      const householdID = await getDocIdByPartnerName(original_household_name);
+      console.log("Resolved householdID to editEntry:", householdID);
+
+      if (householdID) {
+        editEntry(collated_input, householdID);
+      } else {
+        console.error("No householdID found for the given household_name!");
+        alert("Error: Unable to find household ID for original name.");
+      }
+    }
+
+    waitForPromise();
+  }
+  //Data Validation Error message display within modal
+  function displayErrors(errors) {
+    let errorDiv = document.getElementById('error_messages');
+
+    if (errorDiv) {
+
+        errorDiv.innerHTML = '';
+
+        if (validate_errors.length > 0) {
+            for (let error of validate_errors) {
+                let errorParagraph = document.createElement('p');
+                errorParagraph.textContent = error;
+                errorDiv.appendChild(errorParagraph);
+            }
+        }
+        } else {
+            console.error("Error: Couldn't find element with ID 'error_messages'.");
+        }
+    }
+ }
+export function submitAddForm(){
+  var collatedInput = {};
+
+  for (let i = 0; i < BUKLOD_RULES_TEST[2].length; i++) {
+
+      let fieldName = BUKLOD_RULES_TEST[2][i];
+      let inputValue = document.getElementById(fieldName).value;
+
+      if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick' || fieldName == 'number_seniors') {
+          collatedInput[fieldName] = Number(inputValue);
+      } else if (fieldName == 'location_coordinates') {
+          console.log(inputValue)
+          console.log(typeof inputValue)
+          const geoPoint = getCoordinates(inputValue);
+          collatedInput['location_coordinates'] = geoPoint;
+      } else {
+          collatedInput[fieldName] = inputValue;
+      }
+  }
+
+  const errors = validateData("buklod-official-TEST", collatedInput);
+
+  if (errors.length > 0) {
+      displayErrors(errors);
+  } else {
+      addEntry(collatedInput);
+      window.parent.document.getElementById('addModal').style.display = 'none';
+  };
+
+  function displayErrors(errors) {
+  let errorDiv = document.getElementById('error_messages');
+
+  if (errorDiv) {
+
+      errorDiv.innerHTML = '';
+
+      if (errors.length > 0) {
+          for (let error of errors) {
+              let errorParagraph = document.createElement('p');
+              errorParagraph.textContent = error;
+              errorDiv.appendChild(errorParagraph);
+          }
+      }
+      } else {
+          console.error("Error: Couldn't find element with ID 'error_messages'.");
+      }
+  }
+
 }
