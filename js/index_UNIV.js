@@ -128,39 +128,38 @@ export const JS_CS_ENGINE = [
 	[
 		'buklod-official',
 		[
-			'buklod-tao-branch/js/index.js',
-			'buklod-tao-branch/js/firestore.js',
-			'buklod-tao-branch/css/form.css',
-			//   'buklod-tao-branch/css/login.css',
-			'buklod-tao-branch/css/main.css',
+			'app_buklod-tao/js/index.js',
+			'app_buklod-tao/js/firestore.js',
+			'app_buklod-tao/css/form.css',
+			'app_buklod-tao/css/main.css',
 		],
 	],
 	[
 		'buklod-official-TEST',
 		[
-			'buklod-tao-branch/js/index.js',
-			'buklod-tao-branch/js/firestore.js',
-			'buklod-tao-branch/css/form.css',
+			'app_buklod-tao/js/index.js',
+			'app_buklod-tao/js/firestore.js',
+			'app_buklod-tao/css/form.css',
 			//   'buklod-tao-branch/css/login.css',
-			'buklod-tao-branch/css/main.css',
+			'app_buklod-tao/css/main.css',
 		],
 	],
 	[
 		'sdece-official',
 		[
-			'sdece/js/index.js',
-			'sdece/js/firestore.js',
-			'sdece/css/form.css',
-			'sdece/css/modal.css',
+			'app_sdece/js/index.js',
+			'app_sdece/js/firestore.js',
+			'app_sdece/css/form.css',
+			'app_sdece/css/modal.css',
 		],
 	],
 	[
 		'sdece-official-TEST',
 		[
-			'sdece/js/index.js',
-			'sdece/js/firestore.js',
-			'sdece/css/form.css',
-			'sdece/css/modal.css',
+			'app_sdece/js/index.js',
+			'app_sdece/js/firestore.js',
+			'app_sdece/css/form.css',
+			'app_sdece/css/modal.css',
 		],
 	],
 
@@ -180,6 +179,7 @@ export function createJsCssFiles(file_path) {
 		fileref.setAttribute('type', 'text/css');
 		fileref.setAttribute('href', file_path + '?');
 	}
+
 	return fileref;
 }
 

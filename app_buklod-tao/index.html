@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NSTP Hazard Mapping</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+  <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
+
+  <!--Load Leaflet from CDN-->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+    integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+    crossorigin=""></script>
+
+  <!--Load Esri Leaflet from CDN-->
+  <script src="https://unpkg.com/esri-leaflet@2.4.1/dist/esri-leaflet.js"
+    integrity="sha512-xY2smLIHKirD03vHKDJ2u4pqeHA7OQZZ27EjtqmuhDguxiUvdsOuXMwkg16PQrm9cgTmXtoxA6kwr8KBy3cdcw=="
+    crossorigin=""></script>
+
+  <!--Load Esri Leaflet Geocoder from CDN-->
+  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.css"
+    integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+    crossorigin="">
+  <script src="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.js"
+    integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
+    crossorigin=""></script>
+
+  <!--Load CSS sheets and Firestore Database-->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/form.css">
+  <script type="module" src="js/firestore.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!-- Map switching between root index and app_buklod_tao. Remove if not needed.
+   This just allows for easier map switching during development.-->
+  <script type="module">
+          import {
+            setCollection,
+            getCollection,
+            DB_RULES_AND_DATA,
+          } from "/js/firestore_UNIV.js";
+          import {
+            readyField,
+            clearMarkers,
+            clearLocationList,
+            map,
+            loadJsCssFiles,
+            createJsCssFiles,
+          } from "/js/index_UNIV.js";
+          import {
+            getDocs,
+            query,
+          } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
+          import {
+            getCurrentBranchCookie,
+            setCurrentBranchCookie,
+          } from "/js/cookies.js";
+
+          var collections = document.getElementById("collections");
+
+          for (let rule of DB_RULES_AND_DATA) {
+            collections.innerHTML += `<option value="${
+              rule[0]
+            }"> ${readyField(rule[0])}</option>`;
+          }
+
+        collections.addEventListener("change", function () {
+        const SELECTED = collections.value;
+        console.log(SELECTED)
+
+        setCurrentBranchCookie("current_branch", SELECTED);
+
+        if (
+            SELECTED.includes("sdece-official") || 
+            SELECTED.includes("sdece-official-TEST")
+          ) {
+            window.location.href = "../index.html";
+            console.log("switched");
+          } else {
+            setCollection(SELECTED);
+            location.reload();
+          }
+
+      });
+
+      const DEFAULT_BRANCH = "sdece-official";
+
+      if (getCurrentBranchCookie() === null) {
+        setCollection(DEFAULT_BRANCH);
+        setCurrentBranchCookie("current_branch", DEFAULT_BRANCH);
+        loadJsCssFiles(DEFAULT_BRANCH);
+        collections.value = DEFAULT_BRANCH; // Keep dropdown in sync
+      } else {
+        setCollection(getCurrentBranchCookie());
+        collections.value = getCurrentBranchCookie();
+        loadJsCssFiles(getCurrentBranchCookie());
+      }
+
+        </script>
+</head>
+
+<body>
+  <!-- Side bar, Top Bar, and Map -->
+  <div class="main">
+    <div class="sideNav">
+      <!-- Search Bar -->
+      <div class="buttons">
+        <input class="searchBar" type="search" placeholder="Search... " oninput="searchEntries()">
+          <br>
+          <button class="action-btn" id="download-report">Export data</button>
+          <br>
+          <select name="risk" id="risk-sort">
+            <option value="earthquake-sort">Earthquake</option>
+            <option value="fire-sort">Fire</option>
+            <option value="flood-sort">Flood</option>
+            <option value="landslide-sort">Landslide</option>
+            <option value="storm-sort">Storm</option>
+          </select>
+      </div>
+      <!-- List of Entries -->
+      <div class="entries">
+        <ul id="locationList" class="accordion">
+        </ul>
+      </div>
+
+      <!-- Login/Logout header -->
+      <div class="topBar">
+        <!-- Map Switching -->
+         <div class="layer-toggle-container">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  class="bi bi-layers layers-icon"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M8.235 1.559a.5.5 0 0 0-.47 0l-7.5 4a.5.5 0 0 0 0 .882L3.188 8 .264 9.559a.5.5 0 0 0 0 .882l7.5 4a.5.5 0 0 0 .47 0l7.5-4a.5.5 0 0 0 0-.882L12.813 8l2.922-1.559a.5.5 0 0 0 0-.882zm3.515 7.008L14.438 10 8 13.433 1.562 10 4.25 8.567l3.515 1.874a.5.5 0 0 0 .47 0zM8 9.433 1.562 6 8 2.567 14.438 6z"
+                  />
+                </svg>
+                <select
+                  name="collections"
+                  id="collections"
+                  class="layer-toggle"
+                ></select>
+              </div>
+        <!-- Logout Button -->
+        <button class="buttonLogout"><img class="logoutIcon" src="./img/logout.256x256.png" alt="logout"> Logout</button>
+      
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals of Entries -->
+  <div id="partnerModal" class="modal">
+    <!-- Modal Header: includes household owner -->
+    <div class="modalHeader">
+      <h1 id="modalHeader" class="modalName"></h1>
+      <span class="close">&times;</span>
+    </div>
+    <!-- Modal Content: content of the entries -->
+    <div class="modalContent">
+      <p id="modalContent"></p>
+    </div>
+    <!-- Modal footer: contains edit and delete buttons -->
+    <div class="modalFooter">
+      <div class="modalLine">
+        <!--
+        <button class="modalButton" type="submit" id="submit_form" name="submit_form" style="color:#D64747">Delete &nbsp;&nbsp;<img src="./img/delete.png" alt="delete" style="height: 20px; width: 20px;"></button>
+        <button class="modalButton" id="editHousehold" name="submit_form" style="color:#3D97AF">Edit   &nbsp;&nbsp;<img src="./img/edit.png" alt="edit" style="height: 20px; width: 20px;"></button>
+        -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for add household form -->
+  <div id="addModal" class="formModal" style="display: none;">
+    <iframe src="html/addloc.html" class="formIframe"></iframe>
+  </div>
+
+  <!-- Modal for edit household form -->
+  <div id="editModal" class="formModal" style="display: none;">
+    <iframe src="html/editloc.html" class="formIframe"></iframe>
+  </div>
+
+  <!--script for map-->
+  <div id="map" class="map-container"></div>
+  <script type="module" src="js/index.js"></script> 
+
+  <!--script for search bar-->
+  <script>
+    function searchEntries() {
+      var input = document.querySelector('.searchBar').value.toUpperCase();
+      var ul = document.getElementById("locationList");
+      var li = ul.getElementsByTagName('li');
+      for (var i = 0; i < li.length; i++) {
+        var a = li[i].getElementsByTagName("a")[0];
+        var txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(input) > -1) {
+          li[i].style.display = "";
+        } else {
+          li[i].style.display = "none";
+        }
+      }
+    }
+
+					// This hides the Add Activity modal when the user submits the form
+					window.addEventListener('message', function (event) {
+						if (
+							event.data &&
+							event.data.type === 'addlocFormSuccess'
+						) {
+							// Handle successful form submission event here
+							const addModal =
+								document.getElementById('addModal');
+							addModal.classList.add('hidden'); // Hide the iframe
+
+							const messageModal =
+								document.getElementById('messageModal');
+							messageModal.style.display = 'flex'; //display success message
+						}
+					});
+
+					// Function to hide the div containing the iframe
+					function hideModalContainer(modal) {
+						var iframe = document.getElementById(modal);
+						if (iframe) {
+							iframe.style.display = 'none';
+						}
+					}
+
+					// Add an event listener to handle messages from the iframe
+					window.addEventListener('message', function (event) {
+						if (event.data === 'closeAddModal') {
+							hideModalContainer('addModal');
+						}
+						if (event.data === 'closeEditModal') {
+							hideModalContainer('editModal');
+						}
+						if (event.data === 'closeMainModal') {
+							hideModalContainer('mainModal');
+						}
+						if (event.data === 'closeMessageModal') {
+							hideModalContainer('messageModal');
+						}
+						// TEST: remove later
+						if (event.data === 'testMessageModal') {
+							console.log('testing message modal');
+							const messageModal =
+								document.getElementById('messageModal');
+							messageModal.style.display = 'flex';
+						}
+					});
+  </script>
+
+
+<!--script for add a location on map click-->
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    document.body.addEventListener('click', function(event) {
+      if (event.target.matches('.addButton')) {
+        // Prevent default behavior if necessary
+        event.preventDefault();
+
+        // Get the modal
+        var modal = document.getElementById("addModal");
+
+        // Show the modal
+        modal.style.display = "block";
+      }
+
+      // Close the modal when the close button is clicked
+      if (event.target.matches('.close')) {
+        var modal = document.getElementById("addModal");
+        modal.style.display = "none";
+      }
+    });
+  });
+</script>
+
+</body>
+
+</html>
