@@ -1,5 +1,5 @@
-// FIRESTORE DATABASE
-
+// FIRESTORE DATABASE\
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 import {
 	getFirestore,
 	collection,
@@ -13,6 +13,7 @@ import {
 	GeoPoint,
 	Timestamp
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+
 import {
 	getCollection,
 	setCollection,
@@ -20,12 +21,30 @@ import {
 	SDECE_RULES_TEST,
 	getDocIdByPartnerName,
 	validateData,
-	addEntry,
-	editEntry
+	editEntry,
+	addEntry
 } from '/js/firestore_UNIV.js';
+
 import { addListeners, map, getDivContent } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
+
 // Your Firestore code here
+const firebaseConfig = {
+  apiKey: 'AIzaSyA8QWgic_hjbDL-EYIkvSRRII_yfTRdtOQ',
+  authDomain: 'discs-osci-prj.firebaseapp.com',
+  projectId: 'discs-osci-prj',
+  storageBucket: 'discs-osci-prj.appspot.com',
+  messagingSenderId: '601571823960',
+  appId: '1:601571823960:web:1f1278ecb86aa654e6152d',
+  measurementId: 'G-9N9ELDEMX9',
+};
+var collection_value = 'sdece-official'
+
+initializeApp(firebaseConfig);
+const db = getFirestore();
+setCollection(collection_value);
+const colRef = getCollection();
+let partnersArray = [];
 
 // Import the functions you need from the SDKs you need
 //import { initializeApp } from "firebase/app";
@@ -45,15 +64,12 @@ var activities = {};
 var addForm_geopoint;
 var has_existing_partner = false;
 
-// This pans to the Philippines
+// Pans to the Philippines
 map.setView(new L.LatLng(14.651, 121.052), 14);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	attribution:
-		'&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
+	attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
-
-var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
@@ -62,21 +78,16 @@ function onMapClick(e) {
 	const lat = e.latlng.lat;
 	const lng = e.latlng.lng;
 
-	// This is the popup for when the user clicks on a random spot on the map
-	var popupContent = `
-     <div class="partner-geolocation">
-       
-           Latitude: ${lat} <br> Longitude: ${lng}
-       </div>
-   <button class="addButton" data-lat="${lat}" data-lng="${lng}">Add Location</button>
- `;
+	// Popup for when user clicks anywhere on the map
+	var popupContent = 
+	`<div class="partner-geolocation"> Latitude: ${lat} <br> Longitude: ${lng} </div>
+	 <button class="addButton" data-lat="${lat}" data-lng="${lng}"> Add Location</button>`;
 
 	popup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
 
-	// This addButton is from the mini popup
-	var addButton = document.querySelector('.addButton');
-	addButton.addEventListener('click', function () {
-		// show mainmodal from pop up "add location"
+	// Add Location button for Popup
+	var add_button = document.querySelector('.addButton');
+	add_button.addEventListener('click', function () {
 		addForm_geopoint = new GeoPoint(lat, lng);
 		showMainModal();
 		populateMainModalList();
@@ -86,57 +97,38 @@ function onMapClick(e) {
 map.on('click', onMapClick);
 
 // add activity from the main modal
-const mainModalDocument =
-	document.getElementById('mainModalIframe').contentDocument;
+const mainModalDocument = document.getElementById('mainModalIframe').contentDocument;
 const newButton = mainModalDocument.getElementById('addModalButton');
 
 newButton.addEventListener('click', () => {
 	// Get the Add Activity form and the needed input fields for autofill
-	var inputtedPartnerName = mainModalDocument.getElementById(
-		'inputted_partner_name'
-	).value;
-	var inputtedPartnrAddress =
-		mainModalDocument.getElementById('address-input').value;
+	var inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value;
+	var inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value;
+	var input = addFormiframeDocument.getElementById(field);
 	has_existing_partner = false;
 
-	if (inputtedPartnerName == '' || inputtedPartnrAddress == '') {
+	if (inputtedPartnerName == '' || inputtedPartnerAddress == '') {
 		alert('Partner Name and Partner Address cannot be blank.');
 	} else {
 		for (let field of SDECE_RULES[2]) {
 			if (field != 'partner_coordinates') {
 				if (field == 'partner_name' || field == 'partner_address') {
 					if (field == 'partner_name') {
-						addFormiframeDocument.getElementById(
-							field
-						).value = inputtedPartnerName;
-					} else if (field == 'partner_address') {
-						addFormiframeDocument.getElementById(
-							field
-						).value = inputtedPartnrAddress;
+						input.value = inputtedPartnerName;
+					} else {
+						input.value = inputtedPartnerAddress;
 					}
-					addFormiframeDocument.getElementById(
-						field
-					).readOnly = true;
-					addFormiframeDocument.getElementById(
-						field
-					).style.backgroundColor = 'var(--custom-medium-gray';
-					addFormiframeDocument.getElementById(
-						field
-					).style.color = 'var(--custom-dark-gray';
+					input.readOnly = true;
+					input.style.backgroundColor = 'var(--custom-medium-gray';
+					input.style.color = 'var(--custom-dark-gray';
 				} else {
-					addFormiframeDocument.getElementById(field).value =
-						null;
-					addFormiframeDocument.getElementById(
-						field
-					).readOnly = false;
+					input.value = null;
+					input.readOnly = false;
 				}
-			} else {
-			}
+			} 
 		}
 		showAddModal();
 	}
-
-	// Set autofill or reset field
 });
 
 //If activity name is empty, used activity nature	
@@ -176,10 +168,8 @@ getDocs(col_ref)
 			let partner = activities[activity][SDECE_RULES[1]];
 			if (partners[partner] == null) {
 				partners[partner] = [];
-				partners[partner].push(activities[activity]);
-			} else {
-				partners[partner].push(activities[activity]);
-			}
+			} 
+			partners[partner].push(activities[activity]);
 		});
 
 		// Populate side navigation <ul> with partners
@@ -188,21 +178,18 @@ getDocs(col_ref)
 			var marker;
 
 			// Some coordinated are null, protective check
-			if (partners[partner][0]['partner_coordinates'] != null) {
+			let partnerCoordinates = partners[partner][0]['partner_coordinates'];
+			let partnerLatitude = partnerCoordinates.latitude;
+			let partnerLongitude = partnerCoordinates.longitude;
+
+			if (partnerCoordinates != null) {
 				marker = L.marker([
-					parseFloat(
-						partners[partner][0]['partner_coordinates']
-							.latitude
-					),
-					parseFloat(
-						partners[partner][0]['partner_coordinates']
-							.longitude
-					),
+					parseFloat(partnerLatitude),
+					parseFloat(partnerLongitude),
 				]);
 
 				results.addLayer(marker);
-				var popupContent = `
-					<div class="partner-popup" id="`;
+				var popupContent = `<div class="partner-popup" id="`;
 				popupContent += partners[partner][0]['partner_name'];
 				popupContent += `">`;
 				popupContent += partners[partner][0]['partner_name'];
@@ -214,22 +201,13 @@ getDocs(col_ref)
 				marker.on('mouseover', function () {
 					marker.openPopup();
 
-					var test = document.getElementById(
-						partners[partner][0]['partner_name']
-					);
 				});
 
 				marker.on('click', function () {
 					map.panTo(
 					new L.LatLng(
-						parseFloat(
-							partners[partner][0]['partner_coordinates']
-								.latitude
-						),
-						parseFloat(
-							partners[partner][0]['partner_coordinates']
-								.longitude
-						)
+						parseFloat(partnerLatitude),
+						parseFloat(partnerLongitude),
 					)
 				);
 
@@ -245,7 +223,6 @@ getDocs(col_ref)
 					});
 					showModal(partners[partner]);
 				});
-			}
 
 			const containerDiv = document.createElement('div');
 			const img = document.createElement('svg');
@@ -254,21 +231,18 @@ getDocs(col_ref)
 			const nameDiv = document.createElement('div');
 			const addressDiv = document.createElement('div');
 			const activityDiv = document.createElement('div');
-			const sidebarItems = document.querySelectorAll('.partnerDiv');
-
+			
 			containerDiv.addEventListener('click', function () {
 				marker.openPopup();
 				map.panTo(
 					new L.LatLng(
-						parseFloat(partners[partner][0]['partner_coordinates'].latitude),
-						parseFloat(partners[partner][0]['partner_coordinates'].longitude)
+						parseFloat(partnerLatitude),
+						parseFloat(partnerLongitude)
 					)
 				);
 
 				clearAllHighlights();
-
 				containerDiv.classList.add('highlight');
-
 				showModal(partners[partner]);
 			});
 
@@ -276,12 +250,11 @@ getDocs(col_ref)
 
 			containerDiv.classList.add('partnerDiv');
 
-			//   var activities = getDocIdByPartnerName(partner.partner_name);
+			// Checks if list of activities are present
 			if (Object.keys(activities).length > 0) {
-				// check if list of activities is present, otherwise is skipped to avoid errors
+				let html = ';'
 				Object.keys(activities).forEach((activity) => {
-					activityDiv.innerHTML +=
-						getActivity + '<br/>'; // there might be a better way to display multiple activities
+					html += getActivity(activity) + '<br/>'; 
 				});
 			}
 
@@ -301,6 +274,7 @@ getDocs(col_ref)
 			activityDiv.innerHTML = activities_string;
 
 			listItem.classList.add('accordion');
+
 			// Append elements to the DOM
 			anchor.appendChild(nameDiv);
 			anchor.appendChild(addressDiv);
@@ -326,12 +300,13 @@ export function showModal(partner) {
 	const modal = document.getElementById('partnerModal');
 	const modalHeader = document.getElementById('modalHeader');
 	const modalContent = document.getElementById('modalContent');
+	const modalHeaderStyle = modalHeader.style;
 
-	modalHeader.style.width = '100%';
-	modalHeader.style.display = 'flex';
-	modalHeader.style.flexDirection = 'row';
-	modalHeader.style.justifyContent = 'space-between';
-	modalHeader.style.alignItems = 'center';
+	modalHeaderStyle.width = '100%';
+	modalHeaderStyle.display = 'flex';
+	modalHeaderStyle.flexDirection = 'row';
+	modalHeaderStyle.justifyContent = 'space-between';
+	modalHeaderStyle.alignItems = 'center';
 
 	// Clear previous content
 	modalHeader.innerHTML = '';
@@ -355,11 +330,8 @@ export function showModal(partner) {
 	addressDiv.classList.add('modal-address');
 
 	// Set the content of each div
-	backarrowDiv.innerHTML =
-		'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor" transform="matrix(-1, 0, 0, -1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
-
+	backarrowDiv.innerHTML = '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor" transform="matrix(-1, 0, 0, -1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
 	backarrowDiv.classList.add('back-btn');
-
 	backarrowDiv.addEventListener('click', () => {
 		current_viewed_activity = null;
 		document.querySelector('.modal-button').style.display = 'none';
@@ -369,17 +341,14 @@ export function showModal(partner) {
 		modalContent.innerHTML = '';
 
 		// Append the div elements to the modal content
-
 		modalHeader.appendChild(nameDiv);
 		modalHeader.appendChild(closeDiv);
-
 		modalContent.appendChild(addressDiv);
 		modalContent.appendChild(activityHeaderDiv);
 		modalContent.appendChild(activityDiv);
 	});
 
-	closeDiv.innerHTML =
-		'<svg viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><path d="M20.7457 3.32851C20.3552 2.93798 19.722 2.93798 19.3315 3.32851L12.0371 10.6229L4.74275 3.32851C4.35223 2.93798 3.71906 2.93798 3.32854 3.32851C2.93801 3.71903 2.93801 4.3522 3.32854 4.74272L10.6229 12.0371L3.32856 19.3314C2.93803 19.722 2.93803 20.3551 3.32856 20.7457C3.71908 21.1362 4.35225 21.1362 4.74277 20.7457L12.0371 13.4513L19.3315 20.7457C19.722 21.1362 20.3552 21.1362 20.7457 20.7457C21.1362 20.3551 21.1362 19.722 20.7457 19.3315L13.4513 12.0371L20.7457 4.74272C21.1362 4.3522 21.1362 3.71903 20.7457 3.32851Z" fill="currentColor"></path></svg>';
+	closeDiv.innerHTML = '<svg viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><path d="M20.7457 3.32851C20.3552 2.93798 19.722 2.93798 19.3315 3.32851L12.0371 10.6229L4.74275 3.32851C4.35223 2.93798 3.71906 2.93798 3.32854 3.32851C2.93801 3.71903 2.93801 4.3522 3.32854 4.74272L10.6229 12.0371L3.32856 19.3314C2.93803 19.722 2.93803 20.3551 3.32856 20.7457C3.71908 21.1362 4.35225 21.1362 4.74277 20.7457L12.0371 13.4513L19.3315 20.7457C19.722 21.1362 20.3552 21.1362 20.7457 20.7457C21.1362 20.3551 21.1362 19.722 20.7457 19.3315L13.4513 12.0371L20.7457 4.74272C21.1362 4.3522 21.1362 3.71903 20.7457 3.32851Z" fill="currentColor"></path></svg>';
 	closeDiv.classList.add('close-btn');
 	// Close the modal when the close button is clicked
 	closeDiv.addEventListener('click', () => {
@@ -392,16 +361,14 @@ export function showModal(partner) {
 
 	nameDiv.textContent = partner[0].partner_name;
 	addressDiv.textContent =
-		'Latitude, Longitude: ' +
-		partner[0].partner_coordinates._lat +
-		', ' +
-		partner[0].partner_coordinates._long;
+		'Latitude, Longitude: ' 
+		+ partner[0].partner_coordinates._lat + ', ' 
+		+ partner[0].partner_coordinates._long;
 
 	// Activities header with add activity button
 	activityHeaderDiv.innerHTML = 'List of activities: ';
 	const addActivity = document.createElement('button');
-	addActivity.innerHTML =
-		'<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>';
+	addActivity.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>';
 	addActivity.classList.add('plus-btn');
 
 	// Add button for adding activities
@@ -413,55 +380,23 @@ export function showModal(partner) {
 		);
 		// show the addLoc.html with some autofilled values
 		var modal = document.getElementById('addModal');
+		var modalHtml = document.getElementById('addModalHTML');
+		var partnerName = modalHtml.contentWindow.document.getElementById('partner_name');
+		var partnerAddress = modalHtml.contentWindow.document.getElementById('partner_address');
 
 		// Display the modal
 		modal.style.display = 'flex';
 		// populate the field with current partner values
-		document
-			.getElementById('addModalHTML')
-			.contentWindow.document.getElementById('partner_name').value =
-			partner[0].partner_name;
 
-		document
-			.getElementById('addModalHTML')
-			.contentWindow.document.getElementById(
-				'partner_name'
-			).readOnly = true;
+		partnerName.value = partner[0].partner_name;
+		partnerName.readOnly = true;
+		partnerName.style.backgroundColor = 'var(--custom-medium-gray';
+		partnerName.style.color = 'var(--custom-dark-gray';
 
-		document
-			.getElementById('addModalHTML')
-			.contentWindow.document.getElementById(
-				'partner_name'
-			).style.backgroundColor = 'var(--custom-medium-gray';
-
-		document
-			.getElementById('addModalHTML')
-			.contentWindow.document.getElementById('partner_address').value =
-			partner[0].partner_address;
-
-		document
-			.getElementById('addModalHTML')
-			.contentWindow.document.getElementById(
-				'partner_address'
-			).readOnly = true;
-
-		document
-			.getElementById('addModalHTML')
-			.contentWindow.document.getElementById(
-				'partner_address'
-			).style.backgroundColor = 'var(--custom-medium-gray';
-
-		document
-			.getElementById('addModalHTML')
-			.contentWindow.document.getElementById(
-				'partner_address'
-			).style.color = 'var(--custom-dark-gray';
-
-		document
-			.getElementById('addModalHTML')
-			.contentWindow.document.getElementById(
-				'partner_name'
-			).style.color = 'var(--custom-dark-gray';
+		partnerAddress.value = partner[0].partner_address;
+		partnerAddress.readOnly = true;
+		partnerAddress.style.backgroundColor = 'var(--custom-medium-gray';
+		partnerAddress.style.color = 'var(--custom-dark-gray';
 
 		// Close the Add Activity modal when the user clicks anywhere outside of it
 		// window.onclick = function (event) {
@@ -492,8 +427,7 @@ export function showModal(partner) {
 			office.classList.add('modal-office');
 
 			activityName.textContent = getActivity(activity) + '';
-			arrow.innerHTML =
-				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
+			arrow.innerHTML = '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
 			office.innerHTML = activity.ADMU_office;
 
 			activityTitle.appendChild(activityName);
@@ -531,7 +465,13 @@ export function showModal(partner) {
 			activityDatesDiv.innerHTML =
 				'<b>Date/s of Partnership</b>' +
 				'<p class="pm-detailed-info">' +
-				activity.activity_date +
+				(activity.activity_date?.toDate?.()
+					? activity.activity_date.toDate().toLocaleDateString('en-PH', {
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric',
+					})
+					: 'N/A') +
 				'</p>'; //this field might become an array in the future
 
 			activityOfficeDiv.innerHTML =
@@ -549,8 +489,7 @@ export function showModal(partner) {
 			// Executed when the user clicks on an activity listed in the Partner Modal
 			activityButton.addEventListener('click', () => {
 				current_viewed_activity = activity;
-				document.querySelector('.modal-button').style.display =
-					'flex';
+				document.querySelector('.modal-button').style.display = 'flex';
 				modalHeader.innerHTML = '';
 				modalContent.innerHTML = '';
 
@@ -558,8 +497,6 @@ export function showModal(partner) {
 				modalHeader.appendChild(backarrowDiv);
 				modalHeader.appendChild(nameDiv);
 				modalHeader.appendChild(closeDiv);
-
-				// Content
 
 				// Resetting class list to override styles
 				activityNameDiv.classList = '';
@@ -600,8 +537,6 @@ export function showModal(partner) {
 	// NOTE: This is where every partner modal content is added
 	modalHeader.appendChild(nameDiv);
 	modalHeader.appendChild(closeDiv);
-	// TODO: Implement the close button in index.html lang.
-
 	modalContent.appendChild(addressDiv);
 	modalContent.appendChild(activityHeaderDiv);
 	modalContent.appendChild(activityDiv);
@@ -627,13 +562,10 @@ export function showModal(partner) {
 				// Select the modal and partnerName elements
 				var modal = document.getElementById('editModal');
 
-				var partnerModal = document.getElementById('partnerModal');
-
 				// Display the modal
 				modal.style.display = 'flex';
-				// partnerModal.classList.add('hidden'); // Not sure if this should be hidden nalang, or should be kept open with the editModal on top nalang
-
-				//autofill existing values inside the modal
+		
+				// Autofill existing values inside the modal
 				SDECE_RULES[2].forEach((field) => {
 					let current_inp = document
 						.getElementById('editModal_iframe')
@@ -643,12 +575,6 @@ export function showModal(partner) {
 							current_viewed_activity[field];
 					}
 				});
-				// Close the modal when the user clicks anywhere outside of it
-				// window.onclick = function (event) {
-				// 	if (event.target == modal) {
-				// 		modal.style.display = 'none';
-				// 	}
-				// };
 			}
 		});
 	}
@@ -683,17 +609,16 @@ var addFormiframe = document.getElementById('addModalHTML');
 var addFormiframeDocument = addFormiframe.contentWindow.document;
 var addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
 addFormSubmitButton.addEventListener('click', function () {
-	//handleAdd
-	//get data from addloc.html
+	//Get data from addloc.html
 	var info_from_forms = {};
 	for (let field of SDECE_RULES[2]) {
 		if (field != 'partner_coordinates') {
-			let inp_field = addFormiframeDocument.getElementById(field);
-			if (inp_field != null) {
-				if (inp_field.value == '') {
+			let input_field = addFormiframeDocument.getElementById(field);
+			if (input_field != null) {
+				if (input_field.value == '') {
 					info_from_forms[field] = null;
 				} else {
-					info_from_forms[field] = inp_field.value;
+					info_from_forms[field] = input_field.value;
 				}
 			}
 		} else {
@@ -701,7 +626,7 @@ addFormSubmitButton.addEventListener('click', function () {
 		}
 	}
 
-	//validate the collated input here
+	//Validate the collated input here
 	let errors = validateData('sdece-official-TEST', info_from_forms);
 
 	if (errors.length > 0) {
@@ -709,7 +634,7 @@ addFormSubmitButton.addEventListener('click', function () {
 		event.preventDefault();
 	} else {
 		if (has_existing_partner) {
-			//upload it straight to the firebase db
+			// Uploads straight to firebase DB
 			if (
 				typeof info_from_forms.activity_date === 'string' &&
 				!isNaN(Date.parse(info_from_forms.activity_date))
@@ -719,9 +644,6 @@ addFormSubmitButton.addEventListener('click', function () {
 				info_from_forms.activity_date = Timestamp.fromDate(new Date(info_from_forms.activity_date));
 			}
 			addEntry(info_from_forms);
-			// alert(
-			// 	'Reload the page for the new additions to reflect on your browser'
-			// );
 		} else {
 			//locally store it
 			temp_activities[temp_activities_id + ''] = info_from_forms;
@@ -739,7 +661,7 @@ addFormSubmitButton.addEventListener('click', function () {
 		}
 
 		// close the save modal
-		addFormiframeDocument.style.display = 'none';
+		addFormiframe.style.display = 'none';
 	}
 
 	function displayErrors(errors) {
@@ -768,20 +690,19 @@ addFormSubmitButton.addEventListener('click', function () {
 });
 
 // Editloc.html Save button click listener
-let edit_modal =
-	document.getElementById('editModal_iframe').contentWindow.document;
+let edit_modal = document.getElementById('editModal_iframe').contentWindow.document;
 edit_modal.getElementById('submit_form').addEventListener('click', handleEdit);
 
 export function handleEdit() {
 	var collated_inp = {};
 	for (let field of SDECE_RULES[2]) {
 		if (field != 'partner_coordinates') {
-			let inp_field = edit_modal.getElementById(field);
-			if (inp_field != null) {
-				if (inp_field.value == '') {
+			let input_field = edit_modal.getElementById(field);
+			if (input_field != null) {
+				if (input_field.value == '') {
 					collated_inp[field] = null;
 				} else {
-					collated_inp[field] = inp_field.value;
+					collated_inp[field] = input_field.value;
 				}
 			}
 		} else {

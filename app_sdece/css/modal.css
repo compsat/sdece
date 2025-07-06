@@ -1,4 +1,4 @@
-@import url('variables.css');
+@import url('globals.css');
 
 * {
 	margin: 0px;
@@ -391,8 +391,6 @@ button {
 	letter-spacing: 0.32px;
 }
 
-.modal-office {
-}
 .back-btn {
 	animation: slide-in 500ms forwards;
 	margin-right: 1rem;
