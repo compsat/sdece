@@ -37,7 +37,7 @@ const firebaseConfig = {
   measurementId: 'G-9N9ELDEMX9',
 };
 
-var collection_value = 'buklod-official-TEST'
+var collection_value = 'buklod-official'
 
 initializeApp(firebaseConfig);
 const db = getFirestore();
@@ -300,7 +300,7 @@ export function submitAddForm(){
       }
   }
 
-  const errors = validateData("buklod-official-TEST", collatedInput);
+  const errors = validateData("buklod-official", collatedInput);
 
   if (errors.length > 0) {
       displayErrors(errors);
