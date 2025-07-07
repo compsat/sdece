@@ -310,7 +310,7 @@ window.onclick = function (event) {
   }
 };
 
-*/
+
 
 partnersArray.forEach((partner) => {
     var doc = partner;
