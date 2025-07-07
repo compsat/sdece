@@ -8,7 +8,7 @@ import {
   addEntry,
   BUKLOD_RULES_TEST,
 } from '../../js/firestore_UNIV.js';
-import { addListeners, map } from '../../js/index_UNIV.js';
+import { addListeners, clearMarkers, map } from '../../js/index_UNIV.js';
 import {
   getFirestore,
   collection,
@@ -16,8 +16,8 @@ import {
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import evacCenters from '../hardcode/evac-centers.json' with {type: 'json'};
 
+console.log("run1")
 //setCollection("buklod-official-TEST");
-
 // Pans map to Banaba area upon loading the page
 map.panTo(new L.LatLng(14.673, 121.11215));
 
@@ -170,13 +170,14 @@ partnersArray.forEach((partner) => {
           })
         }
       })
-      results.addLayer(this_marker);
+      map.addLayer(this_marker);
       Object.defineProperty(partner, "marker", {value:this_marker, configurable: true});
     }
   });
 
 addListeners();
 
+/*
 function onMapClick(e) {
   const lat = e.latlng.lat;
   const lng = e.latlng.lng;
@@ -257,10 +258,9 @@ function onMapClick(e) {
       }
     };
   });
-}
+}*/
 
-map.on('click', onMapClick);
-
+/*
 //// Event Listeners
 searchControl.on('results', function (data) {
   console.log(data);
@@ -271,7 +271,7 @@ searchControl.on('results', function (data) {
     results.addLayer(marker);
   }
 });
-
+*/
 // Script for add household modal
 
 // Modal
@@ -311,7 +311,7 @@ window.onclick = function (event) {
 };
 
 
-
+/*
 partnersArray.forEach((partner) => {
     var doc = partner;
     if (doc.location_coordinates != null) {
@@ -340,7 +340,7 @@ partnersArray.forEach((partner) => {
       results.addLayer(this_marker);
       Object.defineProperty(partner, "marker", {value:this_marker, configurable: true});
     }
-  });
+  });*/
 
 addListeners();
 
@@ -363,7 +363,7 @@ function onMapClick(e) {
   });
   
   customPopup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
-  popup = customPopup;
+  //popup = customPopup;
 
   // Event listener for the Add Household button using event delegation
   setTimeout(() => {
@@ -639,9 +639,10 @@ function getRiskIcon(riskLevel) {
 // Function for code logic of switching between risk types
 function updateRiskIcons() {
   const riskType = document.getElementById('risk-sort').value.replace('-sort', '');
-
+  debugger;
   // Remove all current markers
-  results.clearLayers();
+  // results.clearLayers();
+  clearMarkers();
 
   partnersArray.forEach((partner) => {
     const coord = partner.location_coordinates;
@@ -677,7 +678,7 @@ function updateRiskIcons() {
       });
     });
 
-    results.addLayer(marker);
+    map.addLayer(marker);
     Object.defineProperty(partner, "marker", { value: marker, configurable: true });
   });
 }
