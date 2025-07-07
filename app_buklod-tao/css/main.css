@@ -91,6 +91,10 @@ body {
 	background-color: #f9fafb;
 }
 
+#risk-sort {
+  width: 100%;
+}
+
 .partners-header {
 	padding: 0 1.5rem 0.75rem;
 	border-bottom: 1px solid #eeeeee;

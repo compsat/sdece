@@ -39,8 +39,8 @@
   <script type="module" src="js/firestore.js"></script>
   <script type="module" src="/components/SearchBar.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <!-- Map switching between root index and app_buklod_tao. Remove if not needed.
    This just allows for easier map switching during development.-->
@@ -124,15 +124,13 @@
           <button class="action-btn">Sort</button>
           <button class="action-btn" id="download-report">Export data</button>
         </div>
-        <div>
-          <select name="risk" id="risk-sort">
-            <option value="earthquake-sort">Earthquake</option>
-            <option value="fire-sort">Fire</option>
-            <option value="flood-sort">Flood</option>
-            <option value="landslide-sort">Landslide</option>
-            <option value="storm-sort">Storm</option>
-          </select>
-        </div>
+        <select name="risk" id="risk-sort" class="action-btn">
+          <option value="earthquake-sort">Earthquake</option>
+          <option value="fire-sort">Fire</option>
+          <option value="flood-sort">Flood</option>
+          <option value="landslide-sort">Landslide</option>
+          <option value="storm-sort">Storm</option>
+        </select>
       </div>
       <div class="partners-header">
         <span id="partners-count">HOUSEHOLDS</span>
