@@ -21,9 +21,13 @@ console.log("run1")
 // Pans map to Banaba area upon loading the page
 map.panTo(new L.LatLng(14.673, 121.11215));
 
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution:
+    '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
+  
 var colRef = getCollection();
 var partnersArray = getPartnersArray();
-
 
 // Function to store the html for info display on pin click
 function onPinClick(doc) {
@@ -131,7 +135,7 @@ evacCenters.forEach(center => {
   const marker = L.marker(
     [center.latitude, center.longitude],
     {icon: L.icon({
-      iconUrl: "/app_buklod-tao/hardcode/evac.svg",
+      iconUrl: "/app_buklod-tao/hardcode/evac_center_v2.svg",
       iconSize: [39,39],
       popupAnchor: [0.5, -15]
     })}
@@ -535,7 +539,6 @@ document.getElementById('download-report').addEventListener('click', async () =>
 	const masterData = [masterHeaders];
 
 	allHouseholds.forEach(h => {
-    debugger;
 		const row = [
 			h.household_name || '',
 			h.household_address || '',
@@ -639,7 +642,6 @@ function getRiskIcon(riskLevel) {
 // Function for code logic of switching between risk types
 function updateRiskIcons() {
   const riskType = document.getElementById('risk-sort').value.replace('-sort', '');
-  debugger;
   // Remove all current markers
   // results.clearLayers();
   clearMarkers();
