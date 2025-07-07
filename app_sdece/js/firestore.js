@@ -303,8 +303,10 @@ getDocs(col_ref)
 			containerDiv.appendChild(img);
 			containerDiv.appendChild(listItem);
 			locationList.appendChild(containerDiv);
-	}});
+
+		});
 	})
+
 	.catch((error) => {
 		console.error('Error getting documents: ', error);
 	});
