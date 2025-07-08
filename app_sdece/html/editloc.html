@@ -8,289 +8,79 @@
 
 	</head>
 	<body>
-		<form action="" id="addLocForm" class="form-container">
-			<div class="form-header">
-				<h1 class="form-heading">Edit Activity</h1>
-				<button id="close-btn">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.5"
-						class="close-btn"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M6 18 18 6M6 6l12 12"
-						/>
-					</svg>
-				</button>
-			</div>
-			<div class="form-body">
-				<!-- Header -->
-			<div class id="error_messages"></div>
-				<!-- General Information -->
-				<div class="form-section">
-					<div class="form-field">
-						<label class="form-label" for="activity_name"
-							>Activity Name
-						</label>
-						<input
-							type="text"
-							id="activity_name"
-							name="activity_name"
-							class="form-input"
-							placeholder="Ex. CSIP Session Week 3"
-						/>
-					</div>
-
-					<div class="form-field">
-						<label class="form-label" for="activity_nature"
-							>Nature of Activity
-						</label>
-						<input
-							type="text"
-							id="activity_nature"
-							name="activity_nature"
-							class="form-input"
-							placeholder="Ex. Tutorial Classes"
-						/>
-					</div>
-
-					<div class="form-field">
-						<label
-							class="form-label"
-							for="activity_date"
-							>Date of Partnership</label
-						>
-
-						<div
-							style="
-								display: flex;
-								flex-direction: column;
-								align-items: flex-start;
-							"
-							id="date-container"
-						>
-							<input
-								type="Date"
-								id="activity_date"
-								name="activity_date"
-								class="form-input"
-								placeholder=""
-							/>
-							<!--
-							<a
-								href=""
-								id="addDate"
-								style="
-									font-size: 1rem;
-									line-height: 1.5rem;
-									font-family: 'Montserrat';
-									color: var(--lightbg);
-									text-decoration-line: underline;
-									margin-top: 1rem;
-								"
-								>Add another date</a
-							>-->
+		<div class="form-container">
+			<form id="editActivityForm">
+				<div class="form-body">
+					<div id="error_messages"></div>
+					<div class="form-section">
+						<div class="form-field">
+							<label class="form-label" for="activity_name">Activity Name</label>
+							<input class="form-input" type="text" name="activity_name" id="activity_name" required />
+						</div>
+						<div class="form-field">
+							<label class="form-label" for="activity_nature">Nature of Activity</label>
+							<input class="form-input" type="text" name="activity_nature" id="activity_nature" required />
+						</div>
+						<div class="form-field">
+							<label class="form-label" for="activity_date">Date of Partnership</label>
+							<input class="form-input" type="date" name="activity_date" id="activity_date" required />
 						</div>
 					</div>
-				</div>
-
-				<!-- PARTNER INFORMATION -->
-				<div class="form-section">
-					<h2
-						class="form-subheading"
-					>
-						PARTNER INFORMATION
-					</h2>
-					<div class="form-field">
-						<label
-							class="form-label"
-							for="additional_partnership"
-							>Additional Partnership
-						</label>
-						<input
-							type="text"
-							id="additional_partnership"
-							name="additional_partnership"
-							class="form-input"
-							placeholder="Ex. Couples for Christ North B Sector"
-						/>
+					<div class="form-section">
+						<div class="form-field">
+							<label class="form-label" for="additional_partnership">Additional Partnership</label>
+							<input class="form-input" type="text" name="additional_partnership" id="additional_partnership" />
+						</div>
+						<div class="form-field">
+							<label class="form-label" for="organization_unit">Organization Unit</label>
+							<input class="form-input" type="text" name="organization_unit" id="organization_unit" />
+						</div>
 					</div>
-
-					<div class="form-field">
-						<label class="form-label" for="organization_unit"
-							>Organization Unit
-						</label>
-						<input
-							type="text"
-							id="organization_unit"
-							name="organization_unit"
-							class="form-input"
-							placeholder="Ex. ACIL"
-						/>
+					<div class="form-section">
+						<div class="form-field">
+							<label class="form-label" for="partner_name">Name of Host</label>
+							<input class="form-input" type="text" name="partner_name" id="partner_name" required />
+						</div>
+						<div class="form-field">
+							<label class="form-label" for="partner_address">Address of Host</label>
+							<input class="form-input" type="text" name="partner_address" id="partner_address" />
+						</div>
 					</div>
-					<div
-						class="form-field"
-					>
-						<label
-							class="form-label"
-							for="partner_name"
-							>Name of Host Partner</label
-						>
-						<input
-							type="text"
-							id="partner_name"
-							name="partner_name"
-							class="form-input"
-							placeholder="Ex. Íñigo López de Loyola"
-						/>
+					<div class="form-section">
+						<div class="form-field">
+							<label class="form-label" for="partner_contact_name">Name of Contact Person</label>
+							<input class="form-input" type="text" name="partner_contact_name" id="partner_contact_name" />
+						</div>
+						<div class="form-field">
+							<label class="form-label" for="partner_contact_number">Number of Contact Person</label>
+							<input class="form-input" type="text" name="partner_contact_number" id="partner_contact_number" />
+						</div>
+						<div class="form-field">
+							<label class="form-label" for="partner_email">Email of Contact Person / Partner</label>
+							<input class="form-input" type="email" name="partner_email" id="partner_email" />
+						</div>
 					</div>
-
-					<div
-						class="form-field"
-					>
-						<label
-							class="form-label"
-							for="partner_address"
-							>Address of Host Partner</label
-						>
-						<input
-							type="text"
-							id="partner_address"
-							name="partner_address"
-							class="form-input"
-							placeholder="Ex. Katipunan, Quezon City"
-						/>
+					<div class="form-section">
+						<div class="form-field">
+							<label class="form-label" for="ADMU_office">Ateneo Office</label>
+							<input class="form-input" type="text" name="ADMU_office" id="ADMU_office" />
+						</div>
+						<div class="form-field">
+							<label class="form-label" for="ADMU_contact_name">Oversight Contact</label>
+							<input class="form-input" type="text" name="ADMU_contact_name" id="ADMU_contact_name" />
+						</div>
+						<div class="form-field">
+							<label class="form-label" for="ADMU_email">Email address</label>
+							<input class="form-input" type="email" name="ADMU_email" id="ADMU_email" />
+						</div>
 					</div>
-
-					<div class="form-field">
-						<label
-							class="form-label"
-							for="partner_contact_name"
-							>Name of Contact Person</label
-						>
-						<input
-							type="text"
-							id="partner_contact_name"
-							name="partner_contact_name"
-							class="form-input"
-							placeholder="Ex. Íñigo López de Loyola"
-						/>
-					</div>
-
-					<div class="form-field">
-						<label
-							class="form-label"
-							for="partner_contact_number"
-							>Number of Contact Person
-						</label>
-						<input
-							type="text"
-							id="partner_contact_number"
-							name="partner_contact_number"
-							class="form-input"
-							placeholder="09XX XXX XXXX"
-						/>
-					</div>
-
-					<div class="form-field">
-						<label class="form-label" for="partner_email"
-							>Email of Contact Person / Partner
-						</label>
-						<input
-							type="email"
-							id="partner_email"
-							name="partner_email"
-							class="form-input"
-							placeholder="Ex. ignatius@ateneo.edu"
-						/>
+					<div class="form-buttons-container">
+						<button type="submit" class="form-button positive" data-id="Save Button">Save</button>
+						<button type="button" class="form-button negative" id="cancel-btn">Cancel</button>
 					</div>
 				</div>
-
-				<div class="form-section">
-					<h2 class="form-subheading">
-						ATENEO OFFICE OVERSIGHT
-					</h2>
-
-					<div
-						class="form-field"
-					>
-						<label
-							class="form-label"
-							for="ADMU_office"
-							>Name of Office</label
-						>
-						<input
-							type="text"
-							id="ADMU_office"
-							name="ADMU_office"
-							class="form-input"
-							placeholder="Ex. OSA"
-						/>
-					</div>
-					<div
-						class="form-field"
-					>
-						<label
-							class="form-label"
-							for="ADMU_contact_name"
-							>Name of Ateneo Contact Person</label
-						>
-						<input
-							type="text"
-							id="ADMU_contact_name"
-							name="ADMU_contact_name"
-							class="form-input"
-							placeholder="Ex. Íñigo López de Loyola"
-						/>
-					</div>
-
-					<div
-						class="form-field"
-					>
-						<label
-							class="form-label"
-							for="ADMU_email"
-							>Email of Ateneo Contact Person</label
-						>
-						<input
-							type="email"
-							id="ADMU_email"
-							name="ADMU_email"
-							class="form-input"
-							placeholder="Ex. ignatius@ateneo.edu"
-						/>
-					</div>
-				</div>
-
-				<!-- Buttons -->
-				<div class="form-buttons-container">
-					<!-- Clears all contents of the form -->
-					<button
-						class="form-button positive"
-						type="submit"
-						id="submit_form"
-						name="submit_form"
-					>
-						Save
-					</button>
-					<input
-						class="form-button negative"
-						data-id="Delete Button"
-						id="delete-btn"
-						onclick="resetForm()"
-						type="button"
-						value="Clear"
-					>
-						
-					</input>
-				</div>
-			</div>
-			
-		</form>
+			</form>
+		</div>
 
 		<script>
 			function resetForm() {
