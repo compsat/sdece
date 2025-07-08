@@ -212,7 +212,7 @@
   <div id="map" class="map-container"></div>
   <script type="module" src="js/index.js"></script> 
 
-  <!--script for search bar-->
+  
   <script>
     // This hides the Add Activity modal when the user submits the form
     window.addEventListener('message', function (event) {
@@ -244,27 +244,31 @@
         }, 3000);
       }
     });
+   
+  // script for search bar
+  const searchBar = document.getElementById('search-bar-component');
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const searchBar = document.getElementById('search-bar-component');
-      searchBar.addEventListener('search', (e) => {
-        const searchTerm = e.detail;
-        
-        let container = document.getElementById('locationList');
-        let partnerContainers = container.getElementsByClassName('partnerDiv');
+  searchBar.addEventListener('search', (event) => {
+    const query = event.detail;  
+    console.log('Searching for:', query);
 
-        for (let i = 0; i < partnerContainers.length; i++) {
-          let nameElement = partnerContainers[i].getElementsByClassName('name')[0];
-          let name = nameElement.textContent.toLowerCase();
+    searchEntries(query);
+  });
 
-          if (name.includes(searchTerm)) {
-            partnerContainers[i].style.display = 'flex';
-          } else {
-            partnerContainers[i].style.display = 'none';
-          }
-        }
-      });
-    });
+  function searchEntries(query) {
+    const input = query.toUpperCase();
+    const ul = document.getElementById("locationList");
+    const li = ul.getElementsByTagName('li');
+    for (let i = 0; i < li.length; i++) {
+      const a = li[i].getElementsByTagName("a")[0];
+      const txtValue = a.textContent || a.innerText;
+      if (txtValue.toUpperCase().indexOf(input) > -1) {
+        li[i].style.display = "";
+      } else {
+        li[i].style.display = "none";
+      }
+    }
+  }
 
     // Function to hide the div containing the iframe
     function hideModalContainer(modal) {
