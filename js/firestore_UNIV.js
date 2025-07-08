@@ -74,7 +74,7 @@ export const DB = getFirestore(app);
 
 var collection_reference = null;
 var rule_reference = null;
-export var document_map = {};
+export const document_map = new Map();
 
 //export let partnersArray = [];
 
@@ -405,13 +405,14 @@ export async function setCollection(collection_name) {
 }
 
 export async function pullCollection(collection_reference) {
+  document_map.clear();
+
   const docs = await getDocs(collection_reference);
   docs.forEach((entry) => {
     let doc = entry.data();
     let doc_id = entry.id;
 
-    document_map[doc_id] = doc;
-    document_map[doc_id]["identifier"] = doc_id;
+    document_map.set(doc_id, doc);
   });
 }
 
