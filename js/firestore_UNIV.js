@@ -74,6 +74,7 @@ export const DB = getFirestore(app);
 
 var collection_reference = null;
 var rule_reference = null;
+var document_map = {};
 
 //export let partnersArray = [];
 
@@ -390,13 +391,32 @@ export const BUKLOD_RULES_TEST = DB_RULES_AND_DATA[1];
 export const SDECE_RULES = DB_RULES_AND_DATA[2];
 export const SDECE_RULES_TEST = DB_RULES_AND_DATA[3];
 
-export function setCollection(collection_name) {
+
+export async function setCollection(collection_name) {
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_name) {
 			collection_reference = collection(DB, collection_name);
       rule_reference = rule
+      pullCollection(collection_reference);
+      console.log(collection_name);
+      console.log(document_map);
 		}
 	}
+}
+
+export async function pullCollection(collection_reference) {
+  const docs = await getDocs(collection_reference);
+  docs.forEach((entry) => {
+    let doc = entry.data();
+    let doc_id = entry.id;
+
+    document_map[doc_id] = doc;
+    document_map[doc_id]["identifier"] = doc_id;
+  });
+}
+
+export function getDocumentMap() {
+  return document_map;
 }
 
 export function getCollection() {
