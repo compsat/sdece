@@ -73,7 +73,7 @@ export const DB = getFirestore(app);
 
 var collection_reference = null;
 var rule_reference = null;
-var document_map = {};
+export var document_map = {};
 
 //export let partnersArray = [];
 
