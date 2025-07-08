@@ -722,8 +722,8 @@ button.collapsible {
 }
 
 .form-modal {
-	width: 90%;
-	max-width: 600px;
+	width: 100%;
+	max-width: 800px;
 	height: 80%;
 	border: none;
 	border-radius: 8px;
