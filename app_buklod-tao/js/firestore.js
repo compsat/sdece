@@ -156,7 +156,7 @@ await loadData();
 
 export function populateEditForm(partner, editFormModal) {
   console.log("populating form");
-  var iframe = editFormModal.getElementsByClassName('formIframe')[0]
+  var iframe = editFormModal.getElementsByClassName('form-modal')
   var editForm = iframe.contentWindow.document
 
   console.log("Original name:", partner.household_name);

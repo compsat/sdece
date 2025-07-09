@@ -557,30 +557,13 @@ addListeners();
 
 // CODE LOGIC FOR PIN DISPLAY ON MAP
 // ------------------------------------------
-// Code logic for displaying evac centers
-evacCenters.forEach(center => {
-  const marker = L.marker(
-    [center.latitude, center.longitude],
-    {icon: L.icon({
-      iconUrl: "../hardcode/evac_center_v2.svg",
-      iconSize: [39,39],
-      popupAnchor: [0.5, -15]
-    })}
-  ).addTo(map);
-
-  marker.bindPopup(`
-    <div class = "evac-marker-header">${center.type}</div>
-    <div style = "text-align:center;">
-      <b>${center.name}</b>
-      <br>Location: ${center.latitude}, ${center.longitude}
-    </div>`);
-});
 
 // Function for getting svg file according to risk type
 function getRiskIcon(riskLevel) {
   const basePath = '/app_buklod-tao/hardcode/';
   switch (riskLevel.toUpperCase()) {
     case 'HIGH RISK':
+      debugger;
       return `${basePath}high_risk.svg`;
     case 'MEDIUM RISK':
       return `${basePath}mid_risk.svg`;
@@ -620,23 +603,41 @@ function updateRiskIcons() {
     marker.bindPopup(popupContent);
 
     marker.on('popupopen', () => {
-      const editBtns = document.querySelectorAll('.editHousehold');
-      editBtns.forEach((btn) => {
-        btn.addEventListener('click', () => {
+      const edit_button = document.getElementById("editHouseholdPopup")
+      edit_button.addEventListener('click', () => {
           const modal = document.getElementById('partnerModal');
           var editFormModal = document.getElementById('editModal');
-          editFormModal.style.display = 'block';
+          editFormModal.style.display = 'flex';
           modal.style.display = 'none';
           populateEditForm(partner, editFormModal);
         });
-      });
     });
 
     map.addLayer(marker);
-    Object.defineProperty(partner, "marker", { value: marker, configurable: true });
   });
-}
 
+
+  // Code logic for displaying evac centers
+  evacCenters.forEach(center => {
+    
+    const marker_icon = L.icon({
+      iconUrl: "/app_buklod-tao/hardcode/evac_center_v2.svg",
+      iconSize: [39,39],
+      popupAnchor: [0.5, -15]
+    })
+    
+    const marker = L.marker([center.latitude, center.longitude], {icon: marker_icon})
+
+    marker.bindPopup(`
+      <div class = "evac-marker-header">${center.type}</div>
+      <div style = "text-align:center;">
+      <b>${center.name}</b>
+      <br>Location: ${center.latitude}, ${center.longitude}
+      </div>`);
+      map.addLayer(marker);
+      
+    });
+}
 // Code logic for automatically changing pin color depending on selected option on dropbox 
 document.getElementById('risk-sort').addEventListener('change', updateRiskIcons);
 updateRiskIcons();
