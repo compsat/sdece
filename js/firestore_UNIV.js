@@ -194,13 +194,13 @@ const VALIDATION_RULES = {
 	//Rules for Validating Data
 	'buklod-official-TEST': {
     household_name: { label: "Household Name", type: 'string', required: true, maxLength: 127 },
-		contact_number: {
-      label: "Contact Number",
-			type: 'string',
-			required: true,
-			minLength: 11,
-			maxLength: 11,
-			regex: /^09[0-9]{9}$/,
+	contact_number: {
+		label: "Contact Number",
+		type: 'string',
+		required: true,
+		minLength: 11,
+		maxLength: 11,
+		regex: /^09[0-9]{9}$/,
 		},
     number_residents: { label: "Number of Residents", type: 'number', required: true , 'minimum': 1},
 		number_minors: { label: "Number of Minor Residents", type: 'number', 'minimum': 0 },
@@ -627,8 +627,20 @@ export function validateData(collectionName, data) {
 			continue;
 		}
 
-		//no validation for geolocation yet
-	}
+		// Check for regex pattern
+		if (rule.regex && typeof value === 'string') {
+			if (!rule.regex.test(value)) {
+				if (fieldLabel == 'Contact Number') {
+					errors.push(`${fieldLabel} is not in the correct format. Number be in the format 09xxxxxxxxx.`);
+					continue;
+				}
+				if (fieldLabel == 'Location Link') {
+					errors.push(`${fieldLabel} is not in the correct format.`);
+					continue;
+				}
+			}
+		}
 
+	}
 	return errors;
 }

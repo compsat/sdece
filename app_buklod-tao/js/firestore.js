@@ -305,7 +305,7 @@ export function submitAddForm(){
       }
   }
 
-  const errors = validateData("buklod-official", collatedInput);
+  const errors = validateData("buklod-official-TEST", collatedInput);
 
   if (errors.length > 0) {
       displayErrors(errors);
@@ -316,6 +316,8 @@ export function submitAddForm(){
 
   function displayErrors(errors) {
   let errorDiv = document.getElementById('error_messages');
+  console.log(errorDiv);
+
 
   if (errorDiv) {
 
