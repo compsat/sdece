@@ -121,7 +121,7 @@
         <search-bar id="search-bar-component"></search-bar>
         <div class="actions-container">
           <button class="action-btn">Filter</button>
-          <button class="action-btn">Sort</button>
+          <button class="action-btn" id="sortBtn">Sort</button>
           <button class="action-btn" id="download-report">Export data</button>
         </div>
         <select name="risk" id="risk-sort" class="action-btn">
@@ -245,7 +245,7 @@
       }
     });
    
-  // script for search bar
+  // script for search bar- search includes only name 
   const searchBar = document.getElementById('search-bar-component');
 
   searchBar.addEventListener('search', (event) => {
@@ -257,18 +257,71 @@
 
   function searchEntries(query) {
     const input = query.toUpperCase();
-    const ul = document.getElementById("locationList");
-    const li = ul.getElementsByTagName('li');
-    for (let i = 0; i < li.length; i++) {
-      const a = li[i].getElementsByTagName("a")[0];
-      const txtValue = a.textContent || a.innerText;
+    const entries = document.querySelectorAll('#locationList .container-entry');
+
+    entries.forEach(entry => {
+      const nameDiv = entry.querySelector('.name');
+      const txtValue = nameDiv ? nameDiv.textContent : '';
       if (txtValue.toUpperCase().indexOf(input) > -1) {
-        li[i].style.display = "";
+        entry.style.display = "";
       } else {
-        li[i].style.display = "none";
+        entry.style.display = "none";
       }
-    }
+    });
   }
+
+let originalItems = [];
+
+function sortButton() {
+  const sortBtn = document.getElementById('sortBtn');
+  const locationList = document.getElementById('locationList');
+
+  let sortState = 'none'; // Shared
+
+  sortBtn.addEventListener('click', () => {
+    console.log("SORT CLICKED");
+    let items = Array.from(locationList.querySelectorAll('.container-entry'));
+
+    if (sortState === 'none') {
+      // Sort A–Z
+      items.sort((a, b) => {
+        const nameA = a.querySelector('.name').textContent.trim().toUpperCase();
+        const nameB = b.querySelector('.name').textContent.trim().toUpperCase();
+        return nameA.localeCompare(nameB);
+      });
+      sortState = 'asc';
+      console.log('Sorted ascending');
+    } else if (sortState === 'asc') {
+      // Sort Z–A
+      items.sort((a, b) => {
+        const nameA = a.querySelector('.name').textContent.trim().toUpperCase();
+        const nameB = b.querySelector('.name').textContent.trim().toUpperCase();
+        return nameB.localeCompare(nameA);
+      });
+      sortState = 'desc';
+      console.log('Sorted descending');
+    } else if (sortState === 'desc') { // doesnt work
+      // Restore original
+      items = [...originalItems];
+      sortState = 'none';
+      console.log('Restored original order');
+    }
+
+    locationList.innerHTML = '';
+    items.forEach(item => locationList.appendChild(item));
+    originalItems = Array.from(locationList.querySelectorAll('.container-entry'));
+    console.log(originalItems);
+
+  });
+}
+
+// ✅ After you load entries:
+// After your list is built
+
+
+// ✅ Call it!
+sortButton();
+
 
     // Function to hide the div containing the iframe
     function hideModalContainer(modal) {
