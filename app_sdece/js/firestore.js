@@ -1,68 +1,12 @@
 // FIRESTORE DATABASE\
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
-import {
-	getFirestore,
-	collection,
-	getDocs,
-	addDoc,
-	updateDoc,
-	doc,
-	query,
-	where,
-	getDoc,
-	GeoPoint,
-	Timestamp
-} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-
-import {
-	getCollection,
-	setCollection,
-	SDECE_RULES,
-	SDECE_RULES_TEST,
-	getDocIdByPartnerName,
-	validateData,
-	editEntry,
-	addEntry
-} from '/js/firestore_UNIV.js';
-
-import { addListeners, map, getDivContent } from '/js/index_UNIV.js';
+import { getDocs, GeoPoint, Timestamp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+import { getCollection, setCollection, SDECE_RULES, validateData, editEntry, addEntry } from '/js/firestore_UNIV.js';
+import { map } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
 
-// Your Firestore code here
-const firebaseConfig = {
-  apiKey: 'AIzaSyA8QWgic_hjbDL-EYIkvSRRII_yfTRdtOQ',
-  authDomain: 'discs-osci-prj.firebaseapp.com',
-  projectId: 'discs-osci-prj',
-  storageBucket: 'discs-osci-prj.appspot.com',
-  messagingSenderId: '601571823960',
-  appId: '1:601571823960:web:1f1278ecb86aa654e6152d',
-  measurementId: 'G-9N9ELDEMX9',
-};
-var collection_value = 'sdece-official'
-
-initializeApp(firebaseConfig);
-const db = getFirestore();
+// Set collection and associated rule config
+let collection_value = 'sdece-official'
 setCollection(collection_value);
-const colRef = getCollection();
-let partnersArray = [];
-
-// Import the functions you need from the SDKs you need
-//import { initializeApp } from "firebase/app";
-//import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-
-var col_ref = null;
-col_ref = getCollection();
-
-var partners = {}; // queried
-var activities = {};
-
-var addForm_geopoint;
-var has_existing_partner = false;
 
 // Pans to the Philippines
 map.setView(new L.LatLng(14.651, 121.052), 14);
@@ -71,22 +15,24 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
-var results = L.layerGroup().addTo(map);
-var popup = L.popup();
+let results = L.layerGroup().addTo(map);
+let popup = L.popup();
+let addForm_geopoint;
 
+// Handles Map Click events
 function onMapClick(e) {
 	const lat = e.latlng.lat;
 	const lng = e.latlng.lng;
 
 	// Popup for when user clicks anywhere on the map
-	var popupContent = 
+	let popupContent = 
 	`<div class="partner-geolocation"> Latitude: ${lat} <br> Longitude: ${lng} </div>
 	 <button class="addButton" data-lat="${lat}" data-lng="${lng}"> Add Location</button>`;
 
 	popup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
 
 	// Add Location button for Popup
-	var add_button = document.querySelector('.addButton');
+	let add_button = document.querySelector('.addButton');
 	add_button.addEventListener('click', function () {
 		addForm_geopoint = new GeoPoint(lat, lng);
 		showMainModal();
@@ -96,15 +42,16 @@ function onMapClick(e) {
 
 map.on('click', onMapClick);
 
-// add activity from the main modal
+// Handles Add Activity from the main modal
 const mainModalDocument = document.getElementById('mainModalIframe').contentDocument;
 const newButton = mainModalDocument.getElementById('addModalButton');
+let has_existing_partner;
 
 newButton.addEventListener('click', () => {
 	// Get the Add Activity form and the needed input fields for autofill
-	var inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value;
-	var inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value;
-	var input = addFormiframeDocument.getElementById(field);
+	let inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value;
+	let inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value;
+	let input = addFormiframeDocument.getElementById(field);
 	has_existing_partner = false;
 
 	if (inputtedPartnerName == '' || inputtedPartnerAddress == '') {
@@ -131,7 +78,7 @@ newButton.addEventListener('click', () => {
 	}
 });
 
-//If activity name is empty, used activity nature	
+// Uses activity nature if there's activity name is N/A	
 function getActivity(activity) {
 	const name = activity['activity_name'];
 	const nature = activity['activity_nature'];
@@ -142,6 +89,7 @@ function getActivity(activity) {
 	return name;
 }
 
+// Clears Highlight on the Side Bar when transitioning
 function clearAllHighlights() {
 	const sidebarItems = document.querySelectorAll('.partnerDiv');
 	sidebarItems.forEach((item) => {
@@ -149,70 +97,69 @@ function clearAllHighlights() {
 	});
 }
 
-getDocs(col_ref)
+// Fetches all activity documents from the specified Firestore collection.
+// Filters out test entries, groups activities by partner, and dynamically
+// creates map markers and sidebar entries for each unique partner.
+let collection_ref = getCollection();
+let partners = {}; 
+let activities = {};
+
+getDocs(collection_ref)
 	.then((querySnapshot) => {
-		// Populate activities
+		// Load and filter activities
 		querySnapshot.forEach((doc) => {
-			if (
-				doc.data().name !== 'Test 2' ||
-				doc.data().name !== 'Test2'
-			) {
-				let activity = doc.data();
+			let activity = doc.data();
+			let activity_Name = activity.name;
+
+			// Store activity by ID
+			if ( activity_Name !== 'Test 2' || activity_Name !== 'Test2'){
 				activity['identifier'] = doc.id;
 				activities[doc.id] = activity;
 			}
 		});
 
-		//  Populate with partners
+		//  Group activities by partner
 		Object.keys(activities).forEach((activity) => {
 			let partner = activities[activity][SDECE_RULES[1]];
+
 			if (partners[partner] == null) {
 				partners[partner] = [];
 			} 
 			partners[partner].push(activities[activity]);
 		});
 
-		// Populate side navigation <ul> with partners
+		// Create map markers and sidebar list items for each partner
 		Object.keys(partners).forEach((partner) => {
-			// Trying to add the pins here instead
-			var marker;
-
 			// Some coordinated are null, protective check
 			let partnerCoordinates = partners[partner][0]['partner_coordinates'];
 			let partnerLatitude = partnerCoordinates.latitude;
 			let partnerLongitude = partnerCoordinates.longitude;
+			let marker;
 
+			// Skip if no coordinates
 			if (partnerCoordinates != null) {
-				marker = L.marker([
-					parseFloat(partnerLatitude),
-					parseFloat(partnerLongitude),
-				]);
 
-				results.addLayer(marker);
-				var popupContent = `<div class="partner-popup" id="`;
-				popupContent += partners[partner][0]['partner_name'];
-				popupContent += `">`;
-				popupContent += partners[partner][0]['partner_name'];
-				popupContent += `</div>`;
+				let lati = parseFloat(partnerLatitude);
+				let longi = parseFloat(partnerLongitude);
 
+				marker = L.marker([lati, longi]);
+
+				// Bind popup to marker
+				let popupContent = `
+					<div class="partner-popup" id="${partner}">
+					${partner}
+					</div>`;
 				marker.bindPopup(popupContent);
-				results.addLayer(marker);
+				results.addLayer(marker); // Add to layer group
 
-				marker.on('mouseover', function () {
-					marker.openPopup();
 
-				});
-
-				marker.on('click', function () {
-					map.panTo(
-					new L.LatLng(
-						parseFloat(partnerLatitude),
-						parseFloat(partnerLongitude),
-					)
-				);
-
+				// Marker hover and click events
+				marker.on('mouseover', () => marker.openPopup());
+				marker.on('click', () => {
+					map.panTo(new L.LatLng(lati, longi));
 					clearAllHighlights();
 
+					// Highlight sidebar item for this partner
 					const sidebarItems = document.querySelectorAll('.partnerDiv');
 					sidebarItems.forEach((item) => {
 						const nameDiv = item.querySelector('.name');
@@ -224,6 +171,7 @@ getDocs(col_ref)
 					showModal(partners[partner]);
 				});
 
+			// Build sidebar item for this partner
 			const containerDiv = document.createElement('div');
 			const img = document.createElement('svg');
 			const listItem = document.createElement('li');
@@ -232,32 +180,8 @@ getDocs(col_ref)
 			const addressDiv = document.createElement('div');
 			const activityDiv = document.createElement('div');
 			
-			containerDiv.addEventListener('click', function () {
-				marker.openPopup();
-				map.panTo(
-					new L.LatLng(
-						parseFloat(partnerLatitude),
-						parseFloat(partnerLongitude)
-					)
-				);
-
-				clearAllHighlights();
-				containerDiv.classList.add('highlight');
-				showModal(partners[partner]);
-			});
-
-			// Adding classes and setting text content
-
 			containerDiv.classList.add('partnerDiv');
-
-			// Checks if list of activities are present
-			if (Object.keys(activities).length > 0) {
-				let html = ';'
-				Object.keys(activities).forEach((activity) => {
-					html += getActivity(activity) + '<br/>'; 
-				});
-			}
-
+			listItem.classList.add('accordion');
 			nameDiv.classList.add('name');
 			addressDiv.classList.add('address');
 			activityDiv.classList.add('activity');
@@ -265,352 +189,359 @@ getDocs(col_ref)
 			nameDiv.textContent = partner;
 			addressDiv.textContent = partners[partner][0]['partner_address'];
 
+			// Append activity names
 			let activities_string = '';
 
 			for (let activity of partners[partner]) {
 				activities_string += getActivity(activity)+ '<br>';
 			}
-
 			activityDiv.innerHTML = activities_string;
 
-			listItem.classList.add('accordion');
+			 // Add click behavior for sidebar item
+			containerDiv.addEventListener('click', function () {
+				marker.openPopup();
+				map.panTo(new L.LatLng(lati, longi));
+
+				clearAllHighlights();
+				containerDiv.classList.add('highlight');
+				showModal(partners[partner]);
+			});
 
 			// Append elements to the DOM
-			anchor.appendChild(nameDiv);
-			anchor.appendChild(addressDiv);
-			anchor.appendChild(activityDiv);
-
+			anchor.append(nameDiv, addressDiv, activityDiv);
 			listItem.appendChild(anchor);
-			containerDiv.appendChild(img);
-			containerDiv.appendChild(listItem);
+			containerDiv.append(img, listItem);
 			locationList.appendChild(containerDiv);
-	}});
+		}});
 	})
 	.catch((error) => {
 		console.error('Error getting documents: ', error);
 	});
 
-var current_viewed_activity = null; //docId of the currently viewed activity
-
 // Display partner modal by clicking partner entry
+let current_viewed_activity = null; // docId of the currently viewed activity
+
 export function showModal(partner) {
-	document.querySelector('.modal-button').style.display = 'none';
-	document.querySelector('.modal-button').style.padding = '0px';
+	
+	// Sets up Partner's Modal
+	function setupModal(){
+		// Hide external button (reset state)
+		const modalButton = document.querySelector('.modal-button'); 
+		modalButton.style.display = 'none';
+		modalButton.style.padding = '0px';
 
-	const modal = document.getElementById('partnerModal');
-	const modalHeader = document.getElementById('modalHeader');
-	const modalContent = document.getElementById('modalContent');
-	const modalHeaderStyle = modalHeader.style;
+		// Select modal containers
+		const modal = document.getElementById('partnerModal');
+		const modalHeader = document.getElementById('modalHeader');
+		const modalContent = document.getElementById('modalContent');
+		const modalHeaderStyle = modalHeader.style;
 
-	modalHeaderStyle.width = '100%';
-	modalHeaderStyle.display = 'flex';
-	modalHeaderStyle.flexDirection = 'row';
-	modalHeaderStyle.justifyContent = 'space-between';
-	modalHeaderStyle.alignItems = 'center';
+		// Prepare modal header style for layout
+		modalHeaderStyle.width = '100%';
+		modalHeaderStyle.display = 'flex';
+		modalHeaderStyle.flexDirection = 'row';
+		modalHeaderStyle.justifyContent = 'space-between';
+		modalHeaderStyle.alignItems = 'center';
 
-	// Clear previous content
-	modalHeader.innerHTML = '';
-	modalContent.innerHTML = '';
-
-	// Create div elements for each piece of information
-	const backarrowDiv = document.createElement('div');
-	const closeDiv = document.createElement('div');
-	const nameDiv = document.createElement('div');
-	const addressDiv = document.createElement('div');
-	const activityHeaderDiv = document.createElement('div');
-	const activityDiv = document.createElement('div');
-	const admuContactDiv = document.createElement('div');
-	const admuEmailDiv = document.createElement('div');
-	const admuOfficeDiv = document.createElement('div');
-	const orgDiv = document.createElement('div');
-	// const datesDiv = document.createElement('div');
-	// const contactPersonDiv = document.createElement('div');
-
-	nameDiv.classList.add('modal-name');
-	addressDiv.classList.add('modal-address');
-
-	// Set the content of each div
-	backarrowDiv.innerHTML = '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor" transform="matrix(-1, 0, 0, -1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
-	backarrowDiv.classList.add('back-btn');
-	backarrowDiv.addEventListener('click', () => {
-		current_viewed_activity = null;
-		document.querySelector('.modal-button').style.display = 'none';
-		document.querySelector('.modal-button').style.padding = '0px';
-
+		// Clear previous content
 		modalHeader.innerHTML = '';
 		modalContent.innerHTML = '';
 
-		// Append the div elements to the modal content
-		modalHeader.appendChild(nameDiv);
-		modalHeader.appendChild(closeDiv);
-		modalContent.appendChild(addressDiv);
-		modalContent.appendChild(activityHeaderDiv);
-		modalContent.appendChild(activityDiv);
-	});
+		return {modal, modalHeader, modalContent};
+	}
+	const {modal, modalHeader, modalContent} = setupModal();
 
-	closeDiv.innerHTML = '<svg viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><path d="M20.7457 3.32851C20.3552 2.93798 19.722 2.93798 19.3315 3.32851L12.0371 10.6229L4.74275 3.32851C4.35223 2.93798 3.71906 2.93798 3.32854 3.32851C2.93801 3.71903 2.93801 4.3522 3.32854 4.74272L10.6229 12.0371L3.32856 19.3314C2.93803 19.722 2.93803 20.3551 3.32856 20.7457C3.71908 21.1362 4.35225 21.1362 4.74277 20.7457L12.0371 13.4513L19.3315 20.7457C19.722 21.1362 20.3552 21.1362 20.7457 20.7457C21.1362 20.3551 21.1362 19.722 20.7457 19.3315L13.4513 12.0371L20.7457 4.74272C21.1362 4.3522 21.1362 3.71903 20.7457 3.32851Z" fill="currentColor"></path></svg>';
-	closeDiv.classList.add('close-btn');
-	// Close the modal when the close button is clicked
-	closeDiv.addEventListener('click', () => {
-		current_viewed_activity = null;
-		clearAllHighlights();
-		//might be better to put this in its own function
-		modal.style.display = 'none';
-		modal.classList.remove('open'); //transition out
-	});
+	// Creates the Partners Details
+	function createBaseElements() {
+		// Partner info display
+		const nameDiv = document.createElement('div');
+		const addressDiv = document.createElement('div');
+		nameDiv.classList.add('modal-name');
+		addressDiv.classList.add('modal-address');
 
-	nameDiv.textContent = partner[0].partner_name;
-	addressDiv.textContent =
-		'Latitude, Longitude: ' 
-		+ partner[0].partner_coordinates._lat + ', ' 
-		+ partner[0].partner_coordinates._long;
+		// Activities Section
+		const activityHeaderDiv = document.createElement('div');
+		const activityDiv = document.createElement('div');
 
-	// Activities header with add activity button
-	activityHeaderDiv.innerHTML = 'List of activities: ';
-	const addActivity = document.createElement('button');
-	addActivity.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>';
-	addActivity.classList.add('plus-btn');
+		// ADMU footer details
+		const admuContactDiv = document.createElement('div');
+		const admuEmailDiv = document.createElement('div');
+		const admuOfficeDiv = document.createElement('div');
+		const orgDiv = document.createElement('div');
 
-	// Add button for adding activities
-	addActivity.addEventListener('click', () => {
-		has_existing_partner = true;
-		addForm_geopoint = new GeoPoint(
-			partner[0].partner_coordinates._lat,
-			partner[0].partner_coordinates._long
-		);
-		// show the addLoc.html with some autofilled values
-		var modal = document.getElementById('addModal');
-		var modalHtml = document.getElementById('addModalHTML');
-		var partnerName = modalHtml.contentWindow.document.getElementById('partner_name');
-		var partnerAddress = modalHtml.contentWindow.document.getElementById('partner_address');
+		return {nameDiv, addressDiv, activityHeaderDiv, activityDiv, admuContactDiv, admuEmailDiv, admuOfficeDiv, orgDiv};
+	}
+	const { nameDiv, addressDiv, activityHeaderDiv, activityDiv, admuContactDiv, admuEmailDiv, admuOfficeDiv, orgDiv } = createBaseElements();
+	
+	// Modal Control Button
+	const backarrowDiv = createBackButton();
+	const closeDiv = createCloseButton();
+	
+	// Back button: return to list view from activity details
+	function createBackButton() {
+		const back = document.createElement('div');
 
-		// Display the modal
-		modal.style.display = 'flex';
-		// populate the field with current partner values
+		back.classList.add('back-btn');
+		back.innerHTML = '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor" transform="matrix(-1, 0, 0, -1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
+		
+		back.addEventListener('click', () => {
+			// Reset state
+			current_viewed_activity = null;
 
-		partnerName.value = partner[0].partner_name;
-		partnerName.readOnly = true;
-		partnerName.style.backgroundColor = 'var(--custom-medium-gray';
-		partnerName.style.color = 'var(--custom-dark-gray';
+			// Hide floating edit button if visible
+			const modalBtn = document.querySelector('.modal-button');
+			modalBtn.style.display = 'none';
+			modalBtn.style.padding = '0px';
 
-		partnerAddress.value = partner[0].partner_address;
-		partnerAddress.readOnly = true;
-		partnerAddress.style.backgroundColor = 'var(--custom-medium-gray';
-		partnerAddress.style.color = 'var(--custom-dark-gray';
+			// Clear modal content before repopulating
+			modalHeader.innerHTML = '';
+			modalContent.innerHTML = '';
 
-		// Close the Add Activity modal when the user clicks anywhere outside of it
-		// window.onclick = function (event) {
-		// 	if (event.target == modal) {
-		// 		modal.style.display = 'none';
-		// 	}
-		// };
-	});
-
-	activityHeaderDiv.appendChild(addActivity);
-	activityHeaderDiv.classList.add('modal-activities-header');
-
-	// Add each activity to the modal content
-	if (partner.length > 0) {
-		// check if list of activities is present, otherwise is skipped to avoid errors
-		partner.forEach((activity) => {
-			// View activity details button
-			const activityButton = document.createElement('div');
-			const activityTitle = document.createElement('button');
-
-			activityTitle.classList.add('modal-activity-title');
-			activityButton.classList.add('modal-activity-button');
-
-			const activityName = document.createElement('div');
-			const arrow = document.createElement('div');
-			arrow.classList.add('arrow');
-			const office = document.createElement('div');
-			office.classList.add('modal-office');
-
-			activityName.textContent = getActivity(activity) + '';
-			arrow.innerHTML = '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
-			office.innerHTML = activity.ADMU_office;
-
-			activityTitle.appendChild(activityName);
-			activityTitle.appendChild(arrow);
-			activityButton.appendChild(activityTitle);
-			activityButton.appendChild(office);
-
-			// Set div content for activity details
-
-			const activityNameDiv = document.createElement('div');
-			const activityAddressDiv = document.createElement('div');
-			const activityContactDiv = document.createElement('div');
-			const activityOrganizationDiv = document.createElement('div');
-			const activityDatesDiv = document.createElement('div');
-			const activityOfficeDiv = document.createElement('div');
-
-			activityNameDiv.innerHTML = getActivity(activity) + '';
-			activityNameDiv.classList.add('modal-activities-header');
-			activityAddressDiv.innerHTML = activity.partner_address;
-			activityAddressDiv.classList.add('modal-address');
-
-			activityContactDiv.innerHTML =
-				'<b>Contact</b>' +
-				'<p class="pm-detailed-info">' +
-				activity.partner_contact_name +
-				'</p>' +
-				'<p class="pm-detailed-info">' +
-				activity.partner_email +
-				'</p>';
-			activityOrganizationDiv.innerHTML =
-				'<b>Organization/Unit</b>' +
-				'<p class="pm-detailed-info">' +
-				activity.organization_unit +
-				'</p>';
-			activityDatesDiv.innerHTML =
-				'<b>Date/s of Partnership</b>' +
-				'<p class="pm-detailed-info">' +
-				(activity.activity_date?.toDate?.()
-					? activity.activity_date.toDate().toLocaleDateString('en-PH', {
-						year: 'numeric',
-						month: 'long',
-						day: 'numeric',
-					})
-					: 'N/A') +
-				'</p>'; //this field might become an array in the future
-
-			activityOfficeDiv.innerHTML =
-				'<b class="ao-header">Ateneo Office Oversight</b>' +
-				'<p class="ao-office">' +
-				activity.ADMU_office +
-				'</p>' +
-				'<p class="ao-details">' +
-				activity.ADMU_contact_name +
-				'</p>' +
-				'<p class="ao-details">' +
-				activity.ADMU_email +
-				'</p>';
-
-			// Executed when the user clicks on an activity listed in the Partner Modal
-			activityButton.addEventListener('click', () => {
-				current_viewed_activity = activity;
-				document.querySelector('.modal-button').style.display = 'flex';
-				modalHeader.innerHTML = '';
-				modalContent.innerHTML = '';
-
-				// Header
-				modalHeader.appendChild(backarrowDiv);
-				modalHeader.appendChild(nameDiv);
-				modalHeader.appendChild(closeDiv);
-
-				// Resetting class list to override styles
-				activityNameDiv.classList = '';
-				activityAddressDiv.classList = '';
-
-				activityNameDiv.classList.add('pm-activity-name');
-				modalContent.appendChild(activityNameDiv);
-
-				activityAddressDiv.classList.add('pm-activity-address');
-				modalContent.appendChild(activityAddressDiv);
-
-				activityContactDiv.classList.add('pm-details');
-				modalContent.appendChild(activityContactDiv);
-
-				activityOrganizationDiv.classList.add('pm-details');
-				modalContent.appendChild(activityOrganizationDiv);
-
-				activityDatesDiv.classList.add('pm-details');
-				modalContent.appendChild(activityDatesDiv);
-
-				activityOfficeDiv.classList.add('pm-activity-office');
-				modalContent.appendChild(activityOfficeDiv);
+			// Restore default partner modal view
+			modalHeader.append(nameDiv, closeDiv);
+			modalContent.append(addressDiv, activityHeaderDiv, activityDiv);
 			});
-
-			activityDiv.appendChild(activityButton);
-		});
+		return back;
 	}
 
-	activityDiv.classList.add('modal-activities-list');
+	// Close button: exit modal entirely
+	function createCloseButton() {
+		const close = document.createElement('div');
 
-	admuContactDiv.innerHTML = '<b>AdMU Contact: </b>' + partner.ADMU_contact;
-	admuEmailDiv.innerHTML = '<b>AdMU Email: </b>' + partner.ADMU_email;
-	admuOfficeDiv.innerHTML = '<b>AdMU Office: </b>' + partner.ADMU_office;
-	orgDiv.innerHTML = '<b>Organization: </b>' + partner.organization_unit;
+		close.classList.add('close-btn');
+		close.innerHTML = '<svg viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><path d="M20.7457 3.32851C20.3552 2.93798 19.722 2.93798 19.3315 3.32851L12.0371 10.6229L4.74275 3.32851C4.35223 2.93798 3.71906 2.93798 3.32854 3.32851C2.93801 3.71903 2.93801 4.3522 3.32854 4.74272L10.6229 12.0371L3.32856 19.3314C2.93803 19.722 2.93803 20.3551 3.32856 20.7457C3.71908 21.1362 4.35225 21.1362 4.74277 20.7457L12.0371 13.4513L19.3315 20.7457C19.722 21.1362 20.3552 21.1362 20.7457 20.7457C21.1362 20.3551 21.1362 19.722 20.7457 19.3315L13.4513 12.0371L20.7457 4.74272C21.1362 4.3522 21.1362 3.71903 20.7457 3.32851Z" fill="currentColor"></path></svg>';
+		
+		close.addEventListener('click', () => {
+			current_viewed_activity = null; // reset viewed activity
+			clearAllHighlights();			// unhighlight selected UI elements
+			modal.style.display = 'none';	// hide modal
+			modal.classList.remove('open'); //transition out
+		});
+		return close;
+	}
 
-	// Append the div elements to the modal content
+	// === ALTERNATE CLOSE EVENT when user clicks outside ===
+	// window.addEventListener('click', (event) => {
+	// 	if (event.target == modal) {
+	// 		modal.classList.remove('open'); //transition out
+	// 		modal.style.display = 'none';
+	// 		current_viewed_activity = null;
+	// 	}
+	// });
 
-	// NOTE: This is where every partner modal content is added
-	modalHeader.appendChild(nameDiv);
-	modalHeader.appendChild(closeDiv);
-	modalContent.appendChild(addressDiv);
-	modalContent.appendChild(activityHeaderDiv);
-	modalContent.appendChild(activityDiv);
+	// Set partner name and coordinates as modal header content
+	function populatePartnerInfo(nameDiv, addressDiv, partner) {
+		nameDiv.textContent = partner[0].partner_name;
+		addressDiv.textContent =
+			'Latitude, Longitude: ' +
+			partner[0].partner_coordinates._lat + ', ' +
+			partner[0].partner_coordinates._long;
+	}
+	populatePartnerInfo(nameDiv, addressDiv, partner);
 
-	// Show the partner modal
+	function setupActivityHeader(partner, activityHeaderDiv) {
+		// Activities header with add activity button
+		activityHeaderDiv.innerHTML = 'List of activities: ';
+		const addActivity = document.createElement('button');
+		addActivity.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>';
+		addActivity.classList.add('plus-btn');
+
+		activityHeaderDiv.appendChild(addActivity);
+		activityHeaderDiv.classList.add('modal-activities-header');
+
+		// Add new activity (reuses existing partner location and name/address)
+		addActivity.addEventListener('click', () => {
+			has_existing_partner = true;
+			addForm_geopoint = new GeoPoint(partner[0].partner_coordinates._lat, partner[0].partner_coordinates._long);
+
+			// Access iframe form and autofill with partner details
+			let modal = document.getElementById('addModal');
+			let modalHtml = document.getElementById('addModalHTML');
+			let partnerName = modalHtml.contentWindow.document.getElementById('partner_name');
+			let partnerAddress = modalHtml.contentWindow.document.getElementById('partner_address');
+
+			modal.style.display = 'flex'; // open modal
+			
+			// Populate the field with current partner values
+			partnerName.value = partner[0].partner_name;
+			partnerName.readOnly = true;
+			partnerName.style.backgroundColor = 'var(--custom-medium-gray)';
+			partnerName.style.color = 'var(--custom-dark-gray)';
+
+			partnerAddress.value = partner[0].partner_address;
+			partnerAddress.readOnly = true;
+			partnerAddress.style.backgroundColor = 'var(--custom-medium-gray)';
+			partnerAddress.style.color = 'var(--custom-dark-gray)';
+		});
+	}
+	setupActivityHeader(partner, activityHeaderDiv);
+
+	// Add each activity to the modal content
+	function populateActivityList(partner, activityDiv, modalHeader, modalContent, nameDiv, closeDiv, backarrowDiv) {
+		if (partner.length > 0) {
+
+			partner.forEach((activity) => {
+				// === PREVIEW SECTION: visible when viewing the partner summary ===
+
+				// Create container for the activity preview
+				const activityButton = document.createElement('div');
+				const activityTitle = document.createElement('button');
+				activityTitle.classList.add('modal-activity-title');
+				activityButton.classList.add('modal-activity-button');
+
+				// Build the elements for the preview 
+				const activityName = document.createElement('div');
+				const arrow = document.createElement('div');
+				arrow.classList.add('arrow');
+				const office = document.createElement('div');
+				office.classList.add('modal-office');
+
+				// Populate preview content
+				activityName.textContent = getActivity(activity) + '';
+				arrow.innerHTML = '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
+				office.innerHTML = activity.ADMU_office;
+
+				// Combine preview elements into the button
+				activityTitle.append(activityName, arrow);
+				activityButton.append(activityTitle, office);
+
+				// === DETAIL SECTION: visible when the activity is clicked ===
+
+				// Set div content for activity details
+				const activityNameDiv = document.createElement('div');
+				const activityAddressDiv = document.createElement('div');
+				const activityContactDiv = document.createElement('div');
+				const activityOrganizationDiv = document.createElement('div');
+				const activityDatesDiv = document.createElement('div');
+				const activityOfficeDiv = document.createElement('div');
+
+				// Fill in detail data and apply classes
+				activityNameDiv.innerHTML = getActivity(activity) + '';
+				activityNameDiv.classList.add('modal-activities-header');
+				activityAddressDiv.innerHTML = activity.partner_address;
+				activityAddressDiv.classList.add('modal-address');
+
+				activityContactDiv.innerHTML =
+					'<b>Contact</b>' +
+					'<p class="pm-detailed-info">' + activity.partner_contact_name + '</p>' +
+					'<p class="pm-detailed-info">' + activity.partner_email + '</p>';
+
+				activityOrganizationDiv.innerHTML =
+					'<b>Organization/Unit</b>' +
+					'<p class="pm-detailed-info">' + activity.organization_unit + '</p>';
+
+				activityDatesDiv.innerHTML =
+					'<b>Date/s of Partnership</b>' +
+					'<p class="pm-detailed-info">' +
+					(activity.activity_date?.toDate?.()
+						? activity.activity_date.toDate().toLocaleDateString('en-PH', {
+							year: 'numeric',
+							month: 'long',
+							day: 'numeric',
+						})
+						: 'N/A') +
+					'</p>'; 
+
+				activityOfficeDiv.innerHTML =
+					'<b class="ao-header">Ateneo Office Oversight</b>' +
+					'<p class="ao-office">' + activity.ADMU_office + '</p>' +
+					'<p class="ao-details">' + activity.ADMU_contact_name + '</p>' +
+					'<p class="ao-details">' + activity.ADMU_email + '</p>';
+
+				// === CLICK HANDLER: when user clicks on activity preview ===
+
+				activityButton.addEventListener('click', () => {
+					current_viewed_activity = activity;
+
+					// Reset modal layout and show detailed view
+					document.querySelector('.modal-button').style.display = 'flex';
+					modalHeader.innerHTML = '';
+					modalContent.innerHTML = '';
+
+					modalHeader.append(backarrowDiv, nameDiv, closeDiv);
+
+					// Reset and apply class styles for detail elements
+					activityNameDiv.classList = '';
+					activityAddressDiv.classList = '';
+
+					activityNameDiv.classList.add('pm-activity-name');
+					activityAddressDiv.classList.add('pm-activity-address');
+					activityContactDiv.classList.add('pm-details');
+					activityOrganizationDiv.classList.add('pm-details');
+					activityDatesDiv.classList.add('pm-details');
+					activityOfficeDiv.classList.add('pm-activity-office');
+
+					// Insert all detail sections into modal body
+					modalContent.append(activityNameDiv, activityAddressDiv, activityContactDiv, 
+					activityOrganizationDiv, activityDatesDiv, activityOfficeDiv);
+				});
+				// Add this activity preview to the list shown in modal
+				activityDiv.appendChild(activityButton);
+			});
+		}
+	}
+	populateActivityList(partner, activityDiv, modalHeader, modalContent, nameDiv, closeDiv, backarrowDiv)
+
+	// Append the main partner info and activity list sections to the modal
+	function finalizeActivitySection(activityDiv, partner, admuContactDiv, admuEmailDiv, admuOfficeDiv, orgDiv) {
+		activityDiv.classList.add('modal-activities-list');
+
+		admuContactDiv.innerHTML = '<b>AdMU Contact: </b>' + partner.ADMU_contact;
+		admuEmailDiv.innerHTML   = '<b>AdMU Email: </b>' + partner.ADMU_email;
+		admuOfficeDiv.innerHTML  = '<b>AdMU Office: </b>' + partner.ADMU_office;
+		orgDiv.innerHTML         = '<b>Organization: </b>' + partner.organization_unit;
+	}
+	finalizeActivitySection(activityDiv, partner, admuContactDiv, admuEmailDiv, admuOfficeDiv, orgDiv)
+
+	// Append core sections to modal: partner info and activity list
+	modalHeader.append(nameDiv, closeDiv);
+	modalContent.append(addressDiv, activityHeaderDiv, activityDiv);
+
+	// Display the partner modal
 	modal.style.display = 'flex';
 	modal.classList.add('open'); //transition in
 
-	// Close the modal when the user clicks outside of it
-	window.addEventListener('click', (event) => {
-		if (event.target == modal) {
-			modal.classList.remove('open'); //transition out
-			modal.style.display = 'none';
-			current_viewed_activity = null;
+	// Setup edit button behavior: opens the edit modal and pre-fills it with data
+	function setupEditButtons() {
+		// Select all buttons that allows editing
+		let editButtons = document.getElementsByClassName('edit-button');
+
+		for (let i = 0; i < editButtons.length; i++) {
+			editButtons[i].addEventListener('click', function () {
+				if (current_viewed_activity != null) {
+
+					// Select modal element and show it
+					let modal = document.getElementById('editModal');
+					modal.style.display = 'flex';
+			
+					// Get reference to the form inside the edit iframe
+					let iframeDoc = document.getElementById('editModal_iframe').contentWindow.document;
+
+					// Loop through all form field names defined in SDECE_RULES[2]
+					SDECE_RULES[2].forEach((field) => {
+						let input = iframeDoc.getElementById(field);
+						if (input != null) {
+							input.value = current_viewed_activity[field];
+						}
+					});
+				}
+			});
 		}
-	});
-
-	var editButtons = document.getElementsByClassName('edit-button');
-
-	for (var i = 0; i < editButtons.length; i++) {
-		editButtons[i].addEventListener('click', function () {
-			if (current_viewed_activity != null) {
-				// Select the modal and partnerName elements
-				var modal = document.getElementById('editModal');
-
-				// Display the modal
-				modal.style.display = 'flex';
-		
-				// Autofill existing values inside the modal
-				SDECE_RULES[2].forEach((field) => {
-					let current_inp = document
-						.getElementById('editModal_iframe')
-						.contentWindow.document.getElementById(field);
-					if (current_inp != null) {
-						current_inp.value =
-							current_viewed_activity[field];
-					}
-				});
-			}
-		});
 	}
+	setupEditButtons();
 }
 
-// This is unreliable but will probably be useful in the future
-// export async function getCoordsFromAddress(address = '161 Daan Tubo, Diliman, Quezon City') {
-
-// 	var parsed_loc = encodeURIComponent(
-// 		address.toLowerCase().replace(/[^a-z0-9 _-]+/gi, '-')
-// 	);
-// 	var api_search = 'https://nominatim.openstreetmap.org/search?q=';
-// 	var link = api_search.concat(parsed_loc).concat('&format=json');
-
-// 	var response = await fetch(link);
-// 	var jsonified = await response.json();
-
-// 	if (addForm_geopoint == null) {
-// 		addForm_geopoint = new GeoPoint(
-// 			jsonified[0]['lat'],
-// 			jsonified[0]['lon']
-// 		);
-// 	} else {
-// 	}
-
-//values stored in local before uploading them in batches
-var temp_activities = {};
-var temp_activities_id = 0;
+// Local values stored before batch uploading
+let temp_activities = {};
+let temp_activities_id = 0;
 
 // Addloc.html Save button click listener
-var addFormiframe = document.getElementById('addModalHTML');
-var addFormiframeDocument = addFormiframe.contentWindow.document;
-var addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
+let addFormiframe = document.getElementById('addModalHTML');
+let addFormiframeDocument = addFormiframe.contentWindow.document;
+let addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
 addFormSubmitButton.addEventListener('click', function () {
 	//Get data from addloc.html
-	var info_from_forms = {};
+	let info_from_forms = {};
 	for (let field of SDECE_RULES[2]) {
 		if (field != 'partner_coordinates') {
 			let input_field = addFormiframeDocument.getElementById(field);
@@ -645,19 +576,11 @@ addFormSubmitButton.addEventListener('click', function () {
 			}
 			addEntry(info_from_forms);
 		} else {
-			//locally store it
+			// Locally store it
 			temp_activities[temp_activities_id + ''] = info_from_forms;
 			temp_activities_id += 1;
 
 			populateMainModalList();
-
-			// add it to the ul
-			// mainModalDocument.getElementById(
-			// 	'mainModalActivityList'
-			// ).innerHTML +=
-			// 	'<li class="main-modal-temporary-activity">' +
-			// 	info_from_forms['activity_nature'] +
-			// 	'</li>';
 		}
 
 		// close the save modal
@@ -694,7 +617,7 @@ let edit_modal = document.getElementById('editModal_iframe').contentWindow.docum
 edit_modal.getElementById('submit_form').addEventListener('click', handleEdit);
 
 export function handleEdit() {
-	var collated_inp = {};
+	let collated_inp = {};
 	for (let field of SDECE_RULES[2]) {
 		if (field != 'partner_coordinates') {
 			let input_field = edit_modal.getElementById(field);
@@ -711,7 +634,7 @@ export function handleEdit() {
 		}
 	}
 
-	//validate the collated input here
+	// Validate the collated input here
 	let errors = validateData('sdece-official-TEST', collated_inp);
 
 	if (errors.length > 0) {
@@ -728,7 +651,6 @@ export function handleEdit() {
 		}
 		editEntry(collated_inp, current_viewed_activity['identifier']);
 		document.getElementById('editModal').style = "display: 'none'";
-		//alert('Reload the page for the new edits to reflect on your browser');
 	}
 
 	function displayErrors(errors) {
@@ -753,9 +675,8 @@ export function handleEdit() {
 	}
 }
 
-// mainmodal save button for batch uploading
-const MAIN_MODAL_SAVE_BUTTON =
-	mainModalDocument.getElementsByClassName('main-modal-save')[0];
+// Mainmodal save button for batch uploading
+const MAIN_MODAL_SAVE_BUTTON = mainModalDocument.getElementsByClassName('main-modal-save')[0];
 
 MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 
@@ -764,11 +685,8 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 	if (temp_keys > 0) {
 		Object.keys(temp_activities).forEach((temp_id) => {
 			let current_temp_activity = temp_activities[temp_id];
-			let new_partner_name = mainModalDocument.getElementsByClassName(
-				'main-modal-partner-name'
-			)[0].value;
-			let new_partner_address =
-				mainModalDocument.getElementById('address-input').value;
+			let new_partner_name = mainModalDocument.getElementsByClassName('main-modal-partner-name')[0].value;
+			let new_partner_address = mainModalDocument.getElementById('address-input').value;
 			current_temp_activity['partner_name'] = new_partner_name;
 			current_temp_activity['partner_address'] = new_partner_address;
 			if (
@@ -785,26 +703,22 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 		// Notify parent window (where the iframe is embedded)
 		window.parent.postMessage({ type: 'mainModalFormSuccess' }, '*');
 
-		//Auto close modal
+		// Auto close modal
 		window.parent.postMessage('closeMainModal', '*');
 
-		//Clear input partner name and address
+		// Clear input partner name and address
 		mainModalDocument.getElementById('inputted_partner_name').value = '';
 		mainModalDocument.getElementById('address-input').value = '';
 
-		//clear temp_activities
+		// Clear temp_activities
 		temp_activities = {};
 
-		// alert(
-		// 	'Reload the page for the new additions to reflect on your browser'
-		// );
 	} else {
 		alert("Can't submit a partner with an empty list of activities ");
 	}
 });
 
 // Handling main modal close on clicking close button
-
 const mainModalCloseButton = mainModalDocument.getElementById('close-btn');
 
 mainModalCloseButton.addEventListener('click', function (event) {
@@ -822,7 +736,6 @@ mainModalCloseButton.addEventListener('click', function (event) {
 				"resetForm function is not defined in the document's script tag."
 			);
 		}
-
 		window.parent.postMessage('closeMainModal', '*');
 	} else {
 		event.preventDefault();
@@ -830,18 +743,15 @@ mainModalCloseButton.addEventListener('click', function (event) {
 });
 
 export function populateMainModalList() {
-	// display temporarily saved activities to main modal
-
-	const mainModalActivityList = mainModalDocument.getElementById(
-		'mainModalActivityList'
-	);
+	// Display temporarily saved activities to main modal
+	const mainModalActivityList = mainModalDocument.getElementById('mainModalActivityList');
 	mainModalActivityList.innerHTML = '';
 
 	if (Object.keys(temp_activities).length == 0) {
 		mainModalActivityList.innerHTML = '<p> No activities to show </p>';
 	} else {
 		for (let i = 0; i < Object.keys(temp_activities).length; i++) {
-			var activity = temp_activities[Object.keys(temp_activities)[i]];
+			let activity = temp_activities[Object.keys(temp_activities)[i]];
 
 			// View activity details button
 			const activityButton = document.createElement('li');
@@ -850,8 +760,7 @@ export function populateMainModalList() {
 
 			activityName.textContent = getActivity(activity) + '';
 
-			arrow.innerHTML =
-				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
+			arrow.innerHTML = '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
 			arrow.classList.add('arrow');
 
 			activityButton.appendChild(activityName);

@@ -1,22 +1,10 @@
-import {
-	getDocs,
-	addDoc,
-	updateDoc,
-	doc,
-	query,
-	where,
-	getDoc,
-	GeoPoint,
-} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+import { getDocs, addDoc, updateDoc, doc, query, where, getDoc, GeoPoint } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 
-import {
-	getFirestore,
-	collection,
-} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+import { getFirestore, collection } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 
 function getUrlParameter(name) {
 	name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -38,7 +26,6 @@ const lng = getUrlParameter('lng');
 // 	).innerText = `Latitude: ${lat}, Longitude: ${lng}`;
 // });
 
-
 export function getCoordinates(coordinates) {
 	var arr = coordinates.split('+');
 	var lat = arr[0], lng = arr[1];
@@ -46,7 +33,6 @@ export function getCoordinates(coordinates) {
 	const latNum = parseFloat(lat);
 	const lngNum = parseFloat(lng);
 	
-
 	// Round the numbers to 5 decimal places
 	var roundLat = parseFloat(latNum.toFixed(5));
 	var roundLon = parseFloat(lngNum.toFixed(5));
@@ -388,7 +374,6 @@ export const BUKLOD_RULES = DB_RULES_AND_DATA[0];
 export const BUKLOD_RULES_TEST = DB_RULES_AND_DATA[1];
 export const SDECE_RULES = DB_RULES_AND_DATA[2];
 export const SDECE_RULES_TEST = DB_RULES_AND_DATA[3];
-
 
 export function setCollection(collection_name) {
 	for (let rule of DB_RULES_AND_DATA) {
