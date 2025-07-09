@@ -130,54 +130,7 @@ function onPinClick(doc) {
   </div>`;
   return leaflet_html;
 } 
-// Pin display
-evacCenters.forEach(center => {
-  const marker = L.marker(
-    [center.latitude, center.longitude],
-    {icon: L.icon({
-      iconUrl: "/app_buklod-tao/hardcode/evac_center_v2.svg",
-      iconSize: [39,39],
-      popupAnchor: [0.5, -15]
-    })}
-  ).addTo(map);
 
-  marker.bindPopup(`
-    <div class = "evac-marker-header">${center.type}</div>
-    <div style = "text-align:center;">
-      <b>${center.name}</b>
-      <br>Location: ${center.latitude}, ${center.longitude}
-    </div>`);
-});
-
-partnersArray.forEach((partner) => {
-    var doc = partner;
-    if (doc.location_coordinates != null) {
-      var this_marker = partner.marker;
-      //console.log(doc.location_coordinates);
-      this_marker = L.marker([
-        parseFloat(doc.location_coordinates._lat),
-        parseFloat(doc.location_coordinates._long),
-      ]);
-
-      // shows partner info on pin click
-      var popupContent = onPinClick(doc);
-      this_marker.bindPopup(popupContent);
-      this_marker.on('popupopen', function(e) {
-        var editBtn = document.getElementById('editHouseholdPopup')
-        if (editBtn) {
-          editBtn.addEventListener('click', function() {
-            const modal = document.getElementById('partnerModal');
-            var editFormModal = document.getElementById('editModal');
-            editFormModal.style.display = 'block';
-            modal.style.display = 'none';
-            populateEditForm(doc, editFormModal)
-          })
-        }
-      })
-      map.addLayer(this_marker);
-      Object.defineProperty(partner, "marker", {value:this_marker, configurable: true});
-    }
-  });
 
 addListeners();
 
@@ -566,26 +519,6 @@ document.getElementById('download-report').addEventListener('click', async () =>
 	XLSX.writeFile(workbook, 'Buklod_Tao_Household_Report.xlsx');
 });
 
-// CODE LOGIC FOR DISPLAYING OF PINS
-// Pin display for Evacuation Centers
-evacCenters.forEach(center => {
-  const marker = L.marker(
-    [center.latitude, center.longitude],
-    {icon: L.icon({
-      iconUrl: "/app_buklod-tao/hardcode/evac_center_v2.svg",
-      iconSize: [39,39],
-      popupAnchor: [0.5, -15]
-    })}
-  ).addTo(map);
-
-  marker.bindPopup(`
-    <div class = "evac-marker-header">${center.type}</div>
-    <div style = "text-align:center;">
-      <b>${center.name}</b>
-      <br>Location: ${center.latitude}, ${center.longitude}
-    </div>`);
-});
-
 /*
 // Pin display for Households
 partnersArray.forEach((partner) => {
@@ -622,8 +555,27 @@ partnersArray.forEach((partner) => {
 addListeners();
 
 
+// CODE LOGIC FOR PIN DISPLAY ON MAP
+// ------------------------------------------
+// Code logic for displaying evac centers
+evacCenters.forEach(center => {
+  const marker = L.marker(
+    [center.latitude, center.longitude],
+    {icon: L.icon({
+      iconUrl: "../hardcode/evac_center_v2.svg",
+      iconSize: [39,39],
+      popupAnchor: [0.5, -15]
+    })}
+  ).addTo(map);
 
-// CODE LOGIC FOR PIN COLOR CHANGE FEATURE
+  marker.bindPopup(`
+    <div class = "evac-marker-header">${center.type}</div>
+    <div style = "text-align:center;">
+      <b>${center.name}</b>
+      <br>Location: ${center.latitude}, ${center.longitude}
+    </div>`);
+});
+
 // Function for getting svg file according to risk type
 function getRiskIcon(riskLevel) {
   const basePath = '/app_buklod-tao/hardcode/';
@@ -639,7 +591,7 @@ function getRiskIcon(riskLevel) {
   }
 }
 
-// Function for code logic of switching between risk types
+// Function for displaying of pins and its switching colors depending on risk type
 function updateRiskIcons() {
   const riskType = document.getElementById('risk-sort').value.replace('-sort', '');
   // Remove all current markers
@@ -685,5 +637,7 @@ function updateRiskIcons() {
   });
 }
 
+// Code logic for automatically changing pin color depending on selected option on dropbox 
 document.getElementById('risk-sort').addEventListener('change', updateRiskIcons);
 updateRiskIcons();
+// ------------------------------------------
