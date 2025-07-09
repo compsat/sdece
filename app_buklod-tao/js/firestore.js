@@ -198,6 +198,9 @@ export function populateEditForm(partner, editFormModal) {
   // console.log(editFormModal.getElementsByClassName('formIframe')[0].contentWindow.document.getElementById('household_name'))
 }
 
+// CODE LOGIC FOR SUBMIT FORMS
+// ------------------------------------------
+// Function for submission of Edit Household form
 export function submitEditForm(){
   console.log("Form is submitting!");
   var collated_input = {}; 
@@ -279,7 +282,9 @@ export function submitEditForm(){
             console.error("Error: Couldn't find element with ID 'error_messages'.");
         }
     }
- }
+}
+
+// Function for submission of Add Household form
 export function submitAddForm(){
   var collatedInput = {};
 
@@ -329,3 +334,4 @@ export function submitAddForm(){
   }
 
 }
+// ------------------------------------------

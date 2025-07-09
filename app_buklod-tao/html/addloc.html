@@ -10,114 +10,11 @@
             //Call function from firestore.js to add new household from input fields after pressing submit button
             //import { addLocation } from "./js/firestore.js";
             import { addEntry, BUKLOD_RULES_TEST, setCollection, validateData, getCoordinates } from "/js/firestore_UNIV.js";
-            setCollection("buklod-official-TEST");
-            document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
+            import { submitAddForm } from '../js/firestore.js';
 
-            import {submitAddForm} from '../js/firestore.js';
+            setCollection("buklod-official-TEST");
             document.getElementById("submit_form").addEventListener("click", submitAddForm);
 
-            function handleFormSubmit_v2(){
-                // Prevent double submission
-                const submitButton = document.getElementById("submit_form");
-                if (submitButton.disabled) {
-                    return;
-                }
-                
-                var collatedInput = {};
-
-                for (let i = 0; i < BUKLOD_RULES_TEST[2].length; i++) {
-                    //BUKLOD_RULES_TEST[2] are just the field names of each document
-                    // console.log(BUKLOD_RULES_TEST[2][i]);
-                    // let q = document.getElementById(BUKLOD_RULES_TEST[2][i]).value;
-                    // collatedInput[BUKLOD_RULES_TEST[2][i]] = q;
-
-                    let fieldName = BUKLOD_RULES_TEST[2][i];
-                    let inputValue = document.getElementById(fieldName).value;
-
-                    if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick' || fieldName == 'number_seniors') {
-                        collatedInput[fieldName] = Number(inputValue);
-                    } else if (fieldName == 'earthquake_risk') {
-                        collatedInput['earthquake_risk'] = inputValue;
-                    } else if (fieldName == 'fire_risk') {
-                        collatedInput['fire_risk'] = inputValue;
-                    } else if (fieldName == 'flood_risk') {
-                        collatedInput['flood_risk'] = inputValue;
-                    } else if (fieldName == 'landslide_risk') {
-                        collatedInput['landslide_risk'] = inputValue;
-                    } else if (fieldName == 'storm_risk') {
-                        collatedInput['storm_risk'] = inputValue;
-                    } else if (fieldName == 'location_coordinates') {
-                        console.log(inputValue)
-                        console.log(typeof inputValue)
-                        const geoPoint = getCoordinates(inputValue);
-                        collatedInput['location_coordinates'] = geoPoint;
-                    } else {
-                        collatedInput[fieldName] = inputValue;
-                    }
-                    // this is where data validation will happen
-                    // add the if-else statements of edge cases here
-                }
-                collatedInput['earthquake_risk'] = document.getElementById("earthquake_level").value + " RISK: " + collatedInput['earthquake_risk'];
-                collatedInput['fire_risk'] = document.getElementById("fire_level").value + " RISK: " + collatedInput['fire_risk'];
-                collatedInput['flood_risk'] = document.getElementById("flood_level").value + " RISK: " + collatedInput['flood_risk'];
-                collatedInput['landslide_risk'] = document.getElementById("landslide_level").value + " RISK: " + collatedInput['landslide_risk'];
-                collatedInput['storm_risk'] = document.getElementById("storm_level").value + " RISK: " + collatedInput['storm_risk'];
-                
-                // if (isLoggedIn == true) {
-                //     const errors = validateData("buklod-official-TEST", collatedInput);
-                // } else {
-                //     const errors = `You do not have permissions to perform this action. Please login to proceed.`;
-                // }
-
-                const errors = validateData("buklod-official-TEST", collatedInput);
-
-                if (errors.length > 0) {
-                    displayErrors(errors);
-                } else {
-                    // Show loading state
-                    document.getElementById("submit_form").disabled = true;
-                    document.getElementById("submit_form").textContent = "Saving...";
-                    
-                    addEntry(collatedInput)
-                        .then(() => {
-                            // Success feedback
-                            alert('Household added successfully!');
-                            
-                            // Close the modal
-                            window.parent.postMessage('closeAddModal', '*');
-                            
-                            // Reload the page to show the new marker
-                            window.parent.location.reload();
-                        })
-                        .catch((error) => {
-                            console.error('Error adding household: ', error);
-                            alert('Error adding household. Please try again.');
-                            
-                            // Reset button state
-                            document.getElementById("submit_form").disabled = false;
-                            document.getElementById("submit_form").textContent = "Save Household";
-                        });
-                }
-
-                function displayErrors(errors) {
-                let errorDiv = document.getElementById('error_messages');
-
-                if (errorDiv) {
-                    errorDiv.innerHTML = '';
-                    errorDiv.classList.add('show');
-
-                    if (errors.length > 0) {
-                        for (let error of errors) {
-                            let errorParagraph = document.createElement('p');
-                            errorParagraph.textContent = error;
-                            errorDiv.appendChild(errorParagraph);
-                        }
-                    }
-                    } else {
-                        console.error("Error: Couldn't find element with ID 'error_messages'.");
-                    }
-                }
-            }
         </script>
     </head>
     
