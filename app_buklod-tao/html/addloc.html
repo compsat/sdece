@@ -7,10 +7,14 @@
         <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
             
         <script type="module">
+            //Call function from firestore.js to add new household from input fields after pressing submit button
             //import { addLocation } from "./js/firestore.js";
             import { addEntry, BUKLOD_RULES_TEST, setCollection, validateData, getCoordinates } from "/js/firestore_UNIV.js";
             setCollection("buklod-official-TEST");
             document.getElementById("submit_form").addEventListener("click", handleFormSubmit_v2);
+
+            import {submitAddForm} from '../js/firestore.js';
+            document.getElementById("submit_form").addEventListener("click", submitAddForm);
 
             function handleFormSubmit_v2(){
                 // Prevent double submission
@@ -428,47 +432,6 @@
             document.getElementById("submit_form").addEventListener("click", submitAddForm);
         </script>
 
-        <script>
-            function resetForm() {
-                let messageText = "Are you sure you want to clear the form?";
-                if (confirm(messageText) == true) {
-                    // Clear input fields
-                    var inputFields = document.getElementsByTagName('input');
-                    for (var i = 0; i < inputFields.length; i++) {
-                    var field = inputFields[i];
-                    if (!field.readOnly && field.type !== 'button') {
-                        field.value = '';
-                    }
-                    }
-
-                    // Clear select dropdowns
-                    var selectFields = document.getElementsByTagName('select');
-                    for (var i = 0; i < selectFields.length; i++) {
-                    selectFields[i].selectedIndex = 0; 
-                    }
-                }
-            }
-
-
-            function closeModal() {
-				window.parent.postMessage('closeAddModal', '*');
-			}
-
-			document
-				.getElementsByClassName('closeForm')[0]
-				.addEventListener('click', function (event) {
-					event.preventDefault();
-					console.log('The user has closed the Add Activity modal.');
-					closeModal();
-				});
-
-			document.getElementById('close-btn').addEventListener('click', function (event) {
-					event.preventDefault();
-					console.log(
-						'The user has closed the Add Activity modal.'
-					);
-					closeModal();
-				});
-        </script>
+        
     -->
 </html>
