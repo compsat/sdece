@@ -67,6 +67,8 @@ function onPinClick(doc) {
       <div class="popup-value">${doc.is_hoa_noa||''}</div>
       <div class="popup-label">Evacuation Area</div>
       <div class="popup-value">${doc.nearest_evac||doc.nearest_evac_area||''}</div>
+      <div class="popup-label">House Material</div>
+      <div class="popup-value">${doc.household_material||''}</div>
     </div>
     <div class="popup-section" style="margin-top:1.2rem;">
       <div class="popup-label risk-header">
@@ -120,6 +122,12 @@ function onPinClick(doc) {
           <div class="resident-label">Pregnant</div>
           <div class="resident-count">${doc.number_pregnant||doc.num_residents_preg||0}</div>
         </div>
+        <div class="resident-divider"></div>
+        <div class="resident-item">
+          <div class="resident-label">Sickness Present</div>
+        </div>
+        <div class="resident-count">${doc.sickness_present||''}</div>
+
       </div>
     </div>
     <div class="popup-edit-section">
