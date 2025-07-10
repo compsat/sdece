@@ -90,18 +90,19 @@
 
                     <div class="resident-item">
                         <div class="resident-label">Total</div>
-                        <div class="resident-count">${doc.number_residents||doc.num_residents||0}</div>
+                        <div class="resident-count" data-bind="number_residents">${doc.number_residents||doc.num_residents||0}</div>
                     </div>
                     <div class="resident-divider"></div>
 
                     <div class="resident-item">
                         <div class="resident-label">Minors</div>
-                        <div class="resident-count">${doc.number_minors||doc.num_residents_minor||0}</div>
+                        <div class="resident-count" data-bind="number_minors">${doc.number_minors||doc.num_residents_minor||0}</div>
                     </div>
 
+                    <!-- add data bind in this section -->
                     <div class="resident-item">
                         <div class="resident-label">Adults</div>
-                        <div class="resident-count">${doc.number_adult || (() => {
+                        <div class="resident-count" data-bind="">${doc.number_adult || (() => {
                             const total = doc.num_residents || doc.number_residents || 0;
                             const minors = doc.num_residents_minor || doc.number_minors || 0;
                             const seniors = doc.num_residents_senior || doc.number_seniors || 0;
@@ -112,29 +113,29 @@
 
                     <div class="resident-item">
                         <div class="resident-label">Seniors</div>
-                        <div class="resident-count">${doc.number_seniors||doc.num_residents_senior||0}</div>
+                        <div class="resident-count" data-bind="number_seniors">${doc.number_seniors||doc.num_residents_senior||0}</div>
                     </div>
 
                     <div class="resident-item">
                         <div class="resident-label">PWD</div>
-                        <div class="resident-count">${doc.number_pwd||doc.num_residents_pwd||0}</div>
+                        <div class="resident-count" data-bind="number_pwd">${doc.number_pwd||doc.num_residents_pwd||0}</div>
                     </div>
 
                     <div class="resident-item">
                         <div class="resident-label">Sick</div>
-                        <div class="resident-count">${doc.number_sick||doc.num_residents_sick||0}</div>
+                        <div class="resident-count" data-bind="number_sick">${doc.number_sick||doc.num_residents_sick||0}</div>
                     </div>
 
                     <div class="resident-item">
                         <div class="resident-label">Pregnant</div>
-                        <div class="resident-count">${doc.number_pregnant||doc.num_residents_preg||0}</div>
+                        <div class="resident-count" data-bind="number_pregnant">${doc.number_pregnant||doc.num_residents_preg||0}</div>
                     </div>
 
                     <div class="resident-divider"></div>
                     <div class="resident-item">
                         <div class="resident-label">Sickness Present</div>
                     </div>
-                    <div class="resident-count">${doc.sickness_present||''}</div>
+                    <div class="resident-count" data-bind="sickness_present">${doc.sickness_present||''}</div>
 
                 </div>
             </div>
