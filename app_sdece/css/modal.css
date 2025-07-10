@@ -178,7 +178,7 @@ button {
 	position: absolute;
 	z-index: 2000;
 	top: 80px;
-	left: 28rem;
+	left: 22rem;
 	display: none;
 	flex-direction: column;
 	animation: slide-out 500ms forwards;

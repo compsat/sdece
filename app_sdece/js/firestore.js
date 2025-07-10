@@ -205,6 +205,24 @@ getDocs(col_ref)
 
 				marker.on('click', function () {
 					marker.openPopup();
+
+					// Center the map on this marker
+					map.setView(marker.getLatLng(), map.getZoom(), {
+						animate: true,
+						duration: 0.5,
+					});
+
+					clearAllHighlights();
+
+					const sidebarItems = document.querySelectorAll('.partnerDiv');
+					sidebarItems.forEach((item) => {
+						const nameDiv = item.querySelector('.name');
+						if (nameDiv && nameDiv.textContent === partner) {
+							item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+							item.classList.add('highlight');
+						}
+					});
+					
 					var test = document.getElementById(
 						partners[partner][0]['partner_name']
 					);

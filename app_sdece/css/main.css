@@ -159,6 +159,10 @@ iframe {
 	background-color: #f9fafb;
 }
 
+.partnerDiv.highlight {
+	background-color: #f3f4f6;
+}
+
 .name {
 	font-family: 'Geist';
 	font-weight: 600;
