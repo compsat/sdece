@@ -500,6 +500,7 @@ export function editEntry(inp_obj,docId) {
 			updateDoc(DOC_REFERENCE, inp_obj)
 				.then(() => {
 					alert("You may now reload the page for your edit to reflect on this page");
+					window.parent.location.reload(); 
 				})
 				.catch((error) => {
 					console.error('Error adding document: ', error);
