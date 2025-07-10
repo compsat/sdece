@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Household Information</title>
+        <link rel="stylesheet" href="../css/form.css">
+        <link rel="stylesheet" href="../css/main.css">
+        <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
+            
+        <script type="module">
+            //Call function from firestore.js to add new household from input fields after pressing submit button
+            //import { addLocation } from "./js/firestore.js";
+            import { addEntry, BUKLOD_RULES_TEST, setCollection, validateData, getCoordinates } from "/js/firestore_UNIV.js";
+            import { submitAddForm } from '../js/firestore.js';
+
+            setCollection("buklod-official-TEST");
+            document.getElementById("submit_form").addEventListener("click", submitAddForm);
+
+        </script>
+    </head>
+    
+    <body>
+        <div class="popup-card">
+            <div class="popup-title" data-bind="household_name">${doc.household_name||''}</div>
+            <div class="popup-phone" data-bind="contact_number">
+                <span style="display:inline-flex;align-items:center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width:1.1em;height:1.1em;color:#888ea8;fill:#888ea8;vertical-align:middle;">
+                        <path d="M9.36556 10.6821C10.302 12.3288 11.6712 13.698 13.3179 14.6344L14.2024 13.3961C14.4965 12.9845 15.0516 12.8573 15.4956 13.0998C16.9024 13.8683 18.4571 14.3353 20.0789 14.4637C20.599 14.5049 21 14.9389 21 15.4606V19.9234C21 20.4361 20.6122 20.8657 20.1022 20.9181C19.5723 20.9726 19.0377 21 18.5 21C9.93959 21 3 14.0604 3 5.5C3 4.96227 3.02742 4.42771 3.08189 3.89776C3.1343 3.38775 3.56394 3 4.07665 3H8.53942C9.0611 3 9.49513 3.40104 9.5363 3.92109C9.66467 5.54288 10.1317 7.09764 10.9002 8.50444C11.1427 8.9484 11.0155 9.50354 10.6039 9.79757L9.36556 10.6821ZM6.84425 10.0252L8.7442 8.66809C8.20547 7.50514 7.83628 6.27183 7.64727 5H5.00907C5.00303 5.16632 5 5.333 5 5.5C5 12.9558 11.0442 19 18.5 19C18.667 19 18.8337 18.997 19 18.9909V16.3527C17.7282 16.1637 16.4949 15.7945 15.3319 15.2558L13.9748 17.1558C13.4258 16.9425 12.8956 16.6915 12.3874 16.4061L12.3293 16.373C10.3697 15.2587 8.74134 13.6303 7.627 11.6707L7.59394 11.6126C7.30849 11.1044 7.05754 10.5742 6.84425 10.0252Z"></path>
+                    </svg>
+                </span>
+                ${doc.contact_number||''}
+            </div>
+
+            <div class="popup-section">
+                <div class="popup-label">Number of Residents</div>
+                <div class="popup-value" data-bind="number_residents">${doc.number_residents||doc.num_residents||0}</div>
+
+                <div class="popup-label">Residency Status</div>
+                <div class="popup-value" data-bind="residency_status">${doc.residency_status||''}</div>
+
+                <div class="popup-label">Part of HOA/NOA</div>
+                <div class="popup-value" data-bind="is_hoa_noa">${doc.is_hoa_noa||''}</div>
+                
+                <div class="popup-label">Evacuation Area</div>
+                <div class="popup-value" data-bind="nearest_evac">${doc.nearest_evac||doc.nearest_evac_area||''}</div>
+            
+                <div class="popup-label">House Material</div>
+                <div class="popup-value" data-bind="household_material">${doc.household_material||''}</div>
+
+            </div>
+
+            <!-- add data bind in this section -->
+            <div class="popup-section" style="margin-top:1.2rem;">
+                <div class="popup-label risk-header">Risk Levels</div>
+                <div class="risk-cards">
+                    <div class="risk-card ${eq.level ? 'risk-'+eq.level.toLowerCase() : ''}">
+                        <div class="risk-type">Earthquake</div>
+                        <div>${riskBadge(eq.level)}</div>
+                        <div class="risk-desc">${eq.desc}</div>
+                    </div>
+
+                    <div class="risk-card ${fire.level ? 'risk-'+fire.level.toLowerCase() : ''}">
+                        <div class="risk-type">Fire</div>
+                        <div>${riskBadge(fire.level)}</div>
+                        <div class="risk-desc">${fire.desc}</div>
+                    </div>
+                    
+                    <div class="risk-card ${flood.level ? 'risk-'+flood.level.toLowerCase() : ''}">
+                        <div class="risk-type">Flood</div>
+                        <div>${riskBadge(flood.level)}</div>
+                        <div class="risk-desc">${flood.desc}</div>
+                    </div>
+                    
+                    <div class="risk-card ${landslide.level ? 'risk-'+landslide.level.toLowerCase() : ''}">
+                        <div class="risk-type">Landslide</div>
+                        <div>${riskBadge(landslide.level)}</div>
+                        <div class="risk-desc">${landslide.desc}</div>
+                    </div>
+                    
+                    <div class="risk-card ${storm.level ? 'risk-'+storm.level.toLowerCase() : ''}">
+                        <div class="risk-type">Storm</div>
+                        <div>${riskBadge(storm.level)}</div>
+                        <div class="risk-desc">${storm.desc}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="popup-section" style="margin-top:1.2rem;">
+                <div class="popup-label risk-header">Residents</div>
+                <div class="residents-breakdown">
+
+                    <div class="resident-item">
+                        <div class="resident-label">Total</div>
+                        <div class="resident-count">${doc.number_residents||doc.num_residents||0}</div>
+                    </div>
+                    <div class="resident-divider"></div>
+
+                    <div class="resident-item">
+                        <div class="resident-label">Minors</div>
+                        <div class="resident-count">${doc.number_minors||doc.num_residents_minor||0}</div>
+                    </div>
+
+                    <div class="resident-item">
+                        <div class="resident-label">Adults</div>
+                        <div class="resident-count">${doc.number_adult || (() => {
+                            const total = doc.num_residents || doc.number_residents || 0;
+                            const minors = doc.num_residents_minor || doc.number_minors || 0;
+                            const seniors = doc.num_residents_senior || doc.number_seniors || 0;
+                            const adults = total - minors - seniors;
+                            return adults >= 0 ? adults : 0;
+                        })()}</div>
+                    </div>
+
+                    <div class="resident-item">
+                        <div class="resident-label">Seniors</div>
+                        <div class="resident-count">${doc.number_seniors||doc.num_residents_senior||0}</div>
+                    </div>
+
+                    <div class="resident-item">
+                        <div class="resident-label">PWD</div>
+                        <div class="resident-count">${doc.number_pwd||doc.num_residents_pwd||0}</div>
+                    </div>
+
+                    <div class="resident-item">
+                        <div class="resident-label">Sick</div>
+                        <div class="resident-count">${doc.number_sick||doc.num_residents_sick||0}</div>
+                    </div>
+
+                    <div class="resident-item">
+                        <div class="resident-label">Pregnant</div>
+                        <div class="resident-count">${doc.number_pregnant||doc.num_residents_preg||0}</div>
+                    </div>
+
+                    <div class="resident-divider"></div>
+                    <div class="resident-item">
+                        <div class="resident-label">Sickness Present</div>
+                    </div>
+                    <div class="resident-count">${doc.sickness_present||''}</div>
+
+                </div>
+            </div>
+
+            <div class="popup-edit-section">
+                <button id="editHouseholdPopup" class="popup-edit-btn">
+                    Edit
+                </button>
+            </div>
+
+        </div>
+
+        <script>
+
+            function closeModal() {
+                window.parent.postMessage('closeAddModal', '*');
+            }
+
+            // Close button handlers
+            document.getElementById('close-btn').addEventListener('click', function (event) {
+                event.preventDefault();
+                console.log('The user has closed the Add Household modal.');
+                closeModal();
+            });
+
+            document.getElementById('cancel-btn').addEventListener('click', function (event) {
+                event.preventDefault();
+                console.log('The user has cancelled the Add Household modal.');
+                closeModal();
+            });
+
+            // Hide error messages when user starts typing
+            const inputs = document.querySelectorAll('.form-input, .form-select, .form-textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    const errorDiv = document.getElementById('error_messages');
+                    if (errorDiv) {
+                        errorDiv.classList.remove('show');
+                    }
+                });
+            });
+        </script>
+
+    </body> 
+    
+</html>

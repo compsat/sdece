@@ -41,73 +41,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-  <!-- Map switching between root index and app_buklod_tao. Remove if not needed.
-   This just allows for easier map switching during development.-->
-  <script type="module">
-          import {
-            setCollection,
-            getCollection,
-            DB_RULES_AND_DATA,
-          } from "/js/firestore_UNIV.js";
-          import {
-            readyField,
-            clearMarkers,
-            clearLocationList,
-            map,
-            loadJsCssFiles,
-            createJsCssFiles,
-          } from "/js/index_UNIV.js";
-          import {
-            getDocs,
-            query,
-          } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
-          import {
-            getCurrentBranchCookie,
-            setCurrentBranchCookie,
-          } from "/js/cookies.js";
-
-          var collections = document.getElementById("collections");
-
-          for (let rule of DB_RULES_AND_DATA) {
-            collections.innerHTML += `<option value="${
-              rule[0]
-            }"> ${readyField(rule[0])}</option>`;
-          }
-
-        collections.addEventListener("change", function () {
-        const SELECTED = collections.value;
-        console.log(SELECTED)
-
-        setCurrentBranchCookie("current_branch", SELECTED);
-
-        if (
-            SELECTED.includes("sdece-official") || 
-            SELECTED.includes("sdece-official-TEST")
-          ) {
-            window.location.href = "../index.html";
-            console.log("switched");
-          } else {
-            setCollection(SELECTED);
-            location.reload();
-          }
-
-      });
-
-      const DEFAULT_BRANCH = "sdece-official";
-
-      if (getCurrentBranchCookie() === null) {
-        setCollection(DEFAULT_BRANCH);
-        setCurrentBranchCookie("current_branch", DEFAULT_BRANCH);
-        loadJsCssFiles(DEFAULT_BRANCH);
-        collections.value = DEFAULT_BRANCH; // Keep dropdown in sync
-      } else {
-        setCollection(getCurrentBranchCookie());
-        collections.value = getCurrentBranchCookie();
-        loadJsCssFiles(getCurrentBranchCookie());
-      }
-
-        </script>
+  
 </head>
 
 <body>
