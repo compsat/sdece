@@ -488,46 +488,34 @@ export function getDocByID(docId) {
 
 
 export function addEntry(inp_obj) {
-	for (let rule of DB_RULES_AND_DATA) {
-		if (rule[0] === collection_reference.id) {
-			let input = {}; // contents depend on the rule engine
-			for (let i = 0; i < Object.keys(inp_obj).length; i++) {
-				input[rule[2][i]] = inp_obj[rule[2][i]];
-			}
-			
-			// Return the Promise so the form can handle success/error
-			return addDoc(collection_reference, input)
-				.then((docRef) => {
-					console.log(docRef);
-					return docRef; // Return the document reference for success handling
-				})
-				.catch((error) => {
-					console.error('Error adding document: ', error);
-					throw error; // Re-throw the error so the form can catch it
-				});
-		}
-	}
-	
+  addDoc(collection_reference, inp_obj)
+    .then((docRef) => {
+      console.log(docRef);
+      alert("You may now reload the page for your addition to reflect on this page");
+      window.parent.location.reload();
+    })
+    .catch((error) => {
+      console.error('Error adding document: ', error);
+      alert("Error uploading new activity. Please try again");
+    });
 	// Return a rejected Promise if no matching collection found
 	return Promise.reject(new Error('Collection not found'));
 }
 
-export function editEntry(inp_obj,docId) {
-	for (let rule of DB_RULES_AND_DATA) {
-		if (rule[0] === collection_reference.id) {
-			const DOC_REFERENCE = doc(DB, rule[0], docId);
-			updateDoc(DOC_REFERENCE, inp_obj)
-				.then(() => {
-					alert("You may now reload the page for your edit to reflect on this page");
-					window.parent.location.reload(); 
-				})
-				.catch((error) => {
-					console.error('Error adding document: ', error);
-					alert("Error uploading the edited activity. Please try again");
-				});
-			break;
-		}
-	}
+
+export function editEntry(inp_obj, docId) {
+	console.log(inp_obj);
+	console.log("entered");
+	const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
+	updateDoc(DOC_REFERENCE, inp_obj)
+		.then(() => {
+			alert("You may now reload the page for your edit to reflect on this page");
+			window.parent.location.reload();
+		})
+		.catch((error) => {
+			console.error('Error adding document: ', error);
+			alert("Error uploading the edited activity. Please try again");
+		});
 }
 
 export function validateData(collectionName, data) {
@@ -538,62 +526,62 @@ export function validateData(collectionName, data) {
 		const rule = rules[field];
 		const value = data[field];
 		const fieldLabel = rule.label || field;
-    console.log(fieldLabel);
+		console.log(fieldLabel);
 
-    // Required Test
-    const IS_EMPTY = value == undefined || value == null || value == ''
-    if ( 
-      (rule.required && IS_EMPTY)|| 
-      (!rule.required && IS_EMPTY)
-    ) {
-      if (rule.required) {
-        errors.push(`${fieldLabel} is required.`);
-      }
-      continue;
-    } 
-
-    // this is at the beginning so that if it's not required, it doesn't check the rest of
-    // the rules. 
-
-    const MIN_LENGTH_TEST = rule.minLength && typeof value == 'string' && value.length < rule.minLength
-    // this will stay here until sdece team implements front-end validation of phone
-    // number
-
-    // Map of Validation Tests
-    const VALIDATION_TEST = new Map([
-      ["date_test", rule.type === "date" && isNaN(new Date(value).getTime())],
-      ["type_test", rule.type && typeof value != rule.type],
-      ["min_length_test", MIN_LENGTH_TEST],
-      ["min_value_test", rule.minimum !== undefined && typeof value === 'number' && value < rule.minimum], 
-      ["max_length_test", rule.maxLength && typeof value == 'string' && value.length > rule.maxLength], 
-      ["regex_test", rule.regex && !rule.regex.test(value)],
-    ]);
-
-    // Map of Error Messages
-    const ERROR_MESSAGES = new Map([
-      ["date_test", `${fieldLabel} must be a valid date.`],
-      ["type_test", `${fieldLabel} must be of type ${rule.type}. type is ${value}`],
-      ["min_length_test", `${fieldLabel} must be at least ${rule.minLength} characters long.`],
-      ["min_value_test", `${fieldLabel} must be at least ${rule.minimum}.`],
-      ["max_length_test", `${fieldLabel} cannot exceed ${rule.maxLength} characters.`],
-      ["regex_test",  `${fieldLabel} is invalid.`],
-    ])
-
-
-    // This is holdover code until the sdece team can implement frontend validation
-		if (MIN_LENGTH_TEST && field === 'partner_contact_number') {
-				errors.push(
-					`${fieldLabel} must be at least ${rule.minLength} characters long and in the form 09XXXXXXXXX.`
-				);
+		// Required Test
+		const IS_EMPTY = value == undefined || value == null || value == ''
+		if (
+			(rule.required && IS_EMPTY) ||
+			(!rule.required && IS_EMPTY)
+		) {
+			if (rule.required) {
+				errors.push(`${fieldLabel} is required.`);
+			}
 			continue;
 		}
 
-    for (const x of VALIDATION_TEST.keys()) {
-      if (VALIDATION_TEST.get(x)) {
-        errors.push(ERROR_MESSAGES.get(x));
-        break;
-      }
-    }
+		// this is at the beginning so that if it's not required, it doesn't check the rest of
+		// the rules. 
+
+		const MIN_LENGTH_TEST = rule.minLength && typeof value == 'string' && value.length < rule.minLength
+		// this will stay here until sdece team implements front-end validation of phone
+		// number
+
+		// Map of Validation Tests
+		const VALIDATION_TEST = new Map([
+			["date_test", rule.type === "date" && isNaN(new Date(value).getTime())],
+			["type_test", rule.type && typeof value != rule.type],
+			["min_length_test", MIN_LENGTH_TEST],
+			["min_value_test", rule.minimum !== undefined && typeof value === 'number' && value < rule.minimum],
+			["max_length_test", rule.maxLength && typeof value == 'string' && value.length > rule.maxLength],
+			["regex_test", rule.regex && !rule.regex.test(value)],
+		]);
+
+		// Map of Error Messages
+		const ERROR_MESSAGES = new Map([
+			["date_test", `${fieldLabel} must be a valid date.`],
+			["type_test", `${fieldLabel} must be of type ${rule.type}. type is ${value}`],
+			["min_length_test", `${fieldLabel} must be at least ${rule.minLength} characters long.`],
+			["min_value_test", `${fieldLabel} must be at least ${rule.minimum}.`],
+			["max_length_test", `${fieldLabel} cannot exceed ${rule.maxLength} characters.`],
+			["regex_test", `${fieldLabel} is invalid.`],
+		])
+
+
+		// This is holdover code until the sdece team can implement frontend validation
+		if (MIN_LENGTH_TEST && field === 'partner_contact_number') {
+			errors.push(
+				`${fieldLabel} must be at least ${rule.minLength} characters long and in the form 09XXXXXXXXX.`
+			);
+			continue;
+		}
+
+		for (const x of VALIDATION_TEST.keys()) {
+			if (VALIDATION_TEST.get(x)) {
+				errors.push(ERROR_MESSAGES.get(x));
+				break;
+			}
+		}
 
 
 		if (rule.enum && !rule.enum.includes(value)) {
