@@ -484,45 +484,31 @@ export function getDocByID(docId) {
 
 export function addEntry(inp_obj) {
 
-	for (let rule of DB_RULES_AND_DATA) {
-		if (rule[0] === collection_reference.id) {
-			let input = {}; // contents depend on the rule engine
-			for (let i = 0; i < Object.keys(inp_obj).length; i++) {
-				input[rule[2][i]] = inp_obj[rule[2][i]];
-				console.log(input);
-			}
-			addDoc(collection_reference, input)
-				.then((docRef) => {
-					console.log(docRef);
-					alert("You may now reload the page for your addition to reflect on this page");
-					window.parent.location.reload();
-
+  addDoc(collection_reference, inp_obj)
+    .then((docRef) => {
+      console.log(docRef);
+      alert("You may now reload the page for your addition to reflect on this page");
+      window.parent.location.reload();
     })
     .catch((error) => {
       console.error('Error adding document: ', error);
       alert("Error uploading new activity. Please try again");
     });
 }
-	}
-}
 
 export function editEntry(inp_obj,docId) {
-	for (let rule of DB_RULES_AND_DATA) {
-		if (rule[0] === collection_reference.id) {
-			console.log(inp_obj);
-			console.log("entered");
-			const DOC_REFERENCE = doc(DB, rule[0], docId);
-			updateDoc(DOC_REFERENCE, inp_obj)
-				.then(() => {
-					alert("You may now reload the page for your edit to reflect on this page");
-				})
-				.catch((error) => {
-					console.error('Error adding document: ', error);
-					alert("Error uploading the edited activity. Please try again");
-				});
-			break;
-		}
-	}
+  console.log(inp_obj);
+  console.log("entered");
+  const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
+  updateDoc(DOC_REFERENCE, inp_obj)
+    .then(() => {
+      alert("You may now reload the page for your edit to reflect on this page");
+      window.parent.location.reload();
+    })
+    .catch((error) => {
+      console.error('Error adding document: ', error);
+      alert("Error uploading the edited activity. Please try again");
+    });
 }
 
 export function validateData(collectionName, data) {
