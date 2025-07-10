@@ -30,6 +30,7 @@ var colRef = getCollection();
 var partnersArray = getPartnersArray();
 
 // Function to store the html for info display on pin click
+/*
 function onPinClick(doc) {
   function riskBadge(level) {
     if (!level) return '';
@@ -138,9 +139,140 @@ function onPinClick(doc) {
   </div>`;
   return leaflet_html;
 } 
+*/
 
+// CODE LOGIC FOR OPENING MAIN MODAL
+// ------------------------------------------
+async function onPinClick(doc) {
+  const modal = await fetch('/app_buklod-tao/html/main_modal.html');
+  const html = await modal.text();
 
-addListeners();
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = html;
+
+  // Populate modal based on doc values
+  wrapper.querySelectorAll('[data-bind]').forEach(ul => {
+    const key = ul.getAttribute('data-bind');
+
+    switch (key) {
+      case 'household_name':
+        ul.textContent = doc.household_name || '';
+        break;
+      case 'contact_number':
+        ul.textContent = doc.contact_number || '';
+        break;
+      case 'number_residents':
+        ul.textContent = doc.number_residents || 0;
+        break;
+      case 'residency_status':
+        ul.textContent = doc.residency_status || '';
+        break;
+      case 'is_hoa_noa':
+        ul.textContent = doc.is_hoa_noa || 'N/A';
+        break;
+      case 'nearest_evac':
+        ul.textContent = doc.nearest_evac || '';
+        break;
+      case 'household_material':
+        ul.textContent = doc.household_material || '';
+        break;
+      case 'earthquake_risk':
+        ul.textContent = doc.earthquake_risk || '';
+        break;
+      case 'earthquake_risk_description':
+        ul.textContent = doc.earthquake_risk_description || 'No description found';
+        break;
+      case 'fire_risk':
+        ul.textContent = doc.fire_risk || '';
+        break;
+      case 'fire_risk_description':
+        ul.textContent = doc.fire_risk_description || 'No description found';
+        break;
+      case 'flood_risk':
+        ul.textContent = doc.flood_risk || '';
+        break;
+      case 'flood_risk_description':
+        ul.textContent = doc.flood_risk_description || 'No description found';
+        break;
+      case 'landslide_risk':
+        ul.textContent = doc.landslide_risk || '';
+        break;
+      case 'landslide_risk_description':
+        ul.textContent = doc.landslide_risk_description || 'No description found';
+        break;
+      case 'storm_risk':
+        ul.textContent = doc.storm_risk || '';
+        break;
+      case 'storm_risk_description':
+        ul.textContent = doc.storm_risk_description || 'No description found';
+        break;
+      case 'number_minors':
+        ul.textContent = doc.number_minors || 0;
+        break;
+
+      case 'number_adult': {
+        const total = doc.num_residents || doc.number_residents || 0;
+        const minors = doc.num_residents_minor || doc.number_minors || 0;
+        const seniors = doc.num_residents_senior || doc.number_seniors || 0;
+        const adults = total - minors - seniors;
+        ul.textContent = adults >= 0 ? adults : 0;
+        break;
+      }
+
+      case 'number_seniors':
+        ul.textContent = doc.number_seniors || 0;
+        break;
+      case 'number_pwd':
+        ul.textContent = doc.number_pwd || 0;
+        break;
+      case 'number_sick':
+        ul.textContent = doc.number_sick || 0;
+        break;
+      case 'number_pregnant':
+        ul.textContent = doc.number_pregnant || 0;
+        break;
+      case 'sickness_present':
+        ul.textContent = doc.number_pregnant || 'None';
+        break;
+
+      case 'risk-section':
+        ul.innerHTML = generateRiskSection(doc); // You already have logic to do this
+        break;
+      default:
+        ul.textContent = doc[key] || '';
+    }
+  });
+
+  // Risk card color display dependent on rosk level
+  wrapper.querySelectorAll('[data-risk-card]').forEach(ul => {
+    const key = ul.getAttribute('data-risk-card');
+    const raw = doc[key] || '';
+    const level = raw.split(':')[0]?.replace('RISK', '').replace(/_/g, '').trim().toUpperCase();
+
+    ul.classList.remove('risk-high', 'risk-medium', 'risk-low');
+    switch (level) {
+      case 'HIGH':
+        ul.classList.add('risk-high');
+        break;
+      case 'MEDIUM':
+        ul.classList.add('risk-medium');
+        break;
+      case 'LOW':
+        ul.classList.add('risk-low');
+        break;
+    }
+  });
+
+  const closeBtn = wrapper.querySelector('#close-btn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      window.parent.postMessage('closeMainModal', '*');
+    });
+  }
+
+  return wrapper.innerHTML;
+}
+// ------------------------------------------
 
 
 // Modal
@@ -452,8 +584,11 @@ function updateRiskIcons() {
     const marker = L.marker([coord._lat, coord._long], { icon });
 
     // Shows partner info on pin click
-    const popupContent = onPinClick(partner);
-    marker.bindPopup(popupContent);
+    //const popupContent = onPinClick(partner);
+    //marker.bindPopup(popupContent);
+    onPinClick(partner).then(popupContent => {
+      marker.bindPopup(popupContent);
+    });
 
     marker.on('popupopen', () => {
       const edit_button = document.getElementById("editHouseholdPopup")
