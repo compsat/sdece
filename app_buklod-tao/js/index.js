@@ -141,6 +141,65 @@ function onPinClick(doc) {
 } 
 */
 
+// CODE FOR NAVBAR
+// populate ul with partners
+// can be used for filter functionality if needed
+function populateNavBar(condition){
+  var filtered_partners;
+
+  if (condition == null){
+    filtered_partners = partnersArray
+  }
+  else{
+    //insert filter here
+  }
+
+  filtered_partners.forEach((partner) => {
+    // Creating DOM elements
+    const containerDiv = document.createElement('div');
+    const img = document.createElement('svg');
+    const listItem = document.createElement('li');
+    const anchor = document.createElement('a');
+    const nameDiv = document.createElement('div');
+    const addressDiv = document.createElement('div');
+    
+    // Set attributes
+    anchor.href = '#';
+    let marker = L.marker([0, 0],{icon:""});
+    
+    Object.defineProperty(partner, "marker", {value:marker, configurable: true});
+    
+    
+    listItem.addEventListener('click', () => {
+      console.log("fired")
+      partner.marker.fire('popupopen');
+    });
+    
+    // Adding classes and setting text content
+    nameDiv.classList.add('name');
+    addressDiv.classList.add('address');
+    
+    nameDiv.textContent = partner.household_name;
+    addressDiv.textContent =
+    partner.household_address + ' ' + partner.household_phase;
+    
+    listItem.classList.add('accordion');
+    anchor.classList.add('accordion', 'link');
+    containerDiv.classList.add('container-entry');
+    
+    // Append elements to the DOM
+    anchor.appendChild(nameDiv);
+    anchor.appendChild(addressDiv);
+    
+    listItem.appendChild(anchor);
+    containerDiv.appendChild(img);
+    containerDiv.appendChild(listItem);
+    locationList.appendChild(containerDiv);
+  });
+}
+populateNavBar();
+
+
 // CODE LOGIC FOR OPENING MAIN MODAL
 // ------------------------------------------
 async function onPinClick(doc) {
@@ -579,9 +638,8 @@ function updateRiskIcons() {
       iconSize: [39, 39],
       popupAnchor: [0.5, -15]
     });
-
-    // Place pin accordingly on map according to icon class standards
     const marker = L.marker([coord._lat, coord._long], { icon });
+    // Place pin accordingly on map according to icon class standards
 
     // Shows partner info on pin click
     //const popupContent = onPinClick(partner);
@@ -591,7 +649,8 @@ function updateRiskIcons() {
     });
 
     marker.on('popupopen', () => {
-      const edit_button = document.getElementById("editHouseholdPopup")
+      console.log("opened")
+      const edit_button = document.getElementById("edit-household-popup")
       edit_button.addEventListener('click', () => {
           const modal = document.getElementById('partnerModal');
           var editFormModal = document.getElementById('editModal');
@@ -599,6 +658,11 @@ function updateRiskIcons() {
           modal.style.display = 'none';
           populateEditForm(partner, editFormModal);
         });
+
+      const close_button = document.getElementById("close-btn")
+      close_button.addEventListener('click', () => {
+        marker.closePopup()
+      })
     });
 
     map.addLayer(marker);

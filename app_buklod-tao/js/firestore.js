@@ -24,7 +24,6 @@ import {
   getDocIdByPartnerName,
 } from '../../js/firestore_UNIV.js';
 // Your Firestore code here
-console.log("run2");
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -98,49 +97,7 @@ const loadData = async() => {
 			) {
 				partnersArray.push(doc.data());
 			}
-		});
-
-    // populate ul with partners
-    partnersArray.forEach((partner) => {
-      // Creating DOM elements
-      const containerDiv = document.createElement('div');
-      const img = document.createElement('svg');
-      const listItem = document.createElement('li');
-      const anchor = document.createElement('a');
-      const nameDiv = document.createElement('div');
-      const addressDiv = document.createElement('div');
-
-			// Set attributes
-			anchor.href = '#';
-			let marker = L.marker([0, 0]);
-
-			Object.defineProperty(partner, "marker", {value:marker, configurable: true});
-
-
-			anchor.addEventListener('click', () => {
-				partner.marker.fire('click');
-			});
-
-      // Adding classes and setting text content
-      nameDiv.classList.add('name');
-      addressDiv.classList.add('address');
-
-      nameDiv.textContent = partner.household_name;
-      addressDiv.textContent =
-        partner.household_address + ' ' + partner.household_phase;
-
-      listItem.classList.add('accordion');
-      anchor.classList.add('accordion', 'link');
-      containerDiv.classList.add('container-entry');
-
-      // Append elements to the DOM
-      anchor.appendChild(nameDiv);
-      anchor.appendChild(addressDiv);
-
-			listItem.appendChild(anchor);
-			containerDiv.appendChild(img);
-			containerDiv.appendChild(listItem);
-			locationList.appendChild(containerDiv);
+    
 		});
 	})
 	.catch((error) => {
@@ -342,4 +299,6 @@ export function submitAddForm(){
   }
 
 }
+
+console.log("run2");
 // ------------------------------------------
