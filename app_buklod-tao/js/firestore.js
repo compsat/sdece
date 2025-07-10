@@ -156,7 +156,9 @@ await loadData();
 
 export function populateEditForm(partner, editFormModal) {
   console.log("populating form");
-  var iframe = editFormModal.getElementsByClassName('form-modal')
+  console.log(partner)
+  var iframe = editFormModal.getElementsByClassName('form-modal')[0]
+  console.log(iframe)
   var editForm = iframe.contentWindow.document
 
   console.log("Original name:", partner.household_name);
@@ -182,20 +184,24 @@ export function populateEditForm(partner, editFormModal) {
         editForm.getElementById(data.toString()).value = '';
       }
     }
-    
+        
     if (data.includes('risk') && !data.includes('description')) {
-      // splits ":" in case its still there (test set only curently)
-      // splits " " to keep the value (this is due to some values in the test set being formatted as "LEVEL RISK")
-      var risk = partner[data].split(':')[0].split(' ')[0].toLowerCase()
-      editForm.getElementById(data).value = risk;
-      
+      console.log('Raw value:', partner[data]);
+
+      // Get the level text: remove description part
+      var riskLevel = partner[data].split(':')[0].trim().toUpperCase();
+
+      // Normalize: if it’s just 'HIGH', append ' RISK'
+      if (!riskLevel.includes('RISK')) {
+        riskLevel = `${riskLevel} RISK`;
+      }
+
+      console.log('Normalized risk level:', riskLevel);
+
+      editForm.getElementById(data).value = riskLevel;
     }
+
   }
-  // partner.forEach(data => {
-  // });
-  // console.log(partner.household_name)
-  // console.log(document)
-  // console.log(editFormModal.getElementsByClassName('formIframe')[0].contentWindow.document.getElementById('household_name'))
 }
 
 // CODE LOGIC FOR SUBMIT FORMS

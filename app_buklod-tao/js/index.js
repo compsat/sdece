@@ -416,7 +416,7 @@ function getRiskIcon(riskLevel) {
   const basePath = '/app_buklod-tao/hardcode/';
   switch (riskLevel.toUpperCase()) {
     case 'HIGH RISK':
-      debugger;
+      // debugger;
       return `${basePath}high_risk.svg`;
     case 'MEDIUM RISK':
       return `${basePath}mid_risk.svg`;
