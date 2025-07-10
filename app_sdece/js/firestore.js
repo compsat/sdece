@@ -258,6 +258,9 @@ getDocs(col_ref)
 						)
 					)
 				);
+				
+				clearAllHighlights();
+				containerDiv.classList.add('highlight');
 				showModal(partners[partner]);
 			});
 
