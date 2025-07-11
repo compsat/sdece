@@ -281,12 +281,6 @@
                 closeModal();
             });
 
-            document.getElementById('cancel-btn').addEventListener('click', function (event) {
-                event.preventDefault();
-                console.log('The user has cancelled the Add Household modal.');
-                closeModal();
-            });
-
             // Hide error messages when user starts typing
             const inputs = document.querySelectorAll('.form-input, .form-select, .form-textarea');
             inputs.forEach(input => {
