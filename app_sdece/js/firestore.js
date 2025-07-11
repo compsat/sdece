@@ -8,6 +8,35 @@ import { showMainModal, showAddModal } from './index.js';
 let collection_value = 'sdece-official'
 setCollection(collection_value);
 
+// Populating activities in main modal
+export function populateMainModalList() {
+	// Display temporarily saved activities to main modal
+	const mainModalActivityList = mainModalDocument.getElementById('mainModalActivityList');
+	mainModalActivityList.innerHTML = '';
+
+	if (Object.keys(temp_activities).length == 0) {
+		mainModalActivityList.innerHTML = '<p> No activities to show </p>';
+	} else {
+		for (let i = 0; i < Object.keys(temp_activities).length; i++) {
+			let activity = temp_activities[Object.keys(temp_activities)[i]];
+
+			// View activity details button
+			const activityButton = document.createElement('li');
+			const activityName = document.createElement('div');
+			const arrow = document.createElement('div');
+
+			activityName.textContent = getActivity(activity) + '';
+
+			arrow.innerHTML = '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
+			arrow.classList.add('arrow');
+
+			activityButton.appendChild(activityName);
+			activityButton.classList.add('main-modal-temporary-activity');
+			mainModalActivityList.appendChild(activityButton);
+		}
+	}
+}
+
 // Pans to the Philippines
 map.setView(new L.LatLng(14.651, 121.052), 14);
 
@@ -39,7 +68,6 @@ function onMapClick(e) {
 		populateMainModalList();
 	});
 }
-
 map.on('click', onMapClick);
 
 // Handles Add Activity from the main modal
@@ -101,32 +129,44 @@ function clearAllHighlights() {
 // Filters out test entries, groups activities by partner, and dynamically
 // creates map markers and sidebar entries for each unique partner.
 let collection_ref = getCollection();
-let partners = {}; 
-let activities = {};
 
 getDocs(collection_ref)
 	.then((querySnapshot) => {
-		// Load and filter activities
-		querySnapshot.forEach((doc) => {
-			let activity = doc.data();
-			let activity_Name = activity.name;
 
-			// Store activity by ID
-			if ( activity_Name !== 'Test 2' || activity_Name !== 'Test2'){
-				activity['identifier'] = doc.id;
-				activities[doc.id] = activity;
-			}
-		});
+		// Load and filter activities
+		function loadActivities(querySnapshot) {
+			const activities = {};
+
+			querySnapshot.forEach((doc) => {
+				const activity = doc.data();
+				const name = activity.name;
+
+				// Skip unwanted test entries
+				if (name !== 'Test 2' && name !== 'Test2') {
+					activity['identifier'] = doc.id;
+					activities[doc.id] = activity;
+				}
+			});
+			return activities;
+		}
+		const activities = loadActivities(querySnapshot);
 
 		//  Group activities by partner
-		Object.keys(activities).forEach((activity) => {
-			let partner = activities[activity][SDECE_RULES[1]];
+		function groupActivities(activities) {
+			const partners = {};
 
-			if (partners[partner] == null) {
-				partners[partner] = [];
-			} 
-			partners[partner].push(activities[activity]);
-		});
+			Object.values(activities).forEach((activity) => {
+				const partner = activity[SDECE_RULES[1]];
+
+				if (!partners[partner]) {
+					partners[partner] = [];
+				}
+				partners[partner].push(activity);
+			});
+
+			return partners;
+		}
+		const partners = groupActivities(activities);
 
 		// Create map markers and sidebar list items for each partner
 		Object.keys(partners).forEach((partner) => {
@@ -216,7 +256,7 @@ getDocs(collection_ref)
 	})
 	.catch((error) => {
 		console.error('Error getting documents: ', error);
-	});
+});
 
 // Display partner modal by clicking partner entry
 let current_viewed_activity = null; // docId of the currently viewed activity
@@ -319,15 +359,6 @@ export function showModal(partner) {
 		});
 		return close;
 	}
-
-	// === ALTERNATE CLOSE EVENT when user clicks outside ===
-	// window.addEventListener('click', (event) => {
-	// 	if (event.target == modal) {
-	// 		modal.classList.remove('open'); //transition out
-	// 		modal.style.display = 'none';
-	// 		current_viewed_activity = null;
-	// 	}
-	// });
 
 	// Set partner name and coordinates as modal header content
 	function populatePartnerInfo(nameDiv, addressDiv, partner) {
@@ -531,149 +562,111 @@ export function showModal(partner) {
 	setupEditButtons();
 }
 
+// Used for add/ edit to collect form inputs
+function collectFormInputs(document, geopointSource, mode) {
+	let result = {};
+	for (let field of SDECE_RULES[2]) {
+		if (field !== 'partner_coordinates') {
+			let input = document.getElementById(field);
+			result[field] = input?.value || null;
+		} if (mode === 'add'){
+			result[field] = geopointSource;
+		} else {
+			result[field] = current_viewed_activity['partner_coordinates']; // for edit
+		}
+	}
+	return result;
+}
+
+// Used for add/edit to display errors
+function displayErrors(errors, docContext) {
+	let errorDiv = docContext.getElementById('error_messages');
+
+	if (!errorDiv) {
+		console.error("Error: Couldn't find element with ID 'error_messages'.");
+		return;
+	}
+	errorDiv.innerHTML = '';
+
+	if (errors.length > 0) {
+		for (let error of errors) {
+			let p = docContext.createElement('p');
+			p.textContent = error;
+			errorDiv.appendChild(p);
+		}
+		docContext.defaultView.scrollTo(0, 0); // scroll to top of iframe
+	} 
+}
+
+// Used for add/edit to normalize date to timestamp
+function dateToTimestamp(date) {
+	if (typeof date === 'string' && !isNaN(Date.parse(date))) {
+		const parsedDate = new Date(date);
+		parsedDate.setHours(0, 0, 0, 0);
+		return Timestamp.fromDate(parsedDate);
+	}
+	return date;
+}
+
 // Local values stored before batch uploading
 let temp_activities = {};
 let temp_activities_id = 0;
 
-// Addloc.html Save button click listener
+// === ADDLOC.HTML SAVE CLICK LISTENER ===
 let addFormiframe = document.getElementById('addModalHTML');
 let addFormiframeDocument = addFormiframe.contentWindow.document;
 let addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
-addFormSubmitButton.addEventListener('click', function () {
+
+addFormSubmitButton.addEventListener('click', function (event) {
 	//Get data from addloc.html
-	let info_from_forms = {};
-	for (let field of SDECE_RULES[2]) {
-		if (field != 'partner_coordinates') {
-			let input_field = addFormiframeDocument.getElementById(field);
-			if (input_field != null) {
-				if (input_field.value == '') {
-					info_from_forms[field] = null;
-				} else {
-					info_from_forms[field] = input_field.value;
-				}
-			}
-		} else {
-			info_from_forms[field] = addForm_geopoint;
-		}
-	}
+	let form_data = collectFormInputs(addFormiframeDocument, addForm_geopoint, 'add');
 
 	//Validate the collated input here
-	let errors = validateData('sdece-official-TEST', info_from_forms);
+	let errors = validateData('sdece-official-TEST', form_data);
 
 	if (errors.length > 0) {
-		displayErrors(errors);
+		displayErrors(errors, addFormiframeDocument);
 		event.preventDefault();
+		return;
+	} 
+	if (has_existing_partner) {
+		// Uploads straight to firebase DB
+		form_data.activity_date = dateToTimestamp(form_data.activity_date);
+		addEntry(form_data);
 	} else {
-		if (has_existing_partner) {
-			// Uploads straight to firebase DB
-			if (
-				typeof info_from_forms.activity_date === 'string' &&
-				!isNaN(Date.parse(info_from_forms.activity_date))
-			) {
-				const parsedDate = new Date(info_from_forms.activity_date);
-				parsedDate.setHours(0, 0, 0, 0);
-				info_from_forms.activity_date = Timestamp.fromDate(new Date(info_from_forms.activity_date));
-			}
-			addEntry(info_from_forms);
-		} else {
-			// Locally store it
-			temp_activities[temp_activities_id + ''] = info_from_forms;
-			temp_activities_id += 1;
-
-			populateMainModalList();
-		}
-
-		// close the save modal
-		addFormiframe.style.display = 'none';
+		// Locally store it
+		temp_activities[temp_activities_id] = form_data;
+		temp_activities_id += 1;
+		populateMainModalList();
 	}
-
-	function displayErrors(errors) {
-		let errorDiv = addFormiframeDocument.getElementById('error_messages');
-
-		if (errorDiv) {
-			errorDiv.innerHTML = '';
-
-			if (errors.length > 0) {
-				for (let error of errors) {
-					let errorParagraph =
-						addFormiframeDocument.createElement('p');
-					errorParagraph.textContent = error;
-					errorDiv.appendChild(errorParagraph);
-				}
-
-				// Scroll the document back to the top
-				errorDiv.ownerDocument.defaultView.scrollTo(0, 0);
-			} else {
-				console.error(
-					"Error: Couldn't find element with ID 'error_messages'."
-				);
-			}
-		}
-	}
+	addFormiframe.style.display = 'none'; // close the save modal
 });
 
-// Editloc.html Save button click listener
-let edit_modal = document.getElementById('editModal_iframe').contentWindow.document;
-edit_modal.getElementById('submit_form').addEventListener('click', handleEdit);
+// === EDITLOC.HTML SAVE CLICK LISTENER ===
+let editFormiframe = document.getElementById('editModal_iframe');
+let editFormiframeDocument = editFormiframe.contentWindow.document;
+let editFormSubmitButton = editFormiframeDocument.getElementById('submit_form');
 
-export function handleEdit() {
-	let collated_inp = {};
-	for (let field of SDECE_RULES[2]) {
-		if (field != 'partner_coordinates') {
-			let input_field = edit_modal.getElementById(field);
-			if (input_field != null) {
-				if (input_field.value == '') {
-					collated_inp[field] = null;
-				} else {
-					collated_inp[field] = input_field.value;
-				}
-			}
-		} else {
-			collated_inp[field] =
-				current_viewed_activity['partner_coordinates'];
-		}
-	}
+editFormSubmitButton.addEventListener('click', function(event) {
+
+	// Get data from editloc.html
+	let form_data = collectFormInputs(editFormiframeDocument, addForm_geopoint, 'edit');
 
 	// Validate the collated input here
-	let errors = validateData('sdece-official-TEST', collated_inp);
+	let errors = validateData('sdece-official-TEST', form_data);
 
 	if (errors.length > 0) {
-		displayErrors(errors);
+		displayErrors(errors, editFormiframeDocument);
 		event.preventDefault();
-	} else {
-		if (
-			typeof collated_inp.activity_date === 'string' &&
-			!isNaN(Date.parse(collated_inp.activity_date))
-		) {
-			const dateOnly = new Date(collated_inp.activity_date);
-			dateOnly.setHours(0, 0, 0, 0);
-			collated_inp.activity_date = Timestamp.fromDate(dateOnly);
-		}
-		editEntry(collated_inp, current_viewed_activity['identifier']);
-		document.getElementById('editModal').style = "display: 'none'";
-	}
+		return;
+	} 
+	// Uploads straight to firebase DB
+	form_data.activity_date = dateToTimestamp(form_data.activity_date);
+	editEntry(form_data, current_viewed_activity['identifier']);
 
-	function displayErrors(errors) {
-		let errorDiv = edit_modal.getElementById('error_messages');
+	editFormiframe.style = "display: 'none'"; // close the save modal
 
-		if (errorDiv) {
-			errorDiv.innerHTML = '';
-
-			if (errors.length > 0) {
-				for (let error of errors) {
-					let errorParagraph = edit_modal.createElement('p');
-					errorParagraph.textContent = error;
-					errorDiv.appendChild(errorParagraph);
-				}
-				errorDiv.ownerDocument.defaultView.scrollTo(0, 0);
-			} else {
-				console.error(
-					"Error: Couldn't find element with ID 'error_messages'."
-				);
-			}
-		}
-	}
-}
+});
 
 // Mainmodal save button for batch uploading
 const MAIN_MODAL_SAVE_BUTTON = mainModalDocument.getElementsByClassName('main-modal-save')[0];
@@ -742,30 +735,4 @@ mainModalCloseButton.addEventListener('click', function (event) {
 	}
 });
 
-export function populateMainModalList() {
-	// Display temporarily saved activities to main modal
-	const mainModalActivityList = mainModalDocument.getElementById('mainModalActivityList');
-	mainModalActivityList.innerHTML = '';
 
-	if (Object.keys(temp_activities).length == 0) {
-		mainModalActivityList.innerHTML = '<p> No activities to show </p>';
-	} else {
-		for (let i = 0; i < Object.keys(temp_activities).length; i++) {
-			let activity = temp_activities[Object.keys(temp_activities)[i]];
-
-			// View activity details button
-			const activityButton = document.createElement('li');
-			const activityName = document.createElement('div');
-			const arrow = document.createElement('div');
-
-			activityName.textContent = getActivity(activity) + '';
-
-			arrow.innerHTML = '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
-			arrow.classList.add('arrow');
-
-			activityButton.appendChild(activityName);
-			activityButton.classList.add('main-modal-temporary-activity');
-			mainModalActivityList.appendChild(activityButton);
-		}
-	}
-}
