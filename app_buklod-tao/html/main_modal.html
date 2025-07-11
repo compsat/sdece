@@ -2,7 +2,6 @@
 <html>
     <head>
         <title>Household Information</title>
-        <link rel="stylesheet" href="css/form.css">
         <link rel="stylesheet" href="css/main.css">
         <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
     </head>
@@ -35,7 +34,6 @@
                 <div class="popup-value" data-bind="household_material"></div>
             </div>
 
-            <!-- add data bind in this section -->
             <div class="popup-section" style="margin-top:1.2rem;">
                 <div class="popup-label risk-header">Risk Levels</div>
                 <div class="risk-cards">
@@ -86,16 +84,9 @@
                         <div class="resident-count" data-bind="number_minors"></div>
                     </div>
 
-                    <!-- add data bind in this section -->
                     <div class="resident-item">
                         <div class="resident-label">Adults</div>
-                        <div class="resident-count" data-bind="number_adult">${doc.number_adult || (() => {
-                            const total = doc.num_residents || doc.number_residents || 0;
-                            const minors = doc.num_residents_minor || doc.number_minors || 0;
-                            const seniors = doc.num_residents_senior || doc.number_seniors || 0;
-                            const adults = total - minors - seniors;
-                            return adults >= 0 ? adults : 0;
-                        })()}</div>
+                        <div class="resident-count" data-bind="number_adult"></div>
                     </div>
 
                     <div class="resident-item">
