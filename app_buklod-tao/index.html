@@ -48,30 +48,27 @@
   <!-- Side bar, Top Bar, and Map -->
   <div class="main">
     <div class="side-nav">
-      <div>
-        <div class="side-nav-header">
-          <div class="side-nav-header-top">
-            <h1 class="map-title">Buklod Tao</h1>
-          </div>
-          <search-bar id="search-bar-component"></search-bar>
-          <div class="actions-container">
-            <button class="action-btn">Filter</button>
-            <button class="action-btn">Sort</button>
-            <button class="action-btn" id="download-report">Export data</button>
-          </div>
-          <select name="risk" id="risk-sort" class="action-btn">
-            <option value="earthquake-sort">Earthquake</option>
-            <option value="fire-sort">Fire</option>
-            <option value="flood-sort">Flood</option>
-            <option value="landslide-sort">Landslide</option>
-            <option value="storm-sort">Storm</option>
-          </select>
+      <div class="side-nav-header">
+        <div class="side-nav-header-top">
+          <h1 class="map-title">Buklod Tao</h1>
         </div>
-        <div class="partners-header">
-          <span id="partners-count">HOUSEHOLDS</span>
+        <search-bar id="search-bar-component"></search-bar>
+        <div class="actions-container">
+          <button class="action-btn">Filter</button>
+          <button class="action-btn" id="sortBtn">Sort</button>
+          <button class="action-btn" id="download-report">Export data</button>
         </div>
+        <select name="risk" id="risk-sort" class="action-btn">
+          <option value="earthquake-sort">Earthquake</option>
+          <option value="fire-sort">Fire</option>
+          <option value="flood-sort">Flood</option>
+          <option value="landslide-sort">Landslide</option>
+          <option value="storm-sort">Storm</option>
+        </select>
       </div>
-
+      <div class="partners-header">
+        <span id="partners-count">HOUSEHOLDS</span>
+      </div>
       <div class="entries">
         <ul id="locationList" style="width: 100%"></ul>
       </div>
@@ -145,7 +142,7 @@
   <div id="map" class="map-container"></div>
   <script type="module" src="js/index.js"></script> 
 
-  <!--script for search bar-->
+  
   <script>
     // This hides the Add Activity modal when the user submits the form
     window.addEventListener('message', function (event) {
@@ -177,27 +174,70 @@
         }, 3000);
       }
     });
+   
+  // script for search bar- search includes only name 
+  const searchBar = document.getElementById('search-bar-component');
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const searchBar = document.getElementById('search-bar-component');
-      searchBar.addEventListener('search', (e) => {
-        const searchTerm = e.detail;
-        
-        let container = document.getElementById('locationList');
-        let partnerContainers = container.getElementsByClassName('partnerDiv');
+  searchBar.addEventListener('search', (event) => {
+    const query = event.detail;  
+    console.log('Searching for:', query);
 
-        for (let i = 0; i < partnerContainers.length; i++) {
-          let nameElement = partnerContainers[i].getElementsByClassName('name')[0];
-          let name = nameElement.textContent.toLowerCase();
+    searchEntries(query);
+  });
 
-          if (name.includes(searchTerm)) {
-            partnerContainers[i].style.display = 'flex';
-          } else {
-            partnerContainers[i].style.display = 'none';
-          }
-        }
-      });
+  function searchEntries(query) {
+    const input = query.toUpperCase();
+    const entries = document.querySelectorAll('#locationList .container-entry');
+
+    entries.forEach(entry => {
+      const nameDiv = entry.querySelector('.name');
+      const txtValue = nameDiv ? nameDiv.textContent : '';
+      if (txtValue.toUpperCase().indexOf(input) > -1) {
+        entry.style.display = "";
+      } else {
+        entry.style.display = "none";
+      }
     });
+  }
+
+let originalItems = [];
+
+function sortButton() {
+  const sortBtn = document.getElementById('sortBtn');
+  const locationList = document.getElementById('locationList');
+  let sortState = 'asc'; // Start with ascending on first click
+
+  sortBtn.addEventListener('click', () => {
+    console.log("SORT CLICKED");
+    let items = Array.from(locationList.querySelectorAll('.container-entry'));
+
+    items.sort((a, b) => {
+      const nameA = a.querySelector('.name').textContent.trim().toUpperCase();
+      const nameB = b.querySelector('.name').textContent.trim().toUpperCase();
+
+      return sortState === 'asc'
+        ? nameA.localeCompare(nameB)
+        : nameB.localeCompare(nameA);
+    });
+
+    // Toggle sort state for next click
+    sortState = (sortState === 'asc') ? 'desc' : 'asc';
+    console.log(`Sorted ${sortState === 'asc' ? 'descending' : 'ascending'}`);
+
+    // Clear and re-append sorted items
+    locationList.innerHTML = '';
+    items.forEach(item => locationList.appendChild(item));
+  });
+}
+
+
+// ✅ After you load entries:
+// After your list is built
+
+
+// ✅ Call it!
+sortButton();
+
 
     // Function to hide the div containing the iframe
     function hideModalContainer(modal) {
