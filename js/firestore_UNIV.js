@@ -456,12 +456,18 @@ export function getDocsByPartnerName(partner_name) {
 }
 
 export function getDocByID(docId) {
-  const DOC_REFERENCE = doc(DB, rule_reference[0], docId); let docObj = {};
-  return getDoc(DOC_REFERENCE).then((doc) => {
-    docObj = doc;
-    return docObj;
+  const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
+  return getDoc(DOC_REFERENCE).then((docSnap) => {
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      console.warn("Document not found for ID:", docId);
+      return null;
+    }
   });
 }
+
+
 
 export function addEntry(inp_obj) {
 	for (let rule of DB_RULES_AND_DATA) {

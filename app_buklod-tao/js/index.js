@@ -162,19 +162,27 @@ function populateNavBar(condition){
     const anchor = document.createElement('a');
     const nameDiv = document.createElement('div');
     const addressDiv = document.createElement('div');
+
+    listItem.setAttribute('data-name', partner.household_name);
+
     
     // Set attributes
     anchor.href = '#';
-    let marker = L.marker([0, 0],{icon:""});
     
-    Object.defineProperty(partner, "marker", {value:marker, configurable: true});
-    
-    
-    listItem.addEventListener('click', () => {
-      console.log("fired")
-      partner.marker.fire('popupopen');
+    listItem.addEventListener('click', async () => {
+      console.log("fired");
+      console.log(partner.household_name);
+
+      const docId = await getDocIdByPartnerName(partner.household_name);
+      const doc = await getDocByID(docId);
+
+      map.setView(partner.marker.getLatLng(), 12); // change zoom: 1, you can see america and europe. 18, banaba area
+      onPinClick(doc).then(popupHTML => {
+        partner.marker.bindPopup(popupHTML).openPopup(); // this replaces fire('popupopen')
+      });
     });
-    
+
+
     // Adding classes and setting text content
     nameDiv.classList.add('name');
     addressDiv.classList.add('address');
@@ -623,6 +631,7 @@ function updateRiskIcons() {
   const riskType = document.getElementById('risk-sort').value.replace('-sort', '');
   // Remove all current markers
   // results.clearLayers();
+  
   clearMarkers();
 
   partnersArray.forEach((partner) => {
@@ -648,22 +657,33 @@ function updateRiskIcons() {
       marker.bindPopup(popupContent);
     });
 
-    marker.on('popupopen', () => {
-      console.log("Clicked on pin. Main modal should now be opened.")
-      const edit_button = document.getElementById("edit-household-popup")
-      edit_button.addEventListener('click', () => {
+    partner.marker = marker; // ✅ store reference here
+    map.addLayer(marker);
+
+marker.on('popupopen', () => {
+  console.log("opened");
+
+  // Use setTimeout to defer this to after the popup DOM is actually rendered
+  setTimeout(() => {
+    const edit_button = document.getElementById("edit-household-popup");
+      if (edit_button) {
+        edit_button.addEventListener('click', () => {
           const modal = document.getElementById('partnerModal');
           var editFormModal = document.getElementById('editModal');
           editFormModal.style.display = 'flex';
           modal.style.display = 'none';
           populateEditForm(partner, editFormModal);
         });
+      }
 
-      const close_button = document.getElementById("close-btn")
-      close_button.addEventListener('click', () => {
-        marker.closePopup()
-      })
-    });
+      const close_button = document.getElementById("close-btn");
+      if (close_button) {
+        close_button.addEventListener('click', () => {
+          marker.closePopup();
+        });
+      }
+    }, 0); // <-- ensures DOM is painted
+  });
 
     map.addLayer(marker);
   });
