@@ -275,45 +275,31 @@ let originalItems = [];
 function sortButton() {
   const sortBtn = document.getElementById('sortBtn');
   const locationList = document.getElementById('locationList');
-
-  let sortState = 'none'; // Shared
+  let sortState = 'asc'; // Start with ascending on first click
 
   sortBtn.addEventListener('click', () => {
     console.log("SORT CLICKED");
     let items = Array.from(locationList.querySelectorAll('.container-entry'));
 
-    if (sortState === 'none') {
-      // Sort A–Z
-      items.sort((a, b) => {
-        const nameA = a.querySelector('.name').textContent.trim().toUpperCase();
-        const nameB = b.querySelector('.name').textContent.trim().toUpperCase();
-        return nameA.localeCompare(nameB);
-      });
-      sortState = 'asc';
-      console.log('Sorted ascending');
-    } else if (sortState === 'asc') {
-      // Sort Z–A
-      items.sort((a, b) => {
-        const nameA = a.querySelector('.name').textContent.trim().toUpperCase();
-        const nameB = b.querySelector('.name').textContent.trim().toUpperCase();
-        return nameB.localeCompare(nameA);
-      });
-      sortState = 'desc';
-      console.log('Sorted descending');
-    } else if (sortState === 'desc') { // doesnt work
-      // Restore original
-      items = [...originalItems];
-      sortState = 'none';
-      console.log('Restored original order');
-    }
+    items.sort((a, b) => {
+      const nameA = a.querySelector('.name').textContent.trim().toUpperCase();
+      const nameB = b.querySelector('.name').textContent.trim().toUpperCase();
 
+      return sortState === 'asc'
+        ? nameA.localeCompare(nameB)
+        : nameB.localeCompare(nameA);
+    });
+
+    // Toggle sort state for next click
+    sortState = (sortState === 'asc') ? 'desc' : 'asc';
+    console.log(`Sorted ${sortState === 'asc' ? 'descending' : 'ascending'}`);
+
+    // Clear and re-append sorted items
     locationList.innerHTML = '';
     items.forEach(item => locationList.appendChild(item));
-    originalItems = Array.from(locationList.querySelectorAll('.container-entry'));
-    console.log(originalItems);
-
   });
 }
+
 
 // ✅ After you load entries:
 // After your list is built
