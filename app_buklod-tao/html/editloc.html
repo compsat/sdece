@@ -19,11 +19,6 @@
         function handleFormSubmit() {
             var collatedInput = {}; 
             for(let i = 0; i < BUKLOD_RULES_TEST[2].length; i++){
-                //BUKLOD_RULES_TEST[2] are just the field names of each document
-                // console.log(BUKLOD_RULES_TEST[2][i]);
-                // let q = document.getElementById(BUKLOD_RULES_TEST[2][i]).value;
-                // collatedInput[BUKLOD_RULES_TEST[2][i]] = q;
-
                 let fieldName = BUKLOD_RULES_TEST[2][i];
                 let inputValue = document.getElementById(fieldName).value;
 
@@ -326,7 +321,6 @@
 
         document.getElementById('close-btn').addEventListener('click', function (event) {
             event.preventDefault();
-            console.log('The user has closed the Edit Household modal.');
             closeModal();
         });
     </script>

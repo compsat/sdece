@@ -121,7 +121,6 @@ export function addListeners() {
 		if (!li) return;
 
 		const partnerName = li.dataset.name;
-		console.log(partnerName);
 		searchLocation(partnerName, map);
 
 	});

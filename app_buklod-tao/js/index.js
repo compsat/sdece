@@ -170,9 +170,6 @@ function populateNavBar(condition){
     anchor.href = '#';
     
     listItem.addEventListener('click', async () => {
-      console.log("fired");
-      console.log(partner.household_name);
-
       const docId = await getDocIdByPartnerName(partner.household_name);
       const doc = await getDocByID(docId);
 
@@ -661,8 +658,6 @@ function updateRiskIcons() {
     map.addLayer(marker);
 
 marker.on('popupopen', () => {
-  console.log("opened");
-
   // Use setTimeout to defer this to after the popup DOM is actually rendered
   setTimeout(() => {
     const edit_button = document.getElementById("edit-household-popup");

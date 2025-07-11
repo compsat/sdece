@@ -44,33 +44,6 @@ setCollection(collection_value);
 const colRef = getCollection();
 let partnersArray = [];
 
-/*
-export function getDocIdByPartnerName(partnerName) {
-  const endName = partnerName.replace(/\s/g, '\uf8ff');
-  return getDocs(
-    query(
-      colRef,
-      where('household_name', '>=', partnerName),
-      where('household_name', '<=', partnerName + endName)
-    )
-  )
-    .then((querySnapshot) => {
-      console.log(querySnapshot);
-      if (!querySnapshot.empty) {
-        // Assuming there is only one document with the given partner name
-        const doc = querySnapshot.docs[0];
-        return doc.id;
-      } else {
-        console.log('EMPTY: No matching document found.');
-        return null;
-      }
-    })
-    .catch((error) => {
-      console.error('Error getting documents: ', error);
-      return null;
-    });
-}*/
-
 export function getDocByID(docId) {
   const docReference = doc(db, 'nstp-3', docId);
   let docObj = {};
@@ -112,14 +85,8 @@ const loadData = async() => {
 await loadData();
 
 export function populateEditForm(partner, editFormModal) {
-  console.log("populating form");
-  console.log(partner)
   var iframe = editFormModal.getElementsByClassName('form-modal')[0]
-  console.log(iframe)
   var editForm = iframe.contentWindow.document
-
-  console.log("Original name:", partner.household_name);
-
 
   const originalField = editForm.createElement('input');
   originalField.type = 'hidden';
@@ -143,8 +110,6 @@ export function populateEditForm(partner, editFormModal) {
     }
         
     if (data.includes('risk') && !data.includes('description')) {
-      console.log('Raw value:', partner[data]);
-
       // Get the level text: remove description part
       var riskLevel = partner[data].split(':')[0].trim().toUpperCase();
 
@@ -152,8 +117,6 @@ export function populateEditForm(partner, editFormModal) {
       if (!riskLevel.includes('RISK')) {
         riskLevel = `${riskLevel} RISK`;
       }
-
-      console.log('Normalized risk level:', riskLevel);
 
       editForm.getElementById(data).value = riskLevel;
     }
@@ -165,12 +128,10 @@ export function populateEditForm(partner, editFormModal) {
 // ------------------------------------------
 // Function for submission of Edit Household form
 export function submitEditForm(){
-  console.log("Form is submitting!");
   var collated_input = {}; 
   var validate_errors =[];
   for(let i = 0; i < BUKLOD_RULES_TEST[2].length; i++){
     //BUKLOD_RULES_TEST[2] are just the field names of each document
-    // console.log(BUKLOD_RULES_TEST[2][i]);
     // let q = document.getElementById(BUKLOD_RULES_TEST[2][i]).value;
     // collated_input[BUKLOD_RULES_TEST[2][i]] = q;
     let field_name = BUKLOD_RULES_TEST[2][i];
@@ -259,8 +220,6 @@ export function submitAddForm(){
       if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick' || fieldName == 'number_seniors') {
           collatedInput[fieldName] = Number(inputValue);
       } else if (fieldName == 'location_coordinates') {
-          console.log(inputValue)
-          console.log(typeof inputValue)
           const geoPoint = getCoordinates(inputValue);
           collatedInput['location_coordinates'] = geoPoint;
       } else {

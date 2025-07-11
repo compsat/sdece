@@ -418,7 +418,6 @@ export function getDocIdByPartnerName(partner_name) {
       if (!querySnapshot.empty) {
         // Assuming there is only one document with the given partner name
         const doc = querySnapshot.docs[0];
-        console.log(doc);
         return doc.id;
       } else {
         return null;
@@ -443,7 +442,6 @@ export function getDocsByPartnerName(partner_name) {
     .then((querySnapshot) => {
       if (!querySnapshot.empty) {
         const docs = querySnapshot.docs;
-        console.log(docs);
         return docs;
       } else {
         return null;
@@ -475,7 +473,6 @@ export function addEntry(inp_obj) {
 			let input = {}; // contents depend on the rule engine
 			for (let i = 0; i < Object.keys(inp_obj).length; i++) {
 				input[rule[2][i]] = inp_obj[rule[2][i]];
-				console.log(input);
 			}
 			
 			// Return the Promise so the form can handle success/error
@@ -500,8 +497,6 @@ export function addEntry(inp_obj) {
 export function editEntry(inp_obj,docId) {
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_reference.id) {
-			console.log(inp_obj);
-			console.log("entered");
 			const DOC_REFERENCE = doc(DB, rule[0], docId);
 			updateDoc(DOC_REFERENCE, inp_obj)
 				.then(() => {
@@ -569,7 +564,6 @@ export function validateData(collectionName, data) {
 		const value = data[field];
 		const fieldLabel = fieldLabels[field] || field;
 		
-		console.log("entered validation");
 		// Check for required field
 		if (
 			rule.required &&
