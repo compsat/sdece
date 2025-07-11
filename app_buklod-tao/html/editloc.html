@@ -32,12 +32,6 @@
                 }
             }
             submitEditForm()
-            
-            // TODO:
-            // get docID via  getDocIdByPartnerName/getDocByID
-            // then call editEntry(inp_obj, docId), inp_obj is collatedInput, docID is gotten from getDocIdByPartnerName/getDocByID
-            // so basically editEntry(collatedInput, docID via  getDocIdByPartnerName/getDocByID)
-    
         }
     </script>
 </head>
@@ -307,7 +301,7 @@
                     }
                 }
 
-                    // Clear select dropdowns
+                // Clear select dropdowns
                 var selectFields = document.getElementsByTagName('select');
                 for (var i = 0; i < selectFields.length; i++) {
                     selectFields[i].selectedIndex = 0; 

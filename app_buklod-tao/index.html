@@ -83,52 +83,10 @@
     </div>
   </div>
 
-  <!-- MODALS -->
+  <!-- POP UP MODALS -->
 
-  <!-- Partner Modal: This is the modal that shows up when clicking on a household entry in the side navigation panel OR the pop-up of a map marker pin. -->
+  <!-- Main Modal: This is the modal that shows up when clicking on a household entry -->
   <div id="partnerModal" class="modal">
-    <!-- Modal Header -->
-    <div class="modal-header">
-      <p id="modalHeader"></p>
-    </div>
-
-    <!-- Modal Content -->
-    <div class="modal-content" id="modalContent">
-      <!-- NOTE: This is where all household modal content should go -->
-    </div>
-
-    <!-- Buttons -->
-    <span class="modal-button">
-      <!-- Edit -->
-      <button class="edit-button partner-hover">
-        Edit
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="modal-button-icon"
-        >
-          <path
-            d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8"
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-          ></path>
-          <polygon
-            fill="none"
-            points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-          ></polygon>
-        </svg>
-      </button>
-    </span>
   </div>
 
   <!-- Add Modal: This is the modal that shows up when adding a new household -->
@@ -142,12 +100,11 @@
   </div>
 
   <!--script for map-->
-  <div id="map" class="map-container"></div>
   <script type="module" src="js/index.js"></script> 
 
   <!--script for search bar-->
   <script>
-    // This hides the Add Activity modal when the user submits the form
+    // Code logic to hide the Add Activity modal when the user submits the form
     window.addEventListener('message', function (event) {
       if (
         event.data &&
@@ -178,6 +135,7 @@
       }
     });
 
+    // Code logic for search bar
     document.addEventListener('DOMContentLoaded', () => {
       const searchBar = document.getElementById('search-bar-component');
       searchBar.addEventListener('search', (e) => {
@@ -207,7 +165,7 @@
       }
     }
 
-    // Add an event listener to handle messages from the iframe
+    // Code logic to add an event listener to handle messages from the iframe
     window.addEventListener('message', function (event) {
       if (event.data === 'closeAddModal') {
         hideModalContainer('addModal');
@@ -218,21 +176,9 @@
       if (event.data === 'closeMainModal') {
         hideModalContainer('mainModal');
       }
-      if (event.data === 'closeMessageModal') {
-        hideModalContainer('messageModal');
-      }
-      // TEST: remove later
-      if (event.data === 'testMessageModal') {
-        console.log('testing message modal');
-        const messageModal =
-          document.getElementById('messageModal');
-        messageModal.style.display = 'flex';
-      }
     });
   </script>
 
-  <!--script for map-->
-  <script type="module" src="js/index.js"></script>
 </body>
 
 </html>
