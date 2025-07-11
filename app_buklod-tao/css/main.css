@@ -909,28 +909,6 @@ button.collapsible {
   margin: 0.4em 0;
 }
 
-.close-btn {
-  position: absolute;
-  top: 1em;
-  right: 1em;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0.5em;
-  z-index: 999;
-  color: #888ea8;
-  transition: color 0.2s ease;
-}
-
-.close-btn:hover {
-  color: #222b45;
-}
-
-.close-btn svg {
-  width: 1.4em;
-  height: 1.4em;
-}
-
 .popup-edit-section {
   margin-top: 1.5rem;
   text-align: center;
