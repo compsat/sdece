@@ -497,7 +497,7 @@ export function editEntry(inp_obj,docId) {
 			const DOC_REFERENCE = doc(DB, rule[0], docId);
 			updateDoc(DOC_REFERENCE, inp_obj)
 				.then(() => {
-					alert("You may now reload the page for your edit to reflect on this page");
+					alert("You may now reload the page for your edit to reflect on this page.");
 				})
 				.catch((error) => {
 					console.error('Error adding document: ', error);

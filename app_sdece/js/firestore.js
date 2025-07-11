@@ -102,30 +102,46 @@ const newButton = mainModalDocument.getElementById('addModalButton');
 
 newButton.addEventListener('click', () => {
 	// Get the Add Activity form and the needed input fields for autofill
-	var inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value;
-	var inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value;
-	var input = addFormiframeDocument.getElementById(field);
+	var inputtedPartnerName = mainModalDocument.getElementById(
+		'inputted_partner_name'
+	).value;
+	var inputtedPartnrAddress =
+		mainModalDocument.getElementById('address-input').value;
 	has_existing_partner = false;
 
-	if (inputtedPartnerName == '' || inputtedPartnerAddress == '') {
+	if (inputtedPartnerName == '' || inputtedPartnrAddress == '') {
 		alert('Partner Name and Partner Address cannot be blank.');
 	} else {
 		for (let field of SDECE_RULES[2]) {
 			if (field != 'partner_coordinates') {
 				if (field == 'partner_name' || field == 'partner_address') {
 					if (field == 'partner_name') {
-						input.value = inputtedPartnerName;
-					} else {
-						input.value = inputtedPartnerAddress;
+						addFormiframeDocument.getElementById(
+							field
+						).value = inputtedPartnerName;
+					} else if (field == 'partner_address') {
+						addFormiframeDocument.getElementById(
+							field
+						).value = inputtedPartnrAddress;
 					}
-					input.readOnly = true;
-					input.style.backgroundColor = 'var(--custom-medium-gray';
-					input.style.color = 'var(--custom-dark-gray';
+					addFormiframeDocument.getElementById(
+						field
+					).readOnly = true;
+					addFormiframeDocument.getElementById(
+						field
+					).style.backgroundColor = 'var(--custom-medium-gray';
+					addFormiframeDocument.getElementById(
+						field
+					).style.color = 'var(--custom-dark-gray';
 				} else {
-					input.value = null;
-					input.readOnly = false;
+					addFormiframeDocument.getElementById(field).value =
+						null;
+					addFormiframeDocument.getElementById(
+						field
+					).readOnly = false;
 				}
-			} 
+			} else {
+			}
 		}
 		showAddModal();
 	}
