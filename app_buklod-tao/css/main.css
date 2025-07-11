@@ -38,12 +38,14 @@ body {
 }
 
 .side-nav {
-	background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 	max-width: 320px;
 	width: 100%;
-	overflow-y: scroll;
-	overflow-x: hidden;
+	overflow: hidden;
 	position: relative;
+  background-color: #ffffff;
 	border-right: 1px solid #e0e0e0;
 }
 
@@ -111,8 +113,14 @@ body {
 }
 
 .entries {
-	background-color: #ffffff;
+	flex-grow: 1;
+  overflow-y: auto;
+  scrollbar-color: rgba(0,0,0,0.01) transparent;
+  background-color: #ffffff;
 	width: 100%;
+}
+.entries:hover {
+  scrollbar-color: rgba(0,0,0,0.2) transparent;
 }
 
 .accordion {
