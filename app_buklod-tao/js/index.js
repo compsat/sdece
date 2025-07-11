@@ -649,7 +649,7 @@ function updateRiskIcons() {
     });
 
     marker.on('popupopen', () => {
-      console.log("opened")
+      console.log("Clicked on pin. Main modal should now be opened.")
       const edit_button = document.getElementById("edit-household-popup")
       edit_button.addEventListener('click', () => {
           const modal = document.getElementById('partnerModal');

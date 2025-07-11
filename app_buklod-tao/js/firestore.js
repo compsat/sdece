@@ -299,6 +299,4 @@ export function submitAddForm(){
   }
 
 }
-
-console.log("run2");
 // ------------------------------------------
