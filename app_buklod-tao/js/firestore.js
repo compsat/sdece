@@ -96,6 +96,14 @@ export function populateEditForm(partner, editFormModal) {
 
 
   for (var data in partner) {
+    // some households have a 'marker' or 'status' attribute. Check database for status fields. 
+    // Not sure yet where the marker came from 
+    // this skips over them so no errors are logged
+    if (!editForm.getElementById(data.toString())) { 
+      // console.warn(`Element with ID "${data}" not found`); 
+      continue;
+    }
+
     if (partner[data] instanceof Object){
       editForm.getElementById(data.toString()).value = partner[data]._lat + " " + partner[data]._long
     } 
