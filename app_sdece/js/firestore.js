@@ -303,7 +303,7 @@ getDocs(col_ref)
 			let activities_string = '';
 
 			for (let activity of partners[partner]) {
-				activities_string += activity['activity_nature'] + '<br>';
+				activities_string += getActivity(activity) + '<br>';
 			}
 
 			activityDiv.innerHTML = activities_string;
