@@ -264,31 +264,11 @@
 
             <!-- Modal Footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="cancel-btn" onclick="resetForm()">Clear</button>
                 <button type="submit" class="btn btn-primary" id="submit_form">Save Household</button>
             </div>
         </div>
 
         <script>
-            function resetForm() {
-                let messageText = "Are you sure you want to clear the form?";
-                if (confirm(messageText) == true) {
-                    // Clear input fields
-                    var inputFields = document.getElementsByTagName('input');
-                    for (var i = 0; i < inputFields.length; i++) {
-                        var field = inputFields[i];
-                        if (!field.readOnly && field.type !== 'button') {
-                                field.value = '';
-                        }
-                    }
-
-                    // Clear select dropdowns
-                    var selectFields = document.getElementsByTagName('select');
-                    for (var i = 0; i < selectFields.length; i++) {
-                        selectFields[i].selectedIndex = 0; 
-                    }
-                }
-            }
 
             function closeModal() {
                 window.parent.postMessage('closeAddModal', '*');
