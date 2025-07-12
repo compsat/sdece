@@ -91,7 +91,7 @@ function populateNavBar(condition){
     containerDiv.appendChild(listItem);
     locationList.appendChild(containerDiv);
   });
-
+}
 populateNavBar();
 // ------------------------------------------
 
@@ -605,4 +605,3 @@ function updateRiskIcons() {
 // Code logic for automatically changing pin color depending on selected option on dropbox 
 document.getElementById('risk-sort').addEventListener('change', updateRiskIcons);
 updateRiskIcons();
-// ------------------------------------------
