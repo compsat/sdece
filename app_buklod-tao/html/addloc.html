@@ -5,202 +5,296 @@
         <link rel="stylesheet" href="../css/form.css">
         <link rel="stylesheet" href="../css/main.css">
         <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
+            
+        <script type="module">
+            //Call function from firestore.js to add new household from input fields after pressing submit button
+            import { addEntry, BUKLOD_RULES_TEST, setCollection, validateData, getCoordinates } from "/js/firestore_UNIV.js";
+            import { submitAddForm } from '../js/firestore.js';
+
+            setCollection("buklod-official-TEST");
+            document.getElementById("submit_form").addEventListener("click", submitAddForm);
+
+        </script>
     </head>
     
     <body>
-      <!-- Modal Header: includes title and address -->
-      <div class="formModalHeader">
-        <button type="button" class="closeForm" id="close-btn">
-            <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" fill="#0F1729"/>
-            </svg>
-        </button>
-        <h1 class="formHeader">Add Household</h1>
-
-      </div>
-          <div class="formModalContent">
-            <h2 class="subHeader">HOUSEHOLD INFORMATION</h2>
-            <br>
-            <!-- Form -->
-            <div class="inputContainer">
-                <label class="form" for="household_name">Household Name</label>
-                <input type="text" id="household_name" name="household_name" class="attribs"/>
-            </div>
-            <br>
-            <div class="inputContainer">
-                <label class="form" for="household_address">Address</label>
-                <input type="text" id="household_address" name="household_address" class="attribs"/>    
-            </div>
-            <br>
-            <div class="inputContainer">
-                <label class="form" for="household_phase">Phase</label>
-                <input type="text" id="household_phase" name="household_phase" class="attribs"/>    
-            </div>
-            <br>
-            <div class="inputContainer">
-                <label class="form" for="contact_number">Contact Number</label>
-                <input type="text" id="contact_number" name="contact_number" class="attribs" maxlength="11"/>    
-            </div>
-            <br>
-            <div class="inputContainer">
-                <label class="form" for="residency_status">Residency Status</label>
-                <select name="residency_status" id="residency_status" class="longAttribs">
-                    <option value="" disabled selected hidden></option>
-                    <option value="May-Ari">May-Ari</option>
-                    <option value="Umuupa">Umuupa</option>
-                </select>
-            </div>
-            <br>
-            <div class="inputContainer">
-                <label class="form" for="HOA/NOA">Part of HOA/NOA</label>
-                <select name="is_hoa_noa" id="is_hoa_noa" class="longAttribs">
-                    <option value="" disabled selected hidden></option>
-                    <option value="HOA">HOA</option>
-                    <option value="NOA">NOA</option>
-                    <option value="N/A">N/A</option>
-                </select>
+        <div class="modal-container">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <div>
+                    <h1 class="modal-title">Add Household</h1>
+                    <p class="modal-subtitle">Register a new household in the system</p>
+                </div>
+                <button type="button" class="close-btn" id="close-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
 
-            <div class="inputContainer">
-                <label class="form" for="location_link">Location link</label>
-                <input type="text" id="location_link" name="location_link" class="attribs" value="https://www.openstreetmap.org/ss">  
-            </div>
-            
-            <div class="inputContainer">
-                <label class="form" for="location_coordinates">Location Coordinates</label>
-                <input type="text" id="location_coordinates" name="location_coordinates" class="attribs" readonly/> 
+            <!-- Modal Content -->
+            <div class="modal-content">
+                <!-- Household Information Section -->
+                <div class="section">
+                    <div class="section-header">
+                        <svg class="section-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        <h2 class="section-title">Household Information</h2>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="household_name">Household Name</label>
+                            <input type="text" id="household_name" name="household_name" class="form-input" placeholder="Enter household name (Ex. Juan Cruz)" required/>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="household_phase">Phase</label>
+                            <input type="text" id="household_phase" name="household_phase" class="form-input" placeholder="Enter phase number (Ex. Phase 1)" />
+                        </div>
+                    </div>
+
+                    <div class="form-grid single">
+                        <div class="form-group">
+                            <label class="form-label" for="household_address">Address</label>
+                            <textarea id="household_address" name="household_address" class="form-textarea" placeholder="Enter house address (Ex. 1 Sampaguita St. Banaba)" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="contact_number">Contact Number</label>
+                            <input type="tel" id="contact_number" name="contact_number" class="form-input" placeholder="Enter contact number (Ex. 09XXXXXXXXX)" inputmode="numeric" pattern="^[0-9]{11}$" maxlength="11" required/>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="residency_status">Residency Status</label>
+                            <select id="residency_status" name="residency_status" class="form-select">
+                                <option value="" disabled selected hidden>Select status</option>
+                                <option value="May-Ari">May-Ari</option>
+                                <option value="Umuupa">Umuupa</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="is_hoa_noa">Part of HOA/NOA</label>
+                            <select id="is_hoa_noa" name="is_hoa_noa" class="form-select">
+                                <option value="" disabled selected hidden>Select HOA/NOA</option>
+                                <option value="HOA">HOA</option>
+                                <option value="NOA">NOA</option>
+                                <option value="N/A">N/A</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="household_material">House Materials</label>
+                            <select name="household_material" id="household_material" class="form-select" required>
+                                <option value="" disabled selected hidden>Select Household Material</option>
+                                <option value="Concrete">Concrete</option>
+                                <option value="Semi-Concrete">Semi-Concrete</option>
+                                <option value="Light materials">Light materials</option>
+                                <option value="Makeshift">Makeshift</option>
+                                <option value="Natural">Natural</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grid single">
+                        <div class="form-group">
+                            <label class="form-label" for="nearest_evac">Nearest Evacuation Area</label>
+                            <input type="text" id="nearest_evac" name="nearest_evac" class="form-input" placeholder="Enter nearest evac center (Ex. Doña Pepeng Elementary School)" required/>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="location_link">Location Link</label>
+                            <input type="text" id="location_link" name="location_link" class="form-input" placeholder="Enter location link (Ex. https://www.openstreetmap.org/ss)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="location_coordinates">
+                                <svg style="display: inline; width: 16px; height: 16px; margin-right: 6px;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                Location Coordinates
+                            </label>
+                            <input type="text" id="location_coordinates" name="location_coordinates" class="form-input" readonly />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resident Information Section -->
+                <div class="section">
+                    <div class="section-header">
+                        <svg class="section-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <h2 class="section-title">Resident Information</h2>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="number_residents">Total Residents</label>
+                            <input type="number" id="number_residents" name="number_residents" class="form-input" placeholder="1" min="1" required/>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="number_minors">Minors</label>
+                            <input type="number" id="number_minors" name="number_minors" class="form-input" placeholder="0" min="0" />
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="number_seniors">Senior Citizens</label>
+                            <input type="number" id="number_seniors" name="number_seniors" class="form-input" placeholder="0" min="0" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="number_pwd">PWD</label>
+                            <input type="number" id="number_pwd" name="number_pwd" class="form-input" placeholder="0" min="0" />
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="number_sick">Sick Residents</label>
+                            <input type="number" id="number_sick" name="number_sick" class="form-input" placeholder="0" min="0" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="number_pregnant">Pregnant Residents</label>
+                            <input type="number" id="number_pregnant" name="number_pregnant" class="form-input" placeholder="0" min="0" />
+                        </div>
+                    </div>
+
+                    <div class="form-grid single">
+                        <div class="form-group">
+                            <label class="form-label" for="sickness_present">Current Sickness/Health Issues</label>
+                            <textarea id="sickness_present" name="sickness_present" class="form-textarea" placeholder="Describe any current health issues or sickness present (Ex. Diabetes, asthma)"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Risk Assessment Section -->
+                <div class="section">
+                    <div class="section-header">
+                        <svg class="section-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                        </svg>
+                        <h2 class="section-title">Risk Assessment</h2>
+                    </div>
+
+                    <div class="risk-grid">
+                        <label class="risk-label">Earthquake Risk</label>
+                        <div style="display: flex; gap: 12px;">
+                            <select name="earthquake_risk" id="earthquake_risk" class="form-select" style="width: 120px;" required>
+                                <option value="" disabled selected hidden>Level</option>
+                                <option value="HIGH RISK">HIGH</option>
+                                <option value="MEDIUM RISK">MEDIUM</option>
+                                <option value="LOW RISK">LOW</option>
+                            </select>
+                            <input type="text" id="earthquake_risk_description" name="earthquake_risk_description" class="form-input" placeholder="Ex. Adobe structure have been check by engineers/ far away from any water ways" style="flex: 1;" />
+                        </div>
+                    </div>
+
+                    <div class="risk-grid">
+                        <label class="risk-label">Fire Risk</label>
+                        <div style="display: flex; gap: 12px;">
+                            <select name="fire_risk" id="fire_risk" class="form-select" style="width: 120px;">
+                                <option value="" disabled selected hidden>Level</option>
+                                <option value="HIGH RISK">HIGH</option>
+                                <option value="MEDIUM RISK">MEDIUM</option>
+                                <option value="LOW RISK">LOW</option>
+                            </select>
+                            <input type="text" id="fire_risk_description" name="fire_risk_description" class="form-input" placeholder="Ex. Concrete House/ Approved by engineers/ Have access road and fire hydrant/ House plan approve by engineers" style="flex: 1;" />
+                        </div>
+                    </div>
+
+                    <div class="risk-grid">
+                        <label class="risk-label">Flood Risk</label>
+                        <div style="display: flex; gap: 12px;">
+                            <select name="flood_risk" id="flood_risk" class="form-select" style="width: 120px;">
+                                <option value="" disabled selected hidden>Level</option>
+                                <option value="HIGH RISK">HIGH</option>
+                                <option value="MEDIUM RISK">MEDIUM</option>
+                                <option value="LOW RISK">LOW</option>
+                            </select>
+                            <input type="text" id="flood_risk_description" name="flood_risk_description" class="form-input" placeholder="Ex. Alarm Level (1st Alarm), 50.00-M away from water ways" style="flex: 1;" />
+                        </div>
+                    </div>
+
+                    <div class="risk-grid">
+                        <label class="risk-label">Landslide Risk</label>
+                        <div style="display: flex; gap: 12px;">
+                            <select name="landslide_risk" id="landslide_risk" class="form-select" style="width: 120px;">
+                                <option value="" disabled selected hidden>Level</option>
+                                <option value="HIGH RISK">HIGH</option>
+                                <option value="MEDIUM RISK">MEDIUM</option>
+                                <option value="LOW RISK">LOW</option>
+                            </select>
+                            <input type="text" id="landslide_risk_description" name="landslide_risk_description" class="form-input" placeholder="Ex. House built check and approved by engineers/ House built far away from the sloped area, river and mountain area" style="flex: 1;" />
+                        </div>
+                    </div>
+
+                    <div class="risk-grid">
+                        <label class="risk-label">Storm Risk</label>
+                        <div style="display: flex; gap: 12px;">
+                            <select name="storm_risk" id="storm_risk" class="form-select" style="width: 120px;">
+                                <option value="" disabled selected hidden>Level</option>
+                                <option value="HIGH RISK">HIGH</option>
+                                <option value="MEDIUM RISK">MEDIUM</option>
+                                <option value="LOW RISK">LOW</option>
+                            </select>
+                            <input type="text" id="storm_risk_description" name="storm_risk_description" class="form-input" placeholder="Ex. Concrete House/Checked by engineers/ Far away from sea shore, river, or any slope land area" style="flex: 1;" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Error Messages -->
+                <div id="error_messages" class="error_messages"></div>
             </div>
 
-            <br>
-            <div class="inputContainer">
-                <label class="form" for="household_material">Materials Used for House</label>
-                <select name="household_material" id="household_material" class="longAttribs">
-                    <option value="" disabled selected hidden></option>
-                    <option value="Concrete">Concrete</option>
-                    <option value="Semi-Concrete">Semi-Concrete</option>
-                    <option value="Light materials">Light materials</option>
-                    <option value="Makeshift">Makeshift</option>
-                    <option value="Natural">Natural</option>
-                </select>
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="submit_form">Save Household</button>
             </div>
-            <br>
-            <div class="inputContainer">
-                <label class="form" for="nearest_evac">Nearest Evactuation Area</label>
-                <input type="text" id="nearest_evac" name="nearest_evac" class="attribs"/>    
-            </div>
+        </div>
 
-            <br>
-            <h2 class="subHeader">RESIDENT INFORMATION</h2>
-            <br>
-            <div class="inputContainer">
-                <label class="form" for="number_residents">Number of Residents</label>
-                <input type="number" id="number_residents" name="number_residents"class="attribs" min="1"/>    
-            </div>
-            <br>
-            <div class="inputContainer">
-                <label class="form" for="number_minors">Number of Minor Residents</label>
-                <input type="number" id="number_minors" name="number_minors" class="attribs" min="0"/>
-            </div>
-            <br>
-            <div class="inputContainer">
-                <label class="form" for="number_seniors">Number of Senior Citizen Residents</label>
-                <input type="number" id="number_seniors" name="number_seniors" class="attribs" min="0"/>
-            </div>
-            <br>
-            <div class="inputContainer">
-                <label class="form" for="number_pwd">Number of PWD Residents</label>
-                <input type="number" id="number_pwd" name="number_pwd" class="attribs" min="0"/>
-            </div>
-            <br>
-            <div class="inputContainer">
-                <label class="form" for="number_pregnant">Number of Pregnant Residents</label>
-                <input type="number" id="number_pregnant" name="number_pregnant" class="attribs" min="0"/>
-            </div>
-            <br>
-            <div class="inputContainer">
-                <label class="form" for="number_sick">Number of Sick Residents</label>
-                <input type="number" id="number_sick" name="number_sick" class="attribs" min="0"/>
-            </div>
-            <br>
-            <div class="inputContainer">
-                <label class="form" for="sickness_present">Sickness Present</label>
-                <input type="text" id="sickness_present" name="sickness_present" class="attribs"/>
-            </div>
-            <br>
-            <h2 class="subHeader">RISK LEVELS</h2>
-            <br>
-            <div class="inputContainer">
-                <label class="disasterForm" for="earthquake">Earthquake</label>
-                <select name="earthquake_risk" id="earthquake_risk" class="attribs">
-                    <option value="" disabled selected hidden></option>
-                    <option value="HIGH">HIGH</option>
-                    <option value="MEDIUM">MEDIUM</option>
-                    <option value="LOW">LOW</option>
-                </select>
-                <input type="text" id="earthquake_risk_description" name="earthquake_risk_description" class="attribs"/>
-            </div>
-            <br>
-            <div class="inputContainer">
-                <label class="disasterForm" for="fire">Fire</label>
-                <select name="fire_risk" id="fire_risk" class="attribs">
-                    <option value="" disabled selected hidden></option>
-                    <option value="HIGH">HIGH</option>
-                    <option value="MEDIUM">MEDIUM</option>
-                    <option value="LOW">LOW</option>
-                </select>
-                <input type="text" id="fire_risk_description" name="fire_risk_description" class="attribs"/>
-            </div>
-            <br>  
-            <div class="inputContainer">
-                <label class="disasterForm" for="flood">Flood</label>
-                <select name="flood_risk" id="flood_risk" class="attribs">
-                    <option value="" disabled selected hidden></option>
-                    <option value="HIGH">HIGH</option>
-                    <option value="MEDIUM">MEDIUM</option>
-                    <option value="LOW">LOW</option>
-                </select>
-                <input type="text" id="flood_risk_description" name="flood_risk_description" class="attribs"/>
-            </div>
-            <br>
-            <div class="inputContainer">
-                <label class="disasterForm" for="landslide">Landslide</label>
-                <select name="landslide_risk" id="landslide_risk" class="attribs">
-                    <option value="" disabled selected hidden></option>
-                    <option value="HIGH">HIGH</option>
-                    <option value="MEDIUM">MEDIUM</option>
-                    <option value="LOW">LOW</option>
-                </select>
-                <input type="text" id="landslide_risk_description" name="landslide_risk_description" class="attribs"/>
-            </div>
-            <br>
-            <div class="inputContainer">
-                <label class="disasterForm" for="storm">Storm</label>
-                <select name="storm_risk" id="storm_risk" class="attribs">
-                    <option value="" disabled selected hidden></option>
-                    <option value="HIGH">HIGH</option>
-                    <option value="MEDIUM">MEDIUM</option>
-                    <option value="LOW">LOW</option>
-                </select>
-                <input type="text" id="storm_risk_description" name="storm_risk_description" class="attribs"/>
-            </div>
-            <br>
-            <br><br>
-            <!-- Error Messages -->
-            <div id="error_messages"></div>   
-            <br><br>
-            <!-- Buttons -->
-            <div>
-                <!-- Submits contents of the form -->                                               
-                <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save</button>   
-            </div>
-            <br>
-            <div>
-                <!-- Clears all contents of the form -->
-                <button onclick="resetForm()" class="clear form">Clear</button>
-            </div>
-          </div>
-          <div class="formModalFooter"></div>
+        <script>
 
+            function closeModal() {
+                window.parent.postMessage('closeAddModal', '*');
+            }
+
+            // Close button handlers
+            document.getElementById('close-btn').addEventListener('click', function (event) {
+                event.preventDefault();
+                console.log('The user has closed the Add Household modal.');
+                closeModal();
+            });
+
+            // Hide error messages when user starts typing
+            const inputs = document.querySelectorAll('.form-input, .form-select, .form-textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    const errorDiv = document.getElementById('error_messages');
+                    if (errorDiv) {
+                        errorDiv.classList.remove('show');
+                    }
+                });
+            });
+        </script>
+
+    </body> 
+    
+    <!--
         <script type="module">
             //Call function from firestore.js to add new household from input fields after pressing submit button
             import {addEntry, BUKLOD_RULES_TEST, setCollection, validateData, getCoordinates } from "/js/firestore_UNIV.js";
@@ -208,47 +302,6 @@
             document.getElementById("submit_form").addEventListener("click", submitAddForm);
         </script>
 
-        <script>
-            function resetForm() {
-                let messageText = "Are you sure you want to clear the form?";
-                if (confirm(messageText) == true) {
-                    // Clear input fields
-                    var inputFields = document.getElementsByTagName('input');
-                    for (var i = 0; i < inputFields.length; i++) {
-                    var field = inputFields[i];
-                    if (!field.readOnly && field.type !== 'button') {
-                        field.value = '';
-                    }
-                    }
-
-                    // Clear select dropdowns
-                    var selectFields = document.getElementsByTagName('select');
-                    for (var i = 0; i < selectFields.length; i++) {
-                    selectFields[i].selectedIndex = 0; 
-                    }
-                }
-            }
-
-
-            function closeModal() {
-				window.parent.postMessage('closeAddModal', '*');
-			}
-
-			document
-				.getElementsByClassName('closeForm')[0]
-				.addEventListener('click', function (event) {
-					event.preventDefault();
-					console.log('The user has closed the Add Activity modal.');
-					closeModal();
-				});
-
-			document.getElementById('close-btn').addEventListener('click', function (event) {
-					event.preventDefault();
-					console.log(
-						'The user has closed the Add Activity modal.'
-					);
-					closeModal();
-				});
-        </script>
-    </body>  
+        
+    -->
 </html>
