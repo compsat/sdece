@@ -1,3 +1,5 @@
+// CODE LOGIC FOR IMPORTING OF FUNCTIONS
+// ------------------------------------------
 import {populateEditForm, getPartnersArray } from './firestore.js';
 import {
   getDocIdByPartnerName,
@@ -5,182 +7,310 @@ import {
   setCollection,
   getCollection,
   DB,
-  addEntry,
   BUKLOD_RULES_TEST,
 } from '../../js/firestore_UNIV.js';
-import { addListeners, map } from '../../js/index_UNIV.js';
+import { addListeners, clearMarkers, map } from '../../js/index_UNIV.js';
 import {
   getFirestore,
   collection,
   getDocs,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import evacCenters from '../hardcode/evac-centers.json' with {type: 'json'};
+// ------------------------------------------
 
-//setCollection("buklod-official-TEST");
 
+// CODE LOGIC FOR SET-UP
+// ------------------------------------------
 // Pans map to Banaba area upon loading the page
 map.panTo(new L.LatLng(14.673, 121.11215));
 
-var colRef = getCollection();
-var partnersArray = getPartnersArray();
-
-
-// Function to store the html for info display on pin click
-function onPinClick(doc) {
-  // Variables for risk levels
-  var earthquake = doc.earthquake_risk;
-  var earthquake_desc = doc.earthquake_risk_description;
-  var fire = doc.fire_risk;
-  var fire_desc = doc.fire_risk_description;
-  var flood = doc.flood_risk;
-  var flood_desc = doc.flood_risk_description;
-  var landslide = doc.landslide_risk;
-  var landslide_desc = doc.landslide_risk_description;
-  var storm = doc.storm_risk;
-  var storm_desc = doc.storm_risk_description;
-
-  let leaflet_html = `
-  <div class="leafletPopupContainer" id="leafletModal">
-    <div class="leafletHeader">
-      <label>${doc.household_name}</label>
-    </div>
-    <div class="leafletContent">
-      <br>
-      <br>
-      <div style="line-height: 1px;">
-        <p>${doc.contact_number}</p>
-        <p>${doc.household_address}</p>
-      </div>
-      <div class="modalLine" style="width: 100%">
-        <label class="leafletLabel">Residency Status</label>
-        <label class="leafletLabel">Part of HOA/NOA</label>
-      </div>
-      <div class="modalLine" style="line-height: 3px; margin-bottom: 2px; width: 180px;">
-        <p class="leafletDetails">${doc.residency_status}</p>
-        <p class="leafletDetails">${doc.is_hoa_noa}</p>
-      </div>
-      <div style="line-height: 105%; margin-bottom: 2px;">
-        <label class="leafletLabel">Nearest Evacuation Area</label>
-        <p class="leafletDetails">${doc.nearest_evac}</p>
-      </div>
-    <div>
-      <div class="leafletSubHeader">
-        <label>Risk Levels</label>
-      </div>
-      <div class="modalLine">
-        <label class="leafletLabel">Earthquake</label>
-        <label class="leafletLabel">${earthquake}</label>
-      </div>
-      <div>
-        <p class="leafletDetails">${earthquake_desc || 'N/A'}</p>
-      </div>
-      <div class="modalLine">
-        <label class="leafletLabel">Fire</label>
-        <label class="leafletLabel">${fire}</label>
-      </div>
-      <div>
-        <p class="leafletDetails">${fire_desc || 'N/A' }</p>
-      </div>
-      <div class="modalLine">
-        <label class="leafletLabel">Flood</label>
-        <label class="leafletLabel">${flood}</label>
-      </div>
-      <div>
-        <p class="leafletDetails">${flood_desc || 'N/A' }</p>
-      </div>
-      <div class="modalLine">
-        <label class="leafletLabel">Landslide</label>
-        <label class="leafletLabel">${landslide}</label>
-      </div>
-      <div>
-        <p class="leafletDetails">${landslide_desc || 'N/A' }</p>
-      </div>
-      <div class="modalLine">
-        <label class="leafletLabel">Storm</label>
-        <label class="leafletLabel">${storm}</label>
-      </div>
-      <div>
-        <p class="leafletDetails">${storm_desc || 'N/A'}</p>
-      </div>
-    </div>
-    <div>
-      <div class="leafletSubHeader">
-        <label>Residents</label>
-      </div>
-      <div class="modalLine">
-        <label class="leafletLabel">Total</label>
-        <label class="leafletLabel">${doc.number_residents}</label>
-      </div>
-      <hr style="border-top: 1px solid #CBD5E0;">
-      <div class="modalLine">
-        <label class="leafletLabel">Minors</label>
-        <label class="leafletLabel">${doc.number_minors}</label>
-      </div>
-      <br>
-      <div class="modalLine">
-        <label class="leafletLabel">Seniors</label>
-        <label class="leafletLabel">${doc.number_seniors}</label>
-      </div>
-      <br>
-      <div class="modalLine">
-        <label class="leafletLabel">PWD</label>
-        <label class="leafletLabel">${doc.number_pwd}</label>
-      </div>
-      <br>
-      <div class="modalLine">
-        <label class="leafletLabel">Sick</label>
-        <label class="leafletLabel">${doc.number_sick}</label>
-      </div>
-      <br>
-      <div class="modalLine">
-        <label class="leafletLabel">Pregnant</label>
-        <label class="leafletLabel">${doc.number_pregnant}</label>
-      </div>
-      <button class="modalButton editHousehold" id="editHouseholdPopup" name="submit_form" style="color:#3D97AF">Edit   &nbsp;&nbsp;<img src="./img/edit.png" alt="edit" style="height: 20px; width: 20px;"></button>
-      </div>
-    </div>
-  </div>
-  `;
-  return leaflet_html;
-} 
-// Pin display
-evacCenters.forEach(center => {
-  const marker = L.marker(
-    [center.latitude, center.longitude],
-    {icon: L.icon({
-      iconUrl: "/app_buklod-tao/hardcode/evac.svg",
-      iconSize: [39,39],
-      popupAnchor: [0.5, -15]
-    })}
-  ).addTo(map)
-});
-
-
+// Load Map Tile Layer
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution:
     '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
-  }).addTo(map);
+}).addTo(map);
+  
+// Get list of households
+var partnersArray = getPartnersArray();
 
-var searchControl = L.esri.Geocoding.geosearch().addTo(map);
+// Function for populating the navbar entries with households entries
+function populateNavBar(condition){
+  var filtered_partners;
 
-var results = L.layerGroup().addTo(map);
-var popup = L.popup();
-
-
-//// Event Listeners
-searchControl.on('results', function (data) {
-  console.log(data);
-  results.clearLayers();
-  for (var i = data.results.length - 1; i >= 0; i--) {
-    var marker = L.marker(data.results[i].latlng);
-    //console.log(marker);
-    results.addLayer(marker);
+  if (condition == null){
+    filtered_partners = partnersArray
   }
-});
+  else{
+    //insert filter here
+  }
 
-// Script for add household modal
+  filtered_partners.forEach((partner) => {
+    // Creating DOM elements
+    const containerDiv = document.createElement('div');
+    const img = document.createElement('svg');
+    const listItem = document.createElement('li');
+    const anchor = document.createElement('a');
+    const nameDiv = document.createElement('div');
+    const addressDiv = document.createElement('div');
 
-// Modal
+    listItem.setAttribute('data-name', partner.household_name);
+
+    
+    // Set attributes
+    anchor.href = '#';
+    
+    listItem.addEventListener('click', async () => {
+      const docId = await getDocIdByPartnerName(partner.household_name);
+      const doc = await getDocByID(docId);
+
+      map.setView(partner.marker.getLatLng(), 12); // change zoom: 1, you can see america and europe. 18, banaba area
+      onPinClick(doc).then(popupHTML => {
+        partner.marker.bindPopup(popupHTML).openPopup(); // this replaces fire('popupopen')
+      });
+    });
+
+
+    // Adding classes and setting text content
+    nameDiv.classList.add('name');
+    addressDiv.classList.add('address');
+    
+    nameDiv.textContent = partner.household_name;
+    addressDiv.textContent =
+    partner.household_address + ' ' + partner.household_phase;
+    
+    listItem.classList.add('accordion');
+    anchor.classList.add('accordion', 'link');
+    containerDiv.classList.add('container-entry');
+    
+    // Append elements to the DOM
+    anchor.appendChild(nameDiv);
+    anchor.appendChild(addressDiv);
+    
+    listItem.appendChild(anchor);
+    containerDiv.appendChild(img);
+    containerDiv.appendChild(listItem);
+    locationList.appendChild(containerDiv);
+  });
+}
+populateNavBar();
+// ------------------------------------------
+
+
+// CODE LOGIC FOR OPENING MAIN MODAL
+// ------------------------------------------
+// Function to access the main_modal.html and populate it with data
+async function onPinClick(doc) {
+  const modal = await fetch('/app_buklod-tao/html/main_modal.html');
+  const html = await modal.text();
+
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = html;
+
+  // Populate modal based on doc values
+  wrapper.querySelectorAll('[data-bind]').forEach(ul => {
+    const key = ul.getAttribute('data-bind');
+
+    switch (key) {
+      case 'household_name':
+        ul.textContent = doc.household_name || '';
+        break;
+      case 'contact_number':
+        ul.textContent = doc.contact_number || '';
+        break;
+      case 'number_residents':
+        ul.textContent = doc.number_residents || 0;
+        break;
+      case 'residency_status':
+        ul.textContent = doc.residency_status || '';
+        break;
+      case 'is_hoa_noa':
+        ul.textContent = doc.is_hoa_noa || 'N/A';
+        break;
+      case 'nearest_evac':
+        ul.textContent = doc.nearest_evac || '';
+        break;
+      case 'household_material':
+        ul.textContent = doc.household_material || '';
+        break;
+      case 'earthquake_risk':
+        ul.textContent = doc.earthquake_risk || '';
+        break;
+      case 'earthquake_risk_description':
+        ul.textContent = doc.earthquake_risk_description || 'No description found';
+        break;
+      case 'fire_risk':
+        ul.textContent = doc.fire_risk || '';
+        break;
+      case 'fire_risk_description':
+        ul.textContent = doc.fire_risk_description || 'No description found';
+        break;
+      case 'flood_risk':
+        ul.textContent = doc.flood_risk || '';
+        break;
+      case 'flood_risk_description':
+        ul.textContent = doc.flood_risk_description || 'No description found';
+        break;
+      case 'landslide_risk':
+        ul.textContent = doc.landslide_risk || '';
+        break;
+      case 'landslide_risk_description':
+        ul.textContent = doc.landslide_risk_description || 'No description found';
+        break;
+      case 'storm_risk':
+        ul.textContent = doc.storm_risk || '';
+        break;
+      case 'storm_risk_description':
+        ul.textContent = doc.storm_risk_description || 'No description found';
+        break;
+      case 'number_minors':
+        ul.textContent = doc.number_minors || 0;
+        break;
+
+      case 'number_adult': {
+        const total = doc.num_residents || doc.number_residents || 0;
+        const minors = doc.num_residents_minor || doc.number_minors || 0;
+        const seniors = doc.num_residents_senior || doc.number_seniors || 0;
+        const adults = total - minors - seniors;
+        ul.textContent = adults >= 0 ? adults : 0;
+        break;
+      }
+
+      case 'number_seniors':
+        ul.textContent = doc.number_seniors || 0;
+        break;
+      case 'number_pwd':
+        ul.textContent = doc.number_pwd || 0;
+        break;
+      case 'number_sick':
+        ul.textContent = doc.number_sick || 0;
+        break;
+      case 'number_pregnant':
+        ul.textContent = doc.number_pregnant || 0;
+        break;
+      case 'sickness_present':
+        ul.textContent = doc.number_pregnant || 'None';
+        break;
+
+      case 'risk-section':
+        ul.innerHTML = generateRiskSection(doc); // You already have logic to do this
+        break;
+      default:
+        ul.textContent = doc[key] || '';
+    }
+  });
+
+  // Risk card color display dependent on rosk level
+  wrapper.querySelectorAll('[data-risk-card]').forEach(ul => {
+    const key = ul.getAttribute('data-risk-card');
+    const raw = doc[key] || '';
+    const level = raw.split(':')[0]?.replace('RISK', '').replace(/_/g, '').trim().toUpperCase();
+
+    ul.classList.remove('risk-high', 'risk-medium', 'risk-low');
+    switch (level) {
+      case 'HIGH':
+        ul.classList.add('risk-high');
+        break;
+      case 'MEDIUM':
+        ul.classList.add('risk-medium');
+        break;
+      case 'LOW':
+        ul.classList.add('risk-low');
+        break;
+    }
+  });
+
+  const closeBtn = wrapper.querySelector('#close-btn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      window.parent.postMessage('closeMainModal', '*');
+    });
+  }
+
+  return wrapper.innerHTML;
+}
+// ------------------------------------------
+
+
+// CODE LOGIC FOR OPENING "ADD HOUSEHOLD" MODAL 
+// ------------------------------------------
+// Function for opening modal on clicking on a point in the map
+function onMapClick(e) {
+  const lat = e.latlng.lat;
+  const lng = e.latlng.lng;
+
+  // This is the popup for when the user clicks on a spot on the map
+  var popupContent = `
+    <div class="partner-geolocation">
+      Latitude: ${lat}<br>
+      Longitude: ${lng}
+    </div>
+    <button class="addButton" data-lat="${lat}" data-lng="${lng}">Add Household</button>
+  `;
+
+  // Custom popup for add household
+  var customPopup = L.popup({
+    className: 'add-household-popup-compact'
+  });
+  
+  customPopup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
+  //popup = customPopup;
+
+  // Event listener for the Add Household button using event delegation
+  setTimeout(() => {
+    var addButton = document.querySelector('.addButton');
+    if (addButton) {
+      addButton.addEventListener('click', function () {
+        const lat = this.getAttribute('data-lat');
+        const lng = this.getAttribute('data-lng');
+
+        var modal = document.getElementById('addModal');
+
+        // Display the modal
+        modal.style.display = 'flex';
+
+        // Set the coordinates in the iframe form
+        var iframe = modal.getElementsByTagName('iframe')[0];
+        var iframeDocument = iframe.contentWindow.document;
+        
+        // Wait for iframe to load then set coordinates
+        iframe.onload = function() {
+          var locationField = iframeDocument.getElementById('location_coordinates');
+          if (locationField) {
+            locationField.value = lat + ',' + lng;
+          }
+        };
+        
+        // If iframe is already loaded, set coordinates immediately
+        if (iframe.contentWindow.document.readyState === 'complete') {
+          var locationField = iframeDocument.getElementById('location_coordinates');
+          if (locationField) {
+            locationField.value = lat + ',' + lng;
+          }
+        }
+
+        // Close the popup after opening modal
+        map.closePopup();
+      });
+    }
+  }, 100);
+}
+
+// Function for add household button
+function addMainButtonText() {
+  var mainButtonText = document.getElementById('mainButtonText');
+  if(mainButtonText) {
+    mainButtonText.innerHTML = 'Add a household';
+  }
+}
+
+map.on('click', onMapClick);
+addMainButtonText();
+// ------------------------------------------
+
+
+// CODE LOGIC FOR OPENING & CLOSING ADD MODAL
+// ------------------------------------------
+// Add Household Form Modal
 var formModal = document.getElementById('addModal');
 
 // Open modal
@@ -199,7 +329,6 @@ if(openForm) {
     formModal.style.display = 'block';
   });
 }
-
 if(closeForm) {
   closeForm.addEventListener('click', function () {
     formModal.style.display = 'none';
@@ -216,105 +345,24 @@ window.onclick = function (event) {
   }
 };
 
-
-
-// CODE LOGIC FOR ADD HOUSEHOLD MODAL TO OPEN ADD HOUSEHOLD FORM
-// When user clicks on the map to add household and open Add Household form
-function onMapClick(e) {
-  const lat = e.latlng.lat;
-  const lng = e.latlng.lng;
-
-  // This is the popup for when the user clicks on a spot on the map
-  var popupContent = `
-    <div class="partner-geolocation">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C11.337 11.5 10.7011 11.2366 10.2322 10.7678C9.76339 10.2989 9.5 9.66304 9.5 9C9.5 8.33696 9.76339 7.70107 10.2322 7.23223C10.7011 6.76339 11.337 6.5 12 6.5C12.663 6.5 13.2989 6.76339 13.7678 7.23223C14.2366 7.70107 14.5 8.33696 14.5 9C14.5 9.66304 14.2366 10.2989 13.7678 10.7678C13.2989 11.2366 12.663 11.5 12 11.5Z" fill="#91C9DB"/>
-          </svg>
-          ${lat} + ${lng}
-          <br>
-    </div>
-    <button id="mainButton" class="addButton p-5" data-lat="${lat}" data-lng="${lng}">Add Household</button>`;
-
-  popup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
-
-  var addButton = document.querySelector('.addButton');
-  addButton.addEventListener('click', function () {
-    const lat = this.getAttribute('data-lat');
-    const lng = this.getAttribute('data-lng');
-
+// Add message listener for iframe communication
+window.addEventListener('message', function(event) {
+  if (event.data === 'closeAddModal') {
     var modal = document.getElementById('addModal');
-
-    // Display the modal
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-
-    // Set the coordinates based on the pin drop
-    modal.getElementsByTagName('iframe')[0].contentWindow.document.getElementById('location_coordinates').value = lat + '+' + lng;
-
- // Handle form submission
-  var addHouseholdFrom = document.getElementById('addHouseholdForm')
-  if (addHouseholdFrom) {
-    addHouseholdFrom.addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      const householdData = {
-        household_name: document.getElementById('household_name').value,
-        contact_number: document.getElementById('contact_number').value,
-        household_address: document.getElementById('household_address').value,
-        residency_status: document.getElementById('residency_status').value,
-        is_hoa_noa: document.getElementById('is_hoa_noa').value,
-        nearest_evac: document.getElementById('nearest_evac').value,
-        earthquake_risk: document.getElementById('earthquake_risk').value,
-        fire_risk: document.getElementById('fire_risk').value,
-        flood_risk: document.getElementById('flood_risk').value,
-        landslide_risk: document.getElementById('landslide_risk').value,
-        storm_risk: document.getElementById('storm_risk').value,
-        number_residents: document.getElementById('number_residents').value,
-        number_minors: document.getElementById('number_minors').value,
-        number_seniors: document.getElementById('number_seniors').value,
-        number_pwd: document.getElementById('number_pwd').value,
-        number_sick: document.getElementById('number_sick').value,
-        number_pregnant: document.getElementById('number_pregnant').value,
-        location_coordinates: new firebase.firestore.GeoPoint(parseFloat(lat), parseFloat(lng))
-      };
-
-      addDoc(colRef, householdData)
-        .then(() => {
-          alert('Household added successfully!');
-          modal.classList.add('hidden');
-          modal.classList.remove('flex');
-          location.reload(); // Reload the map to show the new marker
-        })
-        .catch((error) => {
-          console.error('Error adding document: ', error);
-        });
-    });
+    modal.style.display = 'none';
   }
-
-
-    // Close the modal when the user clicks anywhere outside of it
-    window.onclick = function (event) {
-      if (event.target == modal) {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-      }
-    };
-  });
-}
-
-// Function for Add Household button
-function addMainButtonText() {
-  var mainButtonText = document.getElementById('mainButtonText');
-  if(mainButtonText) {
-    mainButtonText.innerHTML = 'Add a household';
+  if (event.data === 'closeEditModal') {
+    var modal = document.getElementById('editModal');
+    modal.style.display = 'none';
   }
-}
+});
 
-map.on('click', onMapClick);
-addMainButtonText();
+addListeners();
+// ------------------------------------------
 
 
-// EXPORT DATA CODE LOGIC
+// CODE LOGIC FOR EXPORTING OF DATA
+// ------------------------------------------
 document.getElementById('download-report').addEventListener('click', async () => {
   const colRef = getCollection();
 	const snapshot = await getDocs(colRef);
@@ -420,7 +468,6 @@ document.getElementById('download-report').addEventListener('click', async () =>
 	const masterData = [masterHeaders];
 
 	allHouseholds.forEach(h => {
-    debugger;
 		const row = [
 			h.household_name || '',
 			h.household_address || '',
@@ -448,69 +495,18 @@ document.getElementById('download-report').addEventListener('click', async () =>
 	XLSX.writeFile(workbook, 'Buklod_Tao_Household_Report.xlsx');
 });
 
-// CODE LOGIC FOR DISPLAYING OF PINS
-// Pin display for Evacuation Centers
-evacCenters.forEach(center => {
-  const marker = L.marker(
-    [center.latitude, center.longitude],
-    {icon: L.icon({
-      iconUrl: "/app_buklod-tao/hardcode/evac_center_v2.svg",
-      iconSize: [39,39],
-      popupAnchor: [0.5, -15]
-    })}
-  ).addTo(map);
-
-  marker.bindPopup(`
-    <div class = "evac-marker-header">${center.type}</div>
-    <div style = "text-align:center;">
-      <b>${center.name}</b>
-      <br>Location: ${center.latitude}, ${center.longitude}
-    </div>`);
-});
-
-/*
-// Pin display for Households
-partnersArray.forEach((partner) => {
-    var doc = partner;
-    var this_marker = partner.marker;
-    //console.log(doc);
-    if (doc.location_coordinates != null) {
-      this_marker = L.marker([
-        parseFloat(doc.location_coordinates._lat),
-        parseFloat(doc.location_coordinates._long),
-      ]);
-    }
-    // shows partner info on pin click
-    var popupContent = onPinClick(doc);
-    this_marker.bindPopup(popupContent);
-    this_marker.on('popupopen', function(e) {
-        const editBtns = document.querySelectorAll('.editHousehold');
-        editBtns.forEach((btn) => {
-          btn.addEventListener('click', function() {
-            console.log('Edit button was clicked!');
-            const modal = document.getElementById('partnerModal');
-            var editFormModal = document.getElementById('editModal');
-            editFormModal.style.display = 'block';
-            modal.style.display = 'none';
-            populateEditForm(doc, editFormModal)
-          });
-        });
-      });
-    results.addLayer(this_marker);
-    Object.defineProperty(partner, "marker", {value:this_marker, configurable: true});
-  });
-
-  */
 addListeners();
+// ------------------------------------------
 
 
-
-// CODE LOGIC FOR PIN COLOR CHANGE FEATURE
+// CODE LOGIC FOR PIN DISPLAY ON MAP
+// ------------------------------------------
 // Function for getting svg file according to risk type
 function getRiskIcon(riskLevel) {
   const basePath = '/app_buklod-tao/hardcode/';
   switch (riskLevel.toUpperCase()) {
     case 'HIGH RISK':
+      // debugger;
       return `${basePath}high_risk.svg`;
     case 'MEDIUM RISK':
       return `${basePath}mid_risk.svg`;
@@ -521,12 +517,13 @@ function getRiskIcon(riskLevel) {
   }
 }
 
-// Function for code logic of switching between risk types
+// Function for displaying of pins and its switching colors depending on risk type
 function updateRiskIcons() {
   const riskType = document.getElementById('risk-sort').value.replace('-sort', '');
-
   // Remove all current markers
-  results.clearLayers();
+  // results.clearLayers();
+  
+  clearMarkers();
 
   partnersArray.forEach((partner) => {
     const coord = partner.location_coordinates;
@@ -541,31 +538,70 @@ function updateRiskIcons() {
       iconSize: [39, 39],
       popupAnchor: [0.5, -15]
     });
-
-    // Place pin accordingly on map according to icon class standards
     const marker = L.marker([coord._lat, coord._long], { icon });
+    // Place pin accordingly on map according to icon class standards
 
     // Shows partner info on pin click
-    const popupContent = onPinClick(partner);
-    marker.bindPopup(popupContent);
-
-    marker.on('popupopen', () => {
-      const editBtns = document.querySelectorAll('.editHousehold');
-      editBtns.forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const modal = document.getElementById('partnerModal');
-          var editFormModal = document.getElementById('editModal');
-          editFormModal.style.display = 'block';
-          modal.style.display = 'none';
-          populateEditForm(partner, editFormModal);
-        });
-      });
+    //const popupContent = onPinClick(partner);
+    //marker.bindPopup(popupContent);
+    onPinClick(partner).then(popupContent => {
+      marker.bindPopup(popupContent);
     });
 
-    results.addLayer(marker);
-    Object.defineProperty(partner, "marker", { value: marker, configurable: true });
+    partner.marker = marker; // store reference here
+    map.addLayer(marker);
+
+    marker.on('popupopen', () => {
+      // Use setTimeout to defer this to after the popup DOM is actually rendered
+      setTimeout(() => {
+        const edit_button = document.getElementById("edit-household-popup");
+
+        if (edit_button) {
+          edit_button.addEventListener('click', () => {
+            const modal = document.getElementById('partnerModal');
+            var editFormModal = document.getElementById('editModal');
+            editFormModal.style.display = 'flex';
+            modal.style.display = 'none';
+            populateEditForm(partner, editFormModal);
+          });
+        }
+
+        const close_button = document.getElementById("close-btn");
+        if (close_button) {
+          close_button.addEventListener('click', () => {
+            marker.closePopup();
+          });
+        }
+      }, 0); // <-- ensures DOM is painted
+      
+    });
+
+    map.addLayer(marker);
   });
+
+
+  // Code logic for displaying evac centers
+  evacCenters.forEach(center => {
+    
+    const marker_icon = L.icon({
+      iconUrl: "/app_buklod-tao/hardcode/evac_center_v2.svg",
+      iconSize: [39,39],
+      popupAnchor: [0.5, -15]
+    })
+    
+    const marker = L.marker([center.latitude, center.longitude], {icon: marker_icon})
+
+    marker.bindPopup(`
+      <div class = "evac-marker-header">${center.type}</div>
+      <div style = "text-align:center;">
+      <b>${center.name}</b>
+      <br>Location: ${center.latitude}, ${center.longitude}
+      </div>`);
+      map.addLayer(marker);
+      
+    });
 }
 
+// Code logic for automatically changing pin color depending on selected option on dropbox 
 document.getElementById('risk-sort').addEventListener('change', updateRiskIcons);
 updateRiskIcons();

@@ -1,8 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
 
 body {
   margin: 0;
   padding: 0;
+  font-family: 'Geist', sans-serif;
 }
 
 .main {
@@ -36,16 +37,120 @@ body {
   justify-content: flex-end;
 }
 
-.sideNav {
+.side-nav {
   display: flex;
-  position: fixed;
-  width: 380px;
-  height: 100%;
-  background-color: #FFFFFF;
   flex-direction: column;
-  align-items: flex-start;
+  height: 100vh;
+	max-width: 320px;
+	width: 100%;
+	overflow: hidden;
+	position: relative;
+  background-color: #ffffff;
+	border-right: 1px solid #e0e0e0;
+}
+
+.side-nav-header {
+	position: sticky;
+	top: 0;
+	width: 100%;
+	background-color: #ffffff;
+	padding: 1.5rem;
+	box-sizing: border-box;
+	z-index: 10;
+}
+
+.side-nav-header-top {
+	display: flex;
+	align-items: center;
+	margin-bottom: 1rem;
+}
+
+.map-title {
+	font-size: 1.25rem;
+	font-weight: 500;
+	color: #111827;
+	font-family: 'Geist', sans-serif;
+}
+
+.actions-container {
+  display: flex;
+	gap: 0.5rem;
+	margin-bottom: 1.5rem;
+}
+
+.action-btn {
+	background-color: #ffffff;
+	border: 1px solid #e0e0e0;
+	padding: 0.5rem 1rem;
+	border-radius: 0.5rem;
+	font-size: 0.875rem;
+	color: #374151;
+	cursor: pointer;
+	font-family: 'Geist', sans-serif;
+}
+
+.action-btn:hover {
+	background-color: #f9fafb;
+}
+
+#risk-sort {
+  width: 100%;
+}
+
+.partners-header {
+	padding: 0 1.5rem 0.75rem;
+	border-bottom: 1px solid #eeeeee;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+#partners-count {
+	font-size: 0.75rem;
+	color: #6b7280;
+	font-weight: 500;
+	letter-spacing: 0.05em;
+	font-family: 'Geist', sans-serif;
+}
+
+.entries {
+	flex-grow: 1;
   overflow-y: auto;
-  z-index: 4;
+  scrollbar-color: rgba(0,0,0,0.01) transparent;
+  background-color: #ffffff;
+	width: 100%;
+}
+.entries:hover {
+  scrollbar-color: rgba(0,0,0,0.2) transparent;
+}
+
+.accordion {
+	cursor: pointer;
+	padding: 0.5rem 1rem 1rem;
+	max-width: 75%;
+	width: 100%;
+	box-sizing: border-box;
+	/* border-bottom: 1px solid #eeeeee; */
+}
+
+.accordion:hover {
+	background-color: #f9fafb;
+}
+
+.name {
+	font-family: 'Geist', sans-serif;
+	font-weight: 600;
+	font-size: 1rem;
+	line-height: 1.5rem;
+	color: #111827;
+}
+
+.address {
+	font-family: 'Geist', sans-serif;
+	font-weight: normal;
+	font-size: 0.875rem;
+	color: #6b7280;
+	line-height: 1.25rem;
+	margin-top: 0.25rem;
 }
 
 .header {
@@ -57,15 +162,16 @@ body {
 /* search bar itself */
 .searchBar {
   height: 45px;
-  margin: -15px -15px -15px -15px;
-  padding: 15px 32px;
-  width: 107%;
+  margin: 0;
+  padding: 15px 1rem;
+  max-width: 100%;
+  width: 100%;
   box-sizing: border-box;
   border-radius: 12px;
   background-color: #F6F6F6;
   border: transparent;
   background-position: calc(100% - 16px) center;
-  font-family: 'Montserrat';
+  font-family: 'Geist', sans-serif;
   font-size: 18px;
   letter-spacing: 0.5px;
   background-image: url("../img/search-icon.png");
@@ -99,7 +205,7 @@ li {
 
 .heading {
   color: #387181;
-  font-family: Garamond;
+  font-family: 'Geist', sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 700;
@@ -113,7 +219,7 @@ li {
 .label {
   padding-left: 10px;
   text-align: left;
-  font-family: "Montserrat";
+  font-family: "Geist";
   font-style: normal;
   font-weight: 600;
   font-size: 18px;
@@ -167,7 +273,7 @@ li {
 
 /* logout button */
 .buttonLogout {
-  font-family: Montserrat;
+  font-family: Geist;
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -205,7 +311,7 @@ button.container {
 }
 
 button.labelFont {
-  font-family: Montserrat;
+  font-family: Geist;
   padding-top: 30px;
   padding-left: 30px;
   padding-bottom: 30px;
@@ -250,7 +356,7 @@ div.buttons {
 a.accordion {
   overflow: hidden;
   text-overflow: ellipsis;
-  font-family: Montserrat;
+  font-family: Geist;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -260,12 +366,6 @@ a.accordion {
 
 img.accordion {
   fill: #91c9db;
-}
-
-.entries {
-  background-color: #F6F6F6;
-  width: 100%;
-  overflow-y: auto;
 }
 
 ul.accordion {
@@ -278,41 +378,20 @@ ul.accordion {
 
 li.accordion {
   display: flex;
-  padding: 24px 32px;
-  border-bottom: 0.5px solid #bdbdbd;
+  padding: 0.75rem;
+  max-width: 100%;
+  box-sizing: border-box;
+  /* border-bottom: 0.5px solid #bdbdbd; */
 }
 
 a.accordion {
   text-decoration: none;
 }
 
-.name {                           /* Name of each entry in list [Partner Name] */
-  text-decoration: none;
-  color: #387181;
-  font-family: Montserrat;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 750;
-  line-height: 110%;
-  letter-spacing: 0.36px;
-}
-
-.address {                        /* Address of each entry in list [Partner Address] */
-  color: #a0a0a0;
-  margin-top: 10px;
-  text-overflow: ellipsis;
-  font-family: Hind;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 120%; /* 16.8px */
-  letter-spacing: 0.28px;
-}
-
 .activity {
   color: #2f2f2f;
   text-overflow: ellipsis;
-  font-family: Hind;
+  font-family: 'Geist', sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -321,7 +400,7 @@ a.accordion {
 }
 h1.entries {
   color: #000;
-  font-family: Montserrat;
+  font-family: 'Geist', sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -366,7 +445,7 @@ h1.entries {
   width: 100%;
   padding: 0px 24px;
   background-color: #fcfcfc;
-  font-family: Hind;
+  font-family: 'Geist', sans-serif;
   font-size: 16px;
   font-style: normal;
   max-height: calc(80% - 140px);
@@ -393,7 +472,7 @@ h1.entries {
 
 /* modal text */
 .modalLabel {
-  font-family: 'Montserrat';
+  font-family: 'Geist', sans-serif;
   font-size: 16px;
   color: #000;
   font-weight: 750;
@@ -404,7 +483,7 @@ h1.entries {
 .modalName {
   position: relative;
   color: #387181;
-  font-family: Montserrat;
+  font-family: 'Geist', sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 750;
@@ -417,7 +496,7 @@ h1.entries {
   display: flex;
   position: relative;
   justify-content: center;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Geist", sans-serif;
   font-size: 16px;
   font-weight: 750;
   cursor: pointer;
@@ -432,7 +511,7 @@ h1.entries {
 
 .modalText {
   color: #a0a0a0;
-  font-family: Hind;
+  font-family: 'Geist', sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -454,7 +533,7 @@ button.collapsible {
   width: 100%;
   height: 50px;
   color: #3D97AF;
-  font-family: 'Montserrat';
+  font-family: 'Geist', sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 750;
@@ -509,7 +588,7 @@ button.collapsible {
 }
 
 .leafletHeader {
-  font-family: Montserrat;
+  font-family: Geist;
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.1px;
@@ -523,7 +602,7 @@ button.collapsible {
 }
 
 .leafletSubHeader {
-  font-family: Montserrat;
+  font-family: Geist;
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.1px;
@@ -532,14 +611,14 @@ button.collapsible {
 }
 
 .leafletLabel {
-  font-family: Montserrat;
+  font-family: Geist;
   font-size: 14px;
   font-weight: 700;
   color: #000000;
 }
 
 .leafletContent {
-  font-family: Hind;
+  font-family: 'Geist', sans-serif;
   font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.32px;
@@ -579,7 +658,7 @@ button.collapsible {
   gap: 8px;
   border-radius: 8px;
   border: 0;
-  font-family: Montserrat;
+  font-family: 'Geist', sans-serif;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -596,7 +675,7 @@ button.collapsible {
 .partnerValue {
   overflow: hidden;
   text-overflow: ellipsis;
-  font-family: Hind;
+  font-family: 'Geist', sans-serif;
   font-size: 12px;
   font-style: normal;
   line-height: 110%;
@@ -606,7 +685,7 @@ button.collapsible {
 
 .partnerLabel {
   color: #3d97af;
-  font-family: Hind;
+  font-family: 'Geist', sans-serif;
   font-style: normal;
   font-weight: 600;
   line-height: 110%;
@@ -617,7 +696,7 @@ button.collapsible {
 
 .partnerActivity {
   color: #2f2f2f;
-  font-family: Hind;
+  font-family: 'Geist', sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -639,6 +718,32 @@ button.collapsible {
 
 .modal-screen {
 	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 9999;
+	justify-content: center;
+	align-items: center;
+}
+
+.form-modal {
+	width: 100%;
+	max-width: 800px;
+	height: 80%;
+	border: none;
+	border-radius: 8px;
+	background-color: white;
+}
+
+.message-modal {
+	width: 400px;
+	height: 200px;
+	border: none;
+	border-radius: 8px;
+	background-color: white;
 }
 
 .evac-marker {
@@ -656,4 +761,228 @@ button.collapsible {
   color: rgb(11, 103, 65);
   text-align: center;
   margin-bottom: 7px;
+}
+
+.popup-card, .popup-title, .popup-phone, .popup-section, .popup-label, .popup-value, .risk-type, .risk-badge, .risk-desc {
+  font-family: 'Geist', sans-serif !important;
+}
+.popup-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #181c26;
+  margin-bottom: 0.2em;
+}
+.popup-phone {
+  color: #888ea8;
+  font-size: 1.05rem;
+  margin-bottom: 1.1em;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+.popup-phone svg {
+  width: 1.1em;
+  height: 1.1em;
+  color: #888ea8;
+  fill: #888ea8;
+  vertical-align: middle;
+}
+.popup-section {
+  margin-bottom: 1.1rem;
+  border-bottom: 1px solid #fff;
+  padding-bottom: 0.7em;
+}
+.popup-label {
+  font-size: 1rem;
+  color: #7E8A98;
+  font-weight: 500;
+  margin-top: 0.5em;
+  margin-bottom: 0.2em;
+}
+.popup-value {
+  font-size: 1.08rem;
+  color: #181c26;
+  font-weight: 600;
+  margin-bottom: 0.7em;
+}
+.risk-header {
+  color: #181c26;
+  font-weight: 700;
+  margin-bottom: 0.5em;
+  font-size: 1.08em;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+.risk-header svg {
+  width: 1.1em;
+  height: 1.1em;
+  color: #181c26;
+  fill: #181c26;
+  vertical-align: middle;
+}
+.risk-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+  margin-top: 0.7em;
+}
+.risk-card {
+  width: 100%;
+  background: #f7fafc;
+  border-radius: 0.7em;
+  padding: 0.7em 1em 0.5em 1em;
+  display: flex;
+  flex-direction: column;
+  font-size: 1em;
+  font-weight: 600;
+  color: #222b45;
+  align-items: flex-start;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.04);
+  border-left: 6px solid #e0e7ef;
+}
+.risk-card .risk-type {
+  font-weight: 700;
+  font-size: 1.05em;
+  margin-bottom: 0.2em;
+}
+.risk-card.risk-high {
+  border-left: 6px solid #d64747;
+  background: #fde8e8;
+}
+.risk-card.risk-medium {
+  border-left: 6px solid #bfa100;
+  background: #fffbe6;
+}
+.risk-card.risk-low {
+  border-left: 6px solid #1a7f37;
+  background: #e6fbe6;
+}
+.risk-badge {
+  display: inline-block;
+  font-size: 0.95em;
+  font-weight: 700;
+  border-radius: 1em;
+  padding: 0.2em 1em;
+  margin-left: 1em;
+  margin-bottom: 0.2em;
+  letter-spacing: 0.04em;
+}
+.risk-high {
+  color: #d64747;
+}
+.risk-medium {
+  color: #bfa100;
+}
+.risk-low {
+  color: #1a7f37;
+}
+.risk-desc {
+  font-size: 0.97em;
+  color: #888ea8;
+  font-weight: 400;
+  margin-top: 0.2em;
+  margin-left: 0.1em;
+}
+
+.residents-breakdown {
+  margin-top: 0.8em;
+}
+
+.resident-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6em 0;
+  font-family: 'Geist', sans-serif;
+}
+
+.resident-label {
+  font-size: 1.05em;
+  font-weight: 600;
+  color: #888ea8;
+}
+
+.resident-count {
+  font-size: 1.1em;
+  font-weight: 700;
+  color: #181c26;
+  min-width: 2em;
+  text-align: right;
+}
+
+.resident-divider {
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 0.4em 0;
+}
+
+.popup-edit-section {
+  margin-top: 1.5rem;
+  text-align: center;
+  padding-bottom: 0.5rem;
+}
+
+.popup-edit-btn {
+  background: transparent;
+  border: none;
+  color: #1a357b;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: 'Geist', sans-serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+.popup-edit-btn:hover {
+  background-color: #f0f9ff;
+}
+
+.popup-card {
+  min-width: 370px;
+  max-width: 460px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* Restore global popup width to not affect household detail popups */
+.leaflet-popup-content-wrapper {
+  min-width: 400px;
+  max-width: 480px;
+}
+
+/* Specific styling only for Add Household popups using the custom class */
+.leaflet-popup.add-household-popup-compact .leaflet-popup-content-wrapper {
+  min-width: 200px !important;
+  max-width: 300px !important;
+}
+
+.partner-geolocation {
+  font-family: 'Geist', sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.addButton {
+  background: #1a357b;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 5px;
+  width: 100%;
+}
+
+.addButton:hover {
+  background: #2542a3;
 }

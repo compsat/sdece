@@ -55,7 +55,7 @@ function panLocation(doc, map) {
 			var coordinates;
 			for (let i = 0; i < rule[2].length; i++) {
 				if (rule[2][i].includes('location_coordinates')) {
-					coordinates = doc.get(rule[2][i]);
+					coordinates = doc[rule[2][i]];
 					if(coordinates != null) {
 						map.panTo(
 							new L.LatLng(
@@ -72,12 +72,22 @@ function panLocation(doc, map) {
 }
 
 function searchLocation(name, map) {
-	getDocIdByPartnerName(name).then((docId) => {
-		getDocByID(docId).then((doc) => {
-			panLocation(doc, map);
-		});
-	});
+  getDocIdByPartnerName(name).then((docId) => {
+    if (!docId) {
+      console.warn("No document ID found for", name);
+      return;
+    }
+
+    getDocByID(docId).then((doc) => {
+      if (!doc) {
+        console.warn("No document data found for ID:", docId);
+        return;
+      }
+      panLocation(doc, map); // ✅ only called when doc is not null
+    });
+  });
 }
+
 
 // Utility Function for Front-end (remove underscores from a string)
 export function removeUnderscoresFromField(field) {
@@ -106,7 +116,13 @@ export function readyField(field) {
 export function addListeners() {
 	var locationList = document.getElementById(`locationList`);
 	locationList.addEventListener('click', (event) => {
-		searchLocation(event.target.innerHTML, map);
+		
+		const li = event.target.closest('li');
+		if (!li) return;
+
+		const partnerName = li.dataset.name;
+		searchLocation(partnerName, map);
+
 	});
 }
 
@@ -128,38 +144,39 @@ export const JS_CS_ENGINE = [
 	[
 		'buklod-official',
 		[
-			'app_buklod-tao/js/index.js',
-			'app_buklod-tao/js/firestore.js',
-			'app_buklod-tao/css/form.css',
-			'app_buklod-tao/css/main.css',
+			'/app_buklod-tao/js/index.js',
+			'/app_buklod-tao/js/firestore.js',
+			'/app_buklod-tao/css/form.css',
+			//   'buklod-tao-branch/css/login.css',
+			'/app_buklod-tao/css/main.css',
 		],
 	],
 	[
 		'buklod-official-TEST',
 		[
-			'app_buklod-tao/js/index.js',
-			'app_buklod-tao/js/firestore.js',
-			'app_buklod-tao/css/form.css',
+			'/app_buklod-tao/js/index.js',
+			'/app_buklod-tao/js/firestore.js',
+			'/app_buklod-tao/css/form.css',
 			//   'buklod-tao-branch/css/login.css',
-			'app_buklod-tao/css/main.css',
+			'/app_buklod-tao/css/main.css',
 		],
 	],
 	[
 		'sdece-official',
 		[
-			'app_sdece/js/index.js',
-			'app_sdece/js/firestore.js',
-			'app_sdece/css/form.css',
-			'app_sdece/css/modal.css',
+			'/app_sdece/js/index.js',
+			'/app_sdece/js/firestore.js',
+			'/app_sdece/css/form.css',
+			'/app_sdece/css/modal.css',
 		],
 	],
 	[
 		'sdece-official-TEST',
 		[
-			'app_sdece/js/index.js',
-			'app_sdece/js/firestore.js',
-			'app_sdece/css/form.css',
-			'app_sdece/css/modal.css',
+			'/app_sdece/js/index.js',
+			'/app_sdece/js/firestore.js',
+			'/app_sdece/css/form.css',
+			'/app_sdece/css/modal.css',
 		],
 	],
 
@@ -184,7 +201,7 @@ export function createJsCssFiles(file_path) {
 }
 
 // Loads the JS CSS Files
-export function loadJsCssFiles(file_path) {
+export function loadJsCssFiles() {
 	// script if javascript, css if link or none;
 	for (let rule of JS_CS_ENGINE) {
 		if (rule[0] == getCollection().id) {
