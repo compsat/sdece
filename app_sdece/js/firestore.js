@@ -23,9 +23,9 @@ import {
 	validateData,
 	editEntry,
 	addEntry
-} from '/js/firestore_UNIV.js';
+} from '../../js/firestore_UNIV.js'; 
 
-import { addListeners, map, getDivContent } from '/js/index_UNIV.js';
+import { addListeners, map, getDivContent } from '../../js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
 
 // Your Firestore code here
@@ -74,11 +74,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 var results = L.layerGroup().addTo(map);
 var popup = L.popup();
 
-function getActivity(activity) {
-	// Try to return the most descriptive field available
-	return activity.activity_name || activity.activity_nature || 'Activity';
-}
-
 function onMapClick(e) {
 	const lat = e.latlng.lat;
 	const lng = e.latlng.lng;
@@ -107,30 +102,46 @@ const newButton = mainModalDocument.getElementById('addModalButton');
 
 newButton.addEventListener('click', () => {
 	// Get the Add Activity form and the needed input fields for autofill
-	var inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value;
-	var inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value;
-	var input = addFormiframeDocument.getElementById(field);
+	var inputtedPartnerName = mainModalDocument.getElementById(
+		'inputted_partner_name'
+	).value;
+	var inputtedPartnrAddress =
+		mainModalDocument.getElementById('address-input').value;
 	has_existing_partner = false;
 
-	if (inputtedPartnerName == '' || inputtedPartnerAddress == '') {
+	if (inputtedPartnerName == '' || inputtedPartnrAddress == '') {
 		alert('Partner Name and Partner Address cannot be blank.');
 	} else {
 		for (let field of SDECE_RULES[2]) {
 			if (field != 'partner_coordinates') {
 				if (field == 'partner_name' || field == 'partner_address') {
 					if (field == 'partner_name') {
-						input.value = inputtedPartnerName;
-					} else {
-						input.value = inputtedPartnerAddress;
+						addFormiframeDocument.getElementById(
+							field
+						).value = inputtedPartnerName;
+					} else if (field == 'partner_address') {
+						addFormiframeDocument.getElementById(
+							field
+						).value = inputtedPartnrAddress;
 					}
-					input.readOnly = true;
-					input.style.backgroundColor = 'var(--custom-medium-gray';
-					input.style.color = 'var(--custom-dark-gray';
+					addFormiframeDocument.getElementById(
+						field
+					).readOnly = true;
+					addFormiframeDocument.getElementById(
+						field
+					).style.backgroundColor = 'var(--custom-medium-gray';
+					addFormiframeDocument.getElementById(
+						field
+					).style.color = 'var(--custom-dark-gray';
 				} else {
-					input.value = null;
-					input.readOnly = false;
+					addFormiframeDocument.getElementById(field).value =
+						null;
+					addFormiframeDocument.getElementById(
+						field
+					).readOnly = false;
 				}
-			} 
+			} else {
+			}
 		}
 		showAddModal();
 	}
@@ -173,8 +184,10 @@ getDocs(col_ref)
 			let partner = activities[activity][SDECE_RULES[1]];
 			if (partners[partner] == null) {
 				partners[partner] = [];
-			} 
-			partners[partner].push(activities[activity]);
+				partners[partner].push(activities[activity]);
+			} else {
+				partners[partner].push(activities[activity]);
+			}
 		});
 
 		// Populate side navigation <ul> with partners
@@ -183,18 +196,21 @@ getDocs(col_ref)
 			var marker;
 
 			// Some coordinated are null, protective check
-			let partnerCoordinates = partners[partner][0]['partner_coordinates'];
-			let partnerLatitude = partnerCoordinates.latitude;
-			let partnerLongitude = partnerCoordinates.longitude;
-
-			if (partnerCoordinates != null) {
+			if (partners[partner][0]['partner_coordinates'] != null) {
 				marker = L.marker([
-					parseFloat(partnerLatitude),
-					parseFloat(partnerLongitude),
+					parseFloat(
+						partners[partner][0]['partner_coordinates']
+							.latitude
+					),
+					parseFloat(
+						partners[partner][0]['partner_coordinates']
+							.longitude
+					),
 				]);
 
 				results.addLayer(marker);
-				var popupContent = `<div class="partner-popup" id="`;
+				var popupContent = `
+					<div class="partner-popup" id="`;
 				popupContent += partners[partner][0]['partner_name'];
 				popupContent += `">`;
 				popupContent += partners[partner][0]['partner_name'];
@@ -205,25 +221,12 @@ getDocs(col_ref)
 
 				marker.on('click', function () {
 					marker.openPopup();
-					var test = document.getElementById(
-						partners[partner][0]['partner_name']
-					);
-					if (test) {
-					test.addEventListener('click', function () {
-						showModal(partners[partner]);
-					});
-					}
-					// Directly show the modal on marker click
-					showModal(partners[partner]);
-				});
 
-				marker.on('click', function () {
-					map.panTo(
-					new L.LatLng(
-						parseFloat(partnerLatitude),
-						parseFloat(partnerLongitude),
-					)
-				);
+					// Center the map on this marker
+					map.setView(marker.getLatLng(), map.getZoom(), {
+						animate: true,
+						duration: 0.5,
+					});
 
 					clearAllHighlights();
 
@@ -235,8 +238,19 @@ getDocs(col_ref)
 							item.classList.add('highlight');
 						}
 					});
+					
+					var test = document.getElementById(
+						partners[partner][0]['partner_name']
+					);
+					if (test) {
+					test.addEventListener('click', function () {
+						showModal(partners[partner]);
+					});
+					}
+					// Directly show the modal on marker click
 					showModal(partners[partner]);
 				});
+			}
 
 			const containerDiv = document.createElement('div');
 			const img = document.createElement('svg');
@@ -245,16 +259,22 @@ getDocs(col_ref)
 			const nameDiv = document.createElement('div');
 			const addressDiv = document.createElement('div');
 			const activityDiv = document.createElement('div');
-			
+
 			containerDiv.addEventListener('click', function () {
 				marker.openPopup();
 				map.panTo(
 					new L.LatLng(
-						parseFloat(partnerLatitude),
-						parseFloat(partnerLongitude)
+						parseFloat(
+							partners[partner][0]['partner_coordinates']
+								.latitude
+						),
+						parseFloat(
+							partners[partner][0]['partner_coordinates']
+								.longitude
+						)
 					)
 				);
-
+				
 				clearAllHighlights();
 				containerDiv.classList.add('highlight');
 				showModal(partners[partner]);
@@ -264,9 +284,9 @@ getDocs(col_ref)
 
 			containerDiv.classList.add('partnerDiv');
 
-			// Checks if list of activities are present
+			//   var activities = getDocIdByPartnerName(partner.partner_name);
 			if (Object.keys(activities).length > 0) {
-				let html = ';'
+				// check if list of activities is present, otherwise is skipped to avoid errors
 				Object.keys(activities).forEach((activity) => {
 					activityDiv.innerHTML +=
 						getActivity(activity) + '<br/>'; // there might be a better way to display multiple activities
@@ -283,13 +303,12 @@ getDocs(col_ref)
 			let activities_string = '';
 
 			for (let activity of partners[partner]) {
-				activities_string += getActivity(activity)+ '<br>';
+				activities_string += getActivity(activity) + '<br>';
 			}
 
 			activityDiv.innerHTML = activities_string;
 
 			listItem.classList.add('accordion');
-
 			// Append elements to the DOM
 			anchor.appendChild(nameDiv);
 			anchor.appendChild(addressDiv);
@@ -299,7 +318,7 @@ getDocs(col_ref)
 			containerDiv.appendChild(img);
 			containerDiv.appendChild(listItem);
 			locationList.appendChild(containerDiv);
-	}});
+		});
 	})
 	.catch((error) => {
 		console.error('Error getting documents: ', error);
@@ -421,10 +440,11 @@ function showEditActivityForm(activity, partnerName, coords) {
 	modalHeader.appendChild(headerRow);
 
 	// --- LOAD FORM HTML ---
-	fetch('sdece/html/editloc.html')
+	fetch('html/editloc.html')
 		.then(response => response.text())
 		.then(html => {
 			// Extract only the <form>...</form> part
+			console.log('[DEBUG] Loaded HTML:', html);
 			const tempDiv = document.createElement('div');
 			tempDiv.innerHTML = html;
 			const form = tempDiv.querySelector('form');
@@ -447,7 +467,7 @@ function showEditActivityForm(activity, partnerName, coords) {
 			const fieldMap = {
 				activity_name: activity.activity_name || '',
 				activity_nature: activity.activity_nature || '',
-				activity_date: activity.activity_date ? (typeof activity.activity_date === 'string' ? activity.activity_date : (activity.activity_date.toDate ? activity.activity_date.toDate().toISOString().split('T')[0] : '')) : '',
+				activity_date: activity.activity_date ? (typeof activity.activity_date === 'string' ? activity.activity_date : (activity.activity_date.toDate ? activity.activity_date.toDate().toLocaleDateString('en-CA') : '')) : '',
 				additional_partnership: activity.additional_partnership || '',
 				organization_unit: activity.organization_unit || '',
 				partner_name: activity.partner_name || '',
@@ -578,7 +598,7 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	partnershipCard.className = 'modal-card-information';
 	partnershipCard.innerHTML = `
 	  <div class=\"modal-card-header-information\"><span style=\"display:inline-flex;align-items:center;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"rgba(126,138,152,1)\" width=\"1.2em\" height=\"1.2em\" style=\"vertical-align:middle;margin-right:0.5rem;\"><path d=\"M2 22C2 17.5817 5.58172 14 10 14C14.4183 14 18 17.5817 18 22H16C16 18.6863 13.3137 16 10 16C6.68629 16 4 18.6863 4 22H2ZM10 13C6.685 13 4 10.315 4 7C4 3.685 6.685 1 10 1C13.315 1 16 3.685 16 7C16 10.315 13.315 13 10 13ZM10 11C12.21 11 14 9.21 14 7C14 4.79 12.21 3 10 3C7.79 3 6 4.79 6 7C6 9.21 7.79 11 10 11ZM18.2837 14.7028C21.0644 15.9561 23 18.752 23 22H21C21 19.564 19.5483 17.4671 17.4628 16.5271L18.2837 14.7028ZM17.5962 3.41321C19.5944 4.23703 21 6.20361 21 8.5C21 11.3702 18.8042 13.7252 16 13.9776V11.9646C17.6967 11.7222 19 10.264 19 8.5C19 7.11935 18.2016 5.92603 17.041 5.35635L17.5962 3.41321Z\"></path></svg>Partnership Information</span></div>
-	  <div class=\"modal-card-row\">\n        <span class=\"modal-label\">Organization/Unit</span>\n        <span class=\"modal-value\">${activity.organization_unit || '—'}</span>\n      </div>\n      <div class=\"modal-card-row\">\n        <span class=\"modal-label\">Partnership date</span>\n        <span class=\"modal-value\">${activity.activity_date || '—'}</span>\n      </div>\n    `;
+	  <div class=\"modal-card-row\">\n        <span class=\"modal-label\">Organization/Unit</span>\n        <span class=\"modal-value\">${activity.organization_unit || '—'}</span>\n      </div>\n      <div class=\"modal-card-row\">\n        <span class=\"modal-label\">Partnership date</span>\n        <span class="modal-value">${activity.activity_date && activity.activity_date.toDate ? activity.activity_date.toDate().toLocaleDateString('en-PH', {year: 'numeric', month: 'long', day: 'numeric'}): activity.activity_date || '—'}</span>\n      </div>\n    `;
 	generalSection.appendChild(contactCard);
 	generalSection.appendChild(partnershipCard);
 	modalContent.appendChild(generalSection);
@@ -635,41 +655,6 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	// Show the partner modal
 	modal.style.display = 'flex';
 	modal.classList.add('open');
-	modal.classList.add('open'); //transition in
-
-	// Close the modal when the user clicks outside of it
-	window.addEventListener('click', (event) => {
-		if (event.target == modal) {
-			modal.classList.remove('open'); //transition out
-			modal.style.display = 'none';
-			current_viewed_activity = null;
-		}
-	});
-
-	var editButtons = document.getElementsByClassName('edit-button');
-
-	for (var i = 0; i < editButtons.length; i++) {
-		editButtons[i].addEventListener('click', function () {
-			if (current_viewed_activity != null) {
-				// Select the modal and partnerName elements
-				var modal = document.getElementById('editModal');
-
-				// Display the modal
-				modal.style.display = 'flex';
-		
-				// Autofill existing values inside the modal
-				SDECE_RULES[2].forEach((field) => {
-					let current_inp = document
-						.getElementById('editModal_iframe')
-						.contentWindow.document.getElementById(field);
-					if (current_inp != null) {
-						current_inp.value =
-							current_viewed_activity[field];
-					}
-				});
-			}
-		});
-	}
 }
 
 // This is unreliable but will probably be useful in the future

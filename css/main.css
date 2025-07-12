@@ -11,24 +11,6 @@
 	font-family: 'Geist', sans-serif;
 }
 
-button,
-input {
-	border: none;
-	outline: none;
-	width: auto;
-	height: auto;
-}
-
-button {
-	cursor: pointer;
-}
-
-iframe {
-	border: none;
-	overflow-y: scroll;
-}
-/* Equivalent vanilla CSS */
-
 .main {
 	display: flex;
 	flex-direction: row;

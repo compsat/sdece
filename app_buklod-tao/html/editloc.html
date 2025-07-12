@@ -2,234 +2,353 @@
 <html>
 
 <head>
-    <title>Edit Location</title>
-    <link rel="stylesheet" href="../css/form.css">
-    <link rel="stylesheet" href="../css/main.css">
-    <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
+    <title>Edit Household</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/form.css">
+    <link rel="stylesheet" href="./css/main.css">
+
+    <script type="module">
+        import { editEntry, BUKLOD_RULES_TEST, getDocIdByPartnerName, getDocByID } from "/js/firestore_UNIV.js";
+        function populateFormFields(partnerData) {
+            document.getElementById("partner").value = partnerData.name;
+            document.getElementById("partner_contact-person").value = partnerData["`partner-contact`"];
+            document.getElementById("organization").value = partnerData.org;
+            document.getElementById("nature_of_act").value = partnerData.activity;
+            document.getElementById("dates_of_partnership").value = partnerData.dates;
+            document.getElementById("ateneo_office").value = partnerData["`admu-office`"];
+            document.getElementById("ateneo_contact-person").value = partnerData["`admu-contact`"];
+            document.getElementById("ateneo_contact-email").value = partnerData["`admu-email`"];
+        }
+        function fetchPartnerData() {
+            const params = new URLSearchParams(window.location.search);
+            const partnerName = params.get("partnerName");
+            if (partnerName) {
+                getDocIdByPartnerName(partnerName)
+                    .then((docId) => {
+                        if (docId) {
+                            getDocByID(docId).then((doc) => {
+                                populateFormFields(doc);
+                            });
+                        }
+                        else {
+                            alert("No matching document found for the partner name: " + partnerName);
+                        }
+                    });
+            }
+            else {
+                alert("No partnerName parameter found in the URL.");
+            }
+        }
+        //fetchPartnerData();
+
+        document.getElementById("submit_form").addEventListener("click", handleFormSubmit);
+
+        function handleFormSubmit() {
+            var collatedInput = {}; 
+            for(let i = 0; i < BUKLOD_RULES_TEST[2].length; i++){
+                //BUKLOD_RULES_TEST[2] are just the field names of each document
+                // console.log(BUKLOD_RULES_TEST[2][i]);
+                // let q = document.getElementById(BUKLOD_RULES_TEST[2][i]).value;
+                // collatedInput[BUKLOD_RULES_TEST[2][i]] = q;
+
+                let fieldName = BUKLOD_RULES_TEST[2][i];
+                let inputValue = document.getElementById(fieldName).value;
+
+                if (fieldName == 'number_residents' || fieldName == 'location_coordinates' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick') {
+                    if (fieldName == 'location_coordinates') {
+                        //collatedInput[fieldName] = getCoordinates();
+                        collatedInput[fieldName] = inputValue;
+                    } else {
+                        collatedInput[fieldName] = Number(inputValue);
+                    }
+                } 
+                if(fieldName.includes('risk')){
+                    let riskType = fieldName.split('_')
+                    collatedInput[fieldName] = `${document.getElementById(riskType[0]).value.toUpperCase()} RISK: ${document.getElementById(fieldName).value}`;
+                }
+                else {
+                    collatedInput[fieldName] = inputValue;
+                }
+
+                // this is where data validation will happen
+                // add the if-else statements of edge cases here
+            }
+            
+            // TODO:
+            // get docID via  getDocIdByPartnerName/getDocByID
+            // then call editEntry(inp_obj, docId), inp_obj is collatedInput, docID is gotten from getDocIdByPartnerName/getDocByID
+            // so basically editEntry(collatedInput, docID via  getDocIdByPartnerName/getDocByID)
+    
+
+            const partnerName = document.getElementById("partner").value;
+            getDocIdByPartnerName(partnerName)
+                .then((docId) => {
+                    if (docId) {
+                        // If a matching docId is found, proceed with updating the document
+                        const name = partnerName;
+                        const activity = document.getElementById("nature_of_act").value;
+                        const admuContact = document.getElementById("ateneo_contact-person").value;
+                        const admuEmail = document.getElementById("ateneo_contact-email").value;
+                        const admuOffice = document.getElementById("ateneo_office").value;
+                        const org = document.getElementById("organization").value;
+                        const partnerContact = document.getElementById("partner_contact-person").value;
+                        const dates = document.getElementById("dates_of_partnership").value;
+
+                        editLocation(docId, name, activity, admuContact, admuEmail, admuOffice, org, partnerContact, dates);
+                    }
+                    else {
+                        // Handle case when no matching document is found
+                        alert("No matching document found for the partner name: " + partnerName);
+                    }
+                });
+        }
+    </script>
 </head>
 
 <body>
-    <!-- Modal Header: includes title and address -->
-    <div class="formModalHeader">
-        <button type="button" class="closeForm" id="close-btn">
-            <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd"
-                    d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z"
-                    fill="#0F1729" />
-            </svg>
-        </button>
-        <h1 class="formHeader">Edit Household</h1>
-    </div>
-    <div class="formModalContent">
-        <h2 class="subHeader">HOUSEHOLD INFORMATION</h2>
-        <br>
-        <!-- Form -->
-        <div class="inputContainer">
-            <label class="form" for="household_name">Household Name
-            </label>
-            <input type="text" id="household_name" name="household_name" class="attribs" />
+    <div class="modal-container">
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <div>
+                <h1 class="modal-title">Edit Household</h1>
+                <p class="modal-subtitle">Update household information and risk assessment</p>
+            </div>
+            <button type="button" class="close-btn" id="close-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z"
+                        fill="currentColor" />
+                </svg>
+            </button>
         </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="household_address">Address
-            </label>
-            <input type="text" id="household_address" name="household_address" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="household_phase">Phase
-            </label>
-            <input type="text" id="household_phase" name="household_phase" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="contact_number">Contact Number
-            </label>
-            <input type="text" id="contact_number" name="contact_number" class="attribs" maxlength="11"/>
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="residency_status">Residency Status
-            </label>
-            <select name="residency_status" id="residency_status" class="longAttribs">
-                <option value="" disabled selected hidden></option>
-                <option value="May-Ari">May-Ari</option>
-                <option value="Umuupa">Umuupa</option>
-           </select>
 
+        <!-- Modal Content -->
+        <div class="modal-content">
+            <!-- Household Information Section -->
+            <div class="section">
+                <div class="section-header">
+                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    <div>
+                        <h2 class="section-title">Household Information</h2>
+                        <p class="section-description">Basic household details and contact information</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="household_name">Household Name</label>
+                        <input type="text" id="household_name" name="household_name" class="form-input" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="contact_number">Contact Number</label>
+                        <input type="text" id="contact_number" name="contact_number" class="form-input" />
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label" for="household_address">Address</label>
+                        <input type="text" id="household_address" name="household_address" class="form-input" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="household_phase">Phase</label>
+                        <input type="text" id="household_phase" name="household_phase" class="form-input" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="residency_status">Residency Status</label>
+                        <select id="residency_status" name="residency_status" class="form-select">
+                            <option value="">Select status</option>
+                            <option value="Owner">Owner</option>
+                            <option value="Renter">Renter</option>
+                            <option value="Caretaker">Caretaker</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="is_hoa_noa">Part of HOA/NOA</label>
+                        <select id="is_hoa_noa" name="is_hoa_noa" class="form-select">
+                            <option value="">Select option</option>
+                            <option value="HOA">HOA</option>
+                            <option value="NOA">NOA</option>
+                            <option value="None">None</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="household_material">House Materials</label>
+                        <input type="text" id="household_material" name="household_material" class="form-input" placeholder="e.g., Concrete, Wood, Mixed" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="status">Status</label>
+                        <select id="status" name="status" class="form-select">
+                            <option value="">Select status</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                            <option value="Relocated">Relocated</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="nearest_evac">Nearest Evacuation Area</label>
+                        <input type="text" id="nearest_evac" name="nearest_evac" class="form-input" />
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label" for="location_link">Location Link</label>
+                        <input type="text" id="location_link" name="location_link" class="form-input" placeholder="Google Maps or other location link" />
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label" for="location_coordinates">Location Coordinates</label>
+                        <input type="text" id="location_coordinates" name="location_coordinates" class="form-input" placeholder="Latitude, Longitude" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resident Information Section -->
+            <div class="section">
+                <div class="section-header">
+                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <div>
+                        <h2 class="section-title">Resident Information</h2>
+                        <p class="section-description">Details about household members and special conditions</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="number_residents">Total Residents</label>
+                        <input type="number" id="number_residents" name="number_residents" class="form-input" min="0" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="number_minors">Minors (0-17)</label>
+                        <input type="number" id="number_minors" name="number_minors" class="form-input" min="0" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="number_seniors">Senior Citizens (60+)</label>
+                        <input type="number" id="number_seniors" name="number_seniors" class="form-input" min="0" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="number_pwd">PWD</label>
+                        <input type="number" id="number_pwd" name="number_pwd" class="form-input" min="0" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="number_sick">Currently Sick</label>
+                        <input type="number" id="number_sick" name="number_sick" class="form-input" min="0" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="number_pregnant">Pregnant</label>
+                        <input type="number" id="number_pregnant" name="number_pregnant" class="form-input" min="0" />
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label" for="sickness_present">Current Illnesses/Conditions</label>
+                        <input type="text" id="sickness_present" name="sickness_present" class="form-input" placeholder="Describe any current health issues" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Assessment Section -->
+            <div class="section">
+                <div class="section-header">
+                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.854-.833-2.624 0L4.19 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                    <div>
+                        <h2 class="section-title">Risk Assessment</h2>
+                        <p class="section-description">Evaluate various disaster risks for this location</p>
+                    </div>
+                </div>
+
+                <div class="risk-grid">
+                    <label class="risk-label">Earthquake</label>
+                    <div style="display: flex; gap: 12px;">
+                        <select name="earthquake_level" id="earthquake" class="form-select" style="width: 120px;">
+                            <option value="">Level</option>
+                            <option value="HIGH">HIGH</option>
+                            <option value="MEDIUM">MEDIUM</option>
+                            <option value="LOW">LOW</option>
+                        </select>
+                        <input type="text" id="earthquake_risk" name="earthquake_risk" class="form-input" placeholder="Risk description" style="flex: 1;" />
+                    </div>
+                </div>
+
+                <div class="risk-grid">
+                    <label class="risk-label">Fire</label>
+                    <div style="display: flex; gap: 12px;">
+                        <select name="fire_level" id="fire" class="form-select" style="width: 120px;">
+                            <option value="">Level</option>
+                            <option value="HIGH">HIGH</option>
+                            <option value="MEDIUM">MEDIUM</option>
+                            <option value="LOW">LOW</option>
+                        </select>
+                        <input type="text" id="fire_risk" name="fire_risk" class="form-input" placeholder="Risk description" style="flex: 1;" />
+                    </div>
+                </div>
+
+                <div class="risk-grid">
+                    <label class="risk-label">Flood</label>
+                    <div style="display: flex; gap: 12px;">
+                        <select name="flood_level" id="flood" class="form-select" style="width: 120px;">
+                            <option value="">Level</option>
+                            <option value="HIGH">HIGH</option>
+                            <option value="MEDIUM">MEDIUM</option>
+                            <option value="LOW">LOW</option>
+                        </select>
+                        <input type="text" id="flood_risk" name="flood_risk" class="form-input" placeholder="Risk description" style="flex: 1;" />
+                    </div>
+                </div>
+
+                <div class="risk-grid">
+                    <label class="risk-label">Landslide</label>
+                    <div style="display: flex; gap: 12px;">
+                        <select name="landslide_level" id="landslide" class="form-select" style="width: 120px;">
+                            <option value="">Level</option>
+                            <option value="HIGH">HIGH</option>
+                            <option value="MEDIUM">MEDIUM</option>
+                            <option value="LOW">LOW</option>
+                        </select>
+                        <input type="text" id="landslide_risk" name="landslide_risk" class="form-input" placeholder="Risk description" style="flex: 1;" />
+                    </div>
+                </div>
+
+                <div class="risk-grid">
+                    <label class="risk-label">Storm</label>
+                    <div style="display: flex; gap: 12px;">
+                        <select name="storm_level" id="storm" class="form-select" style="width: 120px;">
+                            <option value="">Level</option>
+                            <option value="HIGH">HIGH</option>
+                            <option value="MEDIUM">MEDIUM</option>
+                            <option value="LOW">LOW</option>
+                        </select>
+                        <input type="text" id="storm_risk" name="storm_risk" class="form-input" placeholder="Risk description" style="flex: 1;" />
+                    </div>
+                </div>
+
+                <!-- Error Messages -->
+                <div id="error_messages" class="error-messages"></div>
+            </div>
         </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="HOA/NOA">Part of HOA/NOA
-            </label>
-            <select name="is_hoa_noa" id="is_hoa_noa" class="longAttribs">
-                    <option value="" disabled selected hidden></option>
-                    <option value="HOA">HOA</option>
-                    <option value="NOA">NOA</option>
-                    <option value="N/A">N/A</option>
-            </select>
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="location_link">Location link
-            </label>
-            <input type="text" id="location_link" name="location_link" class="attribs">
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="location_coordinates">Location Coordinates
-            </label>
-            <input type="text" id="location_coordinates" name="location_coordinates" class="attribs" readonly/>
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="household_material">Materials Used for House
-            </label>
-            <select name="household_material" id="household_material" class="longAttribs">
-                    <option value="" disabled selected hidden></option>
-                    <option value="Concrete">Concrete</option>
-                    <option value="Semi-Concrete">Semi-Concrete</option>
-                    <option value="Light materials">Light materials</option>
-                    <option value="Makeshift">Makeshift</option>
-                    <option value="Natural">Natural</option>
-                </select>
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="nearest_evac">Nearest Evactuation Area
-            </label>
-            <input type="text" id="nearest_evac" name="nearest_evac" class="attribs" />
-        </div>
-        <br>
-        <h2 class="subHeader">RESIDENT INFORMATION</h2>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="number_residents">Number of Residents
-            </label>
-            <input type="number" id="number_residents" name="number_residents" class="attribs" min="1"/>
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="number_minors">Number of Minor Residents
-            </label>
-            <input type="number" id="number_minors" name="number_minors" class="attribs" min="0"/>
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="number_seniors">Number of Senior Citizen Residents
-            </label>
-            <input type="number" id="number_seniors" name="number_seniors" class="attribs" min="0"/>
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="number_pwd">Number of PWD Residents
-            </label>
-            <input type="number" id="number_pwd" name="number_pwd" class="attribs" min="0"/>
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="number_pregnant">Number of Pregnant Residents
-            </label>
-            <input type="number" id="number_pregnant" name="number_pregnant" class="attribs" min="0"/>
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="number_sick">Number of Sick Residents
-            </label>
-            <input type="number" id="number_sick" name="number_sick" class="attribs" min="0"/>
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="form" for="sickness_present">Sickness Present
-            </label>
-            <input type="text" id="sickness_present" name="sickness_present" class="attribs" />
-        </div>
-        <br>
-        <h2 class="subHeader">RISK LEVELS</h2>
-        <br>
-        <div class="inputContainer">
-            <label class="disasterForm" for="earthquake">Earthquake
-            </label>
-            <select name="earthquake_level" id="earthquake_risk" class="attribs">
-                <option value="" disabled selected hidden></option>
-                <option value="high">HIGH</option>
-                <option value="medium">MEDIUM</option>
-                <option value="low">LOW</option>
-            </select>
-            <input type="text" id="earthquake_risk_description" name="earthquake_risk" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="disasterForm" for="fire">Fire
-            </label>
-            <select name="fire_level" id="fire_risk" class="attribs">
-                <option value="" disabled selected hidden></option>
-                <option value="high">HIGH</option>
-                <option value="medium">MEDIUM</option>
-                <option value="low">LOW</option>
-            </select>
-            <input type="text" id="fire_risk_description" name="fire_risk" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="disasterForm" for="flood">Flood
-            </label>
-            <select name="flood_level" id="flood_risk" class="attribs">
-                <option value="" disabled selected hidden></option>
-                <option value="high">HIGH</option>
-                <option value="medium">MEDIUM</option>
-                <option value="low">LOW</option>
-            </select>
-            <input type="email" id="flood_risk_description" name="flood" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="disasterForm" for="landslide">Landslide
-            </label>
-            <select name="landslide_level" id="landslide_risk" class="attribs">
-                <option value="" disabled selected hidden></option>
-                <option value="high">HIGH</option>
-                <option value="medium">MEDIUM</option>
-                <option value="low">LOW</option>
-            </select>
-            <input type="email" id="landslide_risk_description" name="landslide" class="attribs" />
-        </div>
-        <br>
-        <div class="inputContainer">
-            <label class="disasterForm" for="storm">Storm
-            </label>
-            <select name="storm_level" id="storm_risk" class="attribs">
-                <option value="" disabled selected hidden></option>
-                <option value="high">HIGH</option>
-                <option value="medium">MEDIUM</option>
-                <option value="low">LOW</option>
-            </select>
-            <input type="email" id="storm_risk_description" name="storm_risk_description" class="attribs" />
-        </div>
-        <br>
-        <br><br>
-        <!-- Error Messages -->
-        <div id="error_messages"></div>
-        <br><br>
-        <!-- Buttons -->
-        <div>
-            <!-- Submits contents of the form -->
-            <button class="confirm form" type="submit" id="submit_form" name="submit_form">Save</button>
-        </div>
-        <br>
-        <div>
-            <!-- Clears all contents of the form -->
-            <button onclick="resetForm()" class="clear form">Clear</button>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary">Delete Household</button>
+            <button type="submit" id="submit_form" name="submit_form" class="btn btn-primary">Save Changes</button>
         </div>
     </div>
-    <div class="formModalFooter"></div>
-
-    <script type="module">
-        //Call function from firestore.js to edit household values from input fields after pressing submit button
-        import {editEntry, setCollection, BUKLOD_RULES_TEST, getDocIdByPartnerName, getDocByID} from "/js/firestore_UNIV.js";
-        import {submitEditForm} from '../js/firestore.js';
-        document.getElementById("submit_form").addEventListener("click", submitEditForm);
-    </script>
 
     <script>
         function resetForm() {
@@ -256,15 +375,11 @@
             window.parent.postMessage('closeEditModal', '*');
         }
 
-        document
-            .getElementsByClassName('closeForm')[0]
-            .addEventListener('click', function (event) {
-                event.preventDefault();
-                console.log(
-                    'The user has closed the Edit Activity modal.'
-                );
-                closeModal();
-            });
+        document.getElementById('close-btn').addEventListener('click', function (event) {
+            event.preventDefault();
+            console.log('The user has closed the Edit Household modal.');
+            closeModal();
+        });
     </script>
 </body>
 

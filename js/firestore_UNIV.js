@@ -475,15 +475,13 @@ export function addEntry(inp_obj) {
 			return addDoc(collection_reference, input)
 				.then((docRef) => {
 					console.log(docRef);
-					alert("You may now reload the page for your addition to reflect on this page");
-					window.parent.location.reload();
-
-    })
-    .catch((error) => {
-      console.error('Error adding document: ', error);
-      alert("Error uploading new activity. Please try again");
-    });
-}
+					return docRef; // Return the document reference for success handling
+				})
+				.catch((error) => {
+					console.error('Error adding document: ', error);
+					throw error; // Re-throw the error so the form can catch it
+				});
+		}
 	}
 	
 	// Return a rejected Promise if no matching collection found
@@ -498,7 +496,7 @@ export function editEntry(inp_obj,docId) {
 			const DOC_REFERENCE = doc(DB, rule[0], docId);
 			updateDoc(DOC_REFERENCE, inp_obj)
 				.then(() => {
-					alert("You may now reload the page for your edit to reflect on this page");
+					alert("You may now reload the page for your edit to reflect on this page.");
 				})
 				.catch((error) => {
 					console.error('Error adding document: ', error);

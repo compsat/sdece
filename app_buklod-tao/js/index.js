@@ -130,20 +130,122 @@ evacCenters.forEach(center => {
       iconSize: [39,39],
       popupAnchor: [0.5, -15]
     })}
-  ).addTo(map)
+  ).addTo(map);
+
+  marker.bindPopup(`
+    <div class = "evac-marker-header">${center.type}</div>
+    <div style = "text-align:center;">
+      <b>${center.name}</b>
+      <br>Location: ${center.latitude}, ${center.longitude}
+    </div>`);
 });
 
+partnersArray.forEach((partner) => {
+    var doc = partner;
+    if (doc.location_coordinates != null) {
+      var this_marker = partner.marker;
+      //console.log(doc.location_coordinates);
+      this_marker = L.marker([
+        parseFloat(doc.location_coordinates._lat),
+        parseFloat(doc.location_coordinates._long),
+      ]);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution:
-    '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
-  }).addTo(map);
+      // shows partner info on pin click
+      var popupContent = onPinClick(doc);
+      this_marker.bindPopup(popupContent);
+      this_marker.on('popupopen', function(e) {
+        var editBtn = document.getElementById('editHouseholdPopup')
+        if (editBtn) {
+          editBtn.addEventListener('click', function() {
+            const modal = document.getElementById('partnerModal');
+            var editFormModal = document.getElementById('editModal');
+            editFormModal.style.display = 'flex';
+            modal.style.display = 'none';
+            populateEditForm(doc, editFormModal)
+          })
+        }
+      })
+      results.addLayer(this_marker);
+      Object.defineProperty(partner, "marker", {value:this_marker, configurable: true});
+    }
+  });
 
-var searchControl = L.esri.Geocoding.geosearch().addTo(map);
+addListeners();
 
-var results = L.layerGroup().addTo(map);
-var popup = L.popup();
+function onMapClick(e) {
+  const lat = e.latlng.lat;
+  const lng = e.latlng.lng;
 
+  // This is the popup for when the user clicks on a spot on the map
+  var popupContent = `
+    <div class="partner-geolocation">
+      Latitude: ${lat}<br>
+      Longitude: ${lng}
+    </div>
+    <button class="addButton" data-lat="${lat}" data-lng="${lng}">Add Household</button>
+  `;
+
+  // Custom popup for add household
+  var customPopup = L.popup({
+    className: 'add-household-popup-compact'
+  });
+  
+  customPopup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
+  popup = customPopup;
+
+  // Event listener for the Add Household button using event delegation
+  setTimeout(() => {
+    var addButton = document.querySelector('.addButton');
+    if (addButton) {
+      addButton.addEventListener('click', function () {
+        const lat = this.getAttribute('data-lat');
+        const lng = this.getAttribute('data-lng');
+
+        var modal = document.getElementById('addModal');
+
+        // Display the modal
+        modal.style.display = 'flex';
+
+        // Set the coordinates in the iframe form
+        var iframe = modal.getElementsByTagName('iframe')[0];
+        var iframeDocument = iframe.contentWindow.document;
+        
+        // Wait for iframe to load then set coordinates
+        iframe.onload = function() {
+          var locationField = iframeDocument.getElementById('location_coordinates');
+          if (locationField) {
+            locationField.value = lat + ',' + lng;
+          }
+        };
+        
+        // If iframe is already loaded, set coordinates immediately
+        if (iframe.contentWindow.document.readyState === 'complete') {
+          var locationField = iframeDocument.getElementById('location_coordinates');
+          if (locationField) {
+            locationField.value = lat + ',' + lng;
+          }
+        }
+
+        // Close the popup after opening modal
+        map.closePopup();
+      });
+    }
+  }, 100);
+}
+
+// Add message listener for iframe communication
+window.addEventListener('message', function(event) {
+  if (event.data === 'closeAddModal') {
+    var modal = document.getElementById('addModal');
+    modal.style.display = 'none';
+  }
+  if (event.data === 'closeEditModal') {
+    var modal = document.getElementById('editModal');
+    modal.style.display = 'none';
+  }
+});
+
+map.on('click', onMapClick);
 
 //// Event Listeners
 searchControl.on('results', function (data) {
@@ -156,12 +258,12 @@ searchControl.on('results', function (data) {
   }
 });
 
-// Script for add household modal
+//script for add household modal
 
-// Modal
+// modal
 var formModal = document.getElementById('addModal');
 
-// Open modal
+// open modal
 var openForm = document.getElementById('mainButton');
 
 // Get the <span> element that closes the modal
