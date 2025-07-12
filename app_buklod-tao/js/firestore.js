@@ -112,7 +112,7 @@ const loadData = async() => {
 
 			// Set attributes
 			anchor.href = '#';
-			let marker = L.marker([0, 0]);
+			//let marker = L.marker([0, 0]);
 
 			Object.defineProperty(partner, "marker", {value:marker, configurable: true});
 
