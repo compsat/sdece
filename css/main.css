@@ -1,4 +1,4 @@
-@import url('/app_sdece/css/globals.css');
+@import url('variables.css');
 
 /* Reset default margin and spacing */
 * {

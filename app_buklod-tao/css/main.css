@@ -38,11 +38,14 @@ body {
 }
 
 .side-nav {
-	background-color: #ffffff;
-	width: 400px;
-	overflow-y: scroll;
-	overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+	max-width: 320px;
+	width: 100%;
+	overflow: hidden;
 	position: relative;
+  background-color: #ffffff;
 	border-right: 1px solid #e0e0e0;
 }
 
@@ -52,19 +55,21 @@ body {
 	width: 100%;
 	background-color: #ffffff;
 	padding: 1.5rem;
+	box-sizing: border-box;
 	z-index: 10;
 }
 
 .side-nav-header-top {
 	display: flex;
 	align-items: center;
-	margin-bottom: 1.5rem;
+	margin-bottom: 1rem;
 }
 
 .map-title {
 	font-size: 1.25rem;
 	font-weight: 500;
 	color: #111827;
+	font-family: 'Geist', sans-serif;
 }
 
 .actions-container {
@@ -81,15 +86,22 @@ body {
 	font-size: 0.875rem;
 	color: #374151;
 	cursor: pointer;
+	font-family: 'Geist', sans-serif;
 }
 
 .action-btn:hover {
 	background-color: #f9fafb;
 }
 
+#risk-sort {
+  width: 100%;
+}
+
 .partners-header {
 	padding: 0 1.5rem 0.75rem;
 	border-bottom: 1px solid #eeeeee;
+	max-width: 100%;
+	box-sizing: border-box;
 }
 
 #partners-count {
@@ -97,20 +109,26 @@ body {
 	color: #6b7280;
 	font-weight: 500;
 	letter-spacing: 0.05em;
+	font-family: 'Geist', sans-serif;
 }
 
 .entries {
-	background-color: #ffffff;
+	flex-grow: 1;
+  overflow-y: auto;
+  scrollbar-color: rgba(0,0,0,0.01) transparent;
+  background-color: #ffffff;
 	width: 100%;
+}
+.entries:hover {
+  scrollbar-color: rgba(0,0,0,0.2) transparent;
 }
 
 .accordion {
 	cursor: pointer;
-	padding-top: 0.5rem;
-	padding-bottom: 1rem;
-	padding-left: 2rem;
-	padding-right: 2rem;
+	padding: 0.5rem 1rem 1rem;
+	max-width: 75%;
 	width: 100%;
+	box-sizing: border-box;
 	/* border-bottom: 1px solid #eeeeee; */
 }
 
@@ -153,7 +171,7 @@ body {
   background-color: #F6F6F6;
   border: transparent;
   background-position: calc(100% - 16px) center;
-  font-family: 'Geist';
+  font-family: 'Geist', sans-serif;
   font-size: 18px;
   letter-spacing: 0.5px;
   background-image: url("../img/search-icon.png");
@@ -360,7 +378,9 @@ ul.accordion {
 
 li.accordion {
   display: flex;
-  padding: 24px 32px;
+  padding: 0.75rem;
+  max-width: 100%;
+  box-sizing: border-box;
   /* border-bottom: 0.5px solid #bdbdbd; */
 }
 
@@ -380,7 +400,7 @@ a.accordion {
 }
 h1.entries {
   color: #000;
-  font-family: Geist;
+  font-family: 'Geist', sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -452,7 +472,7 @@ h1.entries {
 
 /* modal text */
 .modalLabel {
-  font-family: 'Geist';
+  font-family: 'Geist', sans-serif;
   font-size: 16px;
   color: #000;
   font-weight: 750;
@@ -463,7 +483,7 @@ h1.entries {
 .modalName {
   position: relative;
   color: #387181;
-  font-family: Geist;
+  font-family: 'Geist', sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 750;
@@ -513,7 +533,7 @@ button.collapsible {
   width: 100%;
   height: 50px;
   color: #3D97AF;
-  font-family: 'Geist';
+  font-family: 'Geist', sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 750;
@@ -638,7 +658,7 @@ button.collapsible {
   gap: 8px;
   border-radius: 8px;
   border: 0;
-  font-family: Geist;
+  font-family: 'Geist', sans-serif;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -710,8 +730,8 @@ button.collapsible {
 }
 
 .form-modal {
-	width: 90%;
-	max-width: 600px;
+	width: 100%;
+	max-width: 800px;
 	height: 80%;
 	border: none;
 	border-radius: 8px;
@@ -895,6 +915,32 @@ button.collapsible {
   height: 1px;
   background-color: #e2e8f0;
   margin: 0.4em 0;
+}
+
+.popup-edit-section {
+  margin-top: 1.5rem;
+  text-align: center;
+  padding-bottom: 0.5rem;
+}
+
+.popup-edit-btn {
+  background: transparent;
+  border: none;
+  color: #1a357b;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: 'Geist', sans-serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+.popup-edit-btn:hover {
+  background-color: #f0f9ff;
 }
 
 .popup-card {

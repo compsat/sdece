@@ -38,75 +38,9 @@
   <link rel="stylesheet" href="css/form.css">
   <script type="module" src="./js/firestore.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-  <!-- Map switching between root index and app_buklod_tao. Remove if not needed.
-   This just allows for easier map switching during development.-->
-  <script type="module">
-          import {
-            setCollection,
-            getCollection,
-            DB_RULES_AND_DATA,
-          } from "/js/firestore_UNIV.js";
-          import {
-            readyField,
-            clearMarkers,
-            clearLocationList,
-            map,
-            loadJsCssFiles,
-            createJsCssFiles,
-          } from "/js/index_UNIV.js";
-          import {
-            getDocs,
-            query,
-          } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
-          import {
-            getCurrentBranchCookie,
-            setCurrentBranchCookie,
-          } from "/js/cookies.js";
-
-          var collections = document.getElementById("collections");
-
-          for (let rule of DB_RULES_AND_DATA) {
-            collections.innerHTML += `<option value="${
-              rule[0]
-            }"> ${readyField(rule[0])}</option>`;
-          }
-
-        collections.addEventListener("change", function () {
-        const SELECTED = collections.value;
-        console.log(SELECTED)
-
-        setCurrentBranchCookie("current_branch", SELECTED);
-
-        if (
-            SELECTED.includes("sdece-official") || 
-            SELECTED.includes("sdece-official-TEST")
-          ) {
-            window.location.href = "../index.html";
-            console.log("switched");
-          } else {
-            setCollection(SELECTED);
-            location.reload();
-          }
-
-      });
-
-      const DEFAULT_BRANCH = "sdece-official";
-
-      if (getCurrentBranchCookie() === null) {
-        setCollection(DEFAULT_BRANCH);
-        setCurrentBranchCookie("current_branch", DEFAULT_BRANCH);
-        loadJsCssFiles(DEFAULT_BRANCH);
-        collections.value = DEFAULT_BRANCH; // Keep dropdown in sync
-      } else {
-        setCollection(getCurrentBranchCookie());
-        collections.value = getCurrentBranchCookie();
-        loadJsCssFiles(getCurrentBranchCookie());
-      }
-
-        </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
 </head>
 
 <body>
@@ -119,106 +53,53 @@
         </div>
         <div class="actions-container">
           <button class="action-btn">Filter</button>
-          <button class="action-btn">Sort</button>
-          <button class="action-btn" id="download-csv">Export data</button>
+          <button class="action-btn" id="sortBtn">Sort</button>
+          <button class="action-btn" id="download-report">Export data</button>
         </div>
+        <select name="risk" id="risk-sort" class="action-btn">
+          <option value="earthquake-sort">Earthquake</option>
+          <option value="fire-sort">Fire</option>
+          <option value="flood-sort">Flood</option>
+          <option value="landslide-sort">Landslide</option>
+          <option value="storm-sort">Storm</option>
+        </select>
       </div>
       <div class="partners-header">
-        <span id="partners-count">PARTNERS</span>
-          <br>
-          <button class="action-btn" id="download-report">Export data</button>
-          <br>
-          <select name="risk" id="risk-sort">
-            <option value="earthquake-sort">Earthquake</option>
-            <option value="fire-sort">Fire</option>
-            <option value="flood-sort">Flood</option>
-            <option value="landslide-sort">Landslide</option>
-            <option value="storm-sort">Storm</option>
-          </select>
+        <span id="partners-count">HOUSEHOLDS</span>
       </div>
       <div class="entries">
         <ul id="locationList"></ul>
       </div>
-
-      <!-- Login/Logout header -->
-      <div class="topBar">
-        <!-- Logout Button -->
-        <button class="buttonLogout"><img class="logoutIcon" src="./img/logout.256x256.png" alt="logout"> Logout</button>
-      
-      </div>
     </div>
+
     <!-- Right container containing map -->
     <div class="main-container">
       <div id="map" class="map-container"></div>
     </div>
   </div>
 
-  <!-- MODALS -->
+  <!-- POP UP MODALS -->
 
-  <!-- Partner Modal: This is the modal that shows up when clicking on a household entry in the side navigation panel OR the pop-up of a map marker pin. -->
+  <!-- Main Modal: This is the modal that shows up when clicking on a household entry -->
   <div id="partnerModal" class="modal">
-    <!-- Modal Header -->
-    <div class="modal-header">
-      <p id="modalHeader"></p>
-    </div>
-
-    <!-- Modal Content -->
-    <div class="modal-content" id="modalContent">
-      <!-- NOTE: This is where all household modal content should go -->
-    </div>
-
-    <!-- Buttons -->
-    <span class="modal-button">
-      <!-- Edit -->
-      <button class="edit-button partner-hover">
-        Edit
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="modal-button-icon"
-        >
-          <path
-            d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8"
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-          ></path>
-          <polygon
-            fill="none"
-            points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-          ></polygon>
-        </svg>
-      </button>
-    </span>
   </div>
 
   <!-- Add Modal: This is the modal that shows up when adding a new household -->
   <div class="modal-screen" id="addModal">
-    <iframe src="./addloc.html" class="form-modal"></iframe>
+    <iframe src="html/addloc.html" class="form-modal"></iframe>
   </div>
 
   <!-- Edit Modal: This is the modal that shows up when clicking on the Edit button -->
   <div class="modal-screen" id="editModal">
-    <iframe src="./editloc.html" class="form-modal"></iframe>
+    <iframe src="html/editloc.html" class="form-modal"></iframe>
   </div>
 
-  <!-- Message Modal: This is the modal that displays a message. Used to indicate form submission success -->
-  <div class="modal-screen" id="messageModal">
-    <iframe src="./sdece/html/message_modal.html" class="message-modal"></iframe>
-  </div>
+  <!--script for map-->
+  <script type="module" src="js/index.js"></script> 
 
-  <!-- SCRIPTS -->
+  
   <script>
-    // This hides the Add Activity modal when the user submits the form
+    // Code logic to hide the Add Activity modal when the user submits the form
     window.addEventListener('message', function (event) {
       if (
         event.data &&
@@ -248,27 +129,70 @@
         }, 3000);
       }
     });
+   
+  // script for search bar- search includes only name 
+  const searchBar = document.getElementById('search-bar-component');
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const searchBar = document.getElementById('search-bar-component');
-      searchBar.addEventListener('search', (e) => {
-        const searchTerm = e.detail;
-        
-        let container = document.getElementById('locationList');
-        let partnerContainers = container.getElementsByClassName('partnerDiv');
+  searchBar.addEventListener('search', (event) => {
+    const query = event.detail;  
+    console.log('Searching for:', query);
 
-        for (let i = 0; i < partnerContainers.length; i++) {
-          let nameElement = partnerContainers[i].getElementsByClassName('name')[0];
-          let name = nameElement.textContent.toLowerCase();
+    searchEntries(query);
+  });
 
-          if (name.includes(searchTerm)) {
-            partnerContainers[i].style.display = 'flex';
-          } else {
-            partnerContainers[i].style.display = 'none';
-          }
-        }
-      });
+  function searchEntries(query) {
+    const input = query.toUpperCase();
+    const entries = document.querySelectorAll('#locationList .container-entry');
+
+    entries.forEach(entry => {
+      const nameDiv = entry.querySelector('.name');
+      const txtValue = nameDiv ? nameDiv.textContent : '';
+      if (txtValue.toUpperCase().indexOf(input) > -1) {
+        entry.style.display = "";
+      } else {
+        entry.style.display = "none";
+      }
     });
+  }
+
+let originalItems = [];
+
+function sortButton() {
+  const sortBtn = document.getElementById('sortBtn');
+  const locationList = document.getElementById('locationList');
+  let sortState = 'asc'; // Start with ascending on first click
+
+  sortBtn.addEventListener('click', () => {
+    console.log("SORT CLICKED");
+    let items = Array.from(locationList.querySelectorAll('.container-entry'));
+
+    items.sort((a, b) => {
+      const nameA = a.querySelector('.name').textContent.trim().toUpperCase();
+      const nameB = b.querySelector('.name').textContent.trim().toUpperCase();
+
+      return sortState === 'asc'
+        ? nameA.localeCompare(nameB)
+        : nameB.localeCompare(nameA);
+    });
+
+    // Toggle sort state for next click
+    sortState = (sortState === 'asc') ? 'desc' : 'asc';
+    console.log(`Sorted ${sortState === 'asc' ? 'descending' : 'ascending'}`);
+
+    // Clear and re-append sorted items
+    locationList.innerHTML = '';
+    items.forEach(item => locationList.appendChild(item));
+  });
+}
+
+
+// ✅ After you load entries:
+// After your list is built
+
+
+// ✅ Call it!
+sortButton();
+
 
     // Function to hide the div containing the iframe
     function hideModalContainer(modal) {
@@ -278,7 +202,7 @@
       }
     }
 
-    // Add an event listener to handle messages from the iframe
+    // Code logic to add an event listener to handle messages from the iframe
     window.addEventListener('message', function (event) {
       if (event.data === 'closeAddModal') {
         hideModalContainer('addModal');
@@ -289,21 +213,9 @@
       if (event.data === 'closeMainModal') {
         hideModalContainer('mainModal');
       }
-      if (event.data === 'closeMessageModal') {
-        hideModalContainer('messageModal');
-      }
-      // TEST: remove later
-      if (event.data === 'testMessageModal') {
-        console.log('testing message modal');
-        const messageModal =
-          document.getElementById('messageModal');
-        messageModal.style.display = 'flex';
-      }
     });
   </script>
 
-  <!--script for map-->
-  <script type="module" src="js/index.js"></script>
 </body>
 
 </html>

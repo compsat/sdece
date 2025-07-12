@@ -194,13 +194,13 @@ const VALIDATION_RULES = {
 	//Rules for Validating Data
 	'buklod-official-TEST': {
     household_name: { label: "Household Name", type: 'string', required: true, maxLength: 127 },
-		contact_number: {
-      label: "Contact Number",
-			type: 'string',
-			required: true,
-			minLength: 11,
-			maxLength: 11,
-			regex: /^09[0-9]{9}$/,
+	contact_number: {
+		label: "Contact Number",
+		type: 'string',
+		required: true,
+		minLength: 11,
+		maxLength: 11,
+		regex: /^09[0-9]{9}$/,
 		},
     number_residents: { label: "Number of Residents", type: 'number', required: true , 'minimum': 1},
 		number_minors: { label: "Number of Minor Residents", type: 'number', 'minimum': 0 },
@@ -417,7 +417,6 @@ export function getDocIdByPartnerName(partner_name) {
       if (!querySnapshot.empty) {
         // Assuming there is only one document with the given partner name
         const doc = querySnapshot.docs[0];
-        console.log(doc);
         return doc.id;
       } else {
         return null;
@@ -442,7 +441,6 @@ export function getDocsByPartnerName(partner_name) {
     .then((querySnapshot) => {
       if (!querySnapshot.empty) {
         const docs = querySnapshot.docs;
-        console.log(docs);
         return docs;
       } else {
         return null;
@@ -455,12 +453,18 @@ export function getDocsByPartnerName(partner_name) {
 }
 
 export function getDocByID(docId) {
-  const DOC_REFERENCE = doc(DB, rule_reference[0], docId); let docObj = {};
-  return getDoc(DOC_REFERENCE).then((doc) => {
-    docObj = doc;
-    return docObj;
+  const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
+  return getDoc(DOC_REFERENCE).then((docSnap) => {
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      console.warn("Document not found for ID:", docId);
+      return null;
+    }
   });
 }
+
+
 
 export function addEntry(inp_obj) {
 	for (let rule of DB_RULES_AND_DATA) {
@@ -468,7 +472,6 @@ export function addEntry(inp_obj) {
 			let input = {}; // contents depend on the rule engine
 			for (let i = 0; i < Object.keys(inp_obj).length; i++) {
 				input[rule[2][i]] = inp_obj[rule[2][i]];
-				console.log(input);
 			}
 			
 			// Return the Promise so the form can handle success/error
@@ -491,12 +494,11 @@ export function addEntry(inp_obj) {
 export function editEntry(inp_obj,docId) {
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_reference.id) {
-			console.log(inp_obj);
-			console.log("entered");
 			const DOC_REFERENCE = doc(DB, rule[0], docId);
 			updateDoc(DOC_REFERENCE, inp_obj)
 				.then(() => {
-					alert("You may now reload the page for your edit to reflect on this page.");
+					alert("You may now reload the page for your edit to reflect on this page");
+					window.parent.location.reload(); 
 				})
 				.catch((error) => {
 					console.error('Error adding document: ', error);
@@ -578,8 +580,20 @@ export function validateData(collectionName, data) {
 			continue;
 		}
 
-		//no validation for geolocation yet
-	}
+		// Check for regex pattern
+		if (rule.regex && typeof value === 'string') {
+			if (!rule.regex.test(value)) {
+				if (fieldLabel == 'Contact Number') {
+					errors.push(`${fieldLabel} is not in the correct format. Number be in the format 09xxxxxxxxx.`);
+					continue;
+				}
+				if (fieldLabel == 'Location Link') {
+					errors.push(`${fieldLabel} is not in the correct format.`);
+					continue;
+				}
+			}
+		}
 
+	}
 	return errors;
 }
