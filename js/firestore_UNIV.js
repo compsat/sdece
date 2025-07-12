@@ -238,16 +238,16 @@ const VALIDATION_RULES = {
 			],
 		},
 		
-		landslide_risk: { type: 'string', required: true },
-		landslide_risk_description:{type: 'string', required: false},
-		earthquake_risk: { type: 'string', required: true },
-		earthquake_risk_description:{type: 'string', required: false},
-		fire_risk: { type: 'string', required: true },
-		fire_risk_description:{type: 'string', required: false},
-		flood_risk: { type: 'string', required: true },
-		flood_risk_description:{type: 'string', required: false},
-		storm_risk: { type: 'string', required: true },
-		storn_risk_description:{type: 'string', required: false},
+    landslide_risk: { label: 'Landslide Risk', type: 'string', required: true },
+		landslide_risk_description:{ label: 'Landslide Risk Description', type: 'string', required: false},
+		earthquake_risk: { label: 'Earthquake Risk', type: 'string', required: true },
+		earthquake_risk_description:{ label: 'Earthquake Risk Description', type: 'string', required: false},
+		fire_risk: { label: 'Fire Risk', type: 'string', required: true },
+		fire_risk_description:{ label: 'Fire Risk Description', type: 'string', required: false},
+		flood_risk: { label: 'Flood Risk', type: 'string', required: true },
+		flood_risk_description:{ label: 'Flood Risk Description', type: 'string', required: false},
+		storm_risk: { label: 'Storm Risk', type: 'string', required: true },
+		storm_risk_description: { label: 'Storm Risk Description', type: 'string', required: false},
 
 		nearest_evac: { type: 'string', required: true, maxLength: 255 },
 	},
@@ -299,16 +299,16 @@ const VALIDATION_RULES = {
 		},
 		household_phase: { type: 'string', required: true },
 
-		landslide_risk: { type: 'string', required: true },
-		landslide_risk_description:{type: 'string', required: false},
-		earthquake_risk: { type: 'string', required: true },
-		earthquake_risk_description:{type: 'string', required: false},
-		fire_risk: { type: 'string', required: true },
-		fire_risk_description:{type: 'string', required: false},
-		flood_risk: { type: 'string', required: true },
-		flood_risk_description:{type: 'string', required: false},
-		storm_risk: { type: 'string', required: true },
-		storn_risk_description:{type: 'string', required: false},
+    landslide_risk: { label: 'Landslide Risk', type: 'string', required: true },
+		landslide_risk_description:{ label: 'Landslide Risk Description', type: 'string', required: false},
+		earthquake_risk: { label: 'Earthquake Risk', type: 'string', required: true },
+		earthquake_risk_description:{ label: 'Earthquake Risk Description', type: 'string', required: false},
+		fire_risk: { label: 'Fire Risk', type: 'string', required: true },
+		fire_risk_description:{ label: 'Fire Risk Description', type: 'string', required: false},
+		flood_risk: { label: 'Flood Risk', type: 'string', required: true },
+		flood_risk_description:{ label: 'Flood Risk Description', type: 'string', required: false},
+		storm_risk: { label: 'Storm Risk', type: 'string', required: true },
+		storm_risk_description: { label: 'Storm Risk Description', type: 'string', required: false},
 
 		nearest_evac: { type: 'string', required: true, maxLength: 255 },
 	},
@@ -330,14 +330,14 @@ const VALIDATION_RULES = {
 			maxLength: 11,
 			regex: /^09\d{9}$/
 		},
-		partner_email: { type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
-		activity_name: { type: 'string', required: true },
-		activity_nature: { type: 'string', required: true, maxLength: 255 },
-		activity_date: { type: 'date', required: true },
-		additional_partnership: { type: 'string', maxLength: 255 },
-		organization_unit: { type: 'string', maxLength: 127 },
-		ADMU_office: { type: 'string', required: true, maxLength: 127 },
-		ADMU_contact_name: { type: 'string', required: true, maxLength: 255 },
+    partner_email: { label: 'Email of Contact Person/Partner', type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
+		activity_name: { label: 'Activity Name', type: 'string', required: true },
+		activity_nature: { label: 'Nature of Activity', type: 'string', required: true, maxLength: 255 },
+		activity_date: { label: 'Date of Partnership', type: 'string', required: true, regex: /^\d{4}-\d{2}-\d{2}$/ },
+		additional_partnership: { label: 'Additional Partnership', type: 'string', maxLength: 255 },
+		organization_unit: { label: 'Organization Unit', type: 'string', maxLength: 127 },
+		ADMU_office: { label: 'Name of Office', type: 'string', required: true, maxLength: 127 },
+		ADMU_contact_name: { label: 'Name of Ateneo Contact Person', type: 'string', required: true, maxLength: 255 },
 		ADMU_email: {
       label: "Email of Ateneo Contact Person",
 			type: 'string',
@@ -365,14 +365,14 @@ const VALIDATION_RULES = {
 			maxLength: 11,
 			regex: /^09\d{9}$/,
 		},
-		partner_email: { type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
-		activity_name: { type: 'string', required: true },
-		activity_nature: { type: 'string', required: true, maxLength: 255 },
-		activity_date: { type: 'date', required: true },
-		additional_partnership: { type: 'string', maxLength: 255 },
-		organization_unit: { type: 'string', maxLength: 127 },
-		ADMU_office: { type: 'string', required: true, maxLength: 127 },
-		ADMU_contact_name: { type: 'string', required: true, maxLength: 255 },
+    partner_email: { label: 'Email of Contact Person/Partner', type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
+		activity_name: { label: 'Activity Name', type: 'string', required: true },
+		activity_nature: { label: 'Nature of Activity', type: 'string', required: true, maxLength: 255 },
+		activity_date: { label: 'Date of Partnership', type: 'string', required: true, regex: /^\d{4}-\d{2}-\d{2}$/ },
+		additional_partnership: { label: 'Additional Partnership', type: 'string', maxLength: 255 },
+		organization_unit: { label: 'Organization Unit', type: 'string', maxLength: 127 },
+		ADMU_office: { label: 'Name of Office', type: 'string', required: true, maxLength: 127 },
+		ADMU_contact_name: { label: 'Name of Ateneo Contact Person', type: 'string', required: true, maxLength: 255 },
 		ADMU_email: {
       label: "Email of Ateneo Contact Person",
 			type: 'string',
@@ -507,114 +507,68 @@ export function editEntry(inp_obj,docId) {
 export function validateData(collectionName, data) {
 	const rules = VALIDATION_RULES[collectionName];
 	var errors = [];
-	const fieldLabels = {
-		'activity_name': 'Activity Name',
-		'activity_nature': 'Nature of Activity',
-		'activity_date': 'Date of Partnership',
-		'additional_partnership': 'Additional Partnership',
-		'organization_unit': 'Organization Unit',
-		'partner_name': 'Name of Host Partner',
-		'partner_address': 'Address of Host Partner',
-		'partner_contact_name': 'Name of Contact Person',
-		'partner_contact_number': 'Number of Contact Person',
-		'partner_email': 'Email of Contact Person / Partner',
-		'partner_coordinates': 'Partner Coordinates',
-		'ADMU_office': 'Name of Office',
-		'ADMU_contact_name': 'Name of Ateneo Contact Person',
-		'ADMU_email': 'Email of Ateneo Contact Person',
-		'household_name': 'Household Name',
-		'contact_number': 'Contact Number',
-		'number_residents': 'Number of Residents',
-		'number_minors': 'Number of Minor Residents',
-		'number_seniors': 'Number of Senior Residents' ,
-		'number_pregnant': 'Number of Pregnant Residents',
-		'number_pwd': 'Number of PWD Residents',
-		'number_sick': 'Number of Sick Residents',
-		'sickness_present': 'Sickness Present',
-		'residency_status': 'Residency Status',
-		'is_hoa_noa': 'Is HOA/NOA',
-		'location_coordinates': 'Location Coordinates',
-		'location_link': 'Location Link',
-		'household_address': 'Household Address',
-		'household_material': 'Household Material',
-		'household_phase': 'Household Phase',
-		'landslide_risk': 'Landslide Risk',
-		'landslide_risk_description': 'Landslide Risk Description',
-		'earthquake_risk': 'Earthquake Risk',
-		'earthquake_risk_description': 'Earthquake Risk Description',
-		'fire_risk': 'Fire Risk',
-		'fire_risk_description': 'Fire Risk Description',
-		'flood_risk': 'Flood Risk',
-		'flood_risk_description': 'Flood Risk Description',
-		'storm_risk': 'Storm Risk',
-		'storm_risk_description': 'Storm Risk Description',
-		'nearest_evac': 'Nearest Evacuation Center',
-	};
 
 	for (const field in rules) {
 		const rule = rules[field];
 		const value = data[field];
-		const fieldLabel = fieldLabels[field] || field;
-		
-		console.log("entered validation");
-		// Check for required field
-		if (
-			rule.required &&
-			(value == undefined || value == null || value == '' || 
-				value == ' RISK: ' || String(value).startsWith(' RISK:') ) // checks if risk for buklod tao is empty
-		) {
-			errors.push(`${fieldLabel} is required.`);
+		const fieldLabel = rule.label || field;
+    console.log(fieldLabel);
+
+    // Required Test
+    const IS_EMPTY = value == undefined || value == null || value == ''
+    if ( 
+      (rule.required && IS_EMPTY)|| 
+      (!rule.required && IS_EMPTY)
+    ) {
+      if (rule.required) {
+        errors.push(`${fieldLabel} is required.`);
+      }
+      continue;
+    } 
+
+    // this is at the beginning so that if it's not required, it doesn't check the rest of
+    // the rules. 
+
+    const MIN_LENGTH_TEST = rule.minLength && typeof value == 'string' && value.length < rule.minLength
+    // this will stay here until sdece team implements front-end validation of phone
+    // number
+
+    // Map of Validation Tests
+    const VALIDATION_TEST = new Map([
+      ["date_test", rule.type === "date" && isNaN(new Date(value).getTime())],
+      ["type_test", rule.type && typeof value != rule.type],
+      ["min_length_test", MIN_LENGTH_TEST],
+      ["min_value_test", rule.minimum !== undefined && typeof value === 'number' && value < rule.minimum], 
+      ["max_length_test", rule.maxLength && typeof value == 'string' && value.length > rule.maxLength], 
+      ["regex_test", rule.regex && !rule.regex.test(value)],
+    ]);
+
+    // Map of Error Messages
+    const ERROR_MESSAGES = new Map([
+      ["date_test", `${fieldLabel} must be a valid date.`],
+      ["type_test", `${fieldLabel} must be of type ${rule.type}. type is ${value}`],
+      ["min_length_test", `${fieldLabel} must be at least ${rule.minLength} characters long.`],
+      ["min_value_test", `${fieldLabel} must be at least ${rule.minimum}.`],
+      ["max_length_test", `${fieldLabel} cannot exceed ${rule.maxLength} characters.`],
+      ["regex_test",  `${fieldLabel} is invalid.`],
+    ])
+
+
+    // This is holdover code until the sdece team can implement frontend validation
+		if (MIN_LENGTH_TEST && field === 'partner_contact_number') {
+				errors.push(
+					`${fieldLabel} must be at least ${rule.minLength} characters long and in the form 09XXXXXXXXX.`
+				);
 			continue;
 		}
 
-		if (
-			!rule.required &&
-			(value == undefined || value == null || value == '')
-		) {
-			continue;
-		}
-		
-		// Temp type check for geolocation here
-		if (rule.type) {
-			if (rule.type === 'date') {
-				const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-				if (!dateRegex.test(value)) {
-					errors.push(
-						`${fieldLabel} must be a valid date in YYYY-MM-DD format.`
-					);
-					continue;
-				}
+    for (const x of VALIDATION_TEST.keys()) {
+      if (VALIDATION_TEST.get(x)) {
+        errors.push(ERROR_MESSAGES.get(x));
+        break;
+      }
+    }
 
-				const date = new Date(value);
-				if (isNaN(date.getTime())) {
-					errors.push(`${fieldLabel} must be a valid date.`);
-					continue;
-				}
-			} else if (typeof(value) != rule.type) {
-				errors.push(
-					`${fieldLabel} must be of type ${rule.type}. type is ${typeof(value)}` //checking for the type of value in location coordinates
-				);
-				continue;
-			}
-			if (rule.type === 'object' && (isNaN(value._lat) || isNaN(value._long))){
-				console.log(rule.type);
-				errors.push(`${fieldLabel} must be a valid location`)
-			}
-		}
-
-		// Check for minimum length
-		if (
-			rule.minLength &&
-			typeof value == 'string' &&
-			value.length < rule.minLength
-		) {
-			if (field === 'partner_contact_number') {
-				errors.push(
-					`${fieldLabel} must be ${rule.minLength} characters long.`
-				);
-
-			} continue;
-		}
 
 		if (rule.enum && !rule.enum.includes(value)) {
 			errors.push(`${fieldLabel}' must be one of ${rule.enum.join(', ')}.`);
