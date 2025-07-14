@@ -1,68 +1,41 @@
 // FIRESTORE DATABASE\
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
-import {
-	getFirestore,
-	collection,
-	getDocs,
-	addDoc,
-	updateDoc,
-	doc,
-	query,
-	where,
-	getDoc,
-	GeoPoint,
-	Timestamp
-} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-
-import {
-	getCollection,
-	setCollection,
-	SDECE_RULES,
-	SDECE_RULES_TEST,
-	getDocIdByPartnerName,
-	validateData,
-	editEntry,
-	addEntry
-} from '../../js/firestore_UNIV.js'; 
-
-import { addListeners, map, getDivContent } from '../../js/index_UNIV.js';
+import { getDocs, GeoPoint, Timestamp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+import { getCollection, setCollection, SDECE_RULES, validateData, editEntry, addEntry } from '/js/firestore_UNIV.js';
+import { map } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
 
-// Your Firestore code here
-const firebaseConfig = {
-  apiKey: 'AIzaSyA8QWgic_hjbDL-EYIkvSRRII_yfTRdtOQ',
-  authDomain: 'discs-osci-prj.firebaseapp.com',
-  projectId: 'discs-osci-prj',
-  storageBucket: 'discs-osci-prj.appspot.com',
-  messagingSenderId: '601571823960',
-  appId: '1:601571823960:web:1f1278ecb86aa654e6152d',
-  measurementId: 'G-9N9ELDEMX9',
-};
-var collection_value = 'sdece-official'
-
-initializeApp(firebaseConfig);
-const db = getFirestore();
+// Set collection and associated rule config
+let collection_value = 'sdece-official'
 setCollection(collection_value);
-const colRef = getCollection();
-let partnersArray = [];
 
-// Import the functions you need from the SDKs you need
-//import { initializeApp } from "firebase/app";
-//import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+export function populateMainModalList() {
+	// Display temporarily saved activities to main modal
+	const mainModalActivityList = mainModalDocument.getElementById('mainModalActivityList');
+	mainModalActivityList.innerHTML = '';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+	if (Object.keys(temp_activities).length == 0) {
+		mainModalActivityList.innerHTML = '<p class="main-modal-no-activities-message">No activities to show</p>';
+	} else {
+		for (let i = 0; i < Object.keys(temp_activities).length; i++) {
+			var activity = temp_activities[Object.keys(temp_activities)[i]];
 
-var col_ref = null;
-col_ref = getCollection();
+			// View activity details button
+			const activityButton = document.createElement('li');
+			const activityName = document.createElement('div');
+			const arrow = document.createElement('div');
 
-var partners = {}; // queried
-var activities = {};
+			activityName.textContent = getActivity(activity) + '';
 
-var addForm_geopoint;
-var has_existing_partner = false;
+			arrow.innerHTML =
+				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
+			arrow.classList.add('arrow');
+
+			activityButton.appendChild(activityName);
+			activityButton.classList.add('main-modal-temporary-activity');
+			mainModalActivityList.appendChild(activityButton);
+		}
+	}
+}
 
 // Pans to the Philippines
 map.setView(new L.LatLng(14.651, 121.052), 14);
@@ -71,83 +44,68 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
-var results = L.layerGroup().addTo(map);
-var popup = L.popup();
+let results = L.layerGroup().addTo(map);
+let popup = L.popup();
+let addForm_geopoint;
 
+// Handles Map Click events
 function onMapClick(e) {
 	const lat = e.latlng.lat;
 	const lng = e.latlng.lng;
 
 	// Popup for when user clicks anywhere on the map
-	var popupContent = 
+	let popupContent = 
 	`<div class="partner-geolocation"> Latitude: ${lat} <br> Longitude: ${lng} </div>
 	 <button class="addButton" data-lat="${lat}" data-lng="${lng}"> Add Location</button>`;
 
 	popup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
 
 	// Add Location button for Popup
-	var add_button = document.querySelector('.addButton');
+	let add_button = document.querySelector('.addButton');
 	add_button.addEventListener('click', function () {
 		addForm_geopoint = new GeoPoint(lat, lng);
 		showMainModal();
 		populateMainModalList();
 	});
 }
-
 map.on('click', onMapClick);
 
-// add activity from the main modal
+// Handles Add Activity from the main modal
 const mainModalDocument = document.getElementById('mainModalIframe').contentDocument;
 const newButton = mainModalDocument.getElementById('addModalButton');
+let has_existing_partner;
 
 newButton.addEventListener('click', () => {
 	// Get the Add Activity form and the needed input fields for autofill
-	var inputtedPartnerName = mainModalDocument.getElementById(
-		'inputted_partner_name'
-	).value;
-	var inputtedPartnrAddress =
-		mainModalDocument.getElementById('address-input').value;
+	let inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value;
+	let inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value;
 	has_existing_partner = false;
 
-	if (inputtedPartnerName == '' || inputtedPartnrAddress == '') {
+	if (inputtedPartnerName == '' || inputtedPartnerAddress == '') {
 		alert('Partner Name and Partner Address cannot be blank.');
 	} else {
 		for (let field of SDECE_RULES[2]) {
 			if (field != 'partner_coordinates') {
 				if (field == 'partner_name' || field == 'partner_address') {
 					if (field == 'partner_name') {
-						addFormiframeDocument.getElementById(
-							field
-						).value = inputtedPartnerName;
-					} else if (field == 'partner_address') {
-						addFormiframeDocument.getElementById(
-							field
-						).value = inputtedPartnrAddress;
+						addFormiframeDocument.getElementById(field).value = inputtedPartnerName;
+					} else {
+						addFormiframeDocument.getElementById(field).value = inputtedPartnerAddress;
 					}
-					addFormiframeDocument.getElementById(
-						field
-					).readOnly = true;
-					addFormiframeDocument.getElementById(
-						field
-					).style.backgroundColor = 'var(--custom-medium-gray';
-					addFormiframeDocument.getElementById(
-						field
-					).style.color = 'var(--custom-dark-gray';
+					addFormiframeDocument.getElementById(field).readOnly = true;
+					addFormiframeDocument.getElementById(field).style.backgroundColor = 'var(--custom-medium-gray)';
+					addFormiframeDocument.getElementById(field).style.color = 'var(--custom-dark-gray)';
 				} else {
-					addFormiframeDocument.getElementById(field).value =
-						null;
-					addFormiframeDocument.getElementById(
-						field
-					).readOnly = false;
+					addFormiframeDocument.getElementById(field).value = null;
+					addFormiframeDocument.getElementById(field).readOnly = false;
 				}
-			} else {
-			}
+			} 
 		}
 		showAddModal();
 	}
 });
 
-//If activity name is empty, used activity nature	
+// Uses activity nature if there's activity name is N/A	
 function getActivity(activity) {
 	const name = activity['activity_name'];
 	const nature = activity['activity_nature'];
@@ -158,6 +116,7 @@ function getActivity(activity) {
 	return name;
 }
 
+// Clears Highlight on the Side Bar when transitioning
 function clearAllHighlights() {
 	const sidebarItems = document.querySelectorAll('.partnerDiv');
 	sidebarItems.forEach((item) => {
@@ -165,71 +124,81 @@ function clearAllHighlights() {
 	});
 }
 
-getDocs(col_ref)
+// Fetches all activity documents from the specified Firestore collection.
+// Filters out test entries, groups activities by partner, and dynamically
+// creates map markers and sidebar entries for each unique partner.
+let collection_ref = getCollection();
+
+getDocs(collection_ref)
 	.then((querySnapshot) => {
-		// Populate activities
-		querySnapshot.forEach((doc) => {
-			if (
-				doc.data().name !== 'Test 2' ||
-				doc.data().name !== 'Test2'
-			) {
-				let activity = doc.data();
-				activity['identifier'] = doc.id;
-				activities[doc.id] = activity;
-			}
-		});
 
-		//  Populate with partners
-		Object.keys(activities).forEach((activity) => {
-			let partner = activities[activity][SDECE_RULES[1]];
-			if (partners[partner] == null) {
-				partners[partner] = [];
-				partners[partner].push(activities[activity]);
-			} else {
-				partners[partner].push(activities[activity]);
-			}
-		});
+		// Load and filter activities
+		function loadActivities(querySnapshot) {
+			const activities = {};
 
-		// Populate side navigation <ul> with partners
+			querySnapshot.forEach((doc) => {
+				const activity = doc.data();
+				const name = activity.name;
+
+				// Skip unwanted test entries
+				if (name !== 'Test 2' && name !== 'Test2') {
+					activity['identifier'] = doc.id;
+					activities[doc.id] = activity;
+				}
+			});
+			return activities;
+		}
+		const activities = loadActivities(querySnapshot);
+
+		//  Group activities by partner
+		function groupActivities(activities) {
+			const partners = {};
+
+			Object.values(activities).forEach((activity) => {
+				const partner = activity[SDECE_RULES[1]];
+
+				if (!partners[partner]) {
+					partners[partner] = [];
+				}
+				partners[partner].push(activity);
+			});
+
+			return partners;
+		}
+		const partners = groupActivities(activities);
+
+		// Create map markers and sidebar list items for each partner
 		Object.keys(partners).forEach((partner) => {
-			// Trying to add the pins here instead
-			var marker;
-
 			// Some coordinated are null, protective check
-			if (partners[partner][0]['partner_coordinates'] != null) {
-				marker = L.marker([
-					parseFloat(
-						partners[partner][0]['partner_coordinates']
-							.latitude
-					),
-					parseFloat(
-						partners[partner][0]['partner_coordinates']
-							.longitude
-					),
-				]);
+			let partnerCoordinates = partners[partner][0]['partner_coordinates'];
+			let partnerLatitude = partnerCoordinates.latitude;
+			let partnerLongitude = partnerCoordinates.longitude;
+			let marker;
 
-				results.addLayer(marker);
-				var popupContent = `
-					<div class="partner-popup" id="`;
-				popupContent += partners[partner][0]['partner_name'];
-				popupContent += `">`;
-				popupContent += partners[partner][0]['partner_name'];
-				popupContent += `</div>`;
+			// Skip if no coordinates
+			if (partnerCoordinates != null) {
 
+				let lati = parseFloat(partnerLatitude);
+				let longi = parseFloat(partnerLongitude);
+
+				marker = L.marker([lati, longi]);
+
+				// Bind popup to marker
+				let popupContent = `
+					<div class="partner-popup" id="${partner}">
+					${partner}
+					</div>`;
 				marker.bindPopup(popupContent);
-				results.addLayer(marker);
+				results.addLayer(marker); // Add to layer group
 
-				marker.on('click', function () {
-					marker.openPopup();
 
-					// Center the map on this marker
-					map.setView(marker.getLatLng(), map.getZoom(), {
-						animate: true,
-						duration: 0.5,
-					});
-
+				// Marker hover and click events
+				marker.on('mouseover', () => marker.openPopup());
+				marker.on('click', () => {
+					map.panTo(new L.LatLng(lati, longi));
 					clearAllHighlights();
 
+					// Highlight sidebar item for this partner
 					const sidebarItems = document.querySelectorAll('.partnerDiv');
 					sidebarItems.forEach((item) => {
 						const nameDiv = item.querySelector('.name');
@@ -238,20 +207,10 @@ getDocs(col_ref)
 							item.classList.add('highlight');
 						}
 					});
-					
-					var test = document.getElementById(
-						partners[partner][0]['partner_name']
-					);
-					if (test) {
-					test.addEventListener('click', function () {
-						showModal(partners[partner]);
-					});
-					}
-					// Directly show the modal on marker click
 					showModal(partners[partner]);
 				});
-			}
 
+			// Build sidebar item for this partner
 			const containerDiv = document.createElement('div');
 			const img = document.createElement('svg');
 			const listItem = document.createElement('li');
@@ -259,40 +218,9 @@ getDocs(col_ref)
 			const nameDiv = document.createElement('div');
 			const addressDiv = document.createElement('div');
 			const activityDiv = document.createElement('div');
-
-			containerDiv.addEventListener('click', function () {
-				marker.openPopup();
-				map.panTo(
-					new L.LatLng(
-						parseFloat(
-							partners[partner][0]['partner_coordinates']
-								.latitude
-						),
-						parseFloat(
-							partners[partner][0]['partner_coordinates']
-								.longitude
-						)
-					)
-				);
-				
-				clearAllHighlights();
-				containerDiv.classList.add('highlight');
-				showModal(partners[partner]);
-			});
-
-			// Adding classes and setting text content
-
+			
 			containerDiv.classList.add('partnerDiv');
-
-			//   var activities = getDocIdByPartnerName(partner.partner_name);
-			if (Object.keys(activities).length > 0) {
-				// check if list of activities is present, otherwise is skipped to avoid errors
-				Object.keys(activities).forEach((activity) => {
-					activityDiv.innerHTML +=
-						getActivity(activity) + '<br/>'; // there might be a better way to display multiple activities
-				});
-			}
-
+			listItem.classList.add('accordion');
 			nameDiv.classList.add('name');
 			addressDiv.classList.add('address');
 			activityDiv.classList.add('activity');
@@ -300,41 +228,50 @@ getDocs(col_ref)
 			nameDiv.textContent = partner;
 			addressDiv.textContent = partners[partner][0]['partner_address'];
 
+			// Append activity names
 			let activities_string = '';
 
 			for (let activity of partners[partner]) {
-				activities_string += getActivity(activity) + '<br>';
+				activities_string += getActivity(activity)+ '<br>';
 			}
-
 			activityDiv.innerHTML = activities_string;
 
-			listItem.classList.add('accordion');
-			// Append elements to the DOM
-			anchor.appendChild(nameDiv);
-			anchor.appendChild(addressDiv);
-			anchor.appendChild(activityDiv);
+			 // Add click behavior for sidebar item
+			containerDiv.addEventListener('click', function () {
+				marker.openPopup();
+				map.panTo(new L.LatLng(lati, longi));
 
+				clearAllHighlights();
+				containerDiv.classList.add('highlight');
+				showModal(partners[partner]);
+			});
+
+			// Append elements to the DOM
+			anchor.append(nameDiv, addressDiv, activityDiv);
 			listItem.appendChild(anchor);
-			containerDiv.appendChild(img);
-			containerDiv.appendChild(listItem);
+			containerDiv.append(img, listItem);
 			locationList.appendChild(containerDiv);
-		});
+		}});
 	})
 	.catch((error) => {
 		console.error('Error getting documents: ', error);
-	});
-
-var current_viewed_activity = null; //docId of the currently viewed activity
+});
 
 // Display partner modal by clicking partner entry
-export function showModal(partner) {
-	document.querySelector('.modal-button').style.display = 'none';
-	document.querySelector('.modal-button').style.padding = '0px';
+let current_viewed_activity = null; // docId of the currently viewed activity
 
+export function showModal(partner) {
+	// Hide external button (reset state)
+	const modalButton = document.querySelector('.modal-button'); 
+	modalButton.style.display = 'none';
+	modalButton.style.padding = '0px';
+
+	// Select modal containers
 	const modal = document.getElementById('partnerModal');
 	const modalHeader = document.getElementById('modalHeader');
 	const modalContent = document.getElementById('modalContent');
 
+	// Prepare modal header style for layout
 	modalHeader.style.width = '100%';
 	modalHeader.style.display = 'flex';
 	modalHeader.style.flexDirection = 'column';
@@ -657,182 +594,115 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	modal.classList.add('open');
 }
 
-// This is unreliable but will probably be useful in the future
-// export async function getCoordsFromAddress(address = '161 Daan Tubo, Diliman, Quezon City') {
-
-// 	var parsed_loc = encodeURIComponent(
-// 		address.toLowerCase().replace(/[^a-z0-9 _-]+/gi, '-')
-// 	);
-// 	var api_search = 'https://nominatim.openstreetmap.org/search?q=';
-// 	var link = api_search.concat(parsed_loc).concat('&format=json');
-
-// 	var response = await fetch(link);
-// 	var jsonified = await response.json();
-
-// 	if (addForm_geopoint == null) {
-// 		addForm_geopoint = new GeoPoint(
-// 			jsonified[0]['lat'],
-// 			jsonified[0]['lon']
-// 		);
-// 	} else {
-// 	}
-
-//values stored in local before uploading them in batches
-var temp_activities = {};
-var temp_activities_id = 0;
-
-// Addloc.html Save button click listener
-var addFormiframe = document.getElementById('addModalHTML');
-var addFormiframeDocument = addFormiframe.contentWindow.document;
-var addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
-addFormSubmitButton.addEventListener('click', function () {
-	//Get data from addloc.html
-	var info_from_forms = {};
+// Used for add/ edit to collect form inputs
+function collectFormInputs(doc, geopointSource, mode) {
+	let result = {};
 	for (let field of SDECE_RULES[2]) {
-		if (field != 'partner_coordinates') {
-			let input_field = addFormiframeDocument.getElementById(field);
-			if (input_field != null) {
-				if (input_field.value == '') {
-					info_from_forms[field] = null;
-				} else {
-					info_from_forms[field] = input_field.value;
-				}
+		if (field === 'partner_coordinates') {
+			if (mode === 'add') {
+				result[field] = geopointSource;
 			}
+			// edit mode 
 		} else {
-			info_from_forms[field] = addForm_geopoint;
+			let input = doc.getElementById(field);
+			result[field] = input?.value || null;
 		}
 	}
-
-	//Validate the collated input here
-	let errors = validateData('sdece-official-TEST', info_from_forms);
-
-	if (errors.length > 0) {
-		displayErrors(errors);
-		event.preventDefault();
-	} else {
-		if (has_existing_partner) {
-			// Uploads straight to firebase DB
-			if (
-				typeof info_from_forms.activity_date === 'string' &&
-				!isNaN(Date.parse(info_from_forms.activity_date))
-			) {
-				const parsedDate = new Date(info_from_forms.activity_date);
-				parsedDate.setHours(0, 0, 0, 0);
-				info_from_forms.activity_date = Timestamp.fromDate(new Date(info_from_forms.activity_date));
-			}
-			addEntry(info_from_forms);
-		} else {
-			//locally store it
-			temp_activities[temp_activities_id + ''] = info_from_forms;
-			temp_activities_id += 1;
-
-			populateMainModalList();
-
-			// add it to the ul
-			// mainModalDocument.getElementById(
-			// 	'mainModalActivityList'
-			// ).innerHTML +=
-			// 	'<li class="main-modal-temporary-activity">' +
-			// 	info_from_forms['activity_nature'] +
-			// 	'</li>';
-		}
-
-		// close the save modal
-		addFormiframe.style.display = 'none';
-	}
-
-	function displayErrors(errors) {
-		let errorDiv = addFormiframeDocument.getElementById('error_messages');
-
-		if (errorDiv) {
-			errorDiv.innerHTML = '';
-
-			if (errors.length > 0) {
-				for (let error of errors) {
-					let errorParagraph =
-						addFormiframeDocument.createElement('p');
-					errorParagraph.textContent = error;
-					errorDiv.appendChild(errorParagraph);
-				}
-
-				// Scroll the document back to the top
-				errorDiv.ownerDocument.defaultView.scrollTo(0, 0);
-			} else {
-				console.error(
-					"Error: Couldn't find element with ID 'error_messages'."
-				);
-			}
-		}
-	}
-});
-
-// Editloc.html Save button click listener
-let edit_modal = document.getElementById('editModal_iframe').contentWindow.document;
-edit_modal.getElementById('submit_form').addEventListener('click', handleEdit);
-
-export function handleEdit() {
-	var collated_inp = {};
-	for (let field of SDECE_RULES[2]) {
-		if (field != 'partner_coordinates') {
-			let input_field = edit_modal.getElementById(field);
-			if (input_field != null) {
-				if (input_field.value == '') {
-					collated_inp[field] = null;
-				} else {
-					collated_inp[field] = input_field.value;
-				}
-			}
-		} else {
-			collated_inp[field] =
-				current_viewed_activity['partner_coordinates'];
-		}
-	}
-
-	//validate the collated input here
-	let errors = validateData('sdece-official-TEST', collated_inp);
-
-	if (errors.length > 0) {
-		displayErrors(errors);
-		event.preventDefault();
-	} else {
-		if (
-			typeof collated_inp.activity_date === 'string' &&
-			!isNaN(Date.parse(collated_inp.activity_date))
-		) {
-			const dateOnly = new Date(collated_inp.activity_date);
-			dateOnly.setHours(0, 0, 0, 0);
-			collated_inp.activity_date = Timestamp.fromDate(dateOnly);
-		}
-		editEntry(collated_inp, current_viewed_activity['identifier']);
-		document.getElementById('editModal').style = "display: 'none'";
-		//alert('Reload the page for the new edits to reflect on your browser');
-	}
-
-	function displayErrors(errors) {
-		let errorDiv = edit_modal.getElementById('error_messages');
-
-		if (errorDiv) {
-			errorDiv.innerHTML = '';
-
-			if (errors.length > 0) {
-				for (let error of errors) {
-					let errorParagraph = edit_modal.createElement('p');
-					errorParagraph.textContent = error;
-					errorDiv.appendChild(errorParagraph);
-				}
-				errorDiv.ownerDocument.defaultView.scrollTo(0, 0);
-			} else {
-				console.error(
-					"Error: Couldn't find element with ID 'error_messages'."
-				);
-			}
-		}
-	}
+	return result;
 }
 
-// mainmodal save button for batch uploading
-const MAIN_MODAL_SAVE_BUTTON =
-	mainModalDocument.getElementsByClassName('main-modal-save')[0];
+// Used for add/edit to display errors
+function displayErrors(errors, docContext) {
+	let errorDiv = docContext.getElementById('error_messages');
+
+	if (!errorDiv) {
+		console.error("Error: Couldn't find element with ID 'error_messages'.");
+		return;
+	}
+	errorDiv.innerHTML = '';
+
+	if (errors.length > 0) {
+		for (let error of errors) {
+			let p = docContext.createElement('p');
+			p.textContent = error;
+			errorDiv.appendChild(p);
+		}
+		docContext.defaultView.scrollTo(0, 0); // scroll to top of iframe
+	} 
+}
+
+// Used for add/edit to normalize date to timestamp
+function dateToTimestamp(date) {
+	if (typeof date === 'string' && !isNaN(Date.parse(date))) {
+		const parsedDate = new Date(date);
+		parsedDate.setHours(0, 0, 0, 0);
+		return Timestamp.fromDate(parsedDate);
+	}
+	return date;
+}
+
+// Local values stored before batch uploading
+let temp_activities = {};
+let temp_activities_id = 0;
+
+// === ADDLOC.HTML SAVE CLICK LISTENER ===
+let addFormiframe = document.getElementById('addModalHTML');
+let addFormiframeDocument = addFormiframe.contentWindow.document;
+let addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
+
+addFormSubmitButton.addEventListener('click', function (event) {
+	//Get data from addloc.html
+	let form_data = collectFormInputs(addFormiframeDocument, addForm_geopoint, 'add');
+
+	//Validate the collated input here
+	let errors = validateData('sdece-official-TEST', form_data);
+
+	if (errors.length > 0) {
+		displayErrors(errors, addFormiframeDocument);
+		event.preventDefault();
+		return;
+	} 
+	if (has_existing_partner) {
+		// Uploads straight to firebase DB
+		form_data.activity_date = dateToTimestamp(form_data.activity_date);
+		addEntry(form_data);
+	} else {
+		// Locally store it
+		temp_activities[temp_activities_id] = form_data;
+		temp_activities_id += 1;
+		populateMainModalList();
+	}
+	addFormiframe.style.display = 'none'; // close the save modal
+});
+
+// === EDITLOC.HTML SAVE CLICK LISTENER ===
+let editFormiframe = document.getElementById('editModal_iframe');
+let editFormiframeDocument = editFormiframe.contentWindow.document;
+let editFormSubmitButton = editFormiframeDocument.getElementById('submit_form');
+
+editFormSubmitButton.addEventListener('click', function(event) {
+
+	// Get data from editloc.html
+	let form_data = collectFormInputs(editFormiframeDocument, addForm_geopoint, 'edit');
+
+	// Validate the collated input here
+	let errors = validateData('sdece-official-TEST', form_data);
+
+	if (errors.length > 0) {
+		displayErrors(errors, editFormiframeDocument);
+		event.preventDefault();
+		return;
+	} 
+	// Uploads straight to firebase DB
+	form_data.activity_date = dateToTimestamp(form_data.activity_date);
+	editEntry(form_data, current_viewed_activity['identifier']);
+
+	editFormiframe.style = "display: 'none'"; // close the save modal
+
+});
+
+// Mainmodal save button for batch uploading
+const MAIN_MODAL_SAVE_BUTTON = mainModalDocument.getElementsByClassName('main-modal-save')[0];
 
 MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 
@@ -841,11 +711,8 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 	if (temp_keys > 0) {
 		Object.keys(temp_activities).forEach((temp_id) => {
 			let current_temp_activity = temp_activities[temp_id];
-			let new_partner_name = mainModalDocument.getElementsByClassName(
-				'main-modal-partner-name'
-			)[0].value;
-			let new_partner_address =
-				mainModalDocument.getElementById('address-input').value;
+			let new_partner_name = mainModalDocument.getElementsByClassName('main-modal-partner-name')[0].value;
+			let new_partner_address = mainModalDocument.getElementById('address-input').value;
 			current_temp_activity['partner_name'] = new_partner_name;
 			current_temp_activity['partner_address'] = new_partner_address;
 			if (
@@ -872,16 +739,12 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 		//clear temp_activities
 		temp_activities = {};
 
-		// alert(
-		// 	'Reload the page for the new additions to reflect on your browser'
-		// );
 	} else {
 		alert("Can't submit a partner with an empty list of activities ");
 	}
 });
 
 // Handling main modal close on clicking close button
-
 const mainModalCloseButton = mainModalDocument.getElementById('close-btn');
 
 mainModalCloseButton.addEventListener('click', function (event) {
@@ -899,41 +762,9 @@ mainModalCloseButton.addEventListener('click', function (event) {
 				"resetForm function is not defined in the document's script tag."
 			);
 		}
-
 		window.parent.postMessage('closeMainModal', '*');
 	} else {
 		event.preventDefault();
 	}
 });
 
-export function populateMainModalList() {
-	// display temporarily saved activities to main modal
-
-	const mainModalActivityList = mainModalDocument.getElementById(
-		'mainModalActivityList'
-	);
-	mainModalActivityList.innerHTML = '';
-
-	if (Object.keys(temp_activities).length == 0) {
-		mainModalActivityList.innerHTML = '<p class="main-modal-no-activities-message">No activities to show</p>';
-	} else {
-		for (let i = 0; i < Object.keys(temp_activities).length; i++) {
-			var activity = temp_activities[Object.keys(temp_activities)[i]];
-
-			// View activity details button
-			const activityButton = document.createElement('li');
-			const activityName = document.createElement('div');
-			const arrow = document.createElement('div');
-
-			activityName.textContent = getActivity(activity) + '';
-
-			arrow.innerHTML =
-				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
-			arrow.classList.add('arrow');
-
-			activityButton.appendChild(activityName);
-			activityButton.classList.add('main-modal-temporary-activity');
-			mainModalActivityList.appendChild(activityButton);
-		}
-	}
-}
