@@ -157,141 +157,10 @@ li.accordion {
 a.accordion {
   text-decoration: none;
 }
-/* ------------ */
+/* --------------------------- */
 
-
-
-
-/* CONTINUE CLEANING HERE */
-
-button.collapsible {
-  padding: 0px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  align-self: stretch;
-  border: 0;
-  background-color: #fcfcfc;
-  width: 100%;
-  height: 50px;
-  color: #3D97AF;
-  font-family: 'Geist', sans-serif;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 750;
-}
-
-.collapsible:after {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  margin-right: 5px;
-  content: "";
-  background: url("../img/dropdown.png") no-repeat 0 0;
-  background-size: 100%;
-}
-
-.active:after {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  margin-right: 5px;
-  content: "";
-  background: url("../img/dropdown.png") no-repeat 0 0;
-  background-size: 100%;
-  transform: rotate(180deg);
-}
-
-/* closing modal */
-.close {
-  text-align: center;
-  color: #aaaaaa;
-  font-size: 40px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.partnerGeolocation {
-  display: flex;
-  align-items: center;
-}
-
-.leafletPopupContainer {
-  height: 400px;
-  width: 100%;
-  text-overflow: ellipsis;
-  align-items: center;
-}
-
-.leafletHeader {
-  font-family: Geist;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.1px;
-  color: #387181;
-  background-color: #FFFFFF;
-  width: 89%;
-  position: fixed;
-  margin: -10px 0px -10px 0px;
-  padding: 10px 0px 10px 0px;
-  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2)
-}
-
-.leafletSubHeader {
-  font-family: Geist;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.1px;
-  color: #3D97AF;
-  margin: 20px 0px 10px 0px;
-}
-
-.leafletLabel {
-  font-family: Geist;
-  font-size: 14px;
-  font-weight: 700;
-  color: #000000;
-}
-
-.leafletContent {
-  font-family: 'Geist', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: 0.32px;
-  color: #A0A0A0;
-  width: 100%;
-  margin: 15px 0px 15px 0px;
-  max-height: 100%;
-  overflow-y: auto;
-}
-
-.leafletDetails {
-  margin-bottom: 5px;
-}
-
-.leafletButtons {
-  display: flex;
-  justify-content: space-between;
-}
-
-.formIframe {
-  margin-left: 15%;
-  margin-top: 2%;
-  border: none;
-  width: 50%;
-  height: 90%;
-  position: relative;
-  justify-content: center;
-  left: 10%;
-  border-radius: 8px 8px 8px 8px;
-}
-
+/* IFrame Modal Container
+--------------------------- */
 .modal-screen {
 	display: none;
 	position: fixed;
@@ -304,7 +173,6 @@ button.collapsible {
 	justify-content: center;
 	align-items: center;
 }
-
 .form-modal {
 	width: 100%;
 	max-width: 800px;
@@ -313,24 +181,10 @@ button.collapsible {
 	border-radius: 8px;
 	background-color: white;
 }
+/* --------------------------- */
 
-.message-modal {
-	width: 400px;
-	height: 200px;
-	border: none;
-	border-radius: 8px;
-	background-color: white;
-}
-
-.evac-marker {
-  background-color: red;
-  border-radius: 50%;
-  border: 2px solid rgb(255, 255, 255);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
+/* Evac Center Modal 
+--------------------------- */
 .evac-marker-header {
   font-size: 18px;
   font-weight: bold;
@@ -338,7 +192,11 @@ button.collapsible {
   text-align: center;
   margin-bottom: 7px;
 }
+/* --------------------------- */
 
+/* Main Modal 
+--------------------------- */
+/* Household Information Section */
 .popup-card, .popup-title, .popup-phone, .popup-section, .popup-label, .popup-value, .risk-type, .risk-badge, .risk-desc {
   font-family: 'Geist', sans-serif !important;
 }
@@ -381,6 +239,8 @@ button.collapsible {
   font-weight: 600;
   margin-bottom: 0.7em;
 }
+
+/* Risk Information Section */
 .risk-header {
   color: #181c26;
   font-weight: 700;
@@ -461,10 +321,10 @@ button.collapsible {
   margin-left: 0.1em;
 }
 
+/* Resident Information Section */
 .residents-breakdown {
   margin-top: 0.8em;
 }
-
 .resident-item {
   display: flex;
   justify-content: space-between;
@@ -472,13 +332,11 @@ button.collapsible {
   padding: 0.6em 0;
   font-family: 'Geist', sans-serif;
 }
-
 .resident-label {
   font-size: 1.05em;
   font-weight: 600;
   color: #888ea8;
 }
-
 .resident-count {
   font-size: 1.1em;
   font-weight: 700;
@@ -486,19 +344,18 @@ button.collapsible {
   min-width: 2em;
   text-align: right;
 }
-
 .resident-divider {
   height: 1px;
   background-color: #e2e8f0;
   margin: 0.4em 0;
 }
 
+/* Main Modal Footer */
 .popup-edit-section {
   margin-top: 1.5rem;
   text-align: center;
   padding-bottom: 0.5rem;
 }
-
 .popup-edit-btn {
   background: transparent;
   border: none;
@@ -514,28 +371,33 @@ button.collapsible {
   border-radius: 0.25rem;
   transition: background-color 0.2s ease;
 }
-
 .popup-edit-btn:hover {
   background-color: #f0f9ff;
 }
 
+/* Main body */
 .popup-card {
   min-width: 370px;
   max-width: 460px;
   max-height: 500px;
   overflow-y: auto;
 }
+/* --------------------------- */
 
+/* Leaflet
+--------------------------- */
 .leaflet-popup-content-wrapper {
   min-width: 400px;
   max-width: 480px;
 }
-
 .leaflet-popup.add-household-popup-compact .leaflet-popup-content-wrapper {
   min-width: 200px !important;
   max-width: 300px !important;
 }
+/* --------------------------- */
 
+/* Add Household Modal
+--------------------------- */
 .partner-geolocation {
   font-family: 'Geist', sans-serif;
   font-size: 14px;
@@ -543,7 +405,6 @@ button.collapsible {
   margin-bottom: 8px;
   width: 100%;
 }
-
 .addButton {
   background: #1a357b;
   color: #fff;
@@ -556,20 +417,13 @@ button.collapsible {
   margin-top: 5px;
   width: 100%;
 }
-
 .addButton:hover {
   background: #2542a3;
 }
+/* --------------------------- */
 
-.dropdown-icon svg {
-	width: 1.2em;
-	height: 1.2em;
-	vertical-align: middle;
-	display: inline-block;
-	color: #888ea8;
-	fill: #888ea8;
-}
-
+/* Filter Modal 
+--------------------------- */
 .filter-modal {
 	background-color: white;
 	border-radius: 1rem;
@@ -579,7 +433,6 @@ button.collapsible {
 	overflow-y: auto;
 	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
-
 .filter-header {
 	display: flex;
 	justify-content: space-between;
@@ -587,7 +440,6 @@ button.collapsible {
 	padding: 1.5rem;
 	border-bottom: 1px solid #e0e0e0;
 }
-
 .filter-header h2 {
 	font-family: 'Geist', sans-serif;
 	font-size: 1.25rem;
@@ -595,7 +447,6 @@ button.collapsible {
 	color: #111827;
 	margin: 0;
 }
-
 .filter-close {
 	background: none;
 	border: none;
@@ -610,24 +461,20 @@ button.collapsible {
 	height: 2rem;
 	border-radius: 50%;
 }
-
 .filter-close:hover {
 	background-color: #f3f4f6;
 }
-
 .filter-content {
 	padding: 1.5rem;
 	display: flex;
 	flex-direction: column;
 	gap: 1.5rem;
 }
-
 .filter-section {
 	display: flex;
 	flex-direction: column;
 	gap: 0.75rem;
 }
-
 .filter-section h3 {
 	font-family: 'Geist', sans-serif;
 	font-size: 1rem;
@@ -635,13 +482,11 @@ button.collapsible {
 	color: #374151;
 	margin: 0;
 }
-
 .filter-options {
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
 }
-
 .filter-options label {
 	display: flex;
 	align-items: center;
@@ -652,13 +497,11 @@ button.collapsible {
 	cursor: pointer;
 	padding: 0.25rem 0;
 }
-
 .filter-options input[type="checkbox"] {
 	width: 1rem;
 	height: 1rem;
 	cursor: pointer;
 }
-
 #riskTypeFilter {
 	font-family: 'Geist', sans-serif;
 	padding: 0.5rem;
@@ -668,13 +511,11 @@ button.collapsible {
 	background-color: white;
 	cursor: pointer;
 }
-
 #riskTypeFilter:focus {
 	outline: none;
 	border-color: #387181;
 	box-shadow: 0 0 0 2px rgba(56, 113, 129, 0.1);
 }
-
 .filter-footer {
 	display: flex;
 	justify-content: space-between;
@@ -682,7 +523,6 @@ button.collapsible {
 	padding: 1.5rem;
 	border-top: 1px solid #e0e0e0;
 }
-
 .filter-btn {
 	font-family: 'Geist', sans-serif;
 	padding: 0.75rem 1.5rem;
@@ -693,21 +533,17 @@ button.collapsible {
 	border: none;
 	transition: all 0.2s;
 }
-
 .filter-clear {
 	background-color: #f3f4f6;
 	color: #374151;
 }
-
 .filter-clear:hover {
 	background-color: #e5e7eb;
 }
-
 .filter-apply {
 	background-color: #1a357b;
 	color: white;
 }
-
 .filter-apply:hover {
 	background-color: #F2F2FA;
 }
@@ -718,12 +554,4 @@ button.collapsible {
   color: #1a357b;
   border: 1px solid #DADAF1;
 }
-
-/* Active filter indicator 
-.filter-active::after {
-	content: "- 2";
-  margin-top: 0.1rem;
-  margin-left: 0.2rem;
-	font-size: 0.75rem;
-	opacity: 0.8;
-}*/
+/* --------------------------- */
