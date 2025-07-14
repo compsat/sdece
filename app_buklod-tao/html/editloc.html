@@ -9,30 +9,13 @@
     <link rel="stylesheet" href="../css/form.css">
     <link rel="stylesheet" href="../css/main.css">
 
-    <!-- Update! -->
+    
     <script type="module">
+        //Call function from firestore.js to edit new household from input fields after pressing Save Changes button
         import { editEntry, BUKLOD_RULES_TEST, getDocIdByPartnerName, getDocByID } from "/js/firestore_UNIV.js";
         import { submitEditForm } from "../js/firestore.js";
 
-        document.getElementById("submit_form").addEventListener("click", handleFormSubmit);
-
-        function handleFormSubmit() {
-            var collatedInput = {}; 
-            for(let i = 0; i < BUKLOD_RULES_TEST[2].length; i++){
-                let fieldName = BUKLOD_RULES_TEST[2][i];
-                let inputValue = document.getElementById(fieldName).value;
-
-                if (fieldName == 'number_residents' || fieldName == 'location_coordinates' || fieldName == 'number_minors' || 
-                fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick') {
-                    collatedInput[fieldName] = Number(inputValue);
-                    console.log(fieldName, " type: ", typeof collatedInput[fieldName])
-                } 
-                else {
-                    collatedInput[fieldName] = inputValue;
-                }
-            }
-            submitEditForm()
-        }
+        document.getElementById("submit_form").addEventListener("click", submitEditForm);
     </script>
 </head>
 
