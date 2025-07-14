@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Add Location</title>
+
+		<!-- Import Tailwind CSS output file -->
+		<link href="../css/form.css" rel="stylesheet" />
+
+	</head>
+	<body>
+		<div class="form-container">
+			<form id="addLocForm">
+				<div class="form-body">
+					<div id="error_messages"></div>
+					<div class="form-section">
+						<div class="form-field">
+							<label class="form-label" for="activity_name">Activity Name</label>
+							<input class="form-input" type="text" name="activity_name" id="activity_name" required />
+						</div>
+						<div class="form-field">
+							<label class="form-label" for="activity_nature">Nature of Activity</label>
+							<input class="form-input" type="text" name="activity_nature" id="activity_nature" required />
+						</div>
+						<div class="form-field">
+							<label class="form-label" for="activity_date">Date of Partnership</label>
+							<input class="form-input" type="date" name="activity_date" id="activity_date" required />
+						</div>
+					</div>
+					<div class="form-section">
+						<div class="form-field">
+							<label class="form-label" for="additional_partnership">Additional Partnership</label>
+							<input class="form-input" type="text" name="additional_partnership" id="additional_partnership" />
+						</div>
+						<div class="form-field">
+							<label class="form-label" for="organization_unit">Organization Unit</label>
+							<input class="form-input" type="text" name="organization_unit" id="organization_unit" />
+						</div>
+					</div>
+					<div class="form-section">
+						<div class="form-field">
+							<label class="form-label" for="partner_name">Name of Host</label>
+							<input class="form-input" type="text" name="partner_name" id="partner_name" required />
+						</div>
+						<div class="form-field">
+							<label class="form-label" for="partner_address">Address of Host</label>
+							<input class="form-input" type="text" name="partner_address" id="partner_address" />
+						</div>
+					</div>
+					<div class="form-section">
+						<div class="form-field">
+							<label class="form-label" for="partner_contact_name">Name of Contact Person</label>
+							<input class="form-input" type="text" name="partner_contact_name" id="partner_contact_name" />
+						</div>
+						<div class="form-field">
+							<label class="form-label" for="partner_contact_number">Number of Contact Person</label>
+							<input class="form-input" type="text" name="partner_contact_number" id="partner_contact_number" />
+						</div>
+						<div class="form-field">
+							<label class="form-label" for="partner_email">Email of Contact Person / Partner</label>
+							<input class="form-input" type="email" name="partner_email" id="partner_email" />
+						</div>
+					</div>
+					<div class="form-section">
+						<div class="form-field">
+							<label class="form-label" for="ADMU_office">Ateneo Office</label>
+							<input class="form-input" type="text" name="ADMU_office" id="ADMU_office" />
+						</div>
+						<div class="form-field">
+							<label class="form-label" for="ADMU_contact_name">Oversight Contact</label>
+							<input class="form-input" type="text" name="ADMU_contact_name" id="ADMU_contact_name" />
+						</div>
+						<div class="form-field">
+							<label class="form-label" for="ADMU_email">Email address</label>
+							<input class="form-input" type="email" name="ADMU_email" id="ADMU_email" />
+						</div>
+					</div>
+					<div class="form-buttons-container">
+						<button type="submit" class="form-button positive" data-id="Save Button">Save</button>
+						<button type="button" class="form-button negative" id="cancel-btn">Cancel</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</body>
+</html>

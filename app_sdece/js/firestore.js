@@ -377,6 +377,88 @@ function showEditActivityForm(activity, partnerName, coords) {
 	headerRow.appendChild(headerTitle);
 	modalHeader.appendChild(headerRow);
 
+	// --- LOAD ADD HTML ---
+	fetch('html/addloc.html')
+	.then(response => response.text())
+	.then(html => {
+		// Extract only the <form>...</form> part
+		console.log('[DEBUG] Loaded HTML:', html);
+			const tempDiv = document.createElement('div');
+			tempDiv.innerHTML = html;
+			const form = tempDiv.querySelector('form');
+			if (!form) {
+				modalContent.innerHTML = '<div style="color:#b91c1c;">Error loading form.</div>';
+				return;
+		}
+		form.id = 'addLocForm';
+		// Remove any old event listeners
+			form.onsubmit = null;
+			// Remove close button if present
+			const closeBtn = form.querySelector('#close-btn');
+			if (closeBtn) closeBtn.remove();
+			// Prefill fields
+			const fieldMap = {
+				activity_name: activity.activity_name || '',
+				activity_nature: activity.activity_nature || '',
+				activity_date: activity.activity_date ? (typeof activity.activity_date === 'string' ? activity.activity_date : (activity.activity_date.toDate ? activity.activity_date.toDate().toLocaleDateString('en-CA') : '')) : '',
+				additional_partnership: activity.additional_partnership || '',
+				organization_unit: activity.organization_unit || '',
+				partner_name: activity.partner_name || '',
+				partner_address: activity.partner_address || '',
+				partner_contact_name: activity.partner_contact_name || '',
+				partner_contact_number: activity.partner_contact_number || '',
+				partner_email: activity.partner_email || '',
+				ADMU_office: activity.ADMU_office || '',
+				ADMU_contact_name: activity.ADMU_contact_name || '',
+				ADMU_email: activity.ADMU_email || ''
+			};
+			Object.keys(fieldMap).forEach(key => {
+				const input = form.querySelector(`[name="${key}"]`);
+				if (input) input.value = fieldMap[key];
+			});
+			// Save/cancel logic
+			form.onsubmit = function(e) {
+				e.preventDefault();
+				const updated = {};
+				Object.keys(fieldMap).forEach(key => {
+					const input = form.querySelector(`[name="${key}"]`);
+					updated[key] = input ? input.value : '';
+				});
+				updated['partner_coordinates'] = activity.partner_coordinates;
+				let errors = validateData('sdece-official-TEST', updated);
+				const errorDiv = form.querySelector('#error_messages');
+				if (errorDiv) errorDiv.innerHTML = '';
+				if (errors.length > 0) {
+					if (errorDiv) {
+						errors.forEach(err => {
+							const p = document.createElement('p');
+							p.textContent = err;
+							p.style.color = '#b91c1c';
+							p.style.fontSize = '0.95rem';
+							errorDiv.appendChild(p);
+						});
+					}
+					return;
+				}
+				if (typeof updated.activity_date === 'string' && !isNaN(Date.parse(updated.activity_date))) {
+					const dateOnly = new Date(updated.activity_date);
+					dateOnly.setHours(0, 0, 0, 0);
+					updated.activity_date = Timestamp.fromDate(dateOnly);
+				}
+				editEntry(updated, activity.identifier);
+				showActivityDetailModal({...activity, ...updated}, partnerName, coords);
+			};
+			// Cancel/Back logic
+			const cancelBtn = form.querySelector('#cancel-btn');
+			if (cancelBtn) {
+				cancelBtn.onclick = function(e) {
+					e.preventDefault();
+					showActivityDetailModal(activity, partnerName, coords);
+				};
+			}
+			modalContent.appendChild(form);
+		})
+
 	// --- LOAD FORM HTML ---
 	fetch('html/editloc.html')
 		.then(response => response.text())
