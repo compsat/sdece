@@ -650,7 +650,7 @@ function initializeFilterModal() {
 
   // Apply filters
   applyFilters.addEventListener('click', () => {
-    // Filter logic implementation goes here
+    
     updateFilterButtonState();
     closeFilterModal();
   });
@@ -672,6 +672,22 @@ function initializeFilterModal() {
     updateFilterButtonState();
     closeFilterModal();
   });
+}
+
+// Get checked values by filter type
+function getCheckedValuesByFilter(filterType) {
+  const checkboxes = document.querySelectorAll(`input[data-filter="${filterType}"]:checked`);
+  return Array.from(checkboxes).map(checkbox => checkbox.value);
+}
+
+// Collect all filter selections
+function collectAllFilterSelections() {
+  return {
+    residency_status: getCheckedValuesByFilter('residency_status'),
+    house_material: getCheckedValuesByFilter('house_material'),
+    is_hoa_noa: getCheckedValuesByFilter('is_hoa_noa'),
+    risk_level: getCheckedValuesByFilter('risk_level'),
+  };
 }
 
 // Update filter button visual state based on selected filters
