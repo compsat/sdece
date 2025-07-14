@@ -560,11 +560,13 @@ function updateRiskIcons() {
 
         editBtns.forEach((btn) => {
           btn.addEventListener('click', function() {
+            
             const modal = document.getElementById('partnerModal');
             var editFormModal = document.getElementById('editModal');
             editFormModal.style.display = 'flex';
             modal.style.display = 'none';
-            populateEditForm(doc, editFormModal);
+            populateEditForm(partner, editFormModal);
+            console.log(partner)
           });
         });
 
