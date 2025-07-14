@@ -9,10 +9,12 @@ import {
 	GeoPoint,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 
+
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 
+import { FILTER_RULES } from '/js/ruleEngines.js'
 import {
 	getFirestore,
 	collection,
@@ -599,3 +601,49 @@ export function validateData(collectionName, data) {
 	}
 	return errors;
 }
+
+export async function filterData(filter_rules, data) {
+  const rules = FILTER_RULES[filter_rules];
+  const waitingResults = [];
+  const finalResults = new Map();
+
+  for (const field in rules) {
+		const filterRule = rules[field];
+		const value = data[field];
+		const fieldLabel = filterRule.label || field;
+
+
+    const IS_EMPTY = value == undefined || value == null || value == ''
+
+    if (IS_EMPTY) continue;
+
+    switch (filterRule.type) {
+      case "string":
+        if (value.constructor == Array){
+          value.forEach((data) => {
+          waitingResults.push(
+              getDocs(query(collection_reference, where(fieldLabel, "==", data)))
+            );
+          });
+        } else {
+          waitingResults.push(getDocs(query(collection_reference, where(fieldLabel, "==", value))))
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  const unmergedResults = await Promise.all(waitingResults);
+
+  unmergedResults.forEach((query) => {
+    query.forEach((doc) => {
+      let data = doc.data();
+      let docID = doc.id;
+      finalResults.set(docID, data);
+    });
+  });
+
+  return finalResults;
+}
+
