@@ -566,7 +566,6 @@ function updateRiskIcons() {
             editFormModal.style.display = 'flex';
             modal.style.display = 'none';
             populateEditForm(partner, editFormModal);
-            console.log(partner)
           });
         });
 
