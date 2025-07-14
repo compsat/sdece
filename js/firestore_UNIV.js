@@ -602,8 +602,8 @@ export function validateData(collectionName, data) {
 	return errors;
 }
 
-export async function filterData(filter_rules, data) {
-  const rules = FILTER_RULES[filter_rules];
+export async function filterData(collectionName, data) {
+  const rules = VALIDATION_RULES[collectionName];
   const waitingResults = [];
   const finalResults = new Map();
 
