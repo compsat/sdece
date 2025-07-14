@@ -388,6 +388,10 @@ a.accordion {
   text-decoration: none;
 }
 
+.highlight {
+  background-color: #f3f4f6;
+}
+
 .activity {
   color: #2f2f2f;
   text-overflow: ellipsis;
