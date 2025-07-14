@@ -554,11 +554,9 @@ function updateRiskIcons() {
     marker.on('popupopen', () => {
       // Use setTimeout to defer this to after the popup DOM is actually rendered
       setTimeout(() => {
-        //const edit_button = document.getElementById("edit-household-popup");
+        const edit_button = document.querySelectorAll(".popup-edit-btn");
 
-        const editBtns = document.querySelectorAll(".popup-edit-btn");
-
-        editBtns.forEach((btn) => {
+        edit_button.forEach((btn) => {
           btn.addEventListener('click', function() {
             
             const modal = document.getElementById('partnerModal');
@@ -569,25 +567,13 @@ function updateRiskIcons() {
           });
         });
 
-        /*
-        if (edit_button) {
-          edit_button.addEventListener('click', () => {
-            const modal = document.getElementById('partnerModal');
-            var editFormModal = document.getElementById('editModal');
-            editFormModal.style.display = 'flex';
-            modal.style.display = 'none';
-            populateEditForm(partner, editFormModal);
-          });
-        }
-        */
-
         const close_button = document.getElementById("close-btn");
         if (close_button) {
           close_button.addEventListener('click', () => {
             marker.closePopup();
           });
         }
-      }, 0); // <-- ensures DOM is painted
+      }, 0); 
       
     });
 
