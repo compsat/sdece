@@ -289,6 +289,15 @@
                 for (var i = 0; i < selectFields.length; i++) {
                     selectFields[i].selectedIndex = 0; 
                 }
+
+                // Clear select dropdowns
+                var textAreaFields = document.getElementsByTagName('textarea');
+                for (var i = 0; i < textAreaFields.length; i++) {
+                    var field = textAreaFields[i];
+                    if (!field.readOnly && field.type !== 'button') {
+                        field.value = '';
+                    }
+                }
             }
         }
 
