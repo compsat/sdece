@@ -35,13 +35,23 @@ var partnersArray = getPartnersArray();
 
 // Function for populating the navbar entries with households entries
 function populateNavBar(condition){
+  // Clear the current list
+  const locationList = document.getElementById('locationList');
+  locationList.innerHTML = '';
+  
   var filtered_partners;
 
   if (condition == null){
-    filtered_partners = partnersArray
+    filtered_partners = partnersArray;
+  } else {
+    // Filter logic implementation goes here
+    filtered_partners = partnersArray;
   }
-  else{
-    //insert filter here
+
+  // Update the household count
+  const partnersCount = document.getElementById('partners-count');
+  if (partnersCount) {
+    partnersCount.textContent = `HOUSEHOLDS (${filtered_partners.length})`;
   }
 
   filtered_partners.forEach((partner) => {
@@ -603,3 +613,87 @@ function updateRiskIcons() {
 // Code logic for automatically changing pin color depending on selected option on dropbox 
 document.getElementById('risk-sort').addEventListener('change', updateRiskIcons);
 updateRiskIcons();
+
+// FILTER MODAL UI
+// ------------------------------------------
+
+// Initialize filter modal functionality when DOM is loaded
+function initializeFilterModal() {
+  // Filter Modal Controls
+  const filterBtn = document.getElementById('filterBtn');
+  const filterModal = document.getElementById('filterModal');
+  const filterClose = document.getElementById('filterClose');
+  const applyFilters = document.getElementById('applyFilters');
+  const clearFilters = document.getElementById('clearFilters');
+
+  if (!filterBtn || !filterModal) {
+    console.error('Filter elements not found');
+    return;
+  }
+
+  // Open filter modal
+  filterBtn.addEventListener('click', () => {
+    filterModal.style.display = 'flex';
+  });
+
+  // Close filter modal
+  function closeFilterModal() {
+    filterModal.style.display = 'none';
+  }
+
+  filterClose.addEventListener('click', closeFilterModal);
+  filterModal.addEventListener('click', (e) => {
+    if (e.target === filterModal) {
+      closeFilterModal();
+    }
+  });
+
+  // Apply filters
+  applyFilters.addEventListener('click', () => {
+    // Filter logic implementation goes here
+    updateFilterButtonState();
+    closeFilterModal();
+  });
+
+  // Clear all filters
+  clearFilters.addEventListener('click', () => {
+    // Reset all checkboxes
+    document.querySelectorAll('#filterModal input[type="checkbox"]').forEach(checkbox => {
+      checkbox.checked = false;
+    });
+    
+    // Reset risk type dropdown
+    const riskTypeFilter = document.getElementById('riskTypeFilter');
+    if (riskTypeFilter) {
+      riskTypeFilter.value = '';
+    }
+    
+    // Reset visual state
+    updateFilterButtonState();
+    closeFilterModal();
+  });
+}
+
+// Update filter button visual state based on selected filters
+function updateFilterButtonState() {
+  const filterBtn = document.getElementById('filterBtn');
+  
+  // Check if any filters are selected
+  const hasCheckboxFilters = document.querySelectorAll('#filterModal input[type="checkbox"]:checked').length > 0;
+  const riskTypeFilter = document.getElementById('riskTypeFilter');
+  const hasRiskTypeFilter = riskTypeFilter && riskTypeFilter.value !== '';
+  
+  const hasActiveFilters = hasCheckboxFilters || hasRiskTypeFilter;
+  
+  if (hasActiveFilters) {
+    filterBtn.classList.add('filter-active');
+  } else {
+    filterBtn.classList.remove('filter-active');
+  }
+}
+
+// Initialize filter modal when DOM is ready
+document.addEventListener('DOMContentLoaded', initializeFilterModal);
+
+// Also initialize after a short delay to ensure all elements are loaded
+setTimeout(initializeFilterModal, 1000);

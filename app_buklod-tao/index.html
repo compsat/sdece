@@ -54,9 +54,18 @@
         </div>
         <search-bar id="search-bar-component"></search-bar>
         <div class="actions-container">
-          <button class="action-btn">Filter</button>
-          <button class="action-btn" id="sortBtn">Sort</button>
-          <button class="action-btn" id="download-report">Export data</button>
+          <button class="action-btn" id="filterBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"><path d="M5 7C5 6.17157 5.67157 5.5 6.5 5.5C7.32843 5.5 8 6.17157 8 7C8 7.82843 7.32843 8.5 6.5 8.5C5.67157 8.5 5 7.82843 5 7ZM6.5 3.5C4.567 3.5 3 5.067 3 7C3 8.933 4.567 10.5 6.5 10.5C8.433 10.5 10 8.933 10 7C10 5.067 8.433 3.5 6.5 3.5ZM12 8H20V6H12V8ZM16 17C16 16.1716 16.6716 15.5 17.5 15.5C18.3284 15.5 19 16.1716 19 17C19 17.8284 18.3284 18.5 17.5 18.5C16.6716 18.5 16 17.8284 16 17ZM17.5 13.5C15.567 13.5 14 15.067 14 17C14 18.933 15.567 20.5 17.5 20.5C19.433 20.5 21 18.933 21 17C21 15.067 19.433 13.5 17.5 13.5ZM4 16V18H12V16H4Z"></path></svg>
+            Filter
+          </button>
+          <button class="action-btn" id="sortBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"><path d="M18.2072 9.0428 12.0001 2.83569 5.793 9.0428 7.20721 10.457 12.0001 5.66412 16.793 10.457 18.2072 9.0428ZM5.79285 14.9572 12 21.1643 18.2071 14.9572 16.7928 13.543 12 18.3359 7.20706 13.543 5.79285 14.9572Z"></path></svg>
+            Sort
+          </button>
+          <button class="action-btn" id="download-report">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"><path d="M3 19H21V21H3V19ZM13 13.1716L19.0711 7.1005L20.4853 8.51472L12 17L3.51472 8.51472L4.92893 7.1005L11 13.1716V2H13V13.1716Z"></path></svg>
+            Export data
+          </button>
         </div>
         <select name="risk" id="risk-sort" class="action-btn">
           <option value="earthquake-sort">Earthquake</option>
@@ -94,6 +103,70 @@
   <!-- Edit Modal: This is the modal that shows up when clicking on the Edit button -->
   <div class="modal-screen" id="editModal">
     <iframe src="html/editloc.html" class="form-modal"></iframe>
+  </div>
+
+  <!-- Filter Modal: This is the modal that shows up when clicking on the Filter button -->
+  <div class="modal-screen" id="filterModal">
+    <div class="filter-modal">
+      <div class="filter-header">
+        <h2>Filter Households</h2>
+        <button class="filter-close" id="filterClose">&times;</button>
+      </div>
+      <div class="filter-content">
+        <div class="filter-section">
+          <h3>Residency Status</h3>
+          <div class="filter-options">
+            <label><input type="checkbox" value="May-Ari" data-filter="residency_status"> May-Ari</label>
+            <label><input type="checkbox" value="Umuupa" data-filter="residency_status"> Umuupa</label>
+          </div>
+        </div>
+        
+        <div class="filter-section">
+          <h3>House Material</h3>
+          <div class="filter-options">
+            <label><input type="checkbox" value="Concrete" data-filter="house_material"> Concrete</label>
+            <label><input type="checkbox" value="Semi-Concrete" data-filter="house_material"> Semi-Concrete</label>
+            <label><input type="checkbox" value="Light materials" data-filter="house_material"> Light materials</label>
+            <label><input type="checkbox" value="Makeshift" data-filter="house_material"> Makeshift</label>
+            <label><input type="checkbox" value="Natural" data-filter="house_material"> Natural</label>
+          </div>
+        </div>
+        
+        <div class="filter-section">
+          <h3>HOA/NOA Status</h3>
+          <div class="filter-options">
+            <label><input type="checkbox" value="HOA" data-filter="is_hoa_noa"> HOA</label>
+            <label><input type="checkbox" value="NOA" data-filter="is_hoa_noa"> NOA</label>
+            <label><input type="checkbox" value="N/A" data-filter="is_hoa_noa"> N/A</label>
+          </div>
+        </div>
+        
+        <div class="filter-section">
+          <h3>Risk Level</h3>
+          <div class="filter-options">
+            <label><input type="checkbox" value="HIGH RISK" data-filter="risk_level"> High Risk</label>
+            <label><input type="checkbox" value="MEDIUM RISK" data-filter="risk_level"> Medium Risk</label>
+            <label><input type="checkbox" value="LOW RISK" data-filter="risk_level"> Low Risk</label>
+          </div>
+        </div>
+        
+        <div class="filter-section">
+          <h3>Risk Type</h3>
+          <select id="riskTypeFilter" data-filter="risk_type">
+            <option value="">All Risk Types</option>
+            <option value="earthquake">Earthquake</option>
+            <option value="fire">Fire</option>
+            <option value="flood">Flood</option>
+            <option value="landslide">Landslide</option>
+            <option value="storm">Storm</option>
+          </select>
+        </div>
+      </div>
+      <div class="filter-footer">
+        <button class="filter-btn filter-clear" id="clearFilters">Clear All</button>
+        <button class="filter-btn filter-apply" id="applyFilters">Apply Filters</button>
+      </div>
+    </div>
   </div>
 
   <!--script for map-->
@@ -194,6 +267,7 @@ function sortButton() {
 
 // ✅ Call it!
 sortButton();
+
 
 
     // Function to hide the div containing the iframe
