@@ -250,7 +250,7 @@ const VALIDATION_RULES = {
 		storm_risk: { label: 'Storm Risk', type: 'string', required: true },
 		storm_risk_description: { label: 'Storm Risk Description', type: 'string', required: false},
 
-		nearest_evac: { type: 'string', required: true, maxLength: 255 },
+		nearest_evac: { label: 'Nearest Evacuation Area', type: 'string', required: true, maxLength: 255 },
 	},
 	'buklod-official': {
     household_name: { label: "Household Name", type: 'string', required: true, maxLength: 127 },
@@ -284,7 +284,7 @@ const VALIDATION_RULES = {
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
     location_coordinates: { label: "Location Coordinates", type: 'object', required: true },
-		location_link: { label: "Location Link", type: 'string', required: true },
+		location_link: { label: "Location Link", type: 'string', required: true, regex: /^https:\/\/www\.openstreetmap\.org\/.+/  },
 		household_address: { label: "Household Address", type: 'string', required: true, maxLength: 100 },
 		household_material: {
       label: "Household Material",
@@ -584,11 +584,11 @@ export function validateData(collectionName, data) {
 		if (rule.regex && typeof value === 'string') {
 			if (!rule.regex.test(value)) {
 				if (fieldLabel == 'Contact Number') {
-					errors.push(`${fieldLabel} is not in the correct format. Number be in the format 09xxxxxxxxx.`);
+					errors.push(`${fieldLabel} is not in the correct format. Number be in the format: 09xxxxxxxxx.`);
 					continue;
 				}
 				if (fieldLabel == 'Location Link') {
-					errors.push(`${fieldLabel} is not in the correct format.`);
+					errors.push(`${fieldLabel} is not in the correct format. Link must start with: https://www.openstreetmap.org/ss`);
 					continue;
 				}
 			}
