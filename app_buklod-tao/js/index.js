@@ -188,7 +188,7 @@ async function onPinClick(doc) {
         ul.textContent = doc.number_pregnant || 0;
         break;
       case 'sickness_present':
-        ul.textContent = doc.number_pregnant || 'None';
+        ul.textContent = doc.sickness_present || 'None';
         break;
 
       case 'risk-section':
