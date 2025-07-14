@@ -521,7 +521,6 @@ function getRiskIcon(riskLevel) {
 function updateRiskIcons() {
   const riskType = document.getElementById('risk-sort').value.replace('-sort', '');
   // Remove all current markers
-  // results.clearLayers();
   
   clearMarkers();
 
@@ -542,8 +541,6 @@ function updateRiskIcons() {
     // Place pin accordingly on map according to icon class standards
 
     // Shows partner info on pin click
-    //const popupContent = onPinClick(partner);
-    //marker.bindPopup(popupContent);
     onPinClick(partner).then(popupContent => {
       marker.bindPopup(popupContent);
     });
