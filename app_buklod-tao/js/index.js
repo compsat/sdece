@@ -517,9 +517,11 @@ function getRiskIcon(riskLevel) {
   }
 }
 
+// Function for removing the highlights
 function clearAllHighlights() {
   const highlightedItems = document.querySelectorAll('.highlight');
   highlightedItems.forEach(item => item.classList.remove('highlight'));
+  console.log('[DEBUG] Clearing highlights');
 }
 
 // Function for displaying of pins and its switching colors depending on risk type
@@ -575,14 +577,14 @@ function updateRiskIcons() {
         if (close_button) {
           close_button.addEventListener('click', () => {
             marker.closePopup();
+            clearAllHighlights();
           });
         }
         
         // Clearing all highlights to make sure only one item is highlighted
         clearAllHighlights()
         
-        // Function for sidebar scrolling and highlighting when clicking from
-        // sidebar or pin
+        // Function for sidebar scrolling and highlighting when clicking from sidebar or pin
         const listItems = document.querySelectorAll('li.accordion');
         const listItem = Array.from(listItems).find(
           li => li.dataset.name === partner.household_name
