@@ -577,7 +577,7 @@ function updateRiskIcons() {
         if (close_button) {
           close_button.addEventListener('click', () => {
             marker.closePopup();
-            clearAllHighlights();
+            clearAllHighlights(); // Not Working
           });
         }
         
