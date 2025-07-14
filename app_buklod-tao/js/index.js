@@ -521,7 +521,6 @@ function getRiskIcon(riskLevel) {
 function clearAllHighlights() {
   const highlightedItems = document.querySelectorAll('.highlight');
   highlightedItems.forEach(item => item.classList.remove('highlight'));
-  console.log('[DEBUG] Clearing highlights');
 }
 
 // Function for displaying of pins and its switching colors depending on risk type
