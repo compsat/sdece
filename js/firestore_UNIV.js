@@ -477,7 +477,9 @@ export function addEntry(inp_obj) {
 			// Return the Promise so the form can handle success/error
 			return addDoc(collection_reference, input)
 				.then((docRef) => {
-					console.log(docRef);
+					// console.log(docRef);
+					alert("You may now reload the page for the new household to reflect on this page");
+					window.parent.location.reload(); 
 					return docRef; // Return the document reference for success handling
 				})
 				.catch((error) => {
