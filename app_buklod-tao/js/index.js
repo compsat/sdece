@@ -571,17 +571,6 @@ function updateRiskIcons() {
             populateEditForm(partner, editFormModal);
           });
         }
-
-        const close_button = document.getElementById("close-btn");
-        if (close_button) {
-          close_button.addEventListener('click', () => {
-            marker.closePopup();
-            clearAllHighlights(); // Not Working
-          });
-        }
-        
-        // Clearing all highlights to make sure only one item is highlighted
-        clearAllHighlights()
         
         // Function for sidebar scrolling and highlighting when clicking from sidebar or pin
         const listItems = document.querySelectorAll('li.accordion');
@@ -625,3 +614,5 @@ function updateRiskIcons() {
 // Code logic for automatically changing pin color depending on selected option on dropbox 
 document.getElementById('risk-sort').addEventListener('change', updateRiskIcons);
 updateRiskIcons();
+
+map.on("popupclose",clearAllHighlights)
