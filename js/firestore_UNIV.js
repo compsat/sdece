@@ -4,6 +4,8 @@ import {
 	updateDoc,
 	doc,
 	query,
+  or,
+  and,
 	where,
 	getDoc,
 	GeoPoint,
@@ -603,45 +605,43 @@ export function validateData(collectionName, data) {
 }
 
 export async function filterData(collectionName, data) {
-  const rules = VALIDATION_RULES[collectionName];
-  const waitingResults = [];
+  const rules = FILTER_RULES[collectionName];
+  const fullQueries = [];
   const finalResults = new Map();
+
 
   for (const field in rules) {
 		const filterRule = rules[field];
-		const value = data[field];
 		const fieldLabel = filterRule.label || field;
+		const value = data[field]; 
 
-
-    const IS_EMPTY = value == undefined || value == null || value == ''
+    const IS_EMPTY = value == undefined || value == null || value == '' || value == []
 
     if (IS_EMPTY) continue;
 
     switch (filterRule.type) {
       case "string":
-        if (value.constructor == Array){
-          value.forEach((data) => {
-          waitingResults.push(
-              getDocs(query(collection_reference, where(fieldLabel, "==", data)))
-            );
-          });
+        if (value.constructor == Array && value.length > 1){
+          const orQueries = value.map((data) => where(fieldLabel, "==", data));
+          fullQueries.push(or(...orQueries));
         } else {
-          waitingResults.push(getDocs(query(collection_reference, where(fieldLabel, "==", value))))
+          fullQueries.push(where(fieldLabel, "==", value[0]));
         }
+        break;
+      case "number":
+        fullQueries.push(where(fieldLabel, ">=", value));
         break;
       default:
         break;
     }
   }
 
-  const unmergedResults = await Promise.all(waitingResults);
+  const finalQuery = await getDocs(query(collection_reference, and(...fullQueries)));
 
-  unmergedResults.forEach((query) => {
-    query.forEach((doc) => {
+  finalQuery.forEach((doc) => {
       let data = doc.data();
       let docID = doc.id;
       finalResults.set(docID, data);
-    });
   });
 
   return finalResults;

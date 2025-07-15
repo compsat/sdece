@@ -6,6 +6,7 @@ import {
   getDocByID,
   setCollection,
   getCollection,
+  filterData,
   DB,
   BUKLOD_RULES_TEST,
 } from '../../js/firestore_UNIV.js';
@@ -650,7 +651,7 @@ function initializeFilterModal() {
 
   // Apply filters
   applyFilters.addEventListener('click', () => {
-    
+    presentFilteredData(); 
     updateFilterButtonState();
     closeFilterModal();
   });
@@ -684,7 +685,7 @@ function getCheckedValuesByFilter(filterType) {
 function collectAllFilterSelections() {
   return {
     residency_status: getCheckedValuesByFilter('residency_status'),
-    house_material: getCheckedValuesByFilter('house_material'),
+    household_material: getCheckedValuesByFilter('household_material'),
     is_hoa_noa: getCheckedValuesByFilter('is_hoa_noa'),
     risk_level: getCheckedValuesByFilter('risk_level'),
   };
@@ -707,6 +708,18 @@ function updateFilterButtonState() {
     filterBtn.classList.remove('filter-active');
   }
 }
+
+export async function presentFilteredData() {
+  const data = collectAllFilterSelections();
+  console.log(data);
+
+  const finalData = await filterData("buklod-tao", data);
+
+  console.log(finalData);
+
+  return finalData;
+}
+
 
 // Initialize filter modal when DOM is ready
 document.addEventListener('DOMContentLoaded', initializeFilterModal);
