@@ -148,7 +148,7 @@ export const DB_RULES_AND_DATA = [
 		],
 	],
 	[
-		'sdece-official',
+		'seeds-official',
 		'partner_name',
 		[
 			'activity_date',
@@ -168,7 +168,7 @@ export const DB_RULES_AND_DATA = [
 		],
 	],
 	[
-		'sdece-official-TEST',
+		'seeds-official-TEST',
 		'partner_name',
 		[
 			'activity_date',
@@ -313,7 +313,7 @@ const VALIDATION_RULES = {
 
 		nearest_evac: { type: 'string', required: true, maxLength: 255 },
 	},
-	'sdece-official-TEST': {
+	'seeds-official-TEST': {
     partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
 		partner_address: { label: "Address of Host Partner", type: 'string', required: true, maxLength: 255 },
 		partner_coordinates: { label: "Partner Coordinates", required: true },
@@ -348,7 +348,7 @@ const VALIDATION_RULES = {
 			regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/
 		},
 	},
-	'sdece-official': {
+	'seeds-official': {
     partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
 		partner_address: { label: "Address of Host Partner", type: 'string', required: true, maxLength: 255 },
 		partner_coordinates: { label: "Partner Coordinates", required: true },
@@ -387,8 +387,8 @@ const VALIDATION_RULES = {
 
 export const BUKLOD_RULES = DB_RULES_AND_DATA[0];
 export const BUKLOD_RULES_TEST = DB_RULES_AND_DATA[1];
-export const SDECE_RULES = DB_RULES_AND_DATA[2];
-export const SDECE_RULES_TEST = DB_RULES_AND_DATA[3];
+export const SEEDS_RULES = DB_RULES_AND_DATA[2];
+export const SEEDS_RULES_TEST = DB_RULES_AND_DATA[3];
 
 export function setCollection(collection_name) {
 	for (let rule of DB_RULES_AND_DATA) {
@@ -531,7 +531,7 @@ export function validateData(collectionName, data) {
     // the rules. 
 
     const MIN_LENGTH_TEST = rule.minLength && typeof value == 'string' && value.length < rule.minLength
-    // this will stay here until sdece team implements front-end validation of phone
+    // this will stay here until seeds team implements front-end validation of phone
     // number
 
     // Map of Validation Tests
@@ -555,7 +555,7 @@ export function validateData(collectionName, data) {
     ])
 
 
-    // This is holdover code until the sdece team can implement frontend validation
+    // This is holdover code until the seeds team can implement frontend validation
 		if (MIN_LENGTH_TEST && field === 'partner_contact_number') {
 				errors.push(
 					`${fieldLabel} must be at least ${rule.minLength} characters long and in the form 09XXXXXXXXX.`

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Add Location</title>
+
+		<!-- Import Tailwind CSS output file -->
+		<link href="../css/form.css" rel="stylesheet" />
+
+		<script type="module">
+			import {
+				addEntry,
+				SEEDS_RULES_TEST,
+				setCollection,
+				validateData,
+				getCoordinates,
+			} from '/js/firestore_UNIV.js';
+
+			setCollection('seeds-official-TEST');
+
+			// Commenting this out first as new_activity_form is not defined and is causing errors
+			// document.addEventListener('DOMContentLoaded', function () {
+			// 	document
+			// 		.getElementById('new_activity_form')
+			// 		.addEventListener('click', handleFormSubmit_v2);
+			// });
+			// .addEventListener('click', handleFormSubmit_v3);
+
+			function handleFormSubmit_v2() {
+				var collatedInput = {};
+
+				for (let i = 0; i < SEEDS_RULES_TEST[2].length; i++) {
+					//SEEDS_RULES_TEST[2] are just the field names of each document
+
+					let fieldName = SEEDS_RULES_TEST[2][i];
+					let inputValue =
+						document.getElementById(fieldName).value;
+
+					if (fieldName == 'partner_coordinates') {
+						collatedInput[fieldName] = getCoordinates();
+					} else {
+						collatedInput[fieldName] = inputValue;
+					}
+				}
+
+				const errors = validateData(
+					'seeds-official-TEST',
+					collatedInput
+				);
+
+				if (errors.length > 0) {
+					displayErrors(errors);
+					event.preventDefault();
+
+				} else {
+					addEntry(collatedInput);
+				}
+
+				function displayErrors(errors) {
+					let errorDiv =
+						document.getElementById('error_messages');
+
+					if (errorDiv) {
+						errorDiv.innerHTML = '';
+
+						if (errors.length > 0) {
+							for (let error of errors) {
+								let errorParagraph =
+									document.createElement('p');
+								errorParagraph.textContent = error;
+								errorDiv.appendChild(errorParagraph);
+							}
+						} else {
+							console.error(
+								"Error: Couldn't find element with ID 'error_messages'."
+							);
+						}
+					}
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<form
+			action=""
+			id="addLocForm"
+			class="form-container"
+			onsubmit="this.reset(); closeModal()"
+		>
+			<div class="form-header">
+				<h1 class="form-heading">Add Activity</h1>
+
+				<button id="close-btn" >
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="currentColor"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						class="close-btn"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M6 18 18 6M6 6l12 12"
+						/>
+					</svg>
+				</button>
+			</div>
+			<div class="form-body">
+
+				<div class id="error_messages"></div>
+
+				<!-- General Information -->
+				<div class="form-section">
+					<div class="form-field" data-error="">
+						<label class="form-label" for="activity_name"
+							>Activity Name</label
+						>
+
+						<input
+							type="text"
+							id="activity_name"
+							name="activity_name"
+							class="form-input"
+							placeholder="Ex. CSIP Session Week 3"
+						/>
+					</div>
+					<div class="error-message"></div>
+					<div class="form-field" data-error="">
+						<label class="form-label" for="activity_nature"
+							>Nature of Activity</label
+						>
+						<input
+							type="text"
+							id="activity_nature"
+							name="activity_nature"
+							class="form-input"
+							placeholder="Ex. Tutorial Classes"
+						/>
+					</div>
+					<div class="error-message"></div>
+					<div class="form-field" data-error="">
+						<label class="form-label" for="activity_date"
+							>Date of Partnership
+						</label>
+						<div
+							style="
+								display: flex;
+								flex-direction: column;
+								align-items: flex-start;
+							"
+							id="date-container"
+						>
+							<input
+								type="date"
+								id="activity_date"
+								name="activity_date"
+								class="form-input"
+								placeholder=""
+							/>
+							<!-- Commenting out the additional dates functionality first! -->
+							<!-- <a
+								href=""
+								id="addDate"
+								style="
+									font-size: 1rem;
+									line-height: 1.5rem;
+									font-family: 'Montserrat';
+									color: var(--lightbg);
+									text-decoration-line: underline;
+									margin-top: 1rem;
+								"
+								>Add another date
+							</a> -->
+						</div>
+						
+					</div>
+					<div class="error-message"></div>
+				</div>
+
+				<!-- PARTNER INFORMATION -->
+				<div class="form-section">
+					<h2 class="form-subheading">PARTNER INFORMATION</h2>
+
+					<div class="form-field" data-error="">
+						<label
+							class="form-label"
+							for="additional_partnership"
+							>Additional Partnership
+						</label>
+						<input
+							type="text"
+							id="additional_partnership"
+							name="additional_partnership"
+							class="form-input"
+							placeholder="Ex. Couples for Christ North B Sector"
+						/>
+					</div>
+					<!-- <div class="error-message"></div> -->
+					<div class="form-field" data-error="">
+						<label class="form-label" for="organization_unit"
+							>Organization Unit
+						</label>
+						<input
+							type="text"
+							id="organization_unit"
+							name="organization_unit"
+							class="form-input"
+							placeholder="Ex. ACIL"
+						/>
+					</div>
+					<!-- <div class="error-message"></div> -->
+					<div class="form-field" data-error="">
+						<label class="form-label" for="partner_name"
+							>Name of Host Partner</label
+						>
+						<input
+							type="text"
+							id="partner_name"
+							name="partner_name"
+							class="form-input"
+							placeholder="Ex. Íñigo López de Loyola"
+						/>
+					</div>
+					<!-- <div class="error-message"></div> -->
+					<div class="form-field" data-error="">
+						<label class="form-label" for="partner_address"
+							>Address of Host Partner</label
+						>
+						<input
+							type="text"
+							id="partner_address"
+							name="partner_address"
+							class="form-input"
+							placeholder="Ex. Katipunan, Quezon City"
+						/>
+					</div>
+					<!-- <div class="error-message"></div> -->
+					<div class="form-field" data-error="">
+						<label
+							class="form-label"
+							for="partner_contact_name"
+							>Name of Contact Person</label
+						>
+						<input
+							type="text"
+							id="partner_contact_name"
+							name="partner_contact_name"
+							class="form-input"
+							placeholder="Ex. Maria Katipunera"
+						/>
+					</div>
+					<div class="error-message"></div>
+					<div class="form-field" data-error="">
+						<label
+							class="form-label"
+							for="partner_contact_number"
+							>Number of Contact Person
+						</label>
+						<input
+							type="text"
+							id="partner_contact_number"
+							name="partner_contact_number"
+							class="form-input"
+							placeholder="09XXXXXXXXX"
+						/>
+					</div>
+					<div class="error-message"></div>
+					<div class="form-field" data-error="">
+						<label class="form-label" for="partner_email"
+							>Email of Contact Person / Partner</label
+						>
+						<input
+							type="email"
+							id="partner_email"
+							name="partner_email"
+							class="form-input"
+							placeholder="Ex. ignatius@ateneo.edu"
+						/>
+					</div>
+					<div class="error-message"></div>
+					<!-- to see the currently clicked geopoint -->
+					<!-- <div id="location-info" class="form-label"></div> -->
+					<div class="form-field" style="display: none" data-error="">
+						<label
+							class="form-label"
+							for="partner_coordinates"
+							>Partner Coordinates
+						</label>
+						<input
+							type="text"
+							id="partner_coordinates"
+							name="partner_coordinates"
+							class="form-input"
+							placeholder="Ex. 14.6895421, 121.0818291"
+						/>
+					</div>
+					<!-- <div class="error-message"></div> -->
+				</div>
+
+				<div class="form-section">
+					<h2 class="form-subheading">
+						ATENEO OFFICE OVERSIGHT
+					</h2>
+
+					<div class="form-field" data-error="">
+						<label class="form-label" for="ADMU_office"
+							>Name of Office</label
+						>
+						<input
+							type="text"
+							id="ADMU_office"
+							name="ADMU_office"
+							class="form-input"
+							placeholder="Ex. OSCI"
+						/>
+					</div>
+					<div class="error-message"></div>
+					<div class="form-field" data-error="">
+						<label class="form-label" for="ADMU_contact"
+							>Name of Ateneo Contact Person</label
+						>
+						<input
+							type="text"
+							id="ADMU_contact_name"
+							name="ADMU_contact_name"
+							class="form-input"
+							placeholder="Ex. Íñigo López de Loyola"
+						/>
+					</div>
+					<div class="error-message"></div>
+					<div class="form-field" data-error="">
+						<label class="form-label" for="ADMU_email"
+							>Email of Ateneo Contact Person</label
+						>
+						<input
+							type="email"
+							id="ADMU_email"
+							name="ADMU_email"
+							class="form-input"
+							placeholder="Ex. ignatius@ateneo.edu"
+						/>
+					</div>
+					<div class="error-message"></div>
+				</div>
+
+				<!-- Buttons -->
+				<div class="form-buttons-container">
+					<!-- Clears all contents of the form -->
+					<button
+						class="form-button positive"
+						type="submit"
+						id="submit_form"
+						name="submit_form"
+						data-id="Save Button"
+					>
+						Save
+					</button>
+					<input
+						class="form-button negative"
+						data-id="Delete Button"
+						id="delete-btn"
+						onclick="resetForm()"
+						type="button"
+						value="Clear"
+					>
+						
+					</input>
+				</div>
+
+				<br /><br />
+			</div>
+		</form>
+
+
+
+		<script>
+			document
+				.getElementById('addLocForm')
+				.addEventListener('submit', function (event) {
+					event.preventDefault(); // Prevent the default form submission
+
+					// Simulate successful submission (replace with actual form submission code)
+					// Example: Submit form data via AJAX or fetch API
+
+					// Assuming form submission is successful
+					// Notify parent window (where the iframe is embedded)
+					window.parent.postMessage(
+						{ type: 'addlocFormSuccess' },
+						'*'
+					);
+				});
+
+			// Commenting this out since the Date Adding feature will not be implemented yet.
+			// document
+			// 	.getElementById('addDate')
+			// 	.addEventListener('click', function (event) {
+			// 		event.preventDefault();
+			// 		var dateContainer =
+			// 			document.getElementById('date-container');
+			// 		var newDateInput = document.createElement('input');
+			// 		newDateInput.type = 'date';
+			// 		newDateInput.name = 'activity_date';
+			// 		newDateInput.className = 'form-input';
+			// 		newDateInput.style.marginTop = '1.5rem';
+			// 		dateContainer.insertBefore(newDateInput, this);
+			// 	});
+
+
+			// This chunk is for closing the modal, given iFrame approach
+			function closeModal() {
+				window.parent.postMessage('closeAddModal', '*');
+			}
+
+			function resetForm() {
+				var inputFields = document.getElementsByTagName('input');
+				for (var i = 0; i < inputFields.length; i++) {
+					var field = inputFields[i];
+					if (!field.readOnly && field.type !== 'button') {
+						field.value = '';
+					}
+				}
+
+				// Reset error messages
+				var errorMessages = document.getElementsByClassName('error-message');
+				for (var j = 0; j < errorMessages.length; j++) {
+					errorMessages[j].textContent = '';
+				}
+
+				// Clear the overall error messages container
+				var errorContainer = document.getElementById('error_messages');
+				if (errorContainer) {
+					errorContainer.innerHTML = '';
+				}
+			}
+			
+			document
+				.getElementById('close-btn')
+				.addEventListener('click', function (event) {
+					if(confirm("Closing may lead to unsaved data being deleted, proceed?")){
+						event.preventDefault();
+						closeModal();
+						resetForm();
+					} else {
+						event.preventDefault();
+					}
+				});
+
+			// This function is for clearing all input that is not readOnly
+
+		</script>
+	</body>
+</html>

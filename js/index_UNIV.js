@@ -162,21 +162,21 @@ export const JS_CS_ENGINE = [
 		],
 	],
 	[
-		'sdece-official',
+		'seeds-official',
 		[
-			'/app_sdece/js/index.js',
-			'/app_sdece/js/firestore.js',
-			'/app_sdece/css/form.css',
-			'/app_sdece/css/modal.css',
+			'/app_seeds/js/index.js',
+			'/app_seeds/js/firestore.js',
+			'/app_seeds/css/form.css',
+			'/app_seeds/css/modal.css',
 		],
 	],
 	[
-		'sdece-official-TEST',
+		'seeds-official-TEST',
 		[
-			'/app_sdece/js/index.js',
-			'/app_sdece/js/firestore.js',
-			'/app_sdece/css/form.css',
-			'/app_sdece/css/modal.css',
+			'/app_seeds/js/index.js',
+			'/app_seeds/js/firestore.js',
+			'/app_seeds/css/form.css',
+			'/app_seeds/css/modal.css',
 		],
 	],
 

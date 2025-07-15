@@ -1,11 +1,11 @@
 // FIRESTORE DATABASE\
 import { getDocs, GeoPoint, Timestamp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-import { getCollection, setCollection, SDECE_RULES, validateData, editEntry, addEntry } from '/js/firestore_UNIV.js';
+import { getCollection, setCollection, SEEDS_RULES, validateData, editEntry, addEntry } from '/js/firestore_UNIV.js';
 import { map } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
 
 // Set collection and associated rule config
-let collection_value = 'sdece-official'
+let collection_value = 'seeds-official'
 setCollection(collection_value);
 
 export function populateMainModalList() {
@@ -84,7 +84,7 @@ newButton.addEventListener('click', () => {
 	if (inputtedPartnerName == '' || inputtedPartnerAddress == '') {
 		alert('Partner Name and Partner Address cannot be blank.');
 	} else {
-		for (let field of SDECE_RULES[2]) {
+		for (let field of SEEDS_RULES[2]) {
 			if (field != 'partner_coordinates') {
 				if (field == 'partner_name' || field == 'partner_address') {
 					if (field == 'partner_name') {
@@ -155,7 +155,7 @@ getDocs(collection_ref)
 			const partners = {};
 
 			Object.values(activities).forEach((activity) => {
-				const partner = activity[SDECE_RULES[1]];
+				const partner = activity[SEEDS_RULES[1]];
 
 				if (!partners[partner]) {
 					partners[partner] = [];
@@ -430,7 +430,7 @@ function showEditActivityForm(activity, partnerName, coords) {
 					updated[key] = input ? input.value : '';
 				});
 				updated['partner_coordinates'] = activity.partner_coordinates;
-				let errors = validateData('sdece-official-TEST', updated);
+				let errors = validateData('seeds-official-TEST', updated);
 				const errorDiv = form.querySelector('#error_messages');
 				if (errorDiv) errorDiv.innerHTML = '';
 				if (errors.length > 0) {
@@ -598,7 +598,7 @@ function showActivityDetailModal(activity, partnerName, coords) {
 // Used for add/ edit to collect form inputs
 function collectFormInputs(doc, geopointSource, mode) {
 	let result = {};
-	for (let field of SDECE_RULES[2]) {
+	for (let field of SEEDS_RULES[2]) {
 		if (field === 'partner_coordinates') {
 			if (mode === 'add') {
 				result[field] = geopointSource;
@@ -656,7 +656,7 @@ addFormSubmitButton.addEventListener('click', function (event) {
 	let form_data = collectFormInputs(addFormiframeDocument, addForm_geopoint, 'add');
 
 	//Validate the collated input here
-	let errors = validateData('sdece-official-TEST', form_data);
+	let errors = validateData('seeds-official-TEST', form_data);
 
 	if (errors.length > 0) {
 		displayErrors(errors, addFormiframeDocument);
@@ -687,7 +687,7 @@ editFormSubmitButton.addEventListener('click', function(event) {
 	let form_data = collectFormInputs(editFormiframeDocument, addForm_geopoint, 'edit');
 
 	// Validate the collated input here
-	let errors = validateData('sdece-official-TEST', form_data);
+	let errors = validateData('seeds-official-TEST', form_data);
 
 	if (errors.length > 0) {
 		displayErrors(errors, editFormiframeDocument);
