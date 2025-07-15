@@ -433,6 +433,8 @@ a.accordion {
 	overflow-y: auto;
 	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
+
+/* Filter Header */
 .filter-header {
 	display: flex;
 	justify-content: space-between;
@@ -464,6 +466,8 @@ a.accordion {
 .filter-close:hover {
 	background-color: #f3f4f6;
 }
+
+/* Filter Content and Checkboxes */
 .filter-content {
 	padding: 1.5rem;
 	display: flex;
@@ -516,6 +520,8 @@ a.accordion {
 	border-color: #387181;
 	box-shadow: 0 0 0 2px rgba(56, 113, 129, 0.1);
 }
+
+/* Filter Footer & Buttons */
 .filter-footer {
 	display: flex;
 	justify-content: space-between;
