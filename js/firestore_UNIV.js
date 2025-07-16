@@ -428,30 +428,6 @@ export function getDocIdByPartnerName(partner_name) {
 				});
 		}
 
-export function getDocsByPartnerName(partner_name) {
-	const endName = partner_name.replace(/\s/g, '\uf8ff');
-
-  return getDocs(
-    query(
-      collection_reference,
-      where(rule_reference[1], '>=', partner_name),
-      where(rule_reference[1], '<=', partner_name + endName)
-    )
-  )
-    .then((querySnapshot) => {
-      if (!querySnapshot.empty) {
-        const docs = querySnapshot.docs;
-        return docs;
-      } else {
-        return null;
-      }
-    })
-    .catch((error) => {
-      console.error('Error getting documents: ', error);
-      return null;
-    });
-}
-
 export function getDocByID(docId) {
   const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
   return getDoc(DOC_REFERENCE).then((docSnap) => {
