@@ -613,10 +613,10 @@ function updateRiskIcons() {
 // Code logic for automatically changing pin color depending on selected option on dropbox 
 document.getElementById('risk-sort').addEventListener('change', updateRiskIcons);
 updateRiskIcons();
-
-// FILTER MODAL UI
 // ------------------------------------------
 
+// CODE LOGIC FOR FILTER MODAL UI
+// ------------------------------------------
 // Initialize filter modal functionality when DOM is loaded
 function initializeFilterModal() {
   // Filter Modal Controls
