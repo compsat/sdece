@@ -9,13 +9,13 @@
 		<script type="module">
 			import {
 				addEntry,
-				SEEDS_RULES_TEST,
+				SDECE_RULES_TEST,
 				setCollection,
 				validateData,
 				getCoordinates,
 			} from '/js/firestore_UNIV.js';
 
-			setCollection('seeds-official-TEST');
+			setCollection('sdece-official-TEST');
 
 			// Commenting this out first as new_activity_form is not defined and is causing errors
 			// document.addEventListener('DOMContentLoaded', function () {
@@ -28,10 +28,10 @@
 			function handleFormSubmit_v2() {
 				var collatedInput = {};
 
-				for (let i = 0; i < SEEDS_RULES_TEST[2].length; i++) {
-					//SEEDS_RULES_TEST[2] are just the field names of each document
+				for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
+					//SDECE_RULES_TEST[2] are just the field names of each document
 
-					let fieldName = SEEDS_RULES_TEST[2][i];
+					let fieldName = SDECE_RULES_TEST[2][i];
 					let inputValue =
 						document.getElementById(fieldName).value;
 
@@ -43,7 +43,7 @@
 				}
 
 				const errors = validateData(
-					'seeds-official-TEST',
+					'sdece-official-TEST',
 					collatedInput
 				);
 

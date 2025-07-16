@@ -162,7 +162,8 @@ export const JS_CS_ENGINE = [
 		],
 	],
 	[
-		'seeds-official',
+		// TO BE RENAMED TO 'seeds-official'
+		'sdece-official',
 		[
 			'/app_seeds/js/index.js',
 			'/app_seeds/js/firestore.js',
@@ -171,7 +172,8 @@ export const JS_CS_ENGINE = [
 		],
 	],
 	[
-		'seeds-official-TEST',
+		// TO BE RENAMED TO 'seeds-official-TEST'
+		'sdece-official-TEST',
 		[
 			'/app_seeds/js/index.js',
 			'/app_seeds/js/firestore.js',
