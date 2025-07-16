@@ -23,9 +23,9 @@ import {
 	validateData,
 	editEntry,
 	addEntry
-} from '../../js/firestore_UNIV.js'; 
+} from '/js/firestore_UNIV.js'; 
 
-import { addListeners, map, getDivContent } from '../../js/index_UNIV.js';
+import { addListeners, map } from '../../js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
 
 // Your Firestore code here
@@ -40,7 +40,7 @@ const FIREBASE_CONFIG = {
 };
 var collection_value = 'sdece-official'
 
-initializeApp(firebaseConfig);
+initializeApp(FIREBASE_CONFIG);
 const db = getFirestore();
 setCollection(collection_value);
 const colRef = getCollection();

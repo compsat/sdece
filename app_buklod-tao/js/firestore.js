@@ -22,7 +22,7 @@ import {
   addEntry,
   getCoordinates,
   getDocIdByPartnerName,
-} from '../../js/firestore_UNIV.js';
+} from '/js/firestore_UNIV.js';
 // Your Firestore code here
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -38,7 +38,7 @@ const FIREBASE_CONFIG = {
 
 var collection_value = 'buklod-official-TEST'
 
-initializeApp(firebaseConfig);
+initializeApp(FIREBASE_CONFIG);
 const db = getFirestore();
 setCollection(collection_value);
 const colRef = getCollection();
