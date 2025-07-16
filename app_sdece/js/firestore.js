@@ -29,7 +29,7 @@ import { addListeners, map, getDivContent } from '../../js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
 
 // Your Firestore code here
-const firebaseConfig = {
+const FIREBASE_CONFIG = {
   apiKey: 'AIzaSyA8QWgic_hjbDL-EYIkvSRRII_yfTRdtOQ',
   authDomain: 'discs-osci-prj.firebaseapp.com',
   projectId: 'discs-osci-prj',
