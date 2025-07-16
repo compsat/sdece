@@ -344,8 +344,9 @@ export function showModal(partner) {
 	closeDiv.className = 'close-btn';
 	closeDiv.innerHTML = '&times;';
 	closeDiv.onclick = function() {
+		clearAllHighlights();
 		modal.style.display = 'none';
-	  modal.classList.remove('open');
+		modal.classList.remove('open');
 	};
 	modalHeader.appendChild(closeDiv);
 
@@ -777,4 +778,3 @@ mainModalCloseButton.addEventListener('click', function (event) {
 		event.preventDefault();
 	}
 });
-

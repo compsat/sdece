@@ -496,10 +496,6 @@ export function editEntry(inp_obj,docId) {
 		if (rule[0] === collection_reference.id) {
 			const DOC_REFERENCE = doc(DB, rule[0], docId);
 			updateDoc(DOC_REFERENCE, inp_obj)
-				.then(() => {
-					alert("You may now reload the page for your edit to reflect on this page");
-					window.parent.location.reload(); 
-				})
 				.catch((error) => {
 					console.error('Error adding document: ', error);
 					alert("Error uploading the edited activity. Please try again");
