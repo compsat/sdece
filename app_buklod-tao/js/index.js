@@ -534,6 +534,31 @@ function attachMarkers(partners) {
 
     partner.marker = marker;
     map.addLayer(marker);
+
+    marker.on('popupopen', () => {
+      setTimeout(() => {
+        const edit_button = document.querySelectorAll(".popup-edit-btn");
+
+        edit_button.forEach((btn) => {
+          btn.addEventListener('click', function() {
+            const modal = document.getElementById('partnerModal');
+            var editFormModal = document.getElementById('editModal');
+            editFormModal.style.display = 'flex';
+            modal.style.display = 'none';
+            populateEditForm(partner, editFormModal);
+          });
+        });
+
+        const close_button = document.getElementById("close-btn");
+        if (close_button) {
+          close_button.addEventListener('click', () => {
+            marker.closePopup();
+          });
+        }
+        
+      }, 0);
+    });
+
   });
 
   return partners;
