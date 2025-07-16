@@ -509,6 +509,36 @@ document.getElementById('download-report').addEventListener('click', async () =>
 addListeners();
 // ------------------------------------------
 
+function attachMarkers(partners) {
+  const riskType = document.getElementById('risk-sort').value.replace('-sort', '');
+
+  partners.forEach(partner => {
+    const coord = partner.location_coordinates;
+    if (!coord) return;
+
+    const riskLevel = partner[`${riskType}_risk`] || 'LOW RISK';
+    const iconPath = getRiskIcon(riskLevel);
+
+    const icon = L.icon({
+      iconUrl: iconPath,
+      iconSize: [39, 39],
+      popupAnchor: [0.5, -15]
+    });
+
+    const marker = L.marker([coord._lat, coord._long], { icon });
+
+    // Optional: bind popup
+    onPinClick(partner).then(popupContent => {
+      marker.bindPopup(popupContent);
+    });
+
+    partner.marker = marker;
+    map.addLayer(marker);
+  });
+
+  return partners;
+}
+
 
 // CODE LOGIC FOR PIN DISPLAY ON MAP
 // ------------------------------------------
@@ -652,8 +682,12 @@ function initializeFilterModal() {
   // Apply filters
   applyFilters.addEventListener('click', async () => {
     const filteredData = await presentFilteredData();
-    populateNavBar(filteredData);
-    updateRiskIcons();
+
+    clearMarkers(); // remove old markers from map
+
+    const filteredWithMarkers = attachMarkers(filteredData);
+
+    populateNavBar(filteredWithMarkers);
     updateFilterButtonState();
     closeFilterModal();
   });
