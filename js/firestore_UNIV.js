@@ -606,44 +606,49 @@ export function validateData(collectionName, data) {
 
 export async function filterData(collectionName, data) {
   const rules = FILTER_RULES[collectionName];
-  const fullQueries = [];
   const finalResults = new Map();
 
+  const snapshot = await getDocs(collection_reference);
 
-  for (const field in rules) {
-		const filterRule = rules[field];
-		const fieldLabel = filterRule.label || field;
-		const value = data[field]; 
+  snapshot.forEach((doc) => {
+    const docData = doc.data();
+    let isMatch = true;
 
-    const IS_EMPTY = value == undefined || value == null || value == '' || value == []
+    for (const field in rules) {
+      const values = data[field];
+      if (!values || values.length === 0) continue;
 
-    if (IS_EMPTY) continue;
-
-    switch (filterRule.type) {
-      case "string":
-        if (value.constructor == Array && value.length > 1){
-          const orQueries = value.map((data) => where(fieldLabel, "==", data));
-          fullQueries.push(or(...orQueries));
-        } else {
-          fullQueries.push(where(fieldLabel, "==", value[0]));
+      // Special case: risk_level + risk_type
+      if (field === 'risk_level') {
+        const selectedRiskTypeArray = data['risk_type'];
+        if (!selectedRiskTypeArray || selectedRiskTypeArray.length === 0) {
+          continue; // no risk type selected, skip filtering by risk level
         }
-        break;
-      case "number":
-        fullQueries.push(where(fieldLabel, ">=", value));
-        break;
-      default:
-        break;
+
+        const selectedRiskType = selectedRiskTypeArray[0]; // only one selected
+        const riskValueInDoc = docData[selectedRiskType]; // like docData['flood_risk']
+
+        if (!values.includes(riskValueInDoc)) {
+          isMatch = false;
+          break;
+        }
+
+      } else if (field === 'risk_type') {
+        continue; // handled together with risk_level
+      } else {
+        if (!values.includes(docData[field])) {
+          isMatch = false;
+          break;
+        }
+      }
     }
-  }
 
-  const finalQuery = await getDocs(query(collection_reference, and(...fullQueries)));
-
-  finalQuery.forEach((doc) => {
-      let data = doc.data();
-      let docID = doc.id;
-      finalResults.set(docID, data);
+    if (isMatch) {
+      finalResults.set(doc.id, docData);
+    }
   });
 
   return finalResults;
 }
+
 

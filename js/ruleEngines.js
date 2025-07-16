@@ -22,51 +22,17 @@ export const FILTER_RULES = {
         'Natural',
       ],
     },
-    landslide_risk: { 
-      label: 'landslide_risk', 
-      type: 'string', 
-      enum: [
-        "HIGH RISK", 
-        "MEDIUM RISK", 
-        "LOW RISK",
-      ], 
+    risk_level: {
+      label: "risk_level",
+      type: 'string',
+      enum: ['HIGH RISK', 'MEDIUM RISK', 'LOW RISK'],
     },
-    earthquake_risk: { 
-      label: 'earthquake_risk', 
-      type: 'string', 
-      enum: [
-        "HIGH RISK", 
-        "MEDIUM RISK", 
-        "LOW RISK",
-      ], 
+    risk_type: {
+      label: "risk_type",
+      type: 'string',
+      enum: ['earthquake_risk', 'fire_risk', 'flood_risk', 'landslide_risk', 'storm_risk'],
     },
-    fire_risk: { 
-      label: 'fire_risk', 
-      type: 'string', 
-      enum: [
-        "HIGH RISK", 
-        "MEDIUM RISK", 
-        "LOW RISK",
-      ], 
-    },
-    flood_risk: { 
-      label: 'flood_risk', 
-      type: 'string', 
-      enum: [
-        "HIGH RISK", 
-        "MEDIUM RISK", 
-        "LOW RISK",
-      ], 
-    },
-    storm_risk: { 
-      label: 'storm_risk', 
-      type: 'string', 
-      enum: [
-        "HIGH RISK", 
-        "MEDIUM RISK", 
-        "LOW RISK",
-      ], 
-    },
+
   },
   'sdece': {
     partner_name: { label: "partner_name", type: 'string', required: true, maxLength: 255 },

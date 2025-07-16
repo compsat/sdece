@@ -743,13 +743,17 @@ function getCheckedValuesByFilter(filterType) {
 
 // Collect all filter selections
 function collectAllFilterSelections() {
+  const riskTypeFilter = document.getElementById('riskTypeFilter');
+
   return {
     residency_status: getCheckedValuesByFilter('residency_status'),
     household_material: getCheckedValuesByFilter('household_material'),
     is_hoa_noa: getCheckedValuesByFilter('is_hoa_noa'),
     risk_level: getCheckedValuesByFilter('risk_level'),
+    risk_type: riskTypeFilter && riskTypeFilter.value !== "" ? [riskTypeFilter.value] : [],
   };
 }
+
 
 // Update filter button visual state based on selected filters
 function updateFilterButtonState() {
@@ -771,14 +775,15 @@ function updateFilterButtonState() {
 
 export async function presentFilteredData() {
   const data = collectAllFilterSelections();
-  console.log(data);
+  console.log("Collected filter data:", data);
 
   const finalData = await filterData("buklod-tao", data);
 
-  console.log(finalData);
+  console.log("Filtered results:", finalData);
 
   return finalData;
 }
+
 
 
 // Initialize filter modal when DOM is ready
