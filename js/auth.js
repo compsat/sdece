@@ -12,7 +12,7 @@ const SECRETS_REQ = new Request(SECRETS_PATH);
 const SECRETS_RES = await fetch(SECRETS_REQ);
 const SECRETS = await SECRETS_RES.json();
 
-export const FIREBASE_CONFIG = SECRETS.firebaseConfig; 
+export const FIREBASE_CONFIG = SECRETS.FIREBASE_CONFIG; 
 
 initializeApp(FIREBASE_CONFIG);
 const AUTH = getAuth();

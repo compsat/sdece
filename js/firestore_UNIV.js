@@ -67,7 +67,7 @@ const SECRETS_REQ = new Request(SECRETS_PATH);
 const SECRETS_RES = await fetch(SECRETS_REQ);
 const SECRETS = await SECRETS_RES.json();
 
-export const FIREBASE_CONFIG = SECRETS.firebaseConfig;
+export const FIREBASE_CONFIG = SECRETS.FIREBASE_CONFIG;
 
 var app = initializeApp(FIREBASE_CONFIG);
 export const DB = getFirestore(app);
@@ -439,8 +439,6 @@ export function getDocByID(docId) {
     }
   });
 }
-
-
 
 export function addEntry(inp_obj) {
 	for (let rule of DB_RULES_AND_DATA) {
