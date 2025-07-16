@@ -46,7 +46,7 @@ function populateNavBar(condition){
     filtered_partners = partnersArray;
   } else {
     // Filter logic implementation goes here
-    filtered_partners = partnersArray;
+    filtered_partners = condition;
   }
 
   // Update the household count
@@ -650,8 +650,10 @@ function initializeFilterModal() {
   });
 
   // Apply filters
-  applyFilters.addEventListener('click', () => {
-    presentFilteredData(); 
+  applyFilters.addEventListener('click', async () => {
+    const filteredData = await presentFilteredData();
+    populateNavBar(filteredData);
+    updateRiskIcons();
     updateFilterButtonState();
     closeFilterModal();
   });
@@ -671,7 +673,6 @@ function initializeFilterModal() {
     
     // Reset visual state
     updateFilterButtonState();
-    closeFilterModal();
   });
 }
 
