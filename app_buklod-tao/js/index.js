@@ -73,7 +73,7 @@ function populateNavBar(condition){
       const docId = await getDocIdByPartnerName(partner.household_name);
       const doc = await getDocByID(docId);
 
-      map.setView(partner.marker.getLatLng(), 12); // change zoom: 1, you can see america and europe. 18, banaba area
+      map.setView(partner.marker.getLatLng()); // change zoom: 1, you can see america and europe. 18, banaba area
       onPinClick(doc).then(popupHTML => {
         partner.marker.bindPopup(popupHTML).openPopup(); // this replaces fire('popupopen')
       });
