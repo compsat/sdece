@@ -1,6 +1,7 @@
 import openpyxl
 import json
 import datetime
+import sys
 
 filename = "./CRA.xlsx"
 entries = []
@@ -31,5 +32,5 @@ def export_file(filename):
     with open(filename, 'w') as fp:
         json.dump(entries, fp, indent=4, default=date_serializer)
 
-read_from_file(filename,30)
+read_from_file(sys.argv[1],30)
 export_file("output.json")
