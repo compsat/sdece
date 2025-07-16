@@ -21,7 +21,7 @@ import {
 // Your Firestore code here
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
+const FIREBASE_CONFIG = {
   apiKey: 'AIzaSyA8QWgic_hjbDL-EYIkvSRRII_yfTRdtOQ',
   authDomain: 'discs-osci-prj.firebaseapp.com',
   projectId: 'discs-osci-prj',
@@ -33,7 +33,7 @@ const firebaseConfig = {
 
 var collection_value = 'buklod-official-TEST'
 
-initializeApp(firebaseConfig);
+initializeApp(FIREBASE_CONFIG);
 const db = getFirestore();
 setCollection(collection_value);
 const colRef = getCollection();
