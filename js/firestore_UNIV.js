@@ -604,7 +604,7 @@ export function validateData(collectionName, data) {
 	return errors;
 }
 
-export async function filterData(collectionName, query) {
+export async function filterData(collectionName, data) {
   const rules = FILTER_RULES[collectionName];
   const fullQueries = [];
   const finalResults = new Map();
