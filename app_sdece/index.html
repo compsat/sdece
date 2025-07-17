@@ -202,8 +202,10 @@
             // Handle successful form submission event here
             const messageModal = document.getElementById("messageModal");
             messageModal.style.display = "flex"; //display success message
-
-            setTimeout(() => {messageModal.style.display = "none";}, 3000);
+			setTimeout(() => {
+				messageModal.style.display = "none";
+				alert("You may now reload the page for your newly added location to reflect on this page.");
+			}, 3000);
           }
         });
 

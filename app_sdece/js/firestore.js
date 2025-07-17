@@ -720,47 +720,52 @@ editFormiframe.addEventListener('load', function() {
     }
 });
 
-// Mainmodal save button for batch uploading
+// Main modal save button for batch uploading
 const MAIN_MODAL_SAVE_BUTTON = mainModalDocument.getElementsByClassName('main-modal-save')[0];
 
 MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
+	event.preventDefault();
 
-	let temp_keys = Object.keys(temp_activities).length;
+	const temp_keys = Object.keys(temp_activities).length;
 
-	if (temp_keys > 0) {
-		Object.keys(temp_activities).forEach((temp_id) => {
-			let current_temp_activity = temp_activities[temp_id];
-			let new_partner_name = mainModalDocument.getElementsByClassName('main-modal-partner-name')[0].value;
-			let new_partner_address = mainModalDocument.getElementById('address-input').value;
-			current_temp_activity['partner_name'] = new_partner_name;
-			current_temp_activity['partner_address'] = new_partner_address;
-			if (
-				typeof current_temp_activity.activity_date === 'string' &&
-				!isNaN(Date.parse(current_temp_activity.activity_date))
-			) {
-				const dateOnly = new Date(current_temp_activity.activity_date);
-				dateOnly.setHours(0, 0, 0, 0);
-				current_temp_activity.activity_date = Timestamp.fromDate(dateOnly);
-			}
-			addEntry(current_temp_activity);
-		});
-
-		// Notify parent window (where the iframe is embedded)
-		window.parent.postMessage({ type: 'mainModalFormSuccess' }, '*');
-
-		//Auto close modal
-		window.parent.postMessage('closeMainModal', '*');
-
-		//Clear input partner name and address
-		mainModalDocument.getElementById('inputted_partner_name').value = '';
-		mainModalDocument.getElementById('address-input').value = '';
-
-		//clear temp_activities
-		temp_activities = {};
-
-	} else {
-		alert("Can't submit a partner with an empty list of activities ");
+	if (temp_keys === 0) {
+		alert("Can't submit a partner with an empty list of activities.");
+		return;
 	}
+
+	Object.keys(temp_activities).forEach((temp_id) => {
+		let current_temp_activity = temp_activities[temp_id];
+
+		let new_partner_name = mainModalDocument.getElementsByClassName('main-modal-partner-name')[0].value;
+		let new_partner_address = mainModalDocument.getElementById('address-input').value;
+
+		current_temp_activity['partner_name'] = new_partner_name;
+		current_temp_activity['partner_address'] = new_partner_address;
+
+		if (
+			typeof current_temp_activity.activity_date === 'string' &&
+			!isNaN(Date.parse(current_temp_activity.activity_date))
+		) {
+			const dateOnly = new Date(current_temp_activity.activity_date);
+			dateOnly.setHours(0, 0, 0, 0);
+			current_temp_activity.activity_date = Timestamp.fromDate(dateOnly);
+		}
+
+		addEntry(current_temp_activity)
+	});
+
+	// Notify parent window (where the iframe is embedded)
+	window.parent.postMessage({ type: 'mainModalFormSuccess' }, '*');
+
+	// Auto-close modal
+	window.parent.postMessage('closeMainModal', '*');
+
+	// Clear input partner name and address
+	mainModalDocument.getElementById('inputted_partner_name').value = '';
+	mainModalDocument.getElementById('address-input').value = '';
+
+	// Clear temp_activities
+	temp_activities = {};
 });
 
 // Handling main modal close on clicking close button
