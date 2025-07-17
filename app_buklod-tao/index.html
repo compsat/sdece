@@ -41,7 +41,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   
   <script type="module" src="/components/SearchBar.js"></script>
-  
 </head>
 
 <body>
@@ -67,13 +66,16 @@
             Export data
           </button>
         </div>
-        <select name="risk" id="risk-sort" class="action-btn">
-          <option value="earthquake-sort">Earthquake</option>
-          <option value="fire-sort">Fire</option>
-          <option value="flood-sort">Flood</option>
-          <option value="landslide-sort">Landslide</option>
-          <option value="storm-sort">Storm</option>
-        </select>
+        <div class="risk-dropdown-container">
+          <label class="risk-dropdown-label">Risk Type Filter</label>
+          <select name="risk" id="risk-sort">
+            <option value="earthquake-sort">Earthquake</option>
+            <option value="fire-sort">Fire</option>
+            <option value="flood-sort">Flood</option>
+            <option value="landslide-sort">Landslide</option>
+            <option value="storm-sort">Storm</option>
+          </select>
+        </div>
       </div>
       <div class="partners-header">
         <span id="partners-count">HOUSEHOLDS</span>
@@ -170,116 +172,163 @@
   </div>
 
   <!--script for map-->
-  <script type="module" src="js/index.js"></script> 
+  <script type="module" src="js/index.js"></script>
 
-  
   <script>
     // Code logic to hide the Add Household modal when the user submits the form
-    window.addEventListener('message', function (event) {
-      if (
-        event.data &&
-        event.data.type === 'addlocFormSuccess'
-      ) {
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'addlocFormSuccess') {
         // Handle successful form submission event here
-        const addModal =
-          document.getElementById('addModal');
+        const addModal = document.getElementById('addModal');
         addModal.classList.add('hidden'); // Hide the iframe
 
-        const messageModal =
-          document.getElementById('messageModal');
-        messageModal.style.display = 'flex'; //display success message
+        const messageModal = document.getElementById('messageModal');
+        if (messageModal) {
+          messageModal.style.display = 'flex'; //display success message
+          messageModal.classList.remove('closing');
+        }
       }
 
-      if (
-        event.data &&
-        event.data.type === 'mainModalFormSuccess'
-      ) {
+      if (event.data && event.data.type === 'mainModalFormSuccess') {
         // Handle successful form submission event here
-        const messageModal =
-          document.getElementById('messageModal');
-        messageModal.style.display = 'flex'; //display success message
+        const messageModal = document.getElementById('messageModal');
+        if (messageModal) {
+          messageModal.style.display = 'flex'; //display success message
+          messageModal.classList.remove('closing');
 
-        setTimeout(() => {
-          messageModal.style.display = 'none';
-        }, 3000);
+          setTimeout(() => {
+            messageModal.classList.add('closing');
+            setTimeout(() => {
+              messageModal.style.display = 'none';
+              messageModal.classList.remove('closing');
+            }, 300);
+          }, 3000);
+        }
       }
     });
-   
-  // script for search bar- search includes only name 
-  const searchBar = document.getElementById('search-bar-component');
 
-  searchBar.addEventListener('search', (event) => {
-    const query = event.detail;  
-    console.log('Searching for:', query);
+    // script for search bar- search includes only name 
+    const searchBar = document.getElementById('search-bar-component');
 
-    searchEntries(query);
-  });
+    searchBar.addEventListener('search', (event) => {
+      const query = event.detail;
+      console.log('Searching for:', query);
+      searchEntries(query);
+    });
 
-  function searchEntries(query) {
-    const input = query.toUpperCase();
-    const entries = document.querySelectorAll('#locationList .container-entry');
+    function searchEntries(query) {
+      const input = query.toUpperCase();
+      const entries = document.querySelectorAll('#locationList .container-entry');
 
-    entries.forEach(entry => {
-      const nameDiv = entry.querySelector('.name');
-      const txtValue = nameDiv ? nameDiv.textContent : '';
-      if (txtValue.toUpperCase().indexOf(input) > -1) {
-        entry.style.display = "";
-      } else {
-        entry.style.display = "none";
+      entries.forEach(entry => {
+        const nameDiv = entry.querySelector('.name');
+        const txtValue = nameDiv ? nameDiv.textContent : '';
+        if (txtValue.toUpperCase().indexOf(input) > -1) {
+          entry.style.display = "";
+        } else {
+          entry.style.display = "none";
+        }
+      });
+    }
+
+    let originalItems = [];
+
+    function sortButton() {
+      const sortBtn = document.getElementById('sortBtn');
+      const locationList = document.getElementById('locationList');
+      let sortState = 'none'; // Start with no sort applied
+      let isActive = false;
+
+      // Function to update the sort button appearance
+      function updateSortButton() {
+        const sortIcon = sortBtn.querySelector('svg');
+
+        if (isActive) {
+          sortBtn.classList.add('filter-active');
+
+          // Change icon based on sort state
+          if (sortState === 'asc') {
+            // Ascending icon (A to Z) - Arrow pointing up
+            sortIcon.innerHTML = '<path d="M12 2L16 6H13V22H11V6H8L12 2ZM2 17H8V19H2V17ZM2 11H10V13H2V11ZM2 5H12V7H2V5Z"></path>';
+          } else if (sortState === 'desc') {
+            // Descending icon (Z to A) - Arrow pointing down
+            sortIcon.innerHTML = '<path d="M12 22L8 18H11V2H13V18H16L12 22ZM2 17H8V19H2V17ZM2 11H10V13H2V11ZM2 5H12V7H2V5Z"></path>';
+          }
+        } else {
+          sortBtn.classList.remove('filter-active');
+          // Default sort icon
+          sortIcon.innerHTML = '<path d="M18.2072 9.0428 12.0001 2.83569 5.793 9.0428 7.20721 10.457 12.0001 5.66412 16.793 10.457 18.2072 9.0428ZM5.79285 14.9572 12 21.1643 18.2071 14.9572 16.7928 13.543 12 18.3359 7.20706 13.543 5.79285 14.9572Z"></path>';
+        }
       }
-    });
-  }
 
-let originalItems = [];
+      sortBtn.addEventListener('click', () => {
+        console.log("SORT CLICKED");
+        let items = Array.from(locationList.querySelectorAll('.container-entry'));
 
-function sortButton() {
-  const sortBtn = document.getElementById('sortBtn');
-  const locationList = document.getElementById('locationList');
-  let sortState = 'asc'; // Start with ascending on first click
+        // Cycle through three states: none -> asc -> desc -> none
+        if (sortState === 'none') {
+          sortState = 'asc';
+          isActive = true;
+        } else if (sortState === 'asc') {
+          sortState = 'desc';
+          isActive = true;
+        } else if (sortState === 'desc') {
+          sortState = 'none';
+          isActive = false;
+        }
 
-  sortBtn.addEventListener('click', () => {
-    console.log("SORT CLICKED");
-    let items = Array.from(locationList.querySelectorAll('.container-entry'));
+        // Only sort if not in 'none' state
+        if (sortState !== 'none') {
+          items.sort((a, b) => {
+            const nameA = a.querySelector('.name').textContent.trim().toUpperCase();
+            const nameB = b.querySelector('.name').textContent.trim().toUpperCase();
 
-    items.sort((a, b) => {
-      const nameA = a.querySelector('.name').textContent.trim().toUpperCase();
-      const nameB = b.querySelector('.name').textContent.trim().toUpperCase();
+            return sortState === 'asc'
+              ? nameA.localeCompare(nameB)
+              : nameB.localeCompare(nameA);
+          });
 
-      return sortState === 'asc'
-        ? nameA.localeCompare(nameB)
-        : nameB.localeCompare(nameA);
-    });
+          console.log(`Sorted ${sortState === 'asc' ? 'ascending' : 'descending'}`);
 
-    // Toggle sort state for next click
-    sortState = (sortState === 'asc') ? 'desc' : 'asc';
-    console.log(`Sorted ${sortState === 'asc' ? 'descending' : 'ascending'}`);
+          // Clear and re-append sorted items
+          locationList.innerHTML = '';
+          items.forEach(item => locationList.appendChild(item));
+        } 
 
-    // Clear and re-append sorted items
-    locationList.innerHTML = '';
-    items.forEach(item => locationList.appendChild(item));
-  });
-}
+        // Update button appearance
+        updateSortButton();
+      });
 
+      // Initialize button appearance
+      updateSortButton();
 
-// ✅ After you load entries:
-// After your list is built
+      // Return reset function for external use
+      return {
+        reset: function() {
+          sortState = 'none';
+          isActive = false;
+          updateSortButton();
+        }
+      };
+    }
 
+    // Call the sort button function
+    const sortController = sortButton();
 
-// ✅ Call it!
-sortButton();
-
-
-
-    // Function to hide the div containing the iframe
+    // Function to hide the div containing the iframe with animation
     function hideModalContainer(modal) {
       var iframe = document.getElementById(modal);
       if (iframe) {
-        iframe.style.display = 'none';
+        iframe.classList.add('closing');
+        setTimeout(() => {
+          iframe.style.display = 'none';
+          iframe.classList.remove('closing');
+        }, 300); // Match the animation duration
       }
     }
 
     // Code logic to add an event listener to handle messages from the iframe
-    window.addEventListener('message', function (event) {
+    window.addEventListener('message', function(event) {
       if (event.data === 'closeAddModal') {
         hideModalContainer('addModal');
       }

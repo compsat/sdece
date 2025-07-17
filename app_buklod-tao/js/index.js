@@ -75,7 +75,9 @@ function populateNavBar(condition){
 
       map.setView(partner.marker.getLatLng()); // change zoom: 1, you can see america and europe. 18, banaba area
       onPinClick(doc).then(popupHTML => {
-        partner.marker.bindPopup(popupHTML).openPopup(); // this replaces fire('popupopen')
+        partner.marker.bindPopup(popupHTML, {
+          className: 'household-popup'
+        }).openPopup(); // this replaces fire('popupopen')
       });
     });
 
@@ -229,13 +231,6 @@ async function onPinClick(doc) {
     }
   });
 
-  const closeBtn = wrapper.querySelector('#close-btn');
-  if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      window.parent.postMessage('closeMainModal', '*');
-    });
-  }
-
   return wrapper.innerHTML;
 }
 // ------------------------------------------
@@ -277,6 +272,7 @@ function onMapClick(e) {
 
         // Display the modal
         modal.style.display = 'flex';
+        modal.classList.remove('closing');
 
         // Set the coordinates in the iframe form
         var iframe = modal.getElementsByTagName('iframe')[0];
@@ -558,7 +554,9 @@ function updateRiskIcons() {
 
     // Shows partner info on pin click
     onPinClick(partner).then(popupContent => {
-      marker.bindPopup(popupContent);
+      marker.bindPopup(popupContent, {
+        className: 'household-popup'
+      });
     });
 
     partner.marker = marker; // store reference here
@@ -575,10 +573,19 @@ function updateRiskIcons() {
             const modal = document.getElementById('partnerModal');
             var editFormModal = document.getElementById('editModal');
             editFormModal.style.display = 'flex';
+            editFormModal.classList.remove('closing');
             modal.style.display = 'none';
             populateEditForm(partner, editFormModal);
           });
         });
+
+        // Attach close button event listener
+        const closeBtn = document.querySelector('#close-btn');
+        if (closeBtn) {
+          closeBtn.addEventListener('click', () => {
+            map.closePopup();
+          });
+        }
         
         // Function for sidebar scrolling and highlighting when clicking from sidebar or pin
         const listItems = document.querySelectorAll('li.accordion');
@@ -596,7 +603,10 @@ function updateRiskIcons() {
     map.addLayer(marker);
   });
 
-  map.on("popupclose",clearAllHighlights)
+  // Add popup close handler
+  map.on('popupclose', (e) => {
+    clearAllHighlights();
+  });
 
   // Code logic for displaying evac centers
   evacCenters.forEach(center => {
@@ -614,7 +624,9 @@ function updateRiskIcons() {
       <div style = "text-align:center;">
       <b>${center.name}</b>
       <br>Location: ${center.latitude}, ${center.longitude}
-      </div>`);
+      </div>`, {
+        className: 'evacuation-center-popup'
+      });
       map.addLayer(marker);
       
     });
@@ -644,11 +656,16 @@ function initializeFilterModal() {
   // Open filter modal
   filterBtn.addEventListener('click', () => {
     filterModal.style.display = 'flex';
+    filterModal.classList.remove('closing');
   });
 
-  // Close filter modal
+  // Close filter modal with animation
   function closeFilterModal() {
-    filterModal.style.display = 'none';
+    filterModal.classList.add('closing');
+    setTimeout(() => {
+      filterModal.style.display = 'none';
+      filterModal.classList.remove('closing');
+    }, 300); // Match the animation duration
   }
 
   filterClose.addEventListener('click', closeFilterModal);

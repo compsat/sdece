@@ -41,19 +41,20 @@ h1 {
     width: 100%;
     padding: 1rem;
     margin: 0.5rem 0;
-    background-color: #3498db;
+    background-color: #1a237e;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s;
     text-decoration: none;
     text-align: center;
+	font-weight: 500;
 }
 
 .app-button:hover {
-    background-color: #2980b9;
+    background-color: #232d97;
 }
 
 /* Color Definition */

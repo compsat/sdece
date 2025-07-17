@@ -59,7 +59,7 @@ body {
     border: none;
     cursor: pointer;
     padding: 8px;
-    border-radius: 6px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -149,6 +149,17 @@ body {
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
+
+/* Error States */
+.form-input.error, .form-select.error, .form-textarea.error {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+.form-input.error:focus, .form-select.error:focus, .form-textarea.error:focus {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
 .form-textarea {
     resize: vertical;
     min-height: 80px;
@@ -167,7 +178,24 @@ body {
     color: #6b7280;
     cursor: not-allowed;
 }
-/* ---------------------------- */
+
+/* Inline Error Messages */
+.field-error {
+    color: #dc2626;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 4px;
+    display: none;
+    line-height: 1.4;
+}
+.field-error.show {
+    display: block;
+}
+
+/* Error Labels */
+.form-label.error {
+    color: #dc2626;
+}
 
 /* Risk Assessment Grid Section
 ---------------------------- */
@@ -231,13 +259,11 @@ body {
 
 /* Save Button */
 .btn-primary {
-    background: #1f2937;
+    background: #1a357b;
     color: white;
-    border: 1px solid #1f2937;
 }
 .btn-primary:hover {
-    background: #111827;
-    border-color: #111827;
+    background: #2542a3;
 }
 .btn-primary:disabled {
     background: #9ca3af;

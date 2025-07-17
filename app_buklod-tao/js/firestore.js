@@ -193,24 +193,86 @@ export function submitEditForm(){
   
 }
 
-function displayErrors(errors) {
-    let errorDiv = document.getElementById('error_messages');
-
-    if (errorDiv) {
-
-        errorDiv.innerHTML = '';
-
-        if (errors.length > 0) {
-            for (let error of errors) {
-                let errorParagraph = document.createElement('p');
-                errorParagraph.textContent = error;
-                errorDiv.appendChild(errorParagraph);
+// Display errors inline
+function displayInlineErrors(errors) {
+    // Clear all previous errors
+    clearAllErrors();
+    
+    // Create a mapping of field names to error containers
+    const fieldMappings = {
+        'Household Name': 'household_name',
+        'Contact Number': 'contact_number', 
+        'Number of Residents': 'number_residents',
+        'Residency Status': 'residency_status',
+        'HOA Status': 'is_hoa_noa',
+        'Location Link': 'location_link',
+        'Household Address': 'household_address',
+        'Household Material': 'household_material',
+        'Landslide Risk': 'landslide_risk',
+        'Earthquake Risk': 'earthquake_risk',
+        'Fire Risk': 'fire_risk',
+        'Flood Risk': 'flood_risk',
+        'Storm Risk': 'storm_risk',
+        'Nearest Evacuation Area': 'nearest_evac'
+    };
+    
+    // Process each error
+    for (let error of errors) {
+        // Find the field name from the error message
+        for (let [errorKey, fieldName] of Object.entries(fieldMappings)) {
+            if (error.includes(errorKey)) {
+                // Find the field element
+                const field = document.getElementById(fieldName);
+                const label = document.querySelector(`label[for="${fieldName}"]`);
+                const errorContainer = document.getElementById(`${fieldName}_error`);
+                
+                if (field) {
+                    // Add error styling to field
+                    field.classList.add('error');
+                    
+                    // Add error styling to label
+                    if (label) {
+                        label.classList.add('error');
+                    }
+                    
+                    // Show error message below field
+                    if (errorContainer) {
+                        errorContainer.textContent = error;
+                        errorContainer.classList.add('show');
+                    }
+                }
+                break;
             }
         }
-        } else {
-            console.error("Error: Couldn't find element with ID 'error_messages'.");
-        }
     }
+}
+
+// Clear all error states
+function clearAllErrors() {
+    // Remove error classes from all fields
+    const fields = document.querySelectorAll('.form-input, .form-select, .form-textarea');
+    fields.forEach(field => {
+        field.classList.remove('error');
+        
+        // Clear error message
+        const errorContainer = document.getElementById(`${field.id}_error`);
+        if (errorContainer) {
+            errorContainer.textContent = '';
+            errorContainer.classList.remove('show');
+        }
+    });
+    
+    // Remove error classes from all labels
+    const labels = document.querySelectorAll('.form-label');
+    labels.forEach(label => {
+        label.classList.remove('error');
+    });
+}
+
+// Updated displayErrors function to use inline errors
+function displayErrors(errors) {
+    displayInlineErrors(errors);
+}
 
 // Function for submission of Add Household form
 export function submitAddForm(){
