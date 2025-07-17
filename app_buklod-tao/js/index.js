@@ -748,8 +748,10 @@ function collectAllFilterSelections() {
     household_material: getCheckedValuesByFilter('household_material'),
     is_hoa_noa: getCheckedValuesByFilter('is_hoa_noa'),
     risk_level: getCheckedValuesByFilter('risk_level'),
+    risk_type: document.getElementById('riskTypeFilter')?.value || null, // ✅ FIXED
   };
 }
+
 
 // Update filter button visual state based on selected filters
 function updateFilterButtonState() {
@@ -770,15 +772,27 @@ function updateFilterButtonState() {
 }
 
 export async function presentFilteredData() {
-  const data = collectAllFilterSelections();
-  console.log(data);
+  const rawInput = collectAllFilterSelections();
+  console.log("Raw input:", rawInput);
 
-  const finalData = await filterData("buklod-tao", data);
+  const transformedData = { ...rawInput };
 
-  console.log(finalData);
+  // map risk_type + risk_level into fire_risk: HIGH
+  if (rawInput.risk_type && rawInput.risk_level) {
+    transformedData[rawInput.risk_type] = rawInput.risk_level;
+    delete transformedData.risk_type;
+    delete transformedData.risk_level;
+  }
+
+  console.log("Mapped:", transformedData);
+
+  const finalData = await filterData("buklod-tao", transformedData);
+
+  console.log("Final:", finalData);
 
   return finalData;
 }
+
 
 
 // Initialize filter modal when DOM is ready
