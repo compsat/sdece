@@ -37,7 +37,7 @@ initializeApp(firebaseConfig);
 const db = getFirestore();
 setCollection(collection_value);
 const colRef = getCollection();
-let partnersArray = [];
+let partnersArray = new Map();
 
 export function getDocByID(docId) {
   const docReference = doc(db, 'nstp-3', docId);
@@ -59,12 +59,9 @@ const loadData = async() => {
 		await getDocs(colRef)
 	.then((querySnapshot) => {
 		querySnapshot.forEach((doc) => {
-			if (
-				doc.data().name !== 'Test 2' ||
-				doc.data().name !== 'Test2'
-			) {
-				partnersArray.push(doc.data());
-			}
+      let docData = doc.data();
+      let docID = doc.id;
+			partnersArray.set(docID,docData);
     
 		});
 	})

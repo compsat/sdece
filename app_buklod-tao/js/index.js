@@ -52,7 +52,7 @@ function populateNavBar(condition){
   // Update the household count
   const partnersCount = document.getElementById('partners-count');
   if (partnersCount) {
-    partnersCount.textContent = `HOUSEHOLDS (${filtered_partners.length})`;
+    partnersCount.textContent = `HOUSEHOLDS (${filtered_partners.size})`;
   }
 
   filtered_partners.forEach((partner) => {
@@ -585,6 +585,7 @@ function getRiskIcon(riskLevel) {
 
 // Function for displaying of pins and its switching colors depending on risk type
 function updateRiskIcons() {
+  
   const riskType = document.getElementById('risk-sort').value.replace('-sort', '');
   // Remove all current markers
   
