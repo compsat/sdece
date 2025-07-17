@@ -527,6 +527,12 @@ function getRiskIcon(riskLevel) {
   }
 }
 
+// Function for removing the highlights
+function clearAllHighlights() {
+  const highlightedItems = document.querySelectorAll('.highlight');
+  highlightedItems.forEach(item => item.classList.remove('highlight'));
+}
+
 // Function for displaying of pins and its switching colors depending on risk type
 function updateRiskIcons() {
   const riskType = document.getElementById('risk-sort').value.replace('-sort', '');
@@ -573,20 +579,24 @@ function updateRiskIcons() {
             populateEditForm(partner, editFormModal);
           });
         });
-
-        const close_button = document.getElementById("close-btn");
-        if (close_button) {
-          close_button.addEventListener('click', () => {
-            marker.closePopup();
-          });
+        
+        // Function for sidebar scrolling and highlighting when clicking from sidebar or pin
+        const listItems = document.querySelectorAll('li.accordion');
+        const listItem = Array.from(listItems).find(
+          li => li.dataset.name === partner.household_name
+        );
+        if (listItem) {
+        listItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        listItem.classList.add('highlight');
         }
-      }, 0); 
+      }, 0);
       
     });
 
     map.addLayer(marker);
   });
 
+  map.on("popupclose",clearAllHighlights)
 
   // Code logic for displaying evac centers
   evacCenters.forEach(center => {
@@ -713,3 +723,4 @@ document.addEventListener('DOMContentLoaded', initializeFilterModal);
 
 // Also initialize after a short delay to ensure all elements are loaded
 setTimeout(initializeFilterModal, 1000);
+

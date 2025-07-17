@@ -157,10 +157,339 @@ li.accordion {
 a.accordion {
   text-decoration: none;
 }
-/* --------------------------- */
 
-/* IFrame Modal Container
---------------------------- */
+.highlight {
+  background-color: #f3f4f6;
+}
+
+.activity {
+  color: #2f2f2f;
+  text-overflow: ellipsis;
+  font-family: 'Geist', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 110%;
+  letter-spacing: 0.28px;
+}
+h1.entries {
+  color: #000;
+  font-family: 'Geist', sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+/* CSS for the household entry modals */
+/* CSS for the entry modal */
+
+/* modal containers */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9900;
+  top: 3%;
+  left: 20%;
+  width: 100%; /* Adjust the width of the modal as needed */
+  max-width: 528px;
+  height: 100%; /* Adjust the height of the modal as needed */
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.modalHeader {
+  position: relative;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  margin-left: 25%;
+  margin-top: 5%;
+  padding: 7px 24px;
+  width: 100%;
+  background-color: #fcfcfc;
+  z-index: 9901;
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2); 
+}
+
+.modalContent {
+  margin-left: 25%;
+  width: 100%;
+  padding: 0px 24px;
+  background-color: #fcfcfc;
+  font-family: 'Geist', sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  max-height: calc(80% - 140px);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.modalFooter {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  margin-left: 25%;
+  padding: 24px;
+  width: 100%;
+  background-color: #fcfcfc;
+  position: relative;
+  z-index: 9901;
+  box-shadow: 0 -5px 5px -5px rgba(0, 0, 0, 0.2); 
+}
+
+.modalLine {
+  display: flex; 
+  justify-content: space-between;
+}
+
+/* modal text */
+.modalLabel {
+  font-family: 'Geist', sans-serif;
+  font-size: 16px;
+  color: #000;
+  font-weight: 750;
+  font-style: normal;
+  letter-spacing: 2%;
+}
+
+.modalName {
+  position: relative;
+  color: #387181;
+  font-family: 'Geist', sans-serif;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 750;
+  letter-spacing: 0.48px;
+  padding: 10px 0px;
+}
+
+.modalButton {
+  width: 100%;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  font-family: "Geist", sans-serif;
+  font-size: 16px;
+  font-weight: 750;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background-color: #fcfcfc;
+}
+
+.modalButton:hover {
+  background-color: #fcfcfc;
+}
+
+.modalText {
+  color: #a0a0a0;
+  font-family: 'Geist', sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0.32px;
+  line-height: 100%;
+  position: relative;
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+
+button.collapsible {
+  padding: 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  border: 0;
+  background-color: #fcfcfc;
+  width: 100%;
+  height: 50px;
+  color: #3D97AF;
+  font-family: 'Geist', sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 750;
+}
+
+.collapsible:after {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+  content: "";
+  background: url("../img/dropdown.png") no-repeat 0 0;
+  background-size: 100%;
+}
+
+.active:after {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+  content: "";
+  background: url("../img/dropdown.png") no-repeat 0 0;
+  background-size: 100%;
+  transform: rotate(180deg);
+}
+
+/* closing modal */
+.close {
+  text-align: center;
+  color: #aaaaaa;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.partnerGeolocation {
+  display: flex;
+  align-items: center;
+}
+
+.leafletPopupContainer {
+  height: 400px;
+  width: 100%;
+  text-overflow: ellipsis;
+  align-items: center;
+}
+
+.leafletHeader {
+  font-family: Geist;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  color: #387181;
+  background-color: #FFFFFF;
+  width: 89%;
+  position: fixed;
+  margin: -10px 0px -10px 0px;
+  padding: 10px 0px 10px 0px;
+  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2)
+}
+
+.leafletSubHeader {
+  font-family: Geist;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  color: #3D97AF;
+  margin: 20px 0px 10px 0px;
+}
+
+.leafletLabel {
+  font-family: Geist;
+  font-size: 14px;
+  font-weight: 700;
+  color: #000000;
+}
+
+.leafletContent {
+  font-family: 'Geist', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.32px;
+  color: #A0A0A0;
+  width: 100%;
+  margin: 15px 0px 15px 0px;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.leafletDetails {
+  margin-bottom: 5px;
+}
+
+.leafletButtons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.deleteButton {
+  color: #d64747;
+}
+
+.editButton,
+.addButton {
+  color: #3d97af;
+}
+
+.deleteButton,
+.editButton,
+.addButton {
+  display: flex;
+  padding: 16px 24px;
+  width: fit-content;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  border: 0;
+  font-family: 'Geist', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  background-color: transparent;
+}
+
+.deleteButton:hover,
+.editButton:hover,
+.addButton:hover {
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.partnerValue {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Geist', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  line-height: 110%;
+  letter-spacing: 0.32px;
+  margin: 0 !important;
+}
+
+.partnerLabel {
+  color: #3d97af;
+  font-family: 'Geist', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 110%;
+  letter-spacing: 0.36px;
+  font-size: 14px;
+  margin: 12px 0 8px 0 !important;
+}
+
+.partnerActivity {
+  color: #2f2f2f;
+  font-family: 'Geist', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 110%;
+  letter-spacing: 0.4px;
+}
+
+.formIframe {
+  margin-left: 15%;
+  margin-top: 2%;
+  border: none;
+  width: 50%;
+  height: 90%;
+  position: relative;
+  justify-content: center;
+  left: 10%;
+  border-radius: 8px 8px 8px 8px;
+}
+
 .modal-screen {
 	display: none;
 	position: fixed;
