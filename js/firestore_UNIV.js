@@ -613,7 +613,7 @@ export async function filterData(collectionName, data) {
   for (const field in rules) {
 		const filterRule = rules[field];
 		const fieldLabel = filterRule.label || field;
-		const value = data[field]; 
+		const value = query[field]; 
 
     const IS_EMPTY = value == undefined || value == null || value == '' || value == []
 
@@ -622,7 +622,7 @@ export async function filterData(collectionName, data) {
     switch (filterRule.type) {
       case "string":
         if (value.constructor == Array && value.length > 1){
-          const orQueries = value.map((data) => where(fieldLabel, "==", data));
+          const orQueries = value.map((queryValue) => where(fieldLabel, "==", queryValue));
           fullQueries.push(or(...orQueries));
         } else {
           fullQueries.push(where(fieldLabel, "==", value[0]));
@@ -639,9 +639,9 @@ export async function filterData(collectionName, data) {
   const finalQuery = await getDocs(query(collection_reference, and(...fullQueries)));
 
   finalQuery.forEach((doc) => {
-      let data = doc.data();
+      let docData = doc.data();
       let docID = doc.id;
-      finalResults.set(docID, data);
+      finalResults.set(docID, docData);
   });
 
   return finalResults;
