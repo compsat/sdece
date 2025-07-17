@@ -613,7 +613,7 @@ export async function filterData(collectionName, query) {
   for (const field in rules) {
 		const filterRule = rules[field];
 		const fieldLabel = filterRule.label || field;
-		const value = data[field]; 
+		const value = query[field]; 
 
     const IS_EMPTY = value == undefined || value == null || value == '' || value == []
 
