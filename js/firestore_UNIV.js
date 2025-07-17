@@ -604,7 +604,7 @@ export function validateData(collectionName, data) {
 	return errors;
 }
 
-export async function filterData(collectionName, query) {
+export async function filterData(collectionName, queryArray) {
   const rules = FILTER_RULES[collectionName];
   const fullQueries = [];
   const finalResults = new Map();
@@ -613,7 +613,7 @@ export async function filterData(collectionName, query) {
   for (const field in rules) {
 		const filterRule = rules[field];
 		const fieldLabel = filterRule.label || field;
-		const value = query[field]; 
+		const value = queryArray[field]; 
 
     const IS_EMPTY = value == undefined || value == null || value == '' || value == []
 
