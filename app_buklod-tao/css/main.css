@@ -1,42 +1,35 @@
+/* Modern Form Design System - Buklod Tao */
+/* Uses Geist font family and clean, professional styling */
+
 @import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
 
+/* Base Styles 
+---------------------------- */
 body {
   margin: 0;
   padding: 0;
   font-family: 'Geist', sans-serif;
 }
+/* --------------------------- */
 
+/* Side bar and Map 
+---------------------------- */
 .main {
   display: flex;
   flex-direction: row;
 }
 
-.mapContainer {
-  flex: 0 0 20%;
-  display: flex;
-  position: absolute;
-  top: 63px; /* containerizing based on the height of the topbar */
-  left: 380px; /* containerizing based on the height of the sidenav */
-  right: 0;
-  bottom: 0;
-}
-
+/* Map 
+------------ */
 #map {
   position: fixed;
   width: 100%;
   height: 100%;
 }
+/* ------------ */
 
-.topBar{
-  background-color: #387181;
-  height: 63px;
-  width: 100%;
-  display: flex;
-  position: fixed;
-  z-index: 2;
-  justify-content: flex-end;
-}
-
+/* Side Bar 
+------------ */
 .side-nav {
   display: flex;
   flex-direction: column;
@@ -49,6 +42,7 @@ body {
 	border-right: 1px solid #e0e0e0;
 }
 
+/* -Side Bar Header */
 .side-nav-header {
 	position: sticky;
 	top: 0;
@@ -59,12 +53,12 @@ body {
 	z-index: 10;
 }
 
+/* --Side Bar Header Title Section */
 .side-nav-header-top {
 	display: flex;
 	align-items: center;
 	margin-bottom: 1rem;
 }
-
 .map-title {
 	font-size: 1.25rem;
 	font-weight: 500;
@@ -72,38 +66,41 @@ body {
 	font-family: 'Geist', sans-serif;
 }
 
+/* --Side Bar Header Buttons Section */
 .actions-container {
   display: flex;
 	gap: 0.5rem;
 	margin-bottom: 1.5rem;
+	flex-wrap: wrap;
 }
-
 .action-btn {
 	background-color: #ffffff;
 	border: 1px solid #e0e0e0;
-	padding: 0.5rem 1rem;
+	padding: 0.5rem 0.6rem;
 	border-radius: 0.5rem;
-	font-size: 0.875rem;
+	font-size: 0.8rem;
 	color: #374151;
 	cursor: pointer;
 	font-family: 'Geist', sans-serif;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	white-space: nowrap;
 }
-
 .action-btn:hover {
 	background-color: #f9fafb;
 }
-
 #risk-sort {
   width: 100%;
 }
 
+/* --Side Bar Header Entries Header Section */
 .partners-header {
 	padding: 0 1.5rem 0.75rem;
 	border-bottom: 1px solid #eeeeee;
 	max-width: 100%;
 	box-sizing: border-box;
 }
-
 #partners-count {
 	font-size: 0.75rem;
 	color: #6b7280;
@@ -112,6 +109,8 @@ body {
 	font-family: 'Geist', sans-serif;
 }
 
+
+/* -Side Bar Entries List */
 .entries {
 	flex-grow: 1;
   overflow-y: auto;
@@ -122,7 +121,6 @@ body {
 .entries:hover {
   scrollbar-color: rgba(0,0,0,0.2) transparent;
 }
-
 .accordion {
 	cursor: pointer;
 	padding: 0.5rem 1rem 1rem;
@@ -131,11 +129,9 @@ body {
 	box-sizing: border-box;
 	/* border-bottom: 1px solid #eeeeee; */
 }
-
 .accordion:hover {
 	background-color: #f9fafb;
 }
-
 .name {
 	font-family: 'Geist', sans-serif;
 	font-weight: 600;
@@ -143,7 +139,6 @@ body {
 	line-height: 1.5rem;
 	color: #111827;
 }
-
 .address {
 	font-family: 'Geist', sans-serif;
 	font-weight: normal;
@@ -152,230 +147,6 @@ body {
 	line-height: 1.25rem;
 	margin-top: 0.25rem;
 }
-
-.header {
-  display: flex;
-  width: 100%;
-  align-items: center;
-}
-
-/* search bar itself */
-.searchBar {
-  height: 45px;
-  margin: 0;
-  padding: 15px 1rem;
-  max-width: 100%;
-  width: 100%;
-  box-sizing: border-box;
-  border-radius: 12px;
-  background-color: #F6F6F6;
-  border: transparent;
-  background-position: calc(100% - 16px) center;
-  font-family: 'Geist', sans-serif;
-  font-size: 18px;
-  letter-spacing: 0.5px;
-  background-image: url("../img/search-icon.png");
-  background-repeat: no-repeat;
-  background-size: 25px 25px;
-  justify-content: right;
-}
-
-.searchBar:hover {
-  background-color: #e4e3e3;
-}
-.searchBar:focus {
-  background-image: none;
-}
-
-.logoContainer {
-  display: flex;
-  padding: 8px 40px;
-  align-items: center;
-  gap: 32px;
-  background: #387181;
-}
-
-.logo {
-  width: 48px;
-}
-
-li {
-  list-style-type: none;
-}
-
-.heading {
-  color: #387181;
-  font-family: 'Geist', sans-serif;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 86.682%;
-  display: flex;
-  align-self: stretch;
-  height: 44px;
-  flex-direction: column;
-}
-
-.label {
-  padding-left: 10px;
-  text-align: left;
-  font-family: "Geist";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 18px;
-  text-decoration: none;
-  color: #979797; /* Gray */
-  margin: 8px;
-  vertical-align: middle;
-}
-
-.label:hover {
-  color: #49a2bb; /* Viking */
-}
-
-.label:active {
-  color: #387181; /* Calypso */
-}
-
-.layer-toggle-container {
-	display: flex;
-	flex-direction: row;
-	justify-content: start;
-	align-items: center;
-}
-
-.layer-toggle {
-	display: block;
-	width: auto;
-	font-family: 'Montserrat';
-	font-size: 1.125rem;
-	font-weight: bold;
-	border: none;
-	background-color: #387181;
-	color: #fcfcfc;
-	outline: none;
-	border: none;
-	box-shadow: none;
-	margin-left: 0.75rem;
-}
-
-.layers-icon {
-	fill: var(--custom-light-gray);
-}
-
-
-/* logout icon */
-.logoutIcon {
-  height: 15px;
-  width: 15px;
-  margin: 2px 15px 0px 0px;
-}
-
-/* logout button */
-.buttonLogout {
-  font-family: Geist;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  color: #FFFFFF;
-  height: 35px;
-  width: 150px;
-  margin-right: 25px;
-  background-color: #3D97AF ;
-  border: none;
-  border-radius: 4px;
-  display: block;
-  position: relative;
-  top: 50%;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  filter: drop-shadow(0 0 0.25rem #00000025);
-  justify-content: space-between;
-}
-
-.logoutIcon {
-  height: 15px;
-  width: 15px;
-  margin: 2px 15px 0px 0px;
-}
-
-button.container {
-  display: flex;
-  position: relative;
-  z-index: 10;
-  align-items: center;
-  gap: 8px;
-  align-self: stretch;
-  border: 0;
-  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2); 
-}
-
-button.labelFont {
-  font-family: Geist;
-  padding-top: 30px;
-  padding-left: 30px;
-  padding-bottom: 30px;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 750;
-  line-height: normal;
-  color: #3D97AF;
-  letter-spacing: 0.8px;
-  background-color: #F6F6F6;
-}
-
-button:hover {
-  background-color: #e4e4e4;
-  cursor: pointer;
-}
-
-div.buttons {
-  position: relative;
-  display: flex;
-  padding: 24px 20px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 18px;
-  align-self: stretch;
-  border-bottom: 0px solid #cbd5e0; 
-}
-
-/* magnifying glass icon */
-.searchButton {
-  background-image: url("./img/search-icon.png");
-  background-repeat: no-repeat;
-  justify-content: right;
-}
-
-.icon {
-  width: 32px;
-  height: 32px;
-}
-
-/* entries in household list */
-a.accordion {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-family: Geist;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-  letter-spacing: 0.16px;
-}
-
-img.accordion {
-  fill: #91c9db;
-}
-
-ul.accordion {
-  padding-inline-start: 0px !important;
-}
-
-.containerEntry {
-  width: 100%;
-}
-
 li.accordion {
   display: flex;
   padding: 0.75rem;
@@ -383,144 +154,15 @@ li.accordion {
   box-sizing: border-box;
   /* border-bottom: 0.5px solid #bdbdbd; */
 }
-
 a.accordion {
   text-decoration: none;
 }
+/* ------------ */
 
-.activity {
-  color: #2f2f2f;
-  text-overflow: ellipsis;
-  font-family: 'Geist', sans-serif;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 110%;
-  letter-spacing: 0.28px;
-}
-h1.entries {
-  color: #000;
-  font-family: 'Geist', sans-serif;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-}
 
-/* CSS for the household entry modals */
-/* CSS for the entry modal */
 
-/* modal containers */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 9900;
-  top: 3%;
-  left: 20%;
-  width: 100%; /* Adjust the width of the modal as needed */
-  max-width: 528px;
-  height: 100%; /* Adjust the height of the modal as needed */
-  justify-content: center;
-  padding: 20px;
-  box-sizing: border-box;
-}
 
-.modalHeader {
-  position: relative;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  display: flex;
-  justify-content: space-between;
-  margin-left: 25%;
-  margin-top: 5%;
-  padding: 7px 24px;
-  width: 100%;
-  background-color: #fcfcfc;
-  z-index: 9901;
-  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2); 
-}
-
-.modalContent {
-  margin-left: 25%;
-  width: 100%;
-  padding: 0px 24px;
-  background-color: #fcfcfc;
-  font-family: 'Geist', sans-serif;
-  font-size: 16px;
-  font-style: normal;
-  max-height: calc(80% - 140px);
-  overflow-y: auto;
-  scrollbar-gutter: stable;
-}
-
-.modalFooter {
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  margin-left: 25%;
-  padding: 24px;
-  width: 100%;
-  background-color: #fcfcfc;
-  position: relative;
-  z-index: 9901;
-  box-shadow: 0 -5px 5px -5px rgba(0, 0, 0, 0.2); 
-}
-
-.modalLine {
-  display: flex; 
-  justify-content: space-between;
-}
-
-/* modal text */
-.modalLabel {
-  font-family: 'Geist', sans-serif;
-  font-size: 16px;
-  color: #000;
-  font-weight: 750;
-  font-style: normal;
-  letter-spacing: 2%;
-}
-
-.modalName {
-  position: relative;
-  color: #387181;
-  font-family: 'Geist', sans-serif;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 750;
-  letter-spacing: 0.48px;
-  padding: 10px 0px;
-}
-
-.modalButton {
-  width: 100%;
-  display: flex;
-  position: relative;
-  justify-content: center;
-  font-family: "Geist", sans-serif;
-  font-size: 16px;
-  font-weight: 750;
-  cursor: pointer;
-  outline: none;
-  border: none;
-  background-color: #fcfcfc;
-}
-
-.modalButton:hover {
-  background-color: #fcfcfc;
-}
-
-.modalText {
-  color: #a0a0a0;
-  font-family: 'Geist', sans-serif;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  letter-spacing: 0.32px;
-  line-height: 100%;
-  position: relative;
-  margin-top: 5px;
-  margin-bottom: 20px;
-}
+/* CONTINUE CLEANING HERE */
 
 button.collapsible {
   padding: 0px;
@@ -636,72 +278,6 @@ button.collapsible {
 .leafletButtons {
   display: flex;
   justify-content: space-between;
-}
-
-.deleteButton {
-  color: #d64747;
-}
-
-.editButton,
-.addButton {
-  color: #3d97af;
-}
-
-.deleteButton,
-.editButton,
-.addButton {
-  display: flex;
-  padding: 16px 24px;
-  width: fit-content;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  border-radius: 8px;
-  border: 0;
-  font-family: 'Geist', sans-serif;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-  background-color: transparent;
-}
-
-.deleteButton:hover,
-.editButton:hover,
-.addButton:hover {
-  background-color: transparent;
-  cursor: pointer;
-}
-
-.partnerValue {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-family: 'Geist', sans-serif;
-  font-size: 12px;
-  font-style: normal;
-  line-height: 110%;
-  letter-spacing: 0.32px;
-  margin: 0 !important;
-}
-
-.partnerLabel {
-  color: #3d97af;
-  font-family: 'Geist', sans-serif;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 110%;
-  letter-spacing: 0.36px;
-  font-size: 14px;
-  margin: 12px 0 8px 0 !important;
-}
-
-.partnerActivity {
-  color: #2f2f2f;
-  font-family: 'Geist', sans-serif;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 110%;
-  letter-spacing: 0.4px;
 }
 
 .formIframe {
@@ -950,13 +526,11 @@ button.collapsible {
   overflow-y: auto;
 }
 
-/* Restore global popup width to not affect household detail popups */
 .leaflet-popup-content-wrapper {
   min-width: 400px;
   max-width: 480px;
 }
 
-/* Specific styling only for Add Household popups using the custom class */
 .leaflet-popup.add-household-popup-compact .leaflet-popup-content-wrapper {
   min-width: 200px !important;
   max-width: 300px !important;
@@ -986,3 +560,170 @@ button.collapsible {
 .addButton:hover {
   background: #2542a3;
 }
+
+.dropdown-icon svg {
+	width: 1.2em;
+	height: 1.2em;
+	vertical-align: middle;
+	display: inline-block;
+	color: #888ea8;
+	fill: #888ea8;
+}
+
+.filter-modal {
+	background-color: white;
+	border-radius: 1rem;
+	width: 90%;
+	max-width: 500px;
+	max-height: 90vh;
+	overflow-y: auto;
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.filter-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1.5rem;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.filter-header h2 {
+	font-family: 'Geist', sans-serif;
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: #111827;
+	margin: 0;
+}
+
+.filter-close {
+	background: none;
+	border: none;
+	font-size: 1.5rem;
+	cursor: pointer;
+	color: #6b7280;
+	padding: 0.25rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 50%;
+}
+
+.filter-close:hover {
+	background-color: #f3f4f6;
+}
+
+.filter-content {
+	padding: 1.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.filter-section {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.filter-section h3 {
+	font-family: 'Geist', sans-serif;
+	font-size: 1rem;
+	font-weight: 600;
+	color: #374151;
+	margin: 0;
+}
+
+.filter-options {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.filter-options label {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-family: 'Geist', sans-serif;
+	font-size: 0.875rem;
+	color: #374151;
+	cursor: pointer;
+	padding: 0.25rem 0;
+}
+
+.filter-options input[type="checkbox"] {
+	width: 1rem;
+	height: 1rem;
+	cursor: pointer;
+}
+
+#riskTypeFilter {
+	font-family: 'Geist', sans-serif;
+	padding: 0.5rem;
+	border: 1px solid #e0e0e0;
+	border-radius: 0.5rem;
+	font-size: 0.875rem;
+	background-color: white;
+	cursor: pointer;
+}
+
+#riskTypeFilter:focus {
+	outline: none;
+	border-color: #387181;
+	box-shadow: 0 0 0 2px rgba(56, 113, 129, 0.1);
+}
+
+.filter-footer {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 1.5rem;
+	border-top: 1px solid #e0e0e0;
+}
+
+.filter-btn {
+	font-family: 'Geist', sans-serif;
+	padding: 0.75rem 1.5rem;
+	border-radius: 0.5rem;
+	font-size: 0.875rem;
+	font-weight: 500;
+	cursor: pointer;
+	border: none;
+	transition: all 0.2s;
+}
+
+.filter-clear {
+	background-color: #f3f4f6;
+	color: #374151;
+}
+
+.filter-clear:hover {
+	background-color: #e5e7eb;
+}
+
+.filter-apply {
+	background-color: #1a357b;
+	color: white;
+}
+
+.filter-apply:hover {
+	background-color: #F2F2FA;
+}
+
+/* Active filter indicator */
+.filter-active {
+	background-color: #F2F2FA !important;
+  color: #1a357b;
+  border: 1px solid #DADAF1;
+}
+
+/* Active filter indicator 
+.filter-active::after {
+	content: "- 2";
+  margin-top: 0.1rem;
+  margin-left: 0.2rem;
+	font-size: 0.75rem;
+	opacity: 0.8;
+}*/

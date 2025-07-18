@@ -6,6 +6,7 @@ import {
   getDocByID,
   setCollection,
   getCollection,
+  filterData,
   DB,
   BUKLOD_RULES_TEST,
 } from '../../js/firestore_UNIV.js';
@@ -35,13 +36,23 @@ var partnersArray = getPartnersArray();
 
 // Function for populating the navbar entries with households entries
 function populateNavBar(condition){
+  // Clear the current list
+  const locationList = document.getElementById('locationList');
+  locationList.innerHTML = '';
+  
   var filtered_partners;
 
   if (condition == null){
-    filtered_partners = partnersArray
+    filtered_partners = partnersArray;
+  } else {
+    // Filter logic implementation goes here
+    filtered_partners = condition;
   }
-  else{
-    //insert filter here
+
+  // Update the household count
+  const partnersCount = document.getElementById('partners-count');
+  if (partnersCount) {
+    partnersCount.textContent = `HOUSEHOLDS (${filtered_partners.size})`;
   }
 
   filtered_partners.forEach((partner) => {
@@ -188,7 +199,7 @@ async function onPinClick(doc) {
         ul.textContent = doc.number_pregnant || 0;
         break;
       case 'sickness_present':
-        ul.textContent = doc.number_pregnant || 'None';
+        ul.textContent = doc.sickness_present || 'None';
         break;
 
       case 'risk-section':
@@ -498,6 +509,61 @@ document.getElementById('download-report').addEventListener('click', async () =>
 addListeners();
 // ------------------------------------------
 
+function attachMarkers(partners) {
+  const riskType = document.getElementById('risk-sort').value.replace('-sort', '');
+
+  partners.forEach(partner => {
+    const coord = partner.location_coordinates;
+    if (!coord) return;
+
+    const riskLevel = partner[`${riskType}_risk`] || 'LOW RISK';
+    const iconPath = getRiskIcon(riskLevel);
+
+    const icon = L.icon({
+      iconUrl: iconPath,
+      iconSize: [39, 39],
+      popupAnchor: [0.5, -15]
+    });
+
+    const marker = L.marker([coord._lat, coord._long], { icon });
+
+    // Optional: bind popup
+    onPinClick(partner).then(popupContent => {
+      marker.bindPopup(popupContent);
+    });
+
+    partner.marker = marker;
+    map.addLayer(marker);
+
+    marker.on('popupopen', () => {
+      setTimeout(() => {
+        const edit_button = document.querySelectorAll(".popup-edit-btn");
+
+        edit_button.forEach((btn) => {
+          btn.addEventListener('click', function() {
+            const modal = document.getElementById('partnerModal');
+            var editFormModal = document.getElementById('editModal');
+            editFormModal.style.display = 'flex';
+            modal.style.display = 'none';
+            populateEditForm(partner, editFormModal);
+          });
+        });
+
+        const close_button = document.getElementById("close-btn");
+        if (close_button) {
+          close_button.addEventListener('click', () => {
+            marker.closePopup();
+          });
+        }
+        
+      }, 0);
+    });
+
+  });
+
+  return partners;
+}
+
 
 // CODE LOGIC FOR PIN DISPLAY ON MAP
 // ------------------------------------------
@@ -519,9 +585,9 @@ function getRiskIcon(riskLevel) {
 
 // Function for displaying of pins and its switching colors depending on risk type
 function updateRiskIcons() {
+  
   const riskType = document.getElementById('risk-sort').value.replace('-sort', '');
   // Remove all current markers
-  // results.clearLayers();
   
   clearMarkers();
 
@@ -542,8 +608,6 @@ function updateRiskIcons() {
     // Place pin accordingly on map according to icon class standards
 
     // Shows partner info on pin click
-    //const popupContent = onPinClick(partner);
-    //marker.bindPopup(popupContent);
     onPinClick(partner).then(popupContent => {
       marker.bindPopup(popupContent);
     });
@@ -554,17 +618,18 @@ function updateRiskIcons() {
     marker.on('popupopen', () => {
       // Use setTimeout to defer this to after the popup DOM is actually rendered
       setTimeout(() => {
-        const edit_button = document.getElementById("edit-household-popup");
+        const edit_button = document.querySelectorAll(".popup-edit-btn");
 
-        if (edit_button) {
-          edit_button.addEventListener('click', () => {
+        edit_button.forEach((btn) => {
+          btn.addEventListener('click', function() {
+            
             const modal = document.getElementById('partnerModal');
             var editFormModal = document.getElementById('editModal');
             editFormModal.style.display = 'flex';
             modal.style.display = 'none';
             populateEditForm(partner, editFormModal);
           });
-        }
+        });
 
         const close_button = document.getElementById("close-btn");
         if (close_button) {
@@ -572,7 +637,7 @@ function updateRiskIcons() {
             marker.closePopup();
           });
         }
-      }, 0); // <-- ensures DOM is painted
+      }, 0); 
       
     });
 
@@ -605,3 +670,134 @@ function updateRiskIcons() {
 // Code logic for automatically changing pin color depending on selected option on dropbox 
 document.getElementById('risk-sort').addEventListener('change', updateRiskIcons);
 updateRiskIcons();
+
+// FILTER MODAL UI
+// ------------------------------------------
+
+// Initialize filter modal functionality when DOM is loaded
+function initializeFilterModal() {
+  // Filter Modal Controls
+  const filterBtn = document.getElementById('filterBtn');
+  const filterModal = document.getElementById('filterModal');
+  const filterClose = document.getElementById('filterClose');
+  const applyFilters = document.getElementById('applyFilters');
+  const clearFilters = document.getElementById('clearFilters');
+
+  if (!filterBtn || !filterModal) {
+    console.error('Filter elements not found');
+    return;
+  }
+
+  // Open filter modal
+  filterBtn.addEventListener('click', () => {
+    filterModal.style.display = 'flex';
+  });
+
+  // Close filter modal
+  function closeFilterModal() {
+    filterModal.style.display = 'none';
+  }
+
+  filterClose.addEventListener('click', closeFilterModal);
+  filterModal.addEventListener('click', (e) => {
+    if (e.target === filterModal) {
+      closeFilterModal();
+    }
+  });
+
+  // Apply filters
+  applyFilters.addEventListener('click', async () => {
+    const filteredData = await presentFilteredData();
+
+    clearMarkers(); // remove old markers from map
+
+    const filteredWithMarkers = attachMarkers(filteredData);
+
+    populateNavBar(filteredWithMarkers);
+    updateFilterButtonState();
+    closeFilterModal();
+  });
+
+  // Clear all filters
+  clearFilters.addEventListener('click', () => {
+    // Reset all checkboxes
+    document.querySelectorAll('#filterModal input[type="checkbox"]').forEach(checkbox => {
+      checkbox.checked = false;
+    });
+    
+    // Reset risk type dropdown
+    const riskTypeFilter = document.getElementById('riskTypeFilter');
+    if (riskTypeFilter) {
+      riskTypeFilter.value = '';
+    }
+    
+    // Reset visual state
+    updateFilterButtonState();
+  });
+}
+
+// Get checked values by filter type
+function getCheckedValuesByFilter(filterType) {
+  const checkboxes = document.querySelectorAll(`input[data-filter="${filterType}"]:checked`);
+  return Array.from(checkboxes).map(checkbox => checkbox.value);
+}
+
+// Collect all filter selections
+function collectAllFilterSelections() {
+  return {
+    residency_status: getCheckedValuesByFilter('residency_status'),
+    household_material: getCheckedValuesByFilter('household_material'),
+    is_hoa_noa: getCheckedValuesByFilter('is_hoa_noa'),
+    risk_level: getCheckedValuesByFilter('risk_level'),
+    risk_type: document.getElementById('riskTypeFilter')?.value || null, // ✅ FIXED
+  };
+}
+
+
+// Update filter button visual state based on selected filters
+function updateFilterButtonState() {
+  const filterBtn = document.getElementById('filterBtn');
+  
+  // Check if any filters are selected
+  const hasCheckboxFilters = document.querySelectorAll('#filterModal input[type="checkbox"]:checked').length > 0;
+  const riskTypeFilter = document.getElementById('riskTypeFilter');
+  const hasRiskTypeFilter = riskTypeFilter && riskTypeFilter.value !== '';
+  
+  const hasActiveFilters = hasCheckboxFilters || hasRiskTypeFilter;
+  
+  if (hasActiveFilters) {
+    filterBtn.classList.add('filter-active');
+  } else {
+    filterBtn.classList.remove('filter-active');
+  }
+}
+
+export async function presentFilteredData() {
+  const rawInput = collectAllFilterSelections();
+  console.log("Raw input:", rawInput);
+
+  const transformedData = { ...rawInput };
+
+  // map risk_type + risk_level into fire_risk: HIGH
+  if (rawInput.risk_type && rawInput.risk_level) {
+    transformedData[rawInput.risk_type] = rawInput.risk_level;
+    delete transformedData.risk_type;
+    delete transformedData.risk_level;
+  }
+
+  console.log("Mapped:", transformedData);
+
+  const finalData = await filterData("buklod-tao", transformedData);
+
+  console.log("Final:", finalData);
+
+  return finalData;
+}
+
+
+
+// Initialize filter modal when DOM is ready
+document.addEventListener('DOMContentLoaded', initializeFilterModal);
+
+// Also initialize after a short delay to ensure all elements are loaded
+setTimeout(initializeFilterModal, 1000);

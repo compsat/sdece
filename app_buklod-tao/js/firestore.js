@@ -3,13 +3,8 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 import {
   getFirestore,
-  collection,
   getDocs,
-  addDoc,
-  updateDoc,
   doc,
-  query,
-  where,
   getDoc,
   GeoPoint,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
@@ -42,7 +37,7 @@ initializeApp(FIREBASE_CONFIG);
 const db = getFirestore();
 setCollection(collection_value);
 const colRef = getCollection();
-let partnersArray = [];
+let partnersArray = new Map();
 
 export function getDocByID(docId) {
   const docReference = doc(db, 'nstp-3', docId);
@@ -64,12 +59,9 @@ const loadData = async() => {
 		await getDocs(colRef)
 	.then((querySnapshot) => {
 		querySnapshot.forEach((doc) => {
-			if (
-				doc.data().name !== 'Test 2' ||
-				doc.data().name !== 'Test2'
-			) {
-				partnersArray.push(doc.data());
-			}
+      let docData = doc.data();
+      let docID = doc.id;
+			partnersArray.set(docID,docData);
     
 		});
 	})
@@ -161,10 +153,9 @@ export function submitEditForm(){
 
     collated_input[field_name] = input_value;
     
-    // this is where data validation will happen
     // add the if-else statements of edge cases here
   }
-  //Internal data validation within buklod tao app
+  // Internal data validation within buklod tao app
   validate_errors = validateData(collection_value,collated_input);
 
   
@@ -196,15 +187,18 @@ export function submitEditForm(){
     waitForPromise();
   }
   //Data Validation Error message display within modal
-  function displayErrors(errors) {
+  
+}
+
+function displayErrors(errors) {
     let errorDiv = document.getElementById('error_messages');
 
     if (errorDiv) {
 
         errorDiv.innerHTML = '';
 
-        if (validate_errors.length > 0) {
-            for (let error of validate_errors) {
+        if (errors.length > 0) {
+            for (let error of errors) {
                 let errorParagraph = document.createElement('p');
                 errorParagraph.textContent = error;
                 errorDiv.appendChild(errorParagraph);
@@ -214,7 +208,6 @@ export function submitEditForm(){
             console.error("Error: Couldn't find element with ID 'error_messages'.");
         }
     }
-}
 
 // Function for submission of Add Household form
 export function submitAddForm(){
@@ -243,27 +236,5 @@ export function submitAddForm(){
       addEntry(collatedInput);
       window.parent.document.getElementById('addModal').style.display = 'none';
   };
-
-  function displayErrors(errors) {
-  let errorDiv = document.getElementById('error_messages');
-  console.log(errorDiv);
-
-
-  if (errorDiv) {
-
-      errorDiv.innerHTML = '';
-
-      if (errors.length > 0) {
-          for (let error of errors) {
-              let errorParagraph = document.createElement('p');
-              errorParagraph.textContent = error;
-              errorDiv.appendChild(errorParagraph);
-          }
-      }
-      } else {
-          console.error("Error: Couldn't find element with ID 'error_messages'.");
-      }
-  }
-
 }
 // ------------------------------------------

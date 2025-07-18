@@ -4,15 +4,19 @@ import {
 	updateDoc,
 	doc,
 	query,
+  or,
+  and,
 	where,
 	getDoc,
 	GeoPoint,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 
+
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 
+import { FILTER_RULES } from '/js/ruleEngines.js'
 import {
 	getFirestore,
 	collection,
@@ -250,7 +254,7 @@ const VALIDATION_RULES = {
 		storm_risk: { label: 'Storm Risk', type: 'string', required: true },
 		storm_risk_description: { label: 'Storm Risk Description', type: 'string', required: false},
 
-		nearest_evac: { type: 'string', required: true, maxLength: 255 },
+		nearest_evac: { label: 'Nearest Evacuation Area', type: 'string', required: true, maxLength: 255 },
 	},
 	'buklod-official': {
     household_name: { label: "Household Name", type: 'string', required: true, maxLength: 127 },
@@ -284,7 +288,7 @@ const VALIDATION_RULES = {
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
     location_coordinates: { label: "Location Coordinates", type: 'object', required: true },
-		location_link: { label: "Location Link", type: 'string', required: true },
+		location_link: { label: "Location Link", type: 'string', required: true, regex: /^https:\/\/www\.openstreetmap\.org\/.+/  },
 		household_address: { label: "Household Address", type: 'string', required: true, maxLength: 100 },
 		household_material: {
       label: "Household Material",
@@ -451,7 +455,9 @@ export function addEntry(inp_obj) {
 			// Return the Promise so the form can handle success/error
 			return addDoc(collection_reference, input)
 				.then((docRef) => {
-					console.log(docRef);
+					// console.log(docRef);
+					alert("You may now reload the page for the new household to reflect on this page");
+					window.parent.location.reload(); 
 					return docRef; // Return the document reference for success handling
 				})
 				.catch((error) => {
@@ -558,11 +564,11 @@ export function validateData(collectionName, data) {
 		if (rule.regex && typeof value === 'string') {
 			if (!rule.regex.test(value)) {
 				if (fieldLabel == 'Contact Number') {
-					errors.push(`${fieldLabel} is not in the correct format. Number be in the format 09xxxxxxxxx.`);
+					errors.push(`${fieldLabel} is not in the correct format. Number be in the format: 09xxxxxxxxx.`);
 					continue;
 				}
 				if (fieldLabel == 'Location Link') {
-					errors.push(`${fieldLabel} is not in the correct format.`);
+					errors.push(`${fieldLabel} is not in the correct format. Link must start with: https://www.openstreetmap.org/ss`);
 					continue;
 				}
 			}
@@ -571,3 +577,47 @@ export function validateData(collectionName, data) {
 	}
 	return errors;
 }
+
+export async function filterData(collectionName, queryArray) {
+  const rules = FILTER_RULES[collectionName];
+  const fullQueries = [];
+  const finalResults = new Map();
+
+
+  for (const field in rules) {
+		const filterRule = rules[field];
+		const fieldLabel = filterRule.label || field;
+		const value = queryArray[field]; 
+
+    const IS_EMPTY = value == undefined || value == null || value == '' || value == []
+
+    if (IS_EMPTY) continue;
+
+    switch (filterRule.type) {
+      case "string":
+        if (value.constructor == Array && value.length > 1){
+          const orQueries = value.map((queryValue) => where(fieldLabel, "==", queryValue));
+          fullQueries.push(or(...orQueries));
+        } else {
+          fullQueries.push(where(fieldLabel, "==", value[0]));
+        }
+        break;
+      case "number":
+        fullQueries.push(where(fieldLabel, ">=", value));
+        break;
+      default:
+        break;
+    }
+  }
+
+  const finalQuery = await getDocs(query(collection_reference, and(...fullQueries)));
+
+  finalQuery.forEach((doc) => {
+      let docData = doc.data();
+      let docID = doc.id;
+      finalResults.set(docID, docData);
+  });
+
+  return finalResults;
+}
+
