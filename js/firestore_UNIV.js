@@ -67,9 +67,9 @@ const SECRETS_REQ = new Request(SECRETS_PATH);
 const SECRETS_RES = await fetch(SECRETS_REQ);
 const SECRETS = await SECRETS_RES.json();
 
-export const firebaseConfig = SECRETS.firebaseConfig;
+export const FIREBASE_CONFIG = SECRETS.FIREBASE_CONFIG;
 
-var app = initializeApp(firebaseConfig);
+var app = initializeApp(FIREBASE_CONFIG);
 export const DB = getFirestore(app);
 
 var collection_reference = null;
@@ -427,30 +427,6 @@ export function getDocIdByPartnerName(partner_name) {
 					return null;
 				});
 		}
-
-export function getDocsByPartnerName(partner_name) {
-	const endName = partner_name.replace(/\s/g, '\uf8ff');
-
-  return getDocs(
-    query(
-      collection_reference,
-      where(rule_reference[1], '>=', partner_name),
-      where(rule_reference[1], '<=', partner_name + endName)
-    )
-  )
-    .then((querySnapshot) => {
-      if (!querySnapshot.empty) {
-        const docs = querySnapshot.docs;
-        return docs;
-      } else {
-        return null;
-      }
-    })
-    .catch((error) => {
-      console.error('Error getting documents: ', error);
-      return null;
-    });
-}
 
 export function getDocByID(docId) {
   const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
