@@ -517,11 +517,7 @@ function showEditActivityForm(activity, partnerName, coords) {
 
 					return;
 				}
-				if (typeof updated.activity_date === 'string' && !isNaN(Date.parse(updated.activity_date))) {
-					const dateOnly = new Date(updated.activity_date);
-					dateOnly.setHours(0, 0, 0, 0);
-					updated.activity_date = Timestamp.fromDate(dateOnly);
-				}
+				updated.activity_date = dateToTimestamp(updated.activity_date);
 				editEntry(updated, activity.identifier);
 				showActivityDetailModal({...activity, ...updated}, partnerName, coords);
 				alert("Please reload the page for your changes to reflect.");
