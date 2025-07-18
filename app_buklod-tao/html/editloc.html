@@ -9,30 +9,13 @@
     <link rel="stylesheet" href="../css/form.css">
     <link rel="stylesheet" href="../css/main.css">
 
-    <!-- Update! -->
+    
     <script type="module">
-        import { editEntry, BUKLOD_RULES_TEST, getDocIdByPartnerName, getDocByID } from "/js/firestore_UNIV.js";
+        //Call function from firestore.js to edit new household from input fields after pressing Save Changes button
+        import { editEntry, BUKLOD_RULES, getDocIdByPartnerName, getDocByID } from "/js/firestore_UNIV.js";
         import { submitEditForm } from "../js/firestore.js";
 
-        document.getElementById("submit_form").addEventListener("click", handleFormSubmit);
-
-        function handleFormSubmit() {
-            var collatedInput = {}; 
-            for(let i = 0; i < BUKLOD_RULES_TEST[2].length; i++){
-                let fieldName = BUKLOD_RULES_TEST[2][i];
-                let inputValue = document.getElementById(fieldName).value;
-
-                if (fieldName == 'number_residents' || fieldName == 'location_coordinates' || fieldName == 'number_minors' || 
-                fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick') {
-                    collatedInput[fieldName] = Number(inputValue);
-                    console.log(fieldName, " type: ", typeof collatedInput[fieldName])
-                } 
-                else {
-                    collatedInput[fieldName] = inputValue;
-                }
-            }
-            submitEditForm()
-        }
+        document.getElementById("submit_form").addEventListener("click", submitEditForm);
     </script>
 </head>
 
@@ -68,11 +51,13 @@
                     <div class="form-group">
                         <label class="form-label" for="household_name">Household Name</label>
                         <input type="text" id="household_name" name="household_name" class="form-input" placeholder="Enter household name (Ex. Juan Cruz)" required/>
+                        <div class="field-error" id="household_name_error"></div>
                     </div>
                         
                     <div class="form-group">
                         <label class="form-label" for="household_phase">Phase</label>
                         <input type="text" id="household_phase" name="household_phase" class="form-input" placeholder="Enter phase number (Ex. Phase 1)" />
+                        <div class="field-error" id="household_phase_error"></div>
                     </div>
                 </div>
 
@@ -80,6 +65,7 @@
                     <div class="form-group">
                         <label class="form-label" for="household_address">Address</label>
                         <textarea id="household_address" name="household_address" class="form-textarea" placeholder="Enter house address (Ex. 1 Sampaguita St. Banaba)" required></textarea>
+                        <div class="field-error" id="household_address_error"></div>
                     </div>
                 </div>
 
@@ -87,6 +73,7 @@
                     <div class="form-group">
                         <label class="form-label" for="contact_number">Contact Number</label>
                         <input type="tel" id="contact_number" name="contact_number" class="form-input" placeholder="Enter contact number (Ex. 09XXXXXXXXX)" pattern="[0-9]{11}" maxlength="11" required/>
+                        <div class="field-error" id="contact_number_error"></div>
                     </div>
 
                     <div class="form-group">
@@ -96,6 +83,7 @@
                             <option value="May-Ari">May-Ari</option>
                             <option value="Umuupa">Umuupa</option>
                         </select>
+                        <div class="field-error" id="residency_status_error"></div>
                     </div>
                 </div>
 
@@ -108,6 +96,7 @@
                             <option value="NOA">NOA</option>
                             <option value="N/A">N/A</option>
                         </select>
+                        <div class="field-error" id="is_hoa_noa_error"></div>
                     </div>
 
                     <div class="form-group">
@@ -120,6 +109,7 @@
                             <option value="Makeshift">Makeshift</option>
                             <option value="Natural">Natural</option>
                         </select>
+                        <div class="field-error" id="household_material_error"></div>
                     </div>
                 </div>
 
@@ -127,6 +117,7 @@
                     <div class="form-group">
                         <label class="form-label" for="nearest_evac">Nearest Evacuation Area</label>
                         <input type="text" id="nearest_evac" name="nearest_evac" class="form-input" placeholder="Enter nearest evac center (Ex. Doña Pepeng Elementary School)" required/>
+                        <div class="field-error" id="nearest_evac_error"></div>
                     </div>
                 </div>
 
@@ -134,6 +125,7 @@
                     <div class="form-group">
                         <label class="form-label" for="location_link">Location Link</label>
                         <input type="text" id="location_link" name="location_link" class="form-input" placeholder="Enter location link (Ex. https://www.openstreetmap.org/ss)" />
+                        <div class="field-error" id="location_link_error"></div>
                     </div>
 
                     <div class="form-group">
@@ -162,11 +154,13 @@
                     <div class="form-group">
                         <label class="form-label" for="number_residents">Total Residents</label>
                         <input type="number" id="number_residents" name="number_residents" class="form-input" placeholder="1" min="1" required/>
+                        <div class="field-error" id="number_residents_error"></div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="number_minors">Minors</label>
                         <input type="number" id="number_minors" name="number_minors" class="form-input" placeholder="0" min="0" />
+                        <div class="field-error" id="number_minors_error"></div>
                     </div>
                 </div>
 
@@ -174,11 +168,13 @@
                     <div class="form-group">
                         <label class="form-label" for="number_seniors">Senior Citizens</label>
                         <input type="number" id="number_seniors" name="number_seniors" class="form-input" placeholder="0" min="0" />
+                        <div class="field-error" id="number_seniors_error"></div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="number_pwd">PWD</label>
                         <input type="number" id="number_pwd" name="number_pwd" class="form-input" placeholder="0" min="0" />
+                        <div class="field-error" id="number_pwd_error"></div>
                     </div>
                 </div>
 
@@ -186,11 +182,13 @@
                     <div class="form-group">
                         <label class="form-label" for="number_sick">Sick Residents</label>
                         <input type="number" id="number_sick" name="number_sick" class="form-input" placeholder="0" min="0" />
+                        <div class="field-error" id="number_sick_error"></div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="number_pregnant">Pregnant Residents</label>
                         <input type="number" id="number_pregnant" name="number_pregnant" class="form-input" placeholder="0" min="0" />
+                        <div class="field-error" id="number_pregnant_error"></div>
                     </div>
                 </div>
 
@@ -198,6 +196,7 @@
                     <div class="form-group">
                         <label class="form-label" for="sickness_present">Current Sickness/Health Issues</label>
                         <textarea id="sickness_present" name="sickness_present" class="form-textarea" placeholder="Describe any current health issues or sickness present (Ex. Diabetes, asthma)"></textarea>
+                        <div class="field-error" id="sickness_present_error"></div>
                     </div>
                 </div>
             </div>
@@ -213,77 +212,90 @@
 
                 <div class="risk-grid">
                     <label class="risk-label">Earthquake Risk</label>
-                    <div style="display: flex; gap: 12px;">
-                        <select name="earthquake_risk" id="earthquake_risk" class="form-select" style="width: 120px;" required>
-                            <option value="" disabled selected hidden>Level</option>
-                            <option value="HIGH RISK">HIGH</option>
-                            <option value="MEDIUM RISK">MEDIUM</option>
-                            <option value="LOW RISK">LOW</option>
-                        </select>
-                        <input type="text" id="earthquake_risk_description" name="earthquake_risk_description" class="form-input" placeholder="Ex. Adobe structure have been check by engineers/ far away from any water ways" style="flex: 1;" />
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; gap: 12px;">
+                            <select name="earthquake_risk" id="earthquake_risk" class="form-select" style="width: 120px;" required>
+                                <option value="" disabled selected hidden>Level</option>
+                                <option value="HIGH RISK">HIGH</option>
+                                <option value="MEDIUM RISK">MEDIUM</option>
+                                <option value="LOW RISK">LOW</option>
+                            </select>
+                            <input type="text" id="earthquake_risk_description" name="earthquake_risk_description" class="form-input" placeholder="Ex. Adobe structure have been check by engineers/ far away from any water ways" style="flex: 1;" />
+                        </div>
+                        <div class="field-error" id="earthquake_risk_error"></div>
                     </div>
                 </div>
 
                 <div class="risk-grid">
                     <label class="risk-label">Fire Risk</label>
-                    <div style="display: flex; gap: 12px;">
-                        <select name="fire_risk" id="fire_risk" class="form-select" style="width: 120px;">
-                            <option value="" disabled selected hidden>Level</option>
-                            <option value="HIGH RISK">HIGH</option>
-                            <option value="MEDIUM RISK">MEDIUM</option>
-                            <option value="LOW RISK">LOW</option>
-                        </select>
-                        <input type="text" id="fire_risk_description" name="fire_risk_description" class="form-input" placeholder="Ex. Concrete House/ Approved by engineers/ Have access road and fire hydrant/ House plan approve by engineers" style="flex: 1;" />
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; gap: 12px;">
+                            <select name="fire_risk" id="fire_risk" class="form-select" style="width: 120px;">
+                                <option value="" disabled selected hidden>Level</option>
+                                <option value="HIGH RISK">HIGH</option>
+                                <option value="MEDIUM RISK">MEDIUM</option>
+                                <option value="LOW RISK">LOW</option>
+                            </select>
+                            <input type="text" id="fire_risk_description" name="fire_risk_description" class="form-input" placeholder="Ex. Concrete House/ Approved by engineers/ Have access road and fire hydrant/ House plan approve by engineers" style="flex: 1;" />
+                        </div>
+                        <div class="field-error" id="fire_risk_error"></div>
                     </div>
                 </div>
 
                 <div class="risk-grid">
                     <label class="risk-label">Flood Risk</label>
-                    <div style="display: flex; gap: 12px;">
-                        <select name="flood_risk" id="flood_risk" class="form-select" style="width: 120px;">
-                            <option value="" disabled selected hidden>Level</option>
-                            <option value="HIGH RISK">HIGH</option>
-                            <option value="MEDIUM RISK">MEDIUM</option>
-                            <option value="LOW RISK">LOW</option>
-                        </select>
-                        <input type="text" id="flood_risk_description" name="flood_risk_description" class="form-input" placeholder="Ex. Alarm Level (1st Alarm), 50.00-M away from water ways" style="flex: 1;" />
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; gap: 12px;">
+                            <select name="flood_risk" id="flood_risk" class="form-select" style="width: 120px;">
+                                <option value="" disabled selected hidden>Level</option>
+                                <option value="HIGH RISK">HIGH</option>
+                                <option value="MEDIUM RISK">MEDIUM</option>
+                                <option value="LOW RISK">LOW</option>
+                            </select>
+                            <input type="text" id="flood_risk_description" name="flood_risk_description" class="form-input" placeholder="Ex. Alarm Level (1st Alarm), 50.00-M away from water ways" style="flex: 1;" />
+                        </div>
+                        <div class="field-error" id="flood_risk_error"></div>
                     </div>
                 </div>
 
                 <div class="risk-grid">
                     <label class="risk-label">Landslide Risk</label>
-                    <div style="display: flex; gap: 12px;">
-                        <select name="landslide_risk" id="landslide_risk" class="form-select" style="width: 120px;">
-                            <option value="" disabled selected hidden>Level</option>
-                            <option value="HIGH RISK">HIGH</option>
-                            <option value="MEDIUM RISK">MEDIUM</option>
-                            <option value="LOW RISK">LOW</option>
-                        </select>
-                        <input type="text" id="landslide_risk_description" name="landslide_risk_description" class="form-input" placeholder="Ex. House built check and approved by engineers/ House built far away from the sloped area, river and mountain area" style="flex: 1;" />
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; gap: 12px;">
+                            <select name="landslide_risk" id="landslide_risk" class="form-select" style="width: 120px;">
+                                <option value="" disabled selected hidden>Level</option>
+                                <option value="HIGH RISK">HIGH</option>
+                                <option value="MEDIUM RISK">MEDIUM</option>
+                                <option value="LOW RISK">LOW</option>
+                            </select>
+                            <input type="text" id="landslide_risk_description" name="landslide_risk_description" class="form-input" placeholder="Ex. House built check and approved by engineers/ House built far away from the sloped area, river and mountain area" style="flex: 1;" />
+                        </div>
+                        <div class="field-error" id="landslide_risk_error"></div>
                     </div>
                 </div>
 
                 <div class="risk-grid">
                     <label class="risk-label">Storm Risk</label>
-                    <div style="display: flex; gap: 12px;">
-                        <select name="storm_risk" id="storm_risk" class="form-select" style="width: 120px;">
-                            <option value="" disabled selected hidden>Level</option>
-                            <option value="HIGH RISK">HIGH</option>
-                            <option value="MEDIUM RISK">MEDIUM</option>
-                            <option value="LOW RISK">LOW</option>
-                        </select>
-                        <input type="text" id="storm_risk_description" name="storm_risk_description" class="form-input" placeholder="Ex. Concrete House/Checked by engineers/ Far away from sea shore, river, or any slope land area" style="flex: 1;" />
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; gap: 12px;">
+                            <select name="storm_risk" id="storm_risk" class="form-select" style="width: 120px;">
+                                <option value="" disabled selected hidden>Level</option>
+                                <option value="HIGH RISK">HIGH</option>
+                                <option value="MEDIUM RISK">MEDIUM</option>
+                                <option value="LOW RISK">LOW</option>
+                            </select>
+                            <input type="text" id="storm_risk_description" name="storm_risk_description" class="form-input" placeholder="Ex. Concrete House/Checked by engineers/ Far away from sea shore, river, or any slope land area" style="flex: 1;" />
+                        </div>
+                        <div class="field-error" id="storm_risk_error"></div>
                     </div>
                 </div>
 
-                <!-- Error Messages -->
-                <div id="error_messages" class="error_messages"></div>
+
             </div>
         </div>
 
         <!-- Modal Footer -->
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary">Delete Household</button>
             <button type="button" id="cancel-btn" class="btn btn-secondary" onclick="resetForm()">Clear</button>
             <button type="submit" id="submit_form" class="btn btn-primary" name="submit_form">Save Changes</button>
         </div>
@@ -307,6 +319,15 @@
                 for (var i = 0; i < selectFields.length; i++) {
                     selectFields[i].selectedIndex = 0; 
                 }
+
+                // Clear text area fields
+                var textAreaFields = document.getElementsByTagName('textarea');
+                for (var i = 0; i < textAreaFields.length; i++) {
+                    var field = textAreaFields[i];
+                    if (!field.readOnly && field.type !== 'button') {
+                        field.value = '';
+                    }
+                }
             }
         }
 
@@ -317,6 +338,49 @@
         document.getElementById('close-btn').addEventListener('click', function (event) {
             event.preventDefault();
             closeModal();
+        });
+
+        // Hide error messages when user starts typing
+        const inputs = document.querySelectorAll('.form-input, .form-select, .form-textarea');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                // Clear error state for this specific field
+                this.classList.remove('error');
+                
+                // Clear error message for this field
+                const errorContainer = document.getElementById(`${this.id}_error`);
+                if (errorContainer) {
+                    errorContainer.textContent = '';
+                    errorContainer.classList.remove('show');
+                }
+                
+                // Clear error state for the label
+                const label = document.querySelector(`label[for="${this.id}"]`);
+                if (label) {
+                    label.classList.remove('error');
+                }
+            });
+            
+            // Also handle change events for select elements
+            if (input.tagName === 'SELECT') {
+                input.addEventListener('change', function() {
+                    // Clear error state for this specific field
+                    this.classList.remove('error');
+                    
+                    // Clear error message for this field
+                    const errorContainer = document.getElementById(`${this.id}_error`);
+                    if (errorContainer) {
+                        errorContainer.textContent = '';
+                        errorContainer.classList.remove('show');
+                    }
+                    
+                    // Clear error state for the label
+                    const label = document.querySelector(`label[for="${this.id}"]`);
+                    if (label) {
+                        label.classList.remove('error');
+                    }
+                });
+            }
         });
     </script>
 </body>
