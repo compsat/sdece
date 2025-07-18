@@ -188,23 +188,6 @@
           messageModal.classList.remove('closing');
         }
       }
-
-      if (event.data && event.data.type === 'mainModalFormSuccess') {
-        // Handle successful form submission event here
-        const messageModal = document.getElementById('messageModal');
-        if (messageModal) {
-          messageModal.style.display = 'flex'; //display success message
-          messageModal.classList.remove('closing');
-
-          setTimeout(() => {
-            messageModal.classList.add('closing');
-            setTimeout(() => {
-              messageModal.style.display = 'none';
-              messageModal.classList.remove('closing');
-            }, 300);
-          }, 3000);
-        }
-      }
     });
 
     // script for search bar- search includes only name 
@@ -334,9 +317,6 @@
       }
       if (event.data === 'closeEditModal') {
         hideModalContainer('editModal');
-      }
-      if (event.data === 'closeMainModal') {
-        hideModalContainer('mainModal');
       }
     });
   </script>
