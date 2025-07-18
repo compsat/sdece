@@ -18,50 +18,6 @@ import {
 	collection,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 
-function getUrlParameter(name) {
-	name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-	var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-	var results = regex.exec(location.search);
-	return results === null
-		? ''
-		: decodeURIComponent(results[1].replace(/\+/g, ' '));
-}
-
-// Get lat and lng from URL parameters
-const lat = getUrlParameter('lat');
-const lng = getUrlParameter('lng');
-
-// Display the values on the page or use them as needed
-// document.addEventListener('DOMContentLoaded', function () {
-// 	document.getElementById(
-// 		'location-info'
-// 	).innerText = `Latitude: ${lat}, Longitude: ${lng}`;
-// });
-
-
-export function getCoordinates(coordinates) {
-	// Handle both comma and plus-separated formats
-	var arr = coordinates.includes(',') ? coordinates.split(',') : coordinates.split('+');
-	var lat = arr[0], lng = arr[1];
-	
-	// Ensure lat and lng are numbers
-	const latNum = parseFloat(lat);
-	const lngNum = parseFloat(lng);
-	
-	// Round the numbers to 5 decimal places
-	var roundLat = parseFloat(latNum.toFixed(5));
-	var roundLon = parseFloat(lngNum.toFixed(5));
-
-	const GEOPOINT = new GeoPoint(roundLat, roundLon);
-
-	// Create the coordinates string
-	var PARTNER_COORDINATES = GEOPOINT;
-	console.log(typeof GEOPOINT)
-	console.log( GEOPOINT)
-
-	return PARTNER_COORDINATES;
-}
-
 const SECRETS_PATH = "/js/secrets.json";
 const SECRETS_REQ = new Request(SECRETS_PATH);
 const SECRETS_RES = await fetch(SECRETS_REQ);
@@ -74,8 +30,6 @@ export const DB = getFirestore(app);
 
 var collection_reference = null;
 var rule_reference = null;
-
-//export let partnersArray = [];
 
 // General format of the rule engine
 export const DB_RULES_AND_DATA = [
@@ -390,6 +344,47 @@ export const BUKLOD_RULES_TEST = DB_RULES_AND_DATA[1];
 export const SDECE_RULES = DB_RULES_AND_DATA[2];
 export const SDECE_RULES_TEST = DB_RULES_AND_DATA[3];
 
+function getUrlParameter(name) {
+	name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+	var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+	var results = regex.exec(location.search);
+	return results === null
+		? ''
+		: decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+// Get lat and lng from URL parameters
+const lat = getUrlParameter('lat');
+const lng = getUrlParameter('lng');
+
+
+export function getCoordinates(coordinates) {
+	// Handle both comma and plus-separated formats
+	var arr = coordinates.includes(',') ? coordinates.split(',') : coordinates.split('+');
+	var lat = arr[0], lng = arr[1];
+	
+	// Ensure lat and lng are numbers
+	const latNum = parseFloat(lat);
+	const lngNum = parseFloat(lng);
+	
+	// Round the numbers to 5 decimal places
+	var roundLat = parseFloat(latNum.toFixed(5));
+	var roundLon = parseFloat(lngNum.toFixed(5));
+
+	const GEOPOINT = new GeoPoint(roundLat, roundLon);
+
+	// Create the coordinates string
+	var PARTNER_COORDINATES = GEOPOINT;
+	console.log(typeof GEOPOINT)
+	console.log( GEOPOINT)
+
+	return PARTNER_COORDINATES;
+}
+
+
+//export let partnersArray = [];
+
+
 export function setCollection(collection_name) {
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_name) {
@@ -556,6 +551,8 @@ export function validateData(collectionName, data) {
       ["min_value_test", `${fieldLabel} must be at least ${rule.minimum}.`],
       ["max_length_test", `${fieldLabel} cannot exceed ${rule.maxLength} characters.`],
       ["regex_test",  `${fieldLabel} is invalid.`],
+      ["number_regex_test", `${fieldLabel} is not in the correct format. Number be in the format 09xxxxxxxxx.`],
+      ["link_regex_test", `${fieldLabel} is not in the correct format.`]
     ])
 
 
@@ -567,33 +564,35 @@ export function validateData(collectionName, data) {
 			continue;
 		}
 
+    //TODO: make this code better. hardcoding specific error messages for specific cases
+    //feels awful. however, unsure of how to handle this as it is a regex issue. maybe
+    //implement specific regex_tests within the system? violates the rules engine
+    //principle, but it its universal enough....
     for (const x of VALIDATION_TEST.keys()) {
       if (VALIDATION_TEST.get(x)) {
-        errors.push(ERROR_MESSAGES.get(x));
-        break;
+        switch (x) {
+          case "regex_test":
+            if (fieldLabel == 'Contact Number') {
+              errors.push(ERROR_MESSAGES.get('number_regex_test'));
+            } else if (fieldLabel == 'Location Link') {
+              errors.push(ERROR_MESSAGES.get('link_regex_test'));
+            } else {
+              errors.push(ERROR_MESSAGES.get(x));
+            }
+            break;
+          default:
+            errors.push(ERROR_MESSAGES.get(x));
+            break;
+        }
       }
     }
 
 
-		if (rule.enum && !rule.enum.includes(value)) {
-			errors.push(`${fieldLabel}' must be one of ${rule.enum.join(', ')}.`);
-			continue;
-		}
+  if (rule.enum && !rule.enum.includes(value)) {
+    errors.push(`${fieldLabel}' must be one of ${rule.enum.join(', ')}.`);
+    continue;
+  }
 
-		// Check for regex pattern
-		if (rule.regex && typeof value === 'string') {
-			if (!rule.regex.test(value)) {
-				if (fieldLabel == 'Contact Number') {
-					errors.push(`${fieldLabel} is not in the correct format. Number be in the format 09xxxxxxxxx.`);
-					continue;
-				}
-				if (fieldLabel == 'Location Link') {
-					errors.push(`${fieldLabel} is not in the correct format.`);
-					continue;
-				}
-			}
-		}
-
-	}
-	return errors;
+}
+return errors;
 }
