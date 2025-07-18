@@ -224,7 +224,7 @@ const VALIDATION_RULES = {
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
     location_coordinates: {label: "Location Coordinates", type: 'object', required: true },
-		location_link: { label: "Location Link", type: 'string', required: true, regex: /^https:+/ }, // data validation for link
+		location_link: { label: "Location Link", type: 'string', required: true, regex: /^https:\/\/.+\..+/ }, // data validation for link
 		household_address: { label: "Household Address", type: 'string', required: true, maxLength: 100 },
 		household_material: {
       label: "Household Material",
@@ -285,7 +285,7 @@ const VALIDATION_RULES = {
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
     location_coordinates: { label: "Location Coordinates", type: 'object', required: true },
-		location_link: { label: "Location Link", type: 'string', required: true, regex: /^https:\/\/www\.openstreetmap\.org\/.+/  },
+		location_link: { label: "Location Link", type: 'string', required: true, regex: /^https:\/\/.+\..+/  },
 		household_address: { label: "Household Address", type: 'string', required: true, maxLength: 100 },
 		household_material: {
       label: "Household Material",
