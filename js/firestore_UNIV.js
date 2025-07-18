@@ -255,7 +255,6 @@ const VALIDATION_RULES = {
 		flood_risk_description:{ label: 'Flood Risk Description', type: 'string', required: false},
 		storm_risk: { label: 'Storm Risk', type: 'string', required: true },
 		storm_risk_description: { label: 'Storm Risk Description', type: 'string', required: false},
-
 		nearest_evac: { label: 'Nearest Evacuation Area', type: 'string', required: true, maxLength: 255 },
 	},
 	'buklod-official': {
@@ -317,7 +316,7 @@ const VALIDATION_RULES = {
 		storm_risk: { label: 'Storm Risk', type: 'string', required: true },
 		storm_risk_description: { label: 'Storm Risk Description', type: 'string', required: false},
 
-		nearest_evac: { type: 'string', required: true, maxLength: 255 },
+		nearest_evac: { label: 'Nearest Evacuation Area', type: 'string', required: true, maxLength: 255 },
 	},
 	'seeds-official-TEST': {
     partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
