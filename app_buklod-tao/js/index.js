@@ -7,7 +7,7 @@ import {
   setCollection,
   getCollection,
   DB,
-  BUKLOD_RULES_TEST,
+  BUKLOD_RULES,
 } from '../../js/firestore_UNIV.js';
 import { addListeners, clearMarkers, map } from '../../js/index_UNIV.js';
 import {

@@ -11,7 +11,7 @@ import {
 import { 
   getCollection, 
   setCollection, 
-  BUKLOD_RULES_TEST, 
+  BUKLOD_RULES, 
   validateData, 
   editEntry,
   addEntry,
@@ -31,7 +31,7 @@ const FIREBASE_CONFIG = {
   measurementId: 'G-9N9ELDEMX9',
 };
 
-var collection_value = 'buklod-official-TEST'
+var collection_value = 'buklod-official'
 
 initializeApp(FIREBASE_CONFIG);
 const db = getFirestore();
@@ -133,11 +133,11 @@ export function populateEditForm(partner, editFormModal) {
 export function submitEditForm(){
   var collated_input = {}; 
   var validate_errors =[];
-  for(let i = 0; i < BUKLOD_RULES_TEST[2].length; i++){
-    //BUKLOD_RULES_TEST[2] are just the field names of each document
-    // let q = document.getElementById(BUKLOD_RULES_TEST[2][i]).value;
-    // collated_input[BUKLOD_RULES_TEST[2][i]] = q;
-    let field_name = BUKLOD_RULES_TEST[2][i];
+  for(let i = 0; i < BUKLOD_RULES[2].length; i++){
+    //BUKLOD_RULES[2] are just the field names of each document
+    // let q = document.getElementById(BUKLOD_RULES[2][i]).value;
+    // collated_input[BUKLOD_RULES[2][i]] = q;
+    let field_name = BUKLOD_RULES[2][i];
     let input_value = document.getElementById(field_name).value;
 
     if (document.getElementById(field_name).type == "number"){
@@ -279,9 +279,9 @@ function displayErrors(errors) {
 export function submitAddForm(){
   var collatedInput = {};
 
-  for (let i = 0; i < BUKLOD_RULES_TEST[2].length; i++) {
+  for (let i = 0; i < BUKLOD_RULES[2].length; i++) {
 
-      let fieldName = BUKLOD_RULES_TEST[2][i];
+      let fieldName = BUKLOD_RULES[2][i];
       let inputValue = document.getElementById(fieldName).value;
 
       if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick' || fieldName == 'number_seniors') {
@@ -294,7 +294,7 @@ export function submitAddForm(){
       }
   }
 
-  const errors = validateData("buklod-official-TEST", collatedInput);
+  const errors = validateData("buklod-official", collatedInput);
 
   if (errors.length > 0) {
       displayErrors(errors);
