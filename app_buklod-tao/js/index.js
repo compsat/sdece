@@ -33,6 +33,15 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // Get list of households
 var partnersArray = getPartnersArray();
 
+// Handle close button clicks for all popups (event delegation)
+document.addEventListener('click', function(event) {
+  if (event.target.matches('#close-btn, #close-btn *')) {
+    event.preventDefault();
+    event.stopPropagation();
+    map.closePopup();
+  }
+});
+
 // Function for populating the navbar entries with households entries
 function populateNavBar(condition){
   // Clear the current list
@@ -579,13 +588,6 @@ function updateRiskIcons() {
           });
         });
 
-        // Attach close button event listener
-        const closeBtn = document.querySelector('#close-btn');
-        if (closeBtn) {
-          closeBtn.addEventListener('click', () => {
-            map.closePopup();
-          });
-        }
         
         // Function for sidebar scrolling and highlighting when clicking from sidebar or pin
         const listItems = document.querySelectorAll('li.accordion');
