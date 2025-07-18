@@ -453,6 +453,13 @@ function showEditActivityForm(activity, partnerName, coords) {
 							errorDiv.appendChild(p);
 						});
 					}
+					const modalContent = window.parent.document.getElementById('modalContent');
+					
+					if (modalContent) modalContent.scrollTop = 0;
+
+					const modal = window.parent.document.getElementById('partnerModal');
+					if (modal) modal.scrollTop = 0;
+
 					return;
 				}
 				if (typeof updated.activity_date === 'string' && !isNaN(Date.parse(updated.activity_date))) {
