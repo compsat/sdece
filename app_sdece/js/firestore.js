@@ -259,6 +259,10 @@ getDocs(collectionRef)
     .then((querySnapshot) => {
         const activities = loadActivities(querySnapshot);
         const partners = groupActivities(activities);
+
+		window.activities = activities;
+        window.partners = partners;
+		
         createMarkersAndSidebar(partners);
     });
 
