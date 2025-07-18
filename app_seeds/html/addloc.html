@@ -30,7 +30,7 @@
 			//import { addLocation } from "./js/firestore.js";
 			import {
 				addEntry,
-				SDECE_RULES_TEST,
+				SEEDS_RULES_TEST,
 				setCollection,
 				validateData,
 				getCoordinates,
@@ -49,10 +49,10 @@
 			function handleFormSubmit_v2() {
 				var collatedInput = {};
 
-				for (let i = 0; i < SDECE_RULES_TEST[2].length; i++) {
-					//SDECE_RULES_TEST[2] are just the field names of each document
+				for (let i = 0; i < SEEDS_RULES_TEST[2].length; i++) {
+					//SEEDS_RULES_TEST[2] are just the field names of each document
 
-					let fieldName = SDECE_RULES_TEST[2][i];
+					let fieldName = SEEDS_RULES_TEST[2][i];
 					let inputValue =
 						document.getElementById(fieldName).value;
 

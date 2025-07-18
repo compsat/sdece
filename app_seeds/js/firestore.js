@@ -1,6 +1,6 @@
 // FIRESTORE DATABASE\
 import { getDocs, GeoPoint, Timestamp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-import { getCollection, setCollection, SDECE_RULES, validateData, editEntry, addEntry } from '/js/firestore_UNIV.js';
+import { getCollection, setCollection, SEEDS_RULES, validateData, editEntry, addEntry } from '/js/firestore_UNIV.js';
 import { map } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
 
@@ -84,7 +84,7 @@ newButton.addEventListener('click', () => {
 	if (inputtedPartnerName == '' || inputtedPartnerAddress == '') {
 		alert('Partner Name and Partner Address cannot be blank.');
 	} else {
-		for (let field of SDECE_RULES[2]) {
+		for (let field of SEEDS_RULES[2]) {
 			if (field != 'partner_coordinates') {
 				if (field == 'partner_name' || field == 'partner_address') {
 					if (field == 'partner_name') {
@@ -126,7 +126,7 @@ function loadActivities(querySnapshot) {
 function groupActivities(activities) {
     let partners = {};
     Object.values(activities).forEach((activity) => {
-        let partner = activity[SDECE_RULES[1]];
+        let partner = activity[SEEDS_RULES[1]];
         if (!partners[partner]) {
             partners[partner] = [];
         }
@@ -612,7 +612,7 @@ function showActivityDetailModal(activity, partnerName, coords) {
 // Used for add/ edit to collect form inputs
 function collectFormInputs(doc, geopointSource, mode) {
 	let result = {};
-	for (let field of SDECE_RULES[2]) {
+	for (let field of SEEDS_RULES[2]) {
 		if (field === 'partner_coordinates') {
 			if (mode === 'add') {
 				result[field] = geopointSource;
