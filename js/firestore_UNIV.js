@@ -4,15 +4,19 @@ import {
 	updateDoc,
 	doc,
 	query,
+  or,
+  and,
 	where,
 	getDoc,
 	GeoPoint,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 
+
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 
+import { FILTER_RULES } from '/js/ruleEngines.js'
 import {
 	getFirestore,
 	collection,
@@ -67,13 +71,14 @@ const SECRETS_REQ = new Request(SECRETS_PATH);
 const SECRETS_RES = await fetch(SECRETS_REQ);
 const SECRETS = await SECRETS_RES.json();
 
-export const firebaseConfig = SECRETS.firebaseConfig;
+export const FIREBASE_CONFIG = SECRETS.FIREBASE_CONFIG;
 
-var app = initializeApp(firebaseConfig);
+var app = initializeApp(FIREBASE_CONFIG);
 export const DB = getFirestore(app);
 
 var collection_reference = null;
 var rule_reference = null;
+export const document_map = new Map();
 
 //export let partnersArray = [];
 
@@ -148,7 +153,7 @@ export const DB_RULES_AND_DATA = [
 		],
 	],
 	[
-		'sdece-official',
+		'seeds-official',
 		'partner_name',
 		[
 			'activity_date',
@@ -168,7 +173,7 @@ export const DB_RULES_AND_DATA = [
 		],
 	],
 	[
-		'sdece-official-TEST',
+		'seeds-official-TEST',
 		'partner_name',
 		[
 			'activity_date',
@@ -224,7 +229,7 @@ const VALIDATION_RULES = {
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
     location_coordinates: {label: "Location Coordinates", type: 'object', required: true },
-		location_link: { label: "Location Link", type: 'string', required: true, regex: /^https:\/\/www\.openstreetmap\.org\/.+/ }, // data validation for link
+		location_link: { label: "Location Link", type: 'string', required: true, regex: /^https:\/\/.+\..+/ }, // data validation for link
 		household_address: { label: "Household Address", type: 'string', required: true, maxLength: 100 },
 		household_material: {
       label: "Household Material",
@@ -238,6 +243,7 @@ const VALIDATION_RULES = {
 				'Natural',
 			],
 		},
+	household_phase: { label: "Household Phase", type: 'string', required: true },
 		
     landslide_risk: { label: 'Landslide Risk', type: 'string', required: true },
 		landslide_risk_description:{ label: 'Landslide Risk Description', type: 'string', required: false},
@@ -250,7 +256,7 @@ const VALIDATION_RULES = {
 		storm_risk: { label: 'Storm Risk', type: 'string', required: true },
 		storm_risk_description: { label: 'Storm Risk Description', type: 'string', required: false},
 
-		nearest_evac: { type: 'string', required: true, maxLength: 255 },
+		nearest_evac: { label: 'Nearest Evacuation Area', type: 'string', required: true, maxLength: 255 },
 	},
 	'buklod-official': {
     household_name: { label: "Household Name", type: 'string', required: true, maxLength: 127 },
@@ -284,7 +290,7 @@ const VALIDATION_RULES = {
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
     location_coordinates: { label: "Location Coordinates", type: 'object', required: true },
-		location_link: { label: "Location Link", type: 'string', required: true },
+		location_link: { label: "Location Link", type: 'string', required: true, regex: /^https:\/\/.+\..+/  },
 		household_address: { label: "Household Address", type: 'string', required: true, maxLength: 100 },
 		household_material: {
       label: "Household Material",
@@ -298,7 +304,7 @@ const VALIDATION_RULES = {
 				'Natural',
 			],
 		},
-		household_phase: { type: 'string', required: true },
+		household_phase: { label: "Household Phase", type: 'string', required: true },
 
     landslide_risk: { label: 'Landslide Risk', type: 'string', required: true },
 		landslide_risk_description:{ label: 'Landslide Risk Description', type: 'string', required: false},
@@ -313,10 +319,10 @@ const VALIDATION_RULES = {
 
 		nearest_evac: { type: 'string', required: true, maxLength: 255 },
 	},
-	'sdece-official-TEST': {
+	'seeds-official-TEST': {
     partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
 		partner_address: { label: "Address of Host Partner", type: 'string', required: true, maxLength: 255 },
-		partner_coordinates: { label: "Partner Coordinates", required: true },
+		partner_coordinates: { label: "Partner Coordinates"},
 		partner_contact_name: {
       label: "Name of Contact Person",
 			type: 'string',
@@ -348,10 +354,10 @@ const VALIDATION_RULES = {
 			regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/
 		},
 	},
-	'sdece-official': {
+	'seeds-official': {
     partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
 		partner_address: { label: "Address of Host Partner", type: 'string', required: true, maxLength: 255 },
-		partner_coordinates: { label: "Partner Coordinates", required: true },
+		partner_coordinates: { label: "Partner Coordinates"},
 		partner_contact_name: {
       label: "Name of Contact Person",
 			type: 'string',
@@ -387,16 +393,36 @@ const VALIDATION_RULES = {
 
 export const BUKLOD_RULES = DB_RULES_AND_DATA[0];
 export const BUKLOD_RULES_TEST = DB_RULES_AND_DATA[1];
-export const SDECE_RULES = DB_RULES_AND_DATA[2];
-export const SDECE_RULES_TEST = DB_RULES_AND_DATA[3];
+export const SEEDS_RULES = DB_RULES_AND_DATA[2];
+export const SEEDS_RULES_TEST = DB_RULES_AND_DATA[3];
 
-export function setCollection(collection_name) {
+
+export async function setCollection(collection_name) {
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule[0] === collection_name) {
 			collection_reference = collection(DB, collection_name);
       rule_reference = rule
+      pullCollection(collection_reference);
+      console.log(collection_name);
+      console.log(document_map);
 		}
 	}
+}
+
+export async function pullCollection(collection_reference) {
+  document_map.clear();
+
+  const docs = await getDocs(collection_reference);
+  docs.forEach((entry) => {
+    let doc = entry.data();
+    let doc_id = entry.id;
+
+    document_map.set(doc_id, doc);
+  });
+}
+
+export function getDocumentMap() {
+  return document_map;
 }
 
 export function getCollection() {
@@ -428,30 +454,6 @@ export function getDocIdByPartnerName(partner_name) {
 				});
 		}
 
-export function getDocsByPartnerName(partner_name) {
-	const endName = partner_name.replace(/\s/g, '\uf8ff');
-
-  return getDocs(
-    query(
-      collection_reference,
-      where(rule_reference[1], '>=', partner_name),
-      where(rule_reference[1], '<=', partner_name + endName)
-    )
-  )
-    .then((querySnapshot) => {
-      if (!querySnapshot.empty) {
-        const docs = querySnapshot.docs;
-        return docs;
-      } else {
-        return null;
-      }
-    })
-    .catch((error) => {
-      console.error('Error getting documents: ', error);
-      return null;
-    });
-}
-
 export function getDocByID(docId) {
   const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
   return getDoc(DOC_REFERENCE).then((docSnap) => {
@@ -464,49 +466,33 @@ export function getDocByID(docId) {
   });
 }
 
-
-
 export function addEntry(inp_obj) {
-	for (let rule of DB_RULES_AND_DATA) {
-		if (rule[0] === collection_reference.id) {
-			let input = {}; // contents depend on the rule engine
-			for (let i = 0; i < Object.keys(inp_obj).length; i++) {
-				input[rule[2][i]] = inp_obj[rule[2][i]];
-			}
-			
-			// Return the Promise so the form can handle success/error
-			return addDoc(collection_reference, input)
-				.then((docRef) => {
-					console.log(docRef);
-					return docRef; // Return the document reference for success handling
-				})
-				.catch((error) => {
-					console.error('Error adding document: ', error);
-					throw error; // Re-throw the error so the form can catch it
-				});
-		}
-	}
-	
+  addDoc(collection_reference, inp_obj)
+    .then((docRef) => {
+      console.log(docRef);
+      alert("You may now reload the page for your addition to reflect on this page");
+      window.parent.location.reload();
+    })
+    .catch((error) => {
+      console.error('Error adding document: ', error);
+      alert("Error uploading new activity. Please try again");
+    });
 	// Return a rejected Promise if no matching collection found
 	return Promise.reject(new Error('Collection not found'));
 }
 
-export function editEntry(inp_obj,docId) {
-	for (let rule of DB_RULES_AND_DATA) {
-		if (rule[0] === collection_reference.id) {
-			const DOC_REFERENCE = doc(DB, rule[0], docId);
-			updateDoc(DOC_REFERENCE, inp_obj)
-				.then(() => {
-					alert("You may now reload the page for your edit to reflect on this page");
-					window.parent.location.reload(); 
-				})
-				.catch((error) => {
-					console.error('Error adding document: ', error);
-					alert("Error uploading the edited activity. Please try again");
-				});
-			break;
-		}
-	}
+
+export function editEntry(inp_obj, docId) {
+	const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
+	updateDoc(DOC_REFERENCE, inp_obj)
+		.then(() => {
+			alert("You may now reload the page for your edit to reflect on this page");
+			window.parent.location.reload();
+		})
+		.catch((error) => {
+			console.error('Error adding document: ', error);
+			alert("Error uploading the edited activity. Please try again");
+		});
 }
 
 export function validateData(collectionName, data) {
@@ -517,62 +503,62 @@ export function validateData(collectionName, data) {
 		const rule = rules[field];
 		const value = data[field];
 		const fieldLabel = rule.label || field;
-    console.log(fieldLabel);
+		console.log(fieldLabel);
 
-    // Required Test
-    const IS_EMPTY = value == undefined || value == null || value == ''
-    if ( 
-      (rule.required && IS_EMPTY)|| 
-      (!rule.required && IS_EMPTY)
-    ) {
-      if (rule.required) {
-        errors.push(`${fieldLabel} is required.`);
-      }
-      continue;
-    } 
-
-    // this is at the beginning so that if it's not required, it doesn't check the rest of
-    // the rules. 
-
-    const MIN_LENGTH_TEST = rule.minLength && typeof value == 'string' && value.length < rule.minLength
-    // this will stay here until sdece team implements front-end validation of phone
-    // number
-
-    // Map of Validation Tests
-    const VALIDATION_TEST = new Map([
-      ["date_test", rule.type === "date" && isNaN(new Date(value).getTime())],
-      ["type_test", rule.type && typeof value != rule.type],
-      ["min_length_test", MIN_LENGTH_TEST],
-      ["min_value_test", rule.minimum !== undefined && typeof value === 'number' && value < rule.minimum], 
-      ["max_length_test", rule.maxLength && typeof value == 'string' && value.length > rule.maxLength], 
-      ["regex_test", rule.regex && !rule.regex.test(value)],
-    ]);
-
-    // Map of Error Messages
-    const ERROR_MESSAGES = new Map([
-      ["date_test", `${fieldLabel} must be a valid date.`],
-      ["type_test", `${fieldLabel} must be of type ${rule.type}. type is ${value}`],
-      ["min_length_test", `${fieldLabel} must be at least ${rule.minLength} characters long.`],
-      ["min_value_test", `${fieldLabel} must be at least ${rule.minimum}.`],
-      ["max_length_test", `${fieldLabel} cannot exceed ${rule.maxLength} characters.`],
-      ["regex_test",  `${fieldLabel} is invalid.`],
-    ])
-
-
-    // This is holdover code until the sdece team can implement frontend validation
-		if (MIN_LENGTH_TEST && field === 'partner_contact_number') {
-				errors.push(
-					`${fieldLabel} must be at least ${rule.minLength} characters long and in the form 09XXXXXXXXX.`
-				);
+		// Required Test
+		const IS_EMPTY = value == undefined || value == null || value == ''
+		if (
+			(rule.required && IS_EMPTY) ||
+			(!rule.required && IS_EMPTY)
+		) {
+			if (rule.required) {
+				errors.push(`${fieldLabel} is required.`);
+			}
 			continue;
 		}
 
-    for (const x of VALIDATION_TEST.keys()) {
-      if (VALIDATION_TEST.get(x)) {
-        errors.push(ERROR_MESSAGES.get(x));
-        break;
-      }
-    }
+		// this is at the beginning so that if it's not required, it doesn't check the rest of
+		// the rules. 
+
+		const MIN_LENGTH_TEST = rule.minLength && typeof value == 'string' && value.length < rule.minLength
+		// this will stay here until sdece team implements front-end validation of phone
+		// number
+
+		// Map of Validation Tests
+		const VALIDATION_TEST = new Map([
+			["date_test", rule.type === "date" && isNaN(new Date(value).getTime())],
+			["type_test", rule.type && typeof value != rule.type],
+			["min_length_test", MIN_LENGTH_TEST],
+			["min_value_test", rule.minimum !== undefined && typeof value === 'number' && value < rule.minimum],
+			["max_length_test", rule.maxLength && typeof value == 'string' && value.length > rule.maxLength],
+			["regex_test", rule.regex && !rule.regex.test(value)],
+		]);
+
+		// Map of Error Messages
+		const ERROR_MESSAGES = new Map([
+			["date_test", `${fieldLabel} must be a valid date.`],
+			["type_test", `${fieldLabel} must be of type ${rule.type}. type is ${value}`],
+			["min_length_test", `${fieldLabel} must be at least ${rule.minLength} characters long.`],
+			["min_value_test", `${fieldLabel} must be at least ${rule.minimum}.`],
+			["max_length_test", `${fieldLabel} cannot exceed ${rule.maxLength} characters.`],
+			["regex_test", `${fieldLabel} is invalid.`],
+		])
+
+
+		// This is holdover code until the sdece team can implement frontend validation
+		if (MIN_LENGTH_TEST && field === 'partner_contact_number') {
+			errors.push(
+				`${fieldLabel} must be at least ${rule.minLength} characters long and in the form 09XXXXXXXXX.`
+			);
+			continue;
+		}
+
+		for (const x of VALIDATION_TEST.keys()) {
+			if (VALIDATION_TEST.get(x)) {
+				errors.push(ERROR_MESSAGES.get(x));
+				break;
+			}
+		}
 
 
 		if (rule.enum && !rule.enum.includes(value)) {
@@ -584,11 +570,11 @@ export function validateData(collectionName, data) {
 		if (rule.regex && typeof value === 'string') {
 			if (!rule.regex.test(value)) {
 				if (fieldLabel == 'Contact Number') {
-					errors.push(`${fieldLabel} is not in the correct format. Number be in the format 09xxxxxxxxx.`);
+					errors.push(`${fieldLabel} is not in the correct format. Number be in the format: 09xxxxxxxxx.`);
 					continue;
 				}
 				if (fieldLabel == 'Location Link') {
-					errors.push(`${fieldLabel} is not in the correct format.`);
+					errors.push(`${fieldLabel} is not in the correct format. Link must start with: https://`);
 					continue;
 				}
 			}
@@ -597,3 +583,47 @@ export function validateData(collectionName, data) {
 	}
 	return errors;
 }
+
+export async function filterData(collectionName, queryArray) {
+  const rules = FILTER_RULES[collectionName];
+  const fullQueries = [];
+  const finalResults = new Map();
+
+
+  for (const field in rules) {
+		const filterRule = rules[field];
+		const fieldLabel = filterRule.label || field;
+		const value = queryArray[field]; 
+
+    const IS_EMPTY = value == undefined || value == null || value == '' || value == []
+
+    if (IS_EMPTY) continue;
+
+    switch (filterRule.type) {
+      case "string":
+        if (value.constructor == Array && value.length > 1){
+          const orQueries = value.map((queryValue) => where(fieldLabel, "==", queryValue));
+          fullQueries.push(or(...orQueries));
+        } else {
+          fullQueries.push(where(fieldLabel, "==", value[0]));
+        }
+        break;
+      case "number":
+        fullQueries.push(where(fieldLabel, ">=", value));
+        break;
+      default:
+        break;
+    }
+  }
+
+  const finalQuery = await getDocs(query(collection_reference, and(...fullQueries)));
+
+  finalQuery.forEach((doc) => {
+      let docData = doc.data();
+      let docID = doc.id;
+      finalResults.set(docID, docData);
+  });
+
+  return finalResults;
+}
+

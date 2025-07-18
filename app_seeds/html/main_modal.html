@@ -58,7 +58,6 @@
 						</div>
 					</div>
 					<div class="main-modal-modern-footer">
-						<button type="button" class="main-modal-modern-cancel" id="mainModalCancel">Cancel</button>
 						<button type="submit" id="saveButton" class="main-modal-save main-modal-modern-save">Save Partner</button>
 					</div>
 				</form>
@@ -89,9 +88,6 @@
 				}
 			}
 			document.getElementById('close-btn').onclick = function() {
-				window.parent.postMessage('closeMainModal', '*');
-			};
-			document.getElementById('mainModalCancel').onclick = function() {
 				window.parent.postMessage('closeMainModal', '*');
 			};
 		</script>

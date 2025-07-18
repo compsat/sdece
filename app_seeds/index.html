@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>SDECE Activity Mapping</title>
+    <title>SEEDS Activity Mapping</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 
     <!-- Import Geist from Google Fonts -->
@@ -55,13 +55,12 @@
       <div class="side-nav">
         <div class="side-nav-header">
           <div class="side-nav-header-top">
-			<h1 class="map-title">SDECE</h1>					
+			<h1 class="map-title">SEEDS</h1>					
 		</div>
           <search-bar id="search-bar-component"></search-bar>
 					<div class="actions-container">
 						<button class="action-btn">Filter</button>
 						<button class="action-btn">Sort</button>
-						<button class="action-btn">Export data</button>
 					</div>
         </div>
         <div class="partners-header">
@@ -81,7 +80,7 @@
 
     <!-- MODALS -->
 
-		<!-- Partner Modal: This is the modal that shows up when clicking on an SDECE entry in the side navigation panel OR the pop-up of a map marker pin. -->
+		<!-- Partner Modal: This is the modal that shows up when clicking on a SEEDS entry in the side navigation panel OR the pop-up of a map marker pin. -->
 		<div id="partnerModal" class="modal">
 			<!-- Modal Header -->
 			<div class="modal-header">
@@ -92,7 +91,7 @@
 
 			<!-- Modal Content -->
 			<div class="modal-content" id="modalContent">
-				<!-- NOTE: This is where all Entry modal content shoul go (ie. Households for Buklod-Tao, Partners for SDECE) -->
+				<!-- NOTE: This is where all Entry modal content shoul go (ie. Households for Buklod-Tao, Partners for SEEDS) -->
 			</div>
 
 			<!-- Buttons -->
@@ -152,28 +151,28 @@
   <!-- Main Modal: This is the modal that shows up when pressing the main button in the side navigation panel. -->
     <div class="modal-screen" id="mainModal">
       <iframe        
-        src="/app_sdece/html/main_modal.html"
+        src="/app_seeds/html/main_modal.html"
         class="main-modal"
         id="mainModalIframe"
         >
       </iframe>
     </div>
 
-  <!-- Add Modal: This is the modal that shows up when clicking on the '+' sign that is nested inside the Main Modal. This allows the user to add a new activity to the SDECE collections. -->
+  <!-- Add Modal: This is the modal that shows up when clicking on the '+' sign that is nested inside the Main Modal. This allows the user to add a new activity to the SEEDS collections. -->
     <div class="modal-screen" id="addModal">
       <iframe
         class="form-modal"
         id="addModalHTML"
-        src="/app_sdece/html/addloc.html"
+        src="/app_seeds/html/addloc.html"
         >
       </iframe>
     </div>
 
-  <!-- Edit Modal: This is the modal that shows up when clicking on the Edit button that is nested within Partner Modal. This allows the user to edit an existing activity within the SDECE Collections. -->
+  <!-- Edit Modal: This is the modal that shows up when clicking on the Edit button that is nested within Partner Modal. This allows the user to edit an existing activity within the SEEDS Collections. -->
     <div class="modal-screen" id="editModal">
       <iframe
         id="editModal_iframe"
-        src="/app_sdece/html/editloc.html"
+        src="/app_seeds/html/editloc.html"
         class="form-modal"        
         id="editModalHTML"
         >
@@ -183,7 +182,7 @@
   <!-- Message Modal: This is the modal that displays a message. Used to indicate form submission/deletion success -->
     <div class="modal-screen" id="messageModal">
       <iframe
-        src="/app_sdece/html/message_modal.html"
+        src="/app_seeds/html/message_modal.html"
         class="message-modal"
         >
       </iframe>
@@ -202,8 +201,11 @@
             // Handle successful form submission event here
             const messageModal = document.getElementById("messageModal");
             messageModal.style.display = "flex"; //display success message
-
-            setTimeout(() => {messageModal.style.display = "none";}, 3000);
+			setTimeout(() => {
+				messageModal.style.display = "none";
+				alert("You may now reload the page for your newly added location to reflect on this page.");
+				location.reload()
+			}, 3000);
           }
         });
 

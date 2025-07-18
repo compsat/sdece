@@ -1,42 +1,35 @@
+/* Modern Form Design System - Buklod Tao */
+/* Uses Geist font family and clean, professional styling */
+
 @import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
 
+/* Base Styles 
+---------------------------- */
 body {
   margin: 0;
   padding: 0;
   font-family: 'Geist', sans-serif;
 }
+/* --------------------------- */
 
+/* Side bar and Map 
+---------------------------- */
 .main {
   display: flex;
   flex-direction: row;
 }
 
-.mapContainer {
-  flex: 0 0 20%;
-  display: flex;
-  position: absolute;
-  top: 63px; /* containerizing based on the height of the topbar */
-  left: 380px; /* containerizing based on the height of the sidenav */
-  right: 0;
-  bottom: 0;
-}
-
+/* Map 
+------------ */
 #map {
   position: fixed;
   width: 100%;
   height: 100%;
 }
+/* ------------ */
 
-.topBar{
-  background-color: #387181;
-  height: 63px;
-  width: 100%;
-  display: flex;
-  position: fixed;
-  z-index: 2;
-  justify-content: flex-end;
-}
-
+/* Side Bar 
+------------ */
 .side-nav {
   display: flex;
   flex-direction: column;
@@ -49,6 +42,7 @@ body {
 	border-right: 1px solid #e0e0e0;
 }
 
+/* -Side Bar Header */
 .side-nav-header {
 	position: sticky;
 	top: 0;
@@ -59,51 +53,98 @@ body {
 	z-index: 10;
 }
 
+/* --Side Bar Header Title Section */
 .side-nav-header-top {
 	display: flex;
 	align-items: center;
 	margin-bottom: 1rem;
 }
-
+.logo-image {
+	width: 32px;
+	height: 32px;
+	margin-right: 0.65rem;
+  margin-bottom: 0.038rem;
+	border-radius: 50%;
+	object-fit: cover;
+}
 .map-title {
 	font-size: 1.25rem;
-	font-weight: 500;
+	font-weight: 600;
 	color: #111827;
 	font-family: 'Geist', sans-serif;
 }
 
+/* --Side Bar Header Buttons Section */
 .actions-container {
   display: flex;
 	gap: 0.5rem;
 	margin-bottom: 1.5rem;
+	flex-wrap: wrap;
 }
-
 .action-btn {
 	background-color: #ffffff;
 	border: 1px solid #e0e0e0;
-	padding: 0.5rem 1rem;
+	padding: 0.5rem 0.6rem;
 	border-radius: 0.5rem;
-	font-size: 0.875rem;
+	font-size: 0.8rem;
 	color: #374151;
 	cursor: pointer;
 	font-family: 'Geist', sans-serif;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	white-space: nowrap;
 }
-
 .action-btn:hover {
 	background-color: #f9fafb;
 }
 
+/* Risk Type Dropdown */
+.risk-dropdown-container {
+  width: 100%;
+  position: relative;
+}
+.risk-dropdown-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  display: block;
+}
 #risk-sort {
   width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  padding: 0.75rem 2.5rem 0.75rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: #374151;
+  cursor: pointer;
+  font-family: 'Geist', sans-serif;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+#risk-sort:hover {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+}
+#risk-sort:focus {
+  outline: none;
 }
 
+/* --Side Bar Header Entries Header Section */
 .partners-header {
 	padding: 0 1.5rem 0.75rem;
 	border-bottom: 1px solid #eeeeee;
 	max-width: 100%;
 	box-sizing: border-box;
 }
-
 #partners-count {
 	font-size: 0.75rem;
 	color: #6b7280;
@@ -112,6 +153,8 @@ body {
 	font-family: 'Geist', sans-serif;
 }
 
+
+/* -Side Bar Entries List */
 .entries {
 	flex-grow: 1;
   overflow-y: auto;
@@ -122,7 +165,6 @@ body {
 .entries:hover {
   scrollbar-color: rgba(0,0,0,0.2) transparent;
 }
-
 .accordion {
 	cursor: pointer;
 	padding: 0.5rem 1rem 1rem;
@@ -131,11 +173,9 @@ body {
 	box-sizing: border-box;
 	/* border-bottom: 1px solid #eeeeee; */
 }
-
 .accordion:hover {
 	background-color: #f9fafb;
 }
-
 .name {
 	font-family: 'Geist', sans-serif;
 	font-weight: 600;
@@ -143,7 +183,6 @@ body {
 	line-height: 1.5rem;
 	color: #111827;
 }
-
 .address {
 	font-family: 'Geist', sans-serif;
 	font-weight: normal;
@@ -152,230 +191,6 @@ body {
 	line-height: 1.25rem;
 	margin-top: 0.25rem;
 }
-
-.header {
-  display: flex;
-  width: 100%;
-  align-items: center;
-}
-
-/* search bar itself */
-.searchBar {
-  height: 45px;
-  margin: 0;
-  padding: 15px 1rem;
-  max-width: 100%;
-  width: 100%;
-  box-sizing: border-box;
-  border-radius: 12px;
-  background-color: #F6F6F6;
-  border: transparent;
-  background-position: calc(100% - 16px) center;
-  font-family: 'Geist', sans-serif;
-  font-size: 18px;
-  letter-spacing: 0.5px;
-  background-image: url("../img/search-icon.png");
-  background-repeat: no-repeat;
-  background-size: 25px 25px;
-  justify-content: right;
-}
-
-.searchBar:hover {
-  background-color: #e4e3e3;
-}
-.searchBar:focus {
-  background-image: none;
-}
-
-.logoContainer {
-  display: flex;
-  padding: 8px 40px;
-  align-items: center;
-  gap: 32px;
-  background: #387181;
-}
-
-.logo {
-  width: 48px;
-}
-
-li {
-  list-style-type: none;
-}
-
-.heading {
-  color: #387181;
-  font-family: 'Geist', sans-serif;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 86.682%;
-  display: flex;
-  align-self: stretch;
-  height: 44px;
-  flex-direction: column;
-}
-
-.label {
-  padding-left: 10px;
-  text-align: left;
-  font-family: "Geist";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 18px;
-  text-decoration: none;
-  color: #979797; /* Gray */
-  margin: 8px;
-  vertical-align: middle;
-}
-
-.label:hover {
-  color: #49a2bb; /* Viking */
-}
-
-.label:active {
-  color: #387181; /* Calypso */
-}
-
-.layer-toggle-container {
-	display: flex;
-	flex-direction: row;
-	justify-content: start;
-	align-items: center;
-}
-
-.layer-toggle {
-	display: block;
-	width: auto;
-	font-family: 'Montserrat';
-	font-size: 1.125rem;
-	font-weight: bold;
-	border: none;
-	background-color: #387181;
-	color: #fcfcfc;
-	outline: none;
-	border: none;
-	box-shadow: none;
-	margin-left: 0.75rem;
-}
-
-.layers-icon {
-	fill: var(--custom-light-gray);
-}
-
-
-/* logout icon */
-.logoutIcon {
-  height: 15px;
-  width: 15px;
-  margin: 2px 15px 0px 0px;
-}
-
-/* logout button */
-.buttonLogout {
-  font-family: Geist;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  color: #FFFFFF;
-  height: 35px;
-  width: 150px;
-  margin-right: 25px;
-  background-color: #3D97AF ;
-  border: none;
-  border-radius: 4px;
-  display: block;
-  position: relative;
-  top: 50%;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  filter: drop-shadow(0 0 0.25rem #00000025);
-  justify-content: space-between;
-}
-
-.logoutIcon {
-  height: 15px;
-  width: 15px;
-  margin: 2px 15px 0px 0px;
-}
-
-button.container {
-  display: flex;
-  position: relative;
-  z-index: 10;
-  align-items: center;
-  gap: 8px;
-  align-self: stretch;
-  border: 0;
-  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2); 
-}
-
-button.labelFont {
-  font-family: Geist;
-  padding-top: 30px;
-  padding-left: 30px;
-  padding-bottom: 30px;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 750;
-  line-height: normal;
-  color: #3D97AF;
-  letter-spacing: 0.8px;
-  background-color: #F6F6F6;
-}
-
-button:hover {
-  background-color: #e4e4e4;
-  cursor: pointer;
-}
-
-div.buttons {
-  position: relative;
-  display: flex;
-  padding: 24px 20px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 18px;
-  align-self: stretch;
-  border-bottom: 0px solid #cbd5e0; 
-}
-
-/* magnifying glass icon */
-.searchButton {
-  background-image: url("./img/search-icon.png");
-  background-repeat: no-repeat;
-  justify-content: right;
-}
-
-.icon {
-  width: 32px;
-  height: 32px;
-}
-
-/* entries in household list */
-a.accordion {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-family: Geist;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-  letter-spacing: 0.16px;
-}
-
-img.accordion {
-  fill: #91c9db;
-}
-
-ul.accordion {
-  padding-inline-start: 0px !important;
-}
-
-.containerEntry {
-  width: 100%;
-}
-
 li.accordion {
   display: flex;
   padding: 0.75rem;
@@ -383,9 +198,15 @@ li.accordion {
   box-sizing: border-box;
   /* border-bottom: 0.5px solid #bdbdbd; */
 }
-
 a.accordion {
   text-decoration: none;
+}
+/* --------------------------- */
+
+/* IFrame Modal Container
+--------------------------- */
+.highlight {
+  background-color: #f3f4f6;
 }
 
 .activity {
@@ -407,315 +228,6 @@ h1.entries {
   line-height: normal;
 }
 
-/* CSS for the household entry modals */
-/* CSS for the entry modal */
-
-/* modal containers */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 9900;
-  top: 3%;
-  left: 20%;
-  width: 100%; /* Adjust the width of the modal as needed */
-  max-width: 528px;
-  height: 100%; /* Adjust the height of the modal as needed */
-  justify-content: center;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.modalHeader {
-  position: relative;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  display: flex;
-  justify-content: space-between;
-  margin-left: 25%;
-  margin-top: 5%;
-  padding: 7px 24px;
-  width: 100%;
-  background-color: #fcfcfc;
-  z-index: 9901;
-  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2); 
-}
-
-.modalContent {
-  margin-left: 25%;
-  width: 100%;
-  padding: 0px 24px;
-  background-color: #fcfcfc;
-  font-family: 'Geist', sans-serif;
-  font-size: 16px;
-  font-style: normal;
-  max-height: calc(80% - 140px);
-  overflow-y: auto;
-  scrollbar-gutter: stable;
-}
-
-.modalFooter {
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  margin-left: 25%;
-  padding: 24px;
-  width: 100%;
-  background-color: #fcfcfc;
-  position: relative;
-  z-index: 9901;
-  box-shadow: 0 -5px 5px -5px rgba(0, 0, 0, 0.2); 
-}
-
-.modalLine {
-  display: flex; 
-  justify-content: space-between;
-}
-
-/* modal text */
-.modalLabel {
-  font-family: 'Geist', sans-serif;
-  font-size: 16px;
-  color: #000;
-  font-weight: 750;
-  font-style: normal;
-  letter-spacing: 2%;
-}
-
-.modalName {
-  position: relative;
-  color: #387181;
-  font-family: 'Geist', sans-serif;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 750;
-  letter-spacing: 0.48px;
-  padding: 10px 0px;
-}
-
-.modalButton {
-  width: 100%;
-  display: flex;
-  position: relative;
-  justify-content: center;
-  font-family: "Geist", sans-serif;
-  font-size: 16px;
-  font-weight: 750;
-  cursor: pointer;
-  outline: none;
-  border: none;
-  background-color: #fcfcfc;
-}
-
-.modalButton:hover {
-  background-color: #fcfcfc;
-}
-
-.modalText {
-  color: #a0a0a0;
-  font-family: 'Geist', sans-serif;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  letter-spacing: 0.32px;
-  line-height: 100%;
-  position: relative;
-  margin-top: 5px;
-  margin-bottom: 20px;
-}
-
-button.collapsible {
-  padding: 0px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  align-self: stretch;
-  border: 0;
-  background-color: #fcfcfc;
-  width: 100%;
-  height: 50px;
-  color: #3D97AF;
-  font-family: 'Geist', sans-serif;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 750;
-}
-
-.collapsible:after {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  margin-right: 5px;
-  content: "";
-  background: url("../img/dropdown.png") no-repeat 0 0;
-  background-size: 100%;
-}
-
-.active:after {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  margin-right: 5px;
-  content: "";
-  background: url("../img/dropdown.png") no-repeat 0 0;
-  background-size: 100%;
-  transform: rotate(180deg);
-}
-
-/* closing modal */
-.close {
-  text-align: center;
-  color: #aaaaaa;
-  font-size: 40px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.partnerGeolocation {
-  display: flex;
-  align-items: center;
-}
-
-.leafletPopupContainer {
-  height: 400px;
-  width: 100%;
-  text-overflow: ellipsis;
-  align-items: center;
-}
-
-.leafletHeader {
-  font-family: Geist;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.1px;
-  color: #387181;
-  background-color: #FFFFFF;
-  width: 89%;
-  position: fixed;
-  margin: -10px 0px -10px 0px;
-  padding: 10px 0px 10px 0px;
-  box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2)
-}
-
-.leafletSubHeader {
-  font-family: Geist;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.1px;
-  color: #3D97AF;
-  margin: 20px 0px 10px 0px;
-}
-
-.leafletLabel {
-  font-family: Geist;
-  font-size: 14px;
-  font-weight: 700;
-  color: #000000;
-}
-
-.leafletContent {
-  font-family: 'Geist', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: 0.32px;
-  color: #A0A0A0;
-  width: 100%;
-  margin: 15px 0px 15px 0px;
-  max-height: 100%;
-  overflow-y: auto;
-}
-
-.leafletDetails {
-  margin-bottom: 5px;
-}
-
-.leafletButtons {
-  display: flex;
-  justify-content: space-between;
-}
-
-.deleteButton {
-  color: #d64747;
-}
-
-.editButton,
-.addButton {
-  color: #3d97af;
-}
-
-.deleteButton,
-.editButton,
-.addButton {
-  display: flex;
-  padding: 16px 24px;
-  width: fit-content;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  border-radius: 8px;
-  border: 0;
-  font-family: 'Geist', sans-serif;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-  background-color: transparent;
-}
-
-.deleteButton:hover,
-.editButton:hover,
-.addButton:hover {
-  background-color: transparent;
-  cursor: pointer;
-}
-
-.partnerValue {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-family: 'Geist', sans-serif;
-  font-size: 12px;
-  font-style: normal;
-  line-height: 110%;
-  letter-spacing: 0.32px;
-  margin: 0 !important;
-}
-
-.partnerLabel {
-  color: #3d97af;
-  font-family: 'Geist', sans-serif;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 110%;
-  letter-spacing: 0.36px;
-  font-size: 14px;
-  margin: 12px 0 8px 0 !important;
-}
-
-.partnerActivity {
-  color: #2f2f2f;
-  font-family: 'Geist', sans-serif;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 110%;
-  letter-spacing: 0.4px;
-}
-
-.formIframe {
-  margin-left: 15%;
-  margin-top: 2%;
-  border: none;
-  width: 50%;
-  height: 90%;
-  position: relative;
-  justify-content: center;
-  left: 10%;
-  border-radius: 8px 8px 8px 8px;
-}
-
 .modal-screen {
 	display: none;
 	position: fixed;
@@ -728,7 +240,6 @@ button.collapsible {
 	justify-content: center;
 	align-items: center;
 }
-
 .form-modal {
 	width: 100%;
 	max-width: 800px;
@@ -737,231 +248,358 @@ button.collapsible {
 	border-radius: 8px;
 	background-color: white;
 }
+/* --------------------------- */
 
-.message-modal {
-	width: 400px;
-	height: 200px;
-	border: none;
-	border-radius: 8px;
-	background-color: white;
+/* Evac Center Modal 
+--------------------------- */
+.leaflet-popup.evacuation-center-popup .leaflet-popup-content {
+  padding: 0.1rem !important;
+  font-family: 'Geist', sans-serif;
 }
-
-.evac-marker {
-  background-color: red;
-  border-radius: 50%;
-  border: 2px solid rgb(255, 255, 255);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .evac-marker-header {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 0.875rem;
+  font-weight: 600;
   color: rgb(11, 103, 65);
   text-align: center;
-  margin-bottom: 7px;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
 }
+.leaflet-popup.evacuation-center-popup b {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 1rem;
+}
+.leaflet-popup.evacuation-center-popup div {
+  font-size: 0.875rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+/* --------------------------- */
 
+/* Main Modal 
+--------------------------- */
+/* Household Information Section */
 .popup-card, .popup-title, .popup-phone, .popup-section, .popup-label, .popup-value, .risk-type, .risk-badge, .risk-desc {
   font-family: 'Geist', sans-serif !important;
 }
-.popup-title {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #181c26;
-  margin-bottom: 0.2em;
-}
-.popup-phone {
-  color: #888ea8;
-  font-size: 1.05rem;
-  margin-bottom: 1.1em;
+
+/* Close Button */
+.popup-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 0.4em;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+.popup-close-btn:hover {
+  background-color: #f1f5f9;
+  color: #374151;
+}
+.popup-close-btn:active {
+  background-color: #e2e8f0;
+}
+
+.popup-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+  padding-right: 3rem;
+}
+.popup-phone {
+  color: #64748b;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 .popup-phone svg {
-  width: 1.1em;
-  height: 1.1em;
-  color: #888ea8;
-  fill: #888ea8;
+  width: 1rem;
+  height: 1rem;
+  color: #64748b;
+  fill: #64748b;
   vertical-align: middle;
 }
 .popup-section {
-  margin-bottom: 1.1rem;
-  border-bottom: 1px solid #fff;
-  padding-bottom: 0.7em;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 1rem;
+}
+.popup-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
 }
 .popup-label {
-  font-size: 1rem;
-  color: #7E8A98;
+  font-size: 0.75rem;
+  color: #64748b;
   font-weight: 500;
-  margin-top: 0.5em;
-  margin-bottom: 0.2em;
+  margin-top: 0.75rem;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
 }
 .popup-value {
-  font-size: 1.08rem;
-  color: #181c26;
+  font-size: 1rem;
+  color: #0f172a;
   font-weight: 600;
-  margin-bottom: 0.7em;
+  margin-bottom: 0.5rem;
 }
+
+/* Risk Information Section */
 .risk-header {
-  color: #181c26;
-  font-weight: 700;
-  margin-bottom: 0.5em;
-  font-size: 1.08em;
+  color: #0f172a;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-size: 1.125rem;
   display: flex;
   align-items: center;
-  gap: 0.4em;
+  gap: 0.5rem;
 }
 .risk-header svg {
-  width: 1.1em;
-  height: 1.1em;
-  color: #181c26;
-  fill: #181c26;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #0f172a;
+  fill: #0f172a;
   vertical-align: middle;
 }
 .risk-cards {
   display: flex;
   flex-direction: column;
-  gap: 0.7em;
-  margin-top: 0.7em;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .risk-card {
   width: 100%;
-  background: #f7fafc;
-  border-radius: 0.7em;
-  padding: 0.7em 1em 0.5em 1em;
+  max-width: 100%;
+  background: #ffffff;
+  border-radius: 0.5rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  font-size: 1em;
-  font-weight: 600;
-  color: #222b45;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #0f172a;
   align-items: flex-start;
-  box-shadow: 0 2px 8px rgba(44,62,80,0.04);
-  border-left: 6px solid #e0e7ef;
+  border: 1px solid #e2e8f0;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 .risk-card .risk-type {
-  font-weight: 700;
-  font-size: 1.05em;
-  margin-bottom: 0.2em;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+  color: #374151;
 }
 .risk-card.risk-high {
-  border-left: 6px solid #d64747;
-  background: #fde8e8;
+  border-left: 3px solid #dc2626;
+  background: #fef2f2;
 }
 .risk-card.risk-medium {
-  border-left: 6px solid #bfa100;
-  background: #fffbe6;
+  border-left: 3px solid #d97706;
+  background: #fffbeb;
 }
 .risk-card.risk-low {
-  border-left: 6px solid #1a7f37;
-  background: #e6fbe6;
+  border-left: 3px solid #059669;
+  background: #f0fdf4;
 }
 .risk-badge {
   display: inline-block;
-  font-size: 0.95em;
-  font-weight: 700;
-  border-radius: 1em;
-  padding: 0.2em 1em;
-  margin-left: 1em;
-  margin-bottom: 0.2em;
-  letter-spacing: 0.04em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 0.375rem;
+  padding: 0.125rem 0.625rem;
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
 }
 .risk-high {
-  color: #d64747;
+  color: #dc2626;
+  background: #fee2e2;
 }
 .risk-medium {
-  color: #bfa100;
+  color: #d97706;
+  background: #fef3c7;
 }
 .risk-low {
-  color: #1a7f37;
+  color: #059669;
+  background: #d1fae5;
 }
 .risk-desc {
-  font-size: 0.97em;
-  color: #888ea8;
+  font-size: 0.75rem;
+  color: #64748b;
   font-weight: 400;
-  margin-top: 0.2em;
-  margin-left: 0.1em;
+  margin-top: 0.25rem;
+  line-height: 1.4;
 }
 
+/* Resident Information Section */
 .residents-breakdown {
-  margin-top: 0.8em;
+  margin-top: 0.75rem;
+  background: #f8fafc;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
 }
-
 .resident-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.6em 0;
+  padding: 0.75rem 0;
   font-family: 'Geist', sans-serif;
 }
-
-.resident-label {
-  font-size: 1.05em;
+.resident-item:first-child {
   font-weight: 600;
-  color: #888ea8;
 }
-
+.resident-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #475569;
+}
 .resident-count {
-  font-size: 1.1em;
-  font-weight: 700;
-  color: #181c26;
-  min-width: 2em;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+  min-width: 2rem;
   text-align: right;
+  background: #ffffff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  border: 1px solid #e2e8f0;
 }
-
 .resident-divider {
   height: 1px;
   background-color: #e2e8f0;
-  margin: 0.4em 0;
+  margin: 0.5rem 0;
 }
 
+/* Main Modal Footer */
 .popup-edit-section {
   margin-top: 1.5rem;
-  text-align: center;
   padding-bottom: 0.5rem;
 }
-
 .popup-edit-btn {
-  background: transparent;
+  background: #1a357b;
   border: none;
-  color: #1a357b;
-  font-size: 1.1rem;
+  color: #ffffff;
+  font-size: 0.9rem;
   font-weight: 600;
   font-family: 'Geist', sans-serif;
   cursor: pointer;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.3rem 0.5rem;
-  border-radius: 0.25rem;
-  transition: background-color 0.2s ease;
+  padding: 0.92rem 1rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  width: 100%;
 }
-
 .popup-edit-btn:hover {
-  background-color: #f0f9ff;
+  background-color: #2542a3;
 }
 
+/* Main body */
 .popup-card {
-  min-width: 370px;
-  max-width: 460px;
-  max-height: 500px;
+  position: relative;
+  min-width: 500px;
+  max-width: 580px;
+  max-height: 600px;
   overflow-y: auto;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+/* --------------------------- */
+
+/* Leaflet
+--------------------------- */
+/* Household popup */
+.leaflet-popup.household-popup .leaflet-popup-content-wrapper {
+  min-width: 520px;
+  max-width: 600px;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+.leaflet-popup.household-popup .leaflet-popup-close-button {
+  display: none !important;
+}
+.leaflet-popup.household-popup .leaflet-popup-tip {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  width: 12px !important;
+  height: 12px !important;
+  margin-left: -6px !important;
+  margin-top: -6px !important;
+  transform: rotate(45deg) !important;
+  z-index: 1 !important;
+}
+.leaflet-popup.household-popup .leaflet-popup-tip-container {
+  margin-top: -1px !important;
 }
 
-/* Restore global popup width to not affect household detail popups */
-.leaflet-popup-content-wrapper {
-  min-width: 400px;
-  max-width: 480px;
+/* Evacuation center popup */
+.leaflet-popup.evacuation-center-popup .leaflet-popup-content-wrapper {
+  min-width: 250px;
+  max-width: 350px;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+}
+.leaflet-popup.evacuation-center-popup .leaflet-popup-close-button {
+  display: none !important;
+}
+.leaflet-popup.evacuation-center-popup .leaflet-popup-tip {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  width: 12px !important;
+  height: 12px !important;
+  margin-left: -6px !important;
+  margin-top: -6px !important;
+  transform: rotate(45deg) !important;
+  z-index: 1 !important;
 }
 
-/* Specific styling only for Add Household popups using the custom class */
+/* Add household popup */
 .leaflet-popup.add-household-popup-compact .leaflet-popup-content-wrapper {
   min-width: 200px !important;
   max-width: 300px !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
 }
+.leaflet-popup.add-household-popup-compact .leaflet-popup-close-button {
+  display: none !important;
+}
+.leaflet-popup.add-household-popup-compact .partner-geolocation {
+  color: #64748b !important;
+}
+/* --------------------------- */
 
+/* Add Household Modal
+--------------------------- */
 .partner-geolocation {
   font-family: 'Geist', sans-serif;
   font-size: 14px;
@@ -969,20 +607,230 @@ button.collapsible {
   margin-bottom: 8px;
   width: 100%;
 }
-
 .addButton {
   background: #1a357b;
   color: #fff;
   border: none;
   padding: 8px 16px;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   margin-top: 5px;
   width: 100%;
 }
-
 .addButton:hover {
   background: #2542a3;
+}
+/* --------------------------- */
+
+/* Filter Modal 
+--------------------------- */
+.filter-modal {
+	background-color: white;
+	border-radius: 1rem;
+	width: 90%;
+	max-width: 500px;
+	max-height: 90vh;
+	overflow: hidden;
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	display: flex;
+	flex-direction: column;
+}
+
+/* Filter Header */
+.filter-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1.5rem;
+	border-bottom: 1px solid #e0e0e0;
+}
+.filter-header h2 {
+	font-family: 'Geist', sans-serif;
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: #111827;
+	margin: 0;
+}
+.filter-close {
+	background: none;
+	border: none;
+	font-size: 1.5rem;
+	cursor: pointer;
+	color: #6b7280;
+	padding: 0.25rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 50%;
+}
+.filter-close:hover {
+	background-color: #f3f4f6;
+}
+
+/* Filter Content and Checkboxes */
+.filter-content {
+	padding: 1.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	flex: 1;
+	overflow-y: auto;
+}
+.filter-section {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+.filter-section h3 {
+	font-family: 'Geist', sans-serif;
+	font-size: 1rem;
+	font-weight: 600;
+	color: #374151;
+	margin: 0;
+}
+.filter-options {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+.filter-options label {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-family: 'Geist', sans-serif;
+	font-size: 0.875rem;
+	color: #374151;
+	cursor: pointer;
+	padding: 0.25rem 0;
+}
+.filter-options input[type="checkbox"] {
+	width: 1rem;
+	height: 1rem;
+	cursor: pointer;
+}
+#riskTypeFilter {
+	font-family: 'Geist', sans-serif;
+	padding: 0.5rem;
+	border: 1px solid #e0e0e0;
+	border-radius: 0.5rem;
+	font-size: 0.875rem;
+	background-color: white;
+	cursor: pointer;
+}
+#riskTypeFilter:focus {
+	outline: none;
+	border-color: #387181;
+	box-shadow: 0 0 0 2px rgba(56, 113, 129, 0.1);
+}
+
+/* Filter Footer & Buttons */
+.filter-footer {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 1.5rem;
+	border-top: 1px solid #e0e0e0;
+	flex-shrink: 0;
+	background-color: white;
+}
+.filter-btn {
+	font-family: 'Geist', sans-serif;
+	padding: 0.75rem 1.5rem;
+	border-radius: 0.5rem;
+	font-size: 0.875rem;
+	font-weight: 500;
+	cursor: pointer;
+	border: none;
+	transition: all 0.2s;
+}
+.filter-clear {
+	background-color: #f3f4f6;
+	color: #374151;
+}
+.filter-clear:hover {
+	background-color: #e5e7eb;
+}
+.filter-apply {
+	background-color: #1a357b;
+	color: white;
+}
+.filter-apply:hover {
+	background-color: #2542a3;
+}
+
+/* Active filter indicator */
+.filter-active {
+	background-color: #F2F2FA !important;
+  color: #1a357b;
+  border: 1px solid #DADAF1;
+}
+/* --------------------------- */
+
+/* Animations 
+--------------------------- */
+@keyframes modalFadeIn {
+  0% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+}
+
+@keyframes modalFadeOut {
+  0% {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+  100% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+}
+
+@keyframes slideInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideOutDown {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}
+
+/* Modal Screen Animations */
+.modal-screen {
+  animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-screen.closing {
+  animation: modalFadeOut 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-screen .form-modal,
+.modal-screen .filter-modal {
+  animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-screen.closing .form-modal,
+.modal-screen.closing .filter-modal {
+  animation: slideOutDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }

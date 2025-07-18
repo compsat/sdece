@@ -8,47 +8,6 @@ import {
 // Global Map Variable (the map shown)
 export var map = L.map('map').setView([14.5995, 120.9842], 10);
 
-// Takes in a name to determine all field values which should be displayed
-// Current Issue: it doesn't display all the added things, could be due to the async nature of these functions
-export function getDivContent(name) {
-	var div_content = ``; // This isn't affected, this is the one getting printed
-	return getDocIdByPartnerName(name).then((docId) => {
-		if (docId) {
-			return getDocByID(docId).then((doc) => {
-				// Insert the partner details into the div with class "partner-contact"
-				for (let rule of DB_RULES_AND_DATA) {
-					if (getCollection().id === rule[0]) {
-						div_content += `<div class="partner-contact"> <div class="partner-label"> ${doc.get(
-							rule[1]
-						)} </div>`;
-						for (let i = 0; i < rule[2].length; i++) {
-							if (rule[2][i].includes('coordinates')) {
-								div_content += `<div class="partner-activity"> ${readyField(
-									rule[2][i]
-								)}: ${
-									doc.get(rule[2][i]).latitude +
-									' + ' +
-									doc.get(rule[2][i]).longitude
-								}`;
-								continue;
-							}
-							div_content += `<div class="partner-activity"> ${readyField(
-								rule[2][i]
-							)}: ${doc.get(rule[2][i])}`;
-						}
-						div_content += `</div>`;
-						break;
-					}
-				}
-				return div_content;
-			});
-		} else {
-			div_content = 'no partner';
-			return div_content;
-		}
-	});
-}
-
 function panLocation(doc, map) {
 	for (let rule of DB_RULES_AND_DATA) {
 		if (getCollection().id === rule[0]) {
@@ -162,21 +121,23 @@ export const JS_CS_ENGINE = [
 		],
 	],
 	[
-		'sdece-official',
+		// TO BE RENAMED TO 'seeds-official'
+		'seeds-official',
 		[
-			'/app_sdece/js/index.js',
-			'/app_sdece/js/firestore.js',
-			'/app_sdece/css/form.css',
-			'/app_sdece/css/modal.css',
+			'/app_seeds/js/index.js',
+			'/app_seeds/js/firestore.js',
+			'/app_seeds/css/form.css',
+			'/app_seeds/css/modal.css',
 		],
 	],
 	[
-		'sdece-official-TEST',
+		// TO BE RENAMED TO 'seeds-official-TEST'
+		'seeds-official-TEST',
 		[
-			'/app_sdece/js/index.js',
-			'/app_sdece/js/firestore.js',
-			'/app_sdece/css/form.css',
-			'/app_sdece/css/modal.css',
+			'/app_seeds/js/index.js',
+			'/app_seeds/js/firestore.js',
+			'/app_seeds/css/form.css',
+			'/app_seeds/css/modal.css',
 		],
 	],
 
