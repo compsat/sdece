@@ -318,28 +318,86 @@ export function showModal(partner) {
 	}
 
 	// --- LIST OF ACTIVITIES SECTION ---
-	const activitiesSection = document.createElement('div');
-	activitiesSection.className = 'modal-section';
-	activitiesSection.innerHTML = `
-	  <div class=\"modal-section-header\">\n        <span class=\"modal-section-icon\" style=\"display:flex;align-items:center;\">\n          <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"#7b8a99\" width=\"1.1em\" height=\"1.1em\"><path d=\"M20.0833 15.1999L21.2854 15.9212C21.5221 16.0633 21.5989 16.3704 21.4569 16.6072C21.4146 16.6776 21.3557 16.7365 21.2854 16.7787L12.5144 22.0412C12.1977 22.2313 11.8021 22.2313 11.4854 22.0412L2.71451 16.7787C2.47772 16.6366 2.40093 16.3295 2.54301 16.0927C2.58523 16.0223 2.64413 15.9634 2.71451 15.9212L3.9166 15.1999L11.9999 20.0499L20.0833 15.1999ZM20.0833 10.4999L21.2854 11.2212C21.5221 11.3633 21.5989 11.6704 21.4569 11.9072C21.4146 11.9776 21.3557 12.0365 21.2854 12.0787L11.9999 17.6499L2.71451 12.0787C2.47772 11.9366 2.40093 11.6295 2.54301 11.3927C2.58523 11.3223 2.64413 11.2634 2.71451 11.2212L3.9166 10.4999L11.9999 15.3499L20.0833 10.4999ZM12.5144 1.30864L21.2854 6.5712C21.5221 6.71327 21.5989 7.0204 21.4569 7.25719C21.4146 7.32757 21.3557 7.38647 21.2854 7.42869L11.9999 12.9999L2.71451 7.42869C2.47772 7.28662 2.40093 6.97949 2.54301 6.7427C2.58523 6.67232 2.64413 6.61343 2.71451 6.5712L11.4854 1.30864C11.8021 1.11864 12.1977 1.11864 12.5144 1.30864ZM11.9999 3.33233L5.88723 6.99995L11.9999 10.6676L18.1126 6.99995L11.9999 3.33233Z\"></path></svg>\n        </span>\n        <span>List of activities</span>\n      </div>\n      <div class='modal-section-divider'></div>\n    `;
+const activitiesSection = document.createElement('div');
+activitiesSection.className = 'modal-section';
+activitiesSection.innerHTML = `
+  <div class="modal-section-header">
+    <span class="modal-section-icon" style="display:flex;align-items:center;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#7b8a99" width="1.1em" height="1.1em"><path d="M20.0833 15.1999L21.2854 15.9212C21.5221 16.0633 21.5989 16.3704 21.4569 16.6072C21.4146 16.6776 21.3557 16.7365 21.2854 16.7787L12.5144 22.0412C12.1977 22.2313 11.8021 22.2313 11.4854 22.0412L2.71451 16.7787C2.47772 16.6366 2.40093 16.3295 2.54301 16.0927C2.58523 16.0223 2.64413 15.9634 2.71451 15.9212L3.9166 15.1999L11.9999 20.0499L20.0833 15.1999ZM20.0833 10.4999L21.2854 11.2212C21.5221 11.3633 21.5989 11.6704 21.4569 11.9072C21.4146 11.9776 21.3557 12.0365 21.2854 12.0787L11.9999 17.6499L2.71451 12.0787C2.47772 11.9366 2.40093 11.6295 2.54301 11.3927C2.58523 11.3223 2.64413 11.2634 2.71451 11.2212L3.9166 10.4999L11.9999 15.3499L20.0833 10.4999ZM12.5144 1.30864L21.2854 6.5712C21.5221 6.71327 21.5989 7.0204 21.4569 7.25719C21.4146 7.32757 21.3557 7.38647 21.2854 7.42869L11.9999 12.9999L2.71451 7.42869C2.47772 7.28662 2.40093 6.97949 2.54301 6.7427C2.58523 6.67232 2.64413 6.61343 2.71451 6.5712L11.4854 1.30864C11.8021 1.11864 12.1977 1.11864 12.5144 1.30864ZM11.9999 3.33233L5.88723 6.99995L11.9999 10.6676L18.1126 6.99995L11.9999 3.33233Z"></path></svg>
+    </span>
+    <span>List of activities</span>
+    <button type="button" id="addActivityButton" class="main-modal-modern-activities-add" aria-label="Add Activity">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+      </svg>
+    </button>
+  </div>
+  <div class='modal-section-divider'></div>
+`;
+
 	// List of activity cards
 	partner.forEach((activity) => {
-		const card = document.createElement('div');
-		card.className = 'modal-card-activity modal-activity-summary-card';
-		card.style.cursor = 'pointer';
-		card.innerHTML = `
-			<div class="modal-card-header-activity" style="font-size:1rem;font-weight:500;">${getActivity(activity) || 'Activity Name'}</div>
-			<div class="modal-card-row" style="margin-top:-0.5rem;">
-				<span class="modal-office">${activity.ADMU_office || 'Department'}</span>
-	  </div>
-			<span class="modal-activity-arrow" style="position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);font-size:1.3rem;color:#b0b0b0;">&#8250;</span>
-		`;
-		card.style.position = 'relative';
-		card.onclick = () => showActivityDetailModal(activity, partner[0].partner_name, coords);
-		activitiesSection.appendChild(card);
+  		const card = document.createElement('div');
+  		card.className = 'modal-card-activity modal-activity-summary-card';
+  		card.style.cursor = 'pointer';
+  		card.innerHTML = `
+    		<div class="modal-card-header-activity" style="font-size:1rem;font-weight:500;">${getActivity(activity) || 'Activity Name'}</div>
+    		<div class="modal-card-row" style="margin-top:-0.5rem;">
+      			<span class="modal-office">${activity.ADMU_office || 'Department'}</span>
+    		</div>
+    		<span class="modal-activity-arrow" style="position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);font-size:1.3rem;color:#b0b0b0;">&#8250;</span>
+  		`;
+  		card.style.position = 'relative';
+  		card.onclick = () => showActivityDetailModal(activity, partner[0].partner_name, coords);
+  		activitiesSection.appendChild(card);
 	});
 	modalContent.appendChild(activitiesSection);
 
+	// Add click handler for the new activity button
+	const addActivityButton = activitiesSection.querySelector('#addActivityButton');
+	if (addActivityButton) {
+  		addActivityButton.addEventListener('click', () => {
+    		// Close current modal
+    		modal.style.display = 'none';
+    		modal.classList.remove('open');
+    
+    		// Show the add modal
+    		showAddModal();
+    
+    		// Pre-fill partner info after iframe loads
+    		const addFormIframe = document.getElementById('addModalHTML');
+    		const partnerName = partner[0]?.partner_name || '';
+    		const partnerAddress = partner[0]?.partner_address || '';
+    
+    		const fillFormFields = () => {
+      			try {
+        			const addFormDoc = addFormIframe.contentDocument || addFormIframe.contentWindow.document;
+        			const nameField = addFormDoc.getElementById('partner_name');
+        			const addressField = addFormDoc.getElementById('partner_address');
+        
+        		if (nameField) {
+          			nameField.value = partnerName;
+          			nameField.readOnly = true;
+          			nameField.style.backgroundColor = 'var(--custom-medium-gray)';
+        		}
+        		if (addressField) {
+          			addressField.value = partnerAddress;
+          			addressField.readOnly = true;
+          			addressField.style.backgroundColor = 'var(--custom-medium-gray)';
+        		}
+      			} catch (e) {
+        			console.log('Waiting for iframe to load...');
+        			setTimeout(fillFormFields, 100);
+      			}
+    		};
+    
+    		if (addFormIframe.contentDocument) {
+    		  fillFormFields();
+    		} else {
+    		  addFormIframe.onload = fillFormFields;
+    		}
+  		});
+	}
 	// --- CLOSE BUTTON (top right) ---
 	const closeDiv = document.createElement('button');
 	closeDiv.className = 'close-btn';
