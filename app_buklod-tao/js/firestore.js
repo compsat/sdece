@@ -201,6 +201,7 @@ function displayInlineErrors(errors) {
     // Create a mapping of field names to error containers
     const fieldMappings = {
         'Household Name': 'household_name',
+        'Household Phase': 'household_phase',
         'Contact Number': 'contact_number', 
         'Number of Residents': 'number_residents',
         'Residency Status': 'residency_status',

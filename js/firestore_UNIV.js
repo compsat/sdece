@@ -238,6 +238,7 @@ const VALIDATION_RULES = {
 				'Natural',
 			],
 		},
+	household_phase: { label: "Household Phase", type: 'string', required: true },
 		
     landslide_risk: { label: 'Landslide Risk', type: 'string', required: true },
 		landslide_risk_description:{ label: 'Landslide Risk Description', type: 'string', required: false},
@@ -298,7 +299,7 @@ const VALIDATION_RULES = {
 				'Natural',
 			],
 		},
-		household_phase: { type: 'string', required: true },
+		household_phase: { label: "Household Phase", type: 'string', required: true },
 
     landslide_risk: { label: 'Landslide Risk', type: 'string', required: true },
 		landslide_risk_description:{ label: 'Landslide Risk Description', type: 'string', required: false},

@@ -583,6 +583,7 @@ function updateRiskIcons() {
         const closeBtn = document.querySelector('#close-btn');
         if (closeBtn) {
           closeBtn.addEventListener('click', () => {
+            console.log("closed")
             map.closePopup();
           });
         }
