@@ -85,6 +85,7 @@ iframe {
 	display: flex;
 	gap: 0.5rem;
 	margin-bottom: 1.5rem;
+	flex-wrap: wrap;
 }
 
 .action-btn {
@@ -95,6 +96,10 @@ iframe {
 	font-size: 0.875rem;
 	color: #374151;
 	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	white-space: nowrap;
 }
 
 .action-btn:hover {

@@ -229,7 +229,7 @@ const VALIDATION_RULES = {
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
     location_coordinates: {label: "Location Coordinates", type: 'object', required: true },
-		location_link: { label: "Location Link", type: 'string', required: true, regex: /^https:\/\/www\.openstreetmap\.org\/.+/ }, // data validation for link
+		location_link: { label: "Location Link", type: 'string', required: true, regex: /^https:\/\/.+\..+/ }, // data validation for link
 		household_address: { label: "Household Address", type: 'string', required: true, maxLength: 100 },
 		household_material: {
       label: "Household Material",
@@ -243,6 +243,7 @@ const VALIDATION_RULES = {
 				'Natural',
 			],
 		},
+	household_phase: { label: "Household Phase", type: 'string', required: true },
 		
     landslide_risk: { label: 'Landslide Risk', type: 'string', required: true },
 		landslide_risk_description:{ label: 'Landslide Risk Description', type: 'string', required: false},
@@ -289,7 +290,7 @@ const VALIDATION_RULES = {
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
     location_coordinates: { label: "Location Coordinates", type: 'object', required: true },
-		location_link: { label: "Location Link", type: 'string', required: true, regex: /^https:\/\/www\.openstreetmap\.org\/.+/  },
+		location_link: { label: "Location Link", type: 'string', required: true, regex: /^https:\/\/.+\..+/  },
 		household_address: { label: "Household Address", type: 'string', required: true, maxLength: 100 },
 		household_material: {
       label: "Household Material",
@@ -303,7 +304,7 @@ const VALIDATION_RULES = {
 				'Natural',
 			],
 		},
-		household_phase: { type: 'string', required: true },
+		household_phase: { label: "Household Phase", type: 'string', required: true },
 
     landslide_risk: { label: 'Landslide Risk', type: 'string', required: true },
 		landslide_risk_description:{ label: 'Landslide Risk Description', type: 'string', required: false},
@@ -575,7 +576,7 @@ export function validateData(collectionName, data) {
 					continue;
 				}
 				if (fieldLabel == 'Location Link') {
-					errors.push(`${fieldLabel} is not in the correct format. Link must start with: https://www.openstreetmap.org/ss`);
+					errors.push(`${fieldLabel} is not in the correct format. Link must start with: https://`);
 					continue;
 				}
 			}

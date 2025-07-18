@@ -11,7 +11,7 @@ import {
 import { 
   getCollection, 
   setCollection, 
-  BUKLOD_RULES_TEST, 
+  BUKLOD_RULES, 
   validateData, 
   editEntry,
   addEntry,
@@ -31,7 +31,7 @@ const FIREBASE_CONFIG = {
   measurementId: 'G-9N9ELDEMX9',
 };
 
-var collection_value = 'buklod-official-TEST'
+var collection_value = 'buklod-official'
 
 initializeApp(FIREBASE_CONFIG);
 const db = getFirestore();
@@ -130,11 +130,11 @@ export function populateEditForm(partner, editFormModal) {
 export function submitEditForm(){
   var collated_input = {}; 
   var validate_errors =[];
-  for(let i = 0; i < BUKLOD_RULES_TEST[2].length; i++){
-    //BUKLOD_RULES_TEST[2] are just the field names of each document
-    // let q = document.getElementById(BUKLOD_RULES_TEST[2][i]).value;
-    // collated_input[BUKLOD_RULES_TEST[2][i]] = q;
-    let field_name = BUKLOD_RULES_TEST[2][i];
+  for(let i = 0; i < BUKLOD_RULES[2].length; i++){
+    //BUKLOD_RULES[2] are just the field names of each document
+    // let q = document.getElementById(BUKLOD_RULES[2][i]).value;
+    // collated_input[BUKLOD_RULES[2][i]] = q;
+    let field_name = BUKLOD_RULES[2][i];
     let input_value = document.getElementById(field_name).value;
 
     if (document.getElementById(field_name).type == "number"){
@@ -190,32 +190,95 @@ export function submitEditForm(){
   
 }
 
-function displayErrors(errors) {
-    let errorDiv = document.getElementById('error_messages');
-
-    if (errorDiv) {
-
-        errorDiv.innerHTML = '';
-
-        if (errors.length > 0) {
-            for (let error of errors) {
-                let errorParagraph = document.createElement('p');
-                errorParagraph.textContent = error;
-                errorDiv.appendChild(errorParagraph);
+// Display errors inline
+function displayInlineErrors(errors) {
+    // Clear all previous errors
+    clearAllErrors();
+    
+    // Create a mapping of field names to error containers
+    const fieldMappings = {
+        'Household Name': 'household_name',
+        'Household Phase': 'household_phase',
+        'Contact Number': 'contact_number', 
+        'Number of Residents': 'number_residents',
+        'Residency Status': 'residency_status',
+        'HOA Status': 'is_hoa_noa',
+        'Location Link': 'location_link',
+        'Household Address': 'household_address',
+        'Household Material': 'household_material',
+        'Landslide Risk': 'landslide_risk',
+        'Earthquake Risk': 'earthquake_risk',
+        'Fire Risk': 'fire_risk',
+        'Flood Risk': 'flood_risk',
+        'Storm Risk': 'storm_risk',
+        'Nearest Evacuation Area': 'nearest_evac'
+    };
+    
+    // Process each error
+    for (let error of errors) {
+        // Find the field name from the error message
+        for (let [errorKey, fieldName] of Object.entries(fieldMappings)) {
+            if (error.includes(errorKey)) {
+                // Find the field element
+                const field = document.getElementById(fieldName);
+                const label = document.querySelector(`label[for="${fieldName}"]`);
+                const errorContainer = document.getElementById(`${fieldName}_error`);
+                
+                if (field) {
+                    // Add error styling to field
+                    field.classList.add('error');
+                    
+                    // Add error styling to label
+                    if (label) {
+                        label.classList.add('error');
+                    }
+                    
+                    // Show error message below field
+                    if (errorContainer) {
+                        errorContainer.textContent = error;
+                        errorContainer.classList.add('show');
+                    }
+                }
+                break;
             }
         }
-        } else {
-            console.error("Error: Couldn't find element with ID 'error_messages'.");
-        }
     }
+}
+
+// Clear all error states
+function clearAllErrors() {
+    // Remove error classes from all fields
+    const fields = document.querySelectorAll('.form-input, .form-select, .form-textarea');
+    fields.forEach(field => {
+        field.classList.remove('error');
+        
+        // Clear error message
+        const errorContainer = document.getElementById(`${field.id}_error`);
+        if (errorContainer) {
+            errorContainer.textContent = '';
+            errorContainer.classList.remove('show');
+        }
+    });
+    
+    // Remove error classes from all labels
+    const labels = document.querySelectorAll('.form-label');
+    labels.forEach(label => {
+        label.classList.remove('error');
+    });
+}
+
+// Updated displayErrors function to use inline errors
+function displayErrors(errors) {
+    displayInlineErrors(errors);
+}
 
 // Function for submission of Add Household form
 export function submitAddForm(){
   var collatedInput = {};
 
-  for (let i = 0; i < BUKLOD_RULES_TEST[2].length; i++) {
+  for (let i = 0; i < BUKLOD_RULES[2].length; i++) {
 
-      let fieldName = BUKLOD_RULES_TEST[2][i];
+      let fieldName = BUKLOD_RULES[2][i];
       let inputValue = document.getElementById(fieldName).value;
 
       if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick' || fieldName == 'number_seniors') {
@@ -228,7 +291,7 @@ export function submitAddForm(){
       }
   }
 
-  const errors = validateData("buklod-official-TEST", collatedInput);
+  const errors = validateData("buklod-official", collatedInput);
 
   if (errors.length > 0) {
       displayErrors(errors);

@@ -8,7 +8,7 @@ import {
   getCollection,
   filterData,
   DB,
-  BUKLOD_RULES_TEST,
+  BUKLOD_RULES,
 } from '../../js/firestore_UNIV.js';
 import { addListeners, clearMarkers, map } from '../../js/index_UNIV.js';
 import {
@@ -33,6 +33,55 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   
 // Get list of households
 var partnersArray = getPartnersArray();
+
+// Handle close button clicks for all popups (event delegation)
+document.addEventListener('click', function(event) {
+  if (event.target.matches('#close-btn, #close-btn *')) {
+    event.preventDefault();
+    event.stopPropagation();
+    map.closePopup();
+  }
+});
+
+// Handle Add Household button clicks (event delegation)
+document.addEventListener('click', function(event) {
+  if (event.target.matches('.addButton')) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const lat = event.target.getAttribute('data-lat');
+    const lng = event.target.getAttribute('data-lng');
+
+    var modal = document.getElementById('addModal');
+
+    // Display the modal
+    modal.style.display = 'flex';
+    modal.classList.remove('closing');
+
+    // Set the coordinates in the iframe form
+    var iframe = modal.getElementsByTagName('iframe')[0];
+    var iframeDocument = iframe.contentWindow.document;
+    
+    // Wait for iframe to load then set coordinates
+    iframe.onload = function() {
+      var locationField = iframeDocument.getElementById('location_coordinates');
+      if (locationField) {
+        locationField.value = lat + ',' + lng;
+      }
+    };
+    
+    // If iframe is already loaded, set coordinates immediately
+    if (iframe.contentWindow.document.readyState === 'complete') {
+      var locationField = iframeDocument.getElementById('location_coordinates');
+      if (locationField) {
+        locationField.value = lat + ',' + lng;
+      }
+    }
+
+    // Close the popup after opening modal
+    map.closePopup();
+  }
+});
 
 // Function for populating the navbar entries with households entries
 function populateNavBar(condition){
@@ -74,9 +123,11 @@ function populateNavBar(condition){
       const docId = await getDocIdByPartnerName(partner.household_name);
       const doc = await getDocByID(docId);
 
-      map.setView(partner.marker.getLatLng(), 12); // change zoom: 1, you can see america and europe. 18, banaba area
+      map.setView(partner.marker.getLatLng()); // change zoom: 1, you can see america and europe. 18, banaba area
       onPinClick(doc).then(popupHTML => {
-        partner.marker.bindPopup(popupHTML).openPopup(); // this replaces fire('popupopen')
+        partner.marker.bindPopup(popupHTML, {
+          className: 'household-popup'
+        }).openPopup(); // this replaces fire('popupopen')
       });
     });
 
@@ -230,13 +281,6 @@ async function onPinClick(doc) {
     }
   });
 
-  const closeBtn = wrapper.querySelector('#close-btn');
-  if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      window.parent.postMessage('closeMainModal', '*');
-    });
-  }
-
   return wrapper.innerHTML;
 }
 // ------------------------------------------
@@ -264,46 +308,6 @@ function onMapClick(e) {
   });
   
   customPopup.setLatLng(e.latlng).setContent(popupContent).openOn(map);
-  //popup = customPopup;
-
-  // Event listener for the Add Household button using event delegation
-  setTimeout(() => {
-    var addButton = document.querySelector('.addButton');
-    if (addButton) {
-      addButton.addEventListener('click', function () {
-        const lat = this.getAttribute('data-lat');
-        const lng = this.getAttribute('data-lng');
-
-        var modal = document.getElementById('addModal');
-
-        // Display the modal
-        modal.style.display = 'flex';
-
-        // Set the coordinates in the iframe form
-        var iframe = modal.getElementsByTagName('iframe')[0];
-        var iframeDocument = iframe.contentWindow.document;
-        
-        // Wait for iframe to load then set coordinates
-        iframe.onload = function() {
-          var locationField = iframeDocument.getElementById('location_coordinates');
-          if (locationField) {
-            locationField.value = lat + ',' + lng;
-          }
-        };
-        
-        // If iframe is already loaded, set coordinates immediately
-        if (iframe.contentWindow.document.readyState === 'complete') {
-          var locationField = iframeDocument.getElementById('location_coordinates');
-          if (locationField) {
-            locationField.value = lat + ',' + lng;
-          }
-        }
-
-        // Close the popup after opening modal
-        map.closePopup();
-      });
-    }
-  }, 100);
 }
 
 // Function for add household button
@@ -583,6 +587,12 @@ function getRiskIcon(riskLevel) {
   }
 }
 
+// Function for removing the highlights
+function clearAllHighlights() {
+  const highlightedItems = document.querySelectorAll('.highlight');
+  highlightedItems.forEach(item => item.classList.remove('highlight'));
+}
+
 // Function for displaying of pins and its switching colors depending on risk type
 function updateRiskIcons() {
   
@@ -609,7 +619,9 @@ function updateRiskIcons() {
 
     // Shows partner info on pin click
     onPinClick(partner).then(popupContent => {
-      marker.bindPopup(popupContent);
+      marker.bindPopup(popupContent, {
+        className: 'household-popup'
+      });
     });
 
     partner.marker = marker; // store reference here
@@ -626,24 +638,33 @@ function updateRiskIcons() {
             const modal = document.getElementById('partnerModal');
             var editFormModal = document.getElementById('editModal');
             editFormModal.style.display = 'flex';
+            editFormModal.classList.remove('closing');
             modal.style.display = 'none';
             populateEditForm(partner, editFormModal);
           });
         });
 
-        const close_button = document.getElementById("close-btn");
-        if (close_button) {
-          close_button.addEventListener('click', () => {
-            marker.closePopup();
-          });
+        
+        // Function for sidebar scrolling and highlighting when clicking from sidebar or pin
+        const listItems = document.querySelectorAll('li.accordion');
+        const listItem = Array.from(listItems).find(
+          li => li.dataset.name === partner.household_name
+        );
+        if (listItem) {
+        listItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        listItem.classList.add('highlight');
         }
-      }, 0); 
+      }, 0);
       
     });
 
     map.addLayer(marker);
   });
 
+  // Add popup close handler
+  map.on('popupclose', (e) => {
+    clearAllHighlights();
+  });
 
   // Code logic for displaying evac centers
   evacCenters.forEach(center => {
@@ -661,7 +682,9 @@ function updateRiskIcons() {
       <div style = "text-align:center;">
       <b>${center.name}</b>
       <br>Location: ${center.latitude}, ${center.longitude}
-      </div>`);
+      </div>`, {
+        className: 'evacuation-center-popup'
+      });
       map.addLayer(marker);
       
     });
@@ -670,10 +693,10 @@ function updateRiskIcons() {
 // Code logic for automatically changing pin color depending on selected option on dropbox 
 document.getElementById('risk-sort').addEventListener('change', updateRiskIcons);
 updateRiskIcons();
-
-// FILTER MODAL UI
 // ------------------------------------------
 
+// CODE LOGIC FOR FILTER MODAL UI
+// ------------------------------------------
 // Initialize filter modal functionality when DOM is loaded
 function initializeFilterModal() {
   // Filter Modal Controls
@@ -691,11 +714,16 @@ function initializeFilterModal() {
   // Open filter modal
   filterBtn.addEventListener('click', () => {
     filterModal.style.display = 'flex';
+    filterModal.classList.remove('closing');
   });
 
-  // Close filter modal
+  // Close filter modal with animation
   function closeFilterModal() {
-    filterModal.style.display = 'none';
+    filterModal.classList.add('closing');
+    setTimeout(() => {
+      filterModal.style.display = 'none';
+      filterModal.classList.remove('closing');
+    }, 300); // Match the animation duration
   }
 
   filterClose.addEventListener('click', closeFilterModal);
