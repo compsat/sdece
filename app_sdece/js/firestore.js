@@ -706,6 +706,7 @@ editFormiframe.addEventListener('load', function() {
             if (errors.length > 0) {
                 displayErrors(errors, editFormiframeDocument);
                 event.preventDefault();
+				document.getElementById('error_messages')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 return;
             } 
             
@@ -742,15 +743,7 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 		current_temp_activity['partner_name'] = new_partner_name;
 		current_temp_activity['partner_address'] = new_partner_address;
 
-		if (
-			typeof current_temp_activity.activity_date === 'string' &&
-			!isNaN(Date.parse(current_temp_activity.activity_date))
-		) {
-			const dateOnly = new Date(current_temp_activity.activity_date);
-			dateOnly.setHours(0, 0, 0, 0);
-			current_temp_activity.activity_date = Timestamp.fromDate(dateOnly);
-		}
-
+		current_temp_activity.activity_date = dateToTimestamp(current_temp_activity.activity_date);
 		addEntry(current_temp_activity)
 	});
 
