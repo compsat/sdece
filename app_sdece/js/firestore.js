@@ -260,9 +260,6 @@ getDocs(collectionRef)
         const activities = loadActivities(querySnapshot);
         const partners = groupActivities(activities);
         createMarkersAndSidebar(partners);
-    })
-    .catch((error) => {
-        console.error('Error getting documents: ', error);
     });
 
 // === MAIN MODAL SECTION ===
@@ -392,7 +389,6 @@ function showEditActivityForm(activity, partnerName, coords) {
 		.then(response => response.text())
 		.then(html => {
 			// Extract only the <form>...</form> part
-			console.log('[DEBUG] Loaded HTML:', html);
 			const tempDiv = document.createElement('div');
 			tempDiv.innerHTML = html;
 			const form = tempDiv.querySelector('form');
@@ -627,7 +623,6 @@ function displayErrors(errors, docContext) {
 	let errorDiv = docContext.getElementById('error_messages');
 
 	if (!errorDiv) {
-		console.error("Error: Couldn't find element with ID 'error_messages'.");
 		return;
 	}
 	errorDiv.innerHTML = '';
@@ -706,7 +701,6 @@ editFormiframe.addEventListener('load', function() {
             if (errors.length > 0) {
                 displayErrors(errors, editFormiframeDocument);
                 event.preventDefault();
-				document.getElementById('error_messages')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 return;
             } 
             
@@ -716,8 +710,6 @@ editFormiframe.addEventListener('load', function() {
 
             editFormiframe.style.display = 'none'; // close the save modal
         });
-    } else {
-        console.error("Could not find submit_form button in edit form");
     }
 });
 
@@ -743,7 +735,15 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 		current_temp_activity['partner_name'] = new_partner_name;
 		current_temp_activity['partner_address'] = new_partner_address;
 
-		current_temp_activity.activity_date = dateToTimestamp(current_temp_activity.activity_date);
+		if (
+			typeof current_temp_activity.activity_date === 'string' &&
+			!isNaN(Date.parse(current_temp_activity.activity_date))
+		) {
+			const dateOnly = new Date(current_temp_activity.activity_date);
+			dateOnly.setHours(0, 0, 0, 0);
+			current_temp_activity.activity_date = Timestamp.fromDate(dateOnly);
+		}
+
 		addEntry(current_temp_activity)
 	});
 
@@ -774,10 +774,6 @@ mainModalCloseButton.addEventListener('click', function (event) {
 		// Call the resetForm method in the document's script tag
 		if (typeof mainModalDocument.defaultView.resetForm === 'function') {
 			mainModalDocument.defaultView.resetForm();
-		} else {
-			console.error(
-				"resetForm function is not defined in the document's script tag."
-			);
 		}
 		window.parent.postMessage('closeMainModal', '*');
 	} else {
