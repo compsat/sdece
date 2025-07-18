@@ -148,7 +148,7 @@ export const DB_RULES_AND_DATA = [
 		],
 	],
 	[
-		'sdece-official',
+		'seeds-official',
 		'partner_name',
 		[
 			'activity_date',
@@ -168,7 +168,7 @@ export const DB_RULES_AND_DATA = [
 		],
 	],
 	[
-		'sdece-official-TEST',
+		'seeds-official-TEST',
 		'partner_name',
 		[
 			'activity_date',
@@ -313,7 +313,7 @@ const VALIDATION_RULES = {
 
 		nearest_evac: { type: 'string', required: true, maxLength: 255 },
 	},
-	'sdece-official-TEST': {
+	'seeds-official-TEST': {
     partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
 		partner_address: { label: "Address of Host Partner", type: 'string', required: true, maxLength: 255 },
 		partner_coordinates: { label: "Partner Coordinates", required: true },
@@ -348,7 +348,7 @@ const VALIDATION_RULES = {
 			regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/
 		},
 	},
-	'sdece-official': {
+	'seeds-official': {
     partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
 		partner_address: { label: "Address of Host Partner", type: 'string', required: true, maxLength: 255 },
 		partner_coordinates: { label: "Partner Coordinates", required: true },

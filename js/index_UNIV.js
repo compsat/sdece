@@ -125,7 +125,7 @@ export const JS_CS_ENGINE = [
 	],
 	[
 		// TO BE RENAMED TO 'seeds-official'
-		'sdece-official',
+		'seeds-official',
 		[
 			'/app_seeds/js/index.js',
 			'/app_seeds/js/firestore.js',
@@ -135,7 +135,7 @@ export const JS_CS_ENGINE = [
 	],
 	[
 		// TO BE RENAMED TO 'seeds-official-TEST'
-		'sdece-official-TEST',
+		'seeds-official-TEST',
 		[
 			'/app_seeds/js/index.js',
 			'/app_seeds/js/firestore.js',

@@ -5,7 +5,7 @@ import { map } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
 
 // Set collection and associated rule config
-let collection_value = 'sdece-official'
+let collection_value = 'seeds-official'
 setCollection(collection_value);
 
 export function populateMainModalList() {
@@ -440,7 +440,7 @@ function showEditActivityForm(activity, partnerName, coords) {
 					updated[key] = input ? input.value : '';
 				});
 				updated['partner_coordinates'] = activity.partner_coordinates;
-				let errors = validateData('sdece-official-TEST', updated);
+				let errors = validateData('seeds-official-TEST', updated);
 				const errorDiv = form.querySelector('#error_messages');
 				if (errorDiv) errorDiv.innerHTML = '';
 				if (errors.length > 0) {
@@ -669,7 +669,7 @@ addFormSubmitButton.addEventListener('click', function (event) {
 	let form_data = collectFormInputs(addFormiframeDocument, addForm_geopoint, 'add');
 
 	//Validate the collated input here
-	let errors = validateData('sdece-official-TEST', form_data);
+	let errors = validateData('seeds-official-TEST', form_data);
 
 	if (errors.length > 0) {
 		displayErrors(errors, addFormiframeDocument);
@@ -689,7 +689,33 @@ addFormSubmitButton.addEventListener('click', function (event) {
 	addFormiframe.style.display = 'none'; // close the save modal
 });
 
-// Main modal save button for batch uploading
+// === EDITLOC.HTML SAVE CLICK LISTENER ===
+let editFormiframe = document.getElementById('editModal_iframe');
+let editFormiframeDocument = editFormiframe.contentWindow.document;
+let editFormSubmitButton = editFormiframeDocument.getElementById('submit_form');
+
+editFormSubmitButton.addEventListener('click', function(event) {
+
+	// Get data from editloc.html
+	let form_data = collectFormInputs(editFormiframeDocument, addForm_geopoint, 'edit');
+
+	// Validate the collated input here
+	let errors = validateData('seeds-official-TEST', form_data);
+
+	if (errors.length > 0) {
+		displayErrors(errors, editFormiframeDocument);
+		event.preventDefault();
+		return;
+	} 
+	// Uploads straight to firebase DB
+	form_data.activity_date = dateToTimestamp(form_data.activity_date);
+	editEntry(form_data, current_viewed_activity['identifier']);
+
+	editFormiframe.style = "display: 'none'"; // close the save modal
+
+});
+
+// Mainmodal save button for batch uploading
 const MAIN_MODAL_SAVE_BUTTON = mainModalDocument.getElementsByClassName('main-modal-save')[0];
 
 MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
