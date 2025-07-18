@@ -402,8 +402,6 @@ export async function setCollection(collection_name) {
 			collection_reference = collection(DB, collection_name);
       rule_reference = rule
       pullCollection(collection_reference);
-      console.log(collection_name);
-      console.log(document_map);
 		}
 	}
 }
