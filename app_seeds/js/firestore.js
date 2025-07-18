@@ -748,32 +748,6 @@ addFormSubmitButton.addEventListener('click', function (event) {
 	addFormiframe.style.display = 'none'; // close the save modal
 });
 
-// === EDITLOC.HTML SAVE CLICK LISTENER ===
-let editFormiframe = document.getElementById('editModal_iframe');
-let editFormiframeDocument = editFormiframe.contentWindow.document;
-let editFormSubmitButton = editFormiframeDocument.getElementById('submit_form');
-
-editFormSubmitButton.addEventListener('click', function(event) {
-
-	// Get data from editloc.html
-	let form_data = collectFormInputs(editFormiframeDocument, addForm_geopoint, 'edit');
-
-	// Validate the collated input here
-	let errors = validateData('seeds-official-TEST', form_data);
-
-	if (errors.length > 0) {
-		displayErrors(errors, editFormiframeDocument);
-		event.preventDefault();
-		return;
-	} 
-	// Uploads straight to firebase DB
-	form_data.activity_date = dateToTimestamp(form_data.activity_date);
-	editEntry(form_data, current_viewed_activity['identifier']);
-
-	editFormiframe.style = "display: 'none'"; // close the save modal
-
-});
-
 // Mainmodal save button for batch uploading
 const MAIN_MODAL_SAVE_BUTTON = mainModalDocument.getElementsByClassName('main-modal-save')[0];
 
