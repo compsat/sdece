@@ -520,7 +520,6 @@ function showEditActivityForm(activity, partnerName, coords) {
 				updated.activity_date = dateToTimestamp(updated.activity_date);
 				editEntry(updated, activity.identifier);
 				showActivityDetailModal({...activity, ...updated}, partnerName, coords);
-				alert("Please reload the page for your changes to reflect.");
 			};
 			// Cancel/Back logic
 			const cancelBtn = form.querySelector('#cancel-btn');

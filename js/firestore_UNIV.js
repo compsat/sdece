@@ -470,7 +470,7 @@ export function addEntry(inp_obj) {
   addDoc(collection_reference, inp_obj)
     .then((docRef) => {
       console.log(docRef);
-      alert("You may now reload the page for your addition to reflect on this page");
+      alert("You may now reload the page for your addition to reflect on this page.");
       window.parent.location.reload();
     })
     .catch((error) => {
@@ -486,7 +486,7 @@ export function editEntry(inp_obj, docId) {
 	const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
 	updateDoc(DOC_REFERENCE, inp_obj)
 		.then(() => {
-			alert("You may now reload the page for your edit to reflect on this page");
+			alert("You may now reload the page for your edit to reflect on this page.");
 			window.parent.location.reload();
 		})
 		.catch((error) => {
