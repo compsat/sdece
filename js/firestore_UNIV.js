@@ -462,63 +462,47 @@ export function getDocByID(docId) {
 
 
 export function addEntry(inp_obj) {
-	for (let rule of DB_RULES_AND_DATA) {
-		if (rule[0] === collection_reference.id) {
-			let input = {}; // contents depend on the rule engine
-			for (let i = 0; i < Object.keys(inp_obj).length; i++) {
-				input[rule[2][i]] = inp_obj[rule[2][i]];
-			}
-			
-			// Return the Promise so the form can handle success/error
-			return addDoc(collection_reference, input)
-				.then((docRef) => {
-					console.log(docRef);
-					return docRef; // Return the document reference for success handling
-				})
-				.catch((error) => {
-					console.error('Error adding document: ', error);
-					throw error; // Re-throw the error so the form can catch it
-				});
-		}
-	}
-	
-	// Return a rejected Promise if no matching collection found
-	return Promise.reject(new Error('Collection not found'));
+  // Return the Promise so the form can handle success/error
+  return addDoc(collection_reference, inp_obj)
+    .then((docRef) => {
+      alert("You may now reload the page for your edit to reflect on this page");
+      window.parent.location.reload(); 
+    })
+    .catch((error) => {
+      console.error('Error adding document: ', error);
+      throw error; // Re-throw the error so the form can catch it
+    });
 }
 
+
 export function editEntry(inp_obj,docId) {
-	for (let rule of DB_RULES_AND_DATA) {
-		if (rule[0] === collection_reference.id) {
-			const DOC_REFERENCE = doc(DB, rule[0], docId);
-			updateDoc(DOC_REFERENCE, inp_obj)
-				.then(() => {
-					alert("You may now reload the page for your edit to reflect on this page");
-					window.parent.location.reload(); 
-				})
-				.catch((error) => {
-					console.error('Error adding document: ', error);
-					alert("Error uploading the edited activity. Please try again");
-				});
-			break;
-		}
-	}
+  const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
+  updateDoc(DOC_REFERENCE, inp_obj)
+    .then(() => {
+      alert("You may now reload the page for your edit to reflect on this page");
+      window.parent.location.reload(); 
+    })
+    .catch((error) => {
+      console.error('Error adding document: ', error);
+      alert("Error uploading the edited activity. Please try again");
+    });
 }
 
 export function validateData(collectionName, data) {
-	const rules = VALIDATION_RULES[collectionName];
-	var errors = [];
+  const rules = VALIDATION_RULES[collectionName];
+  var errors = [];
 
-	for (const field in rules) {
-		const rule = rules[field];
-		const value = data[field];
-		const fieldLabel = rule.label || field;
+  for (const field in rules) {
+    const rule = rules[field];
+    const value = data[field];
+    const fieldLabel = rule.label || field;
     console.log(fieldLabel);
 
     // Required Test
     const IS_EMPTY = value == undefined || value == null || value == ''
     if ( 
       (rule.required && IS_EMPTY)|| 
-      (!rule.required && IS_EMPTY)
+        (!rule.required && IS_EMPTY)
     ) {
       if (rule.required) {
         errors.push(`${fieldLabel} is required.`);
@@ -557,12 +541,12 @@ export function validateData(collectionName, data) {
 
 
     // This is holdover code until the sdece team can implement frontend validation
-		if (MIN_LENGTH_TEST && field === 'partner_contact_number') {
-				errors.push(
-					`${fieldLabel} must be at least ${rule.minLength} characters long and in the form 09XXXXXXXXX.`
-				);
-			continue;
-		}
+    if (MIN_LENGTH_TEST && field === 'partner_contact_number') {
+      errors.push(
+        `${fieldLabel} must be at least ${rule.minLength} characters long and in the form 09XXXXXXXXX.`
+      );
+      continue;
+    }
 
     //TODO: make this code better. hardcoding specific error messages for specific cases
     //feels awful. however, unsure of how to handle this as it is a regex issue. maybe
@@ -588,11 +572,11 @@ export function validateData(collectionName, data) {
     }
 
 
-  if (rule.enum && !rule.enum.includes(value)) {
-    errors.push(`${fieldLabel}' must be one of ${rule.enum.join(', ')}.`);
-    continue;
-  }
+    if (rule.enum && !rule.enum.includes(value)) {
+      errors.push(`${fieldLabel}' must be one of ${rule.enum.join(', ')}.`);
+      continue;
+    }
 
-}
-return errors;
+  }
+  return errors;
 }
