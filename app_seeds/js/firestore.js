@@ -259,10 +259,11 @@ getDocs(collectionRef)
     .then((querySnapshot) => {
         const activities = loadActivities(querySnapshot);
         const partners = groupActivities(activities);
+
+		window.activities = activities;
+        window.partners = partners;
+		
         createMarkersAndSidebar(partners);
-    })
-    .catch((error) => {
-        console.error('Error getting documents: ', error);
     });
 
 // === MAIN MODAL SECTION ===
@@ -392,7 +393,6 @@ function showEditActivityForm(activity, partnerName, coords) {
 		.then(response => response.text())
 		.then(html => {
 			// Extract only the <form>...</form> part
-			console.log('[DEBUG] Loaded HTML:', html);
 			const tempDiv = document.createElement('div');
 			tempDiv.innerHTML = html;
 			const form = tempDiv.querySelector('form');
@@ -453,6 +453,9 @@ function showEditActivityForm(activity, partnerName, coords) {
 							errorDiv.appendChild(p);
 						});
 					}
+					const modalContent = window.parent.document.getElementById('modalContent');		
+					if (modalContent) modalContent.scrollTop = 0;
+
 					return;
 				}
 				if (typeof updated.activity_date === 'string' && !isNaN(Date.parse(updated.activity_date))) {
@@ -462,6 +465,7 @@ function showEditActivityForm(activity, partnerName, coords) {
 				}
 				editEntry(updated, activity.identifier);
 				showActivityDetailModal({...activity, ...updated}, partnerName, coords);
+				alert("Please reload the page for your changes to reflect.");
 			};
 			// Cancel/Back logic
 			const cancelBtn = form.querySelector('#cancel-btn');
@@ -627,7 +631,6 @@ function displayErrors(errors, docContext) {
 	let errorDiv = docContext.getElementById('error_messages');
 
 	if (!errorDiv) {
-		console.error("Error: Couldn't find element with ID 'error_messages'.");
 		return;
 	}
 	errorDiv.innerHTML = '';
@@ -686,40 +689,6 @@ addFormSubmitButton.addEventListener('click', function (event) {
 	addFormiframe.style.display = 'none'; // close the save modal
 });
 
-// === EDITLOC.HTML SAVE CLICK LISTENER ===
-let editFormiframe = document.getElementById('editModal_iframe');
-
-// Wait for iframe to load before accessing its contents
-editFormiframe.addEventListener('load', function() {
-    let editFormiframeDocument = editFormiframe.contentWindow.document;
-    
-    // Check if element exists before adding listener
-    let editFormSubmitButton = editFormiframeDocument.getElementById('submit_form');
-    if (editFormSubmitButton) {
-        editFormSubmitButton.addEventListener('click', function(event) {
-            // Get data from editloc.html
-            let form_data = collectFormInputs(editFormiframeDocument, addForm_geopoint, 'edit');
-
-            // Validate the collated input here
-            let errors = validateData('sdece-official-TEST', form_data);
-
-            if (errors.length > 0) {
-                displayErrors(errors, editFormiframeDocument);
-                event.preventDefault();
-                return;
-            } 
-            
-            // Uploads straight to firebase DB
-            form_data.activity_date = dateToTimestamp(form_data.activity_date);
-            editEntry(form_data, current_viewed_activity['identifier']);
-
-            editFormiframe.style.display = 'none'; // close the save modal
-        });
-    } else {
-        console.error("Could not find submit_form button in edit form");
-    }
-});
-
 // Main modal save button for batch uploading
 const MAIN_MODAL_SAVE_BUTTON = mainModalDocument.getElementsByClassName('main-modal-save')[0];
 
@@ -742,15 +711,7 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 		current_temp_activity['partner_name'] = new_partner_name;
 		current_temp_activity['partner_address'] = new_partner_address;
 
-		if (
-			typeof current_temp_activity.activity_date === 'string' &&
-			!isNaN(Date.parse(current_temp_activity.activity_date))
-		) {
-			const dateOnly = new Date(current_temp_activity.activity_date);
-			dateOnly.setHours(0, 0, 0, 0);
-			current_temp_activity.activity_date = Timestamp.fromDate(dateOnly);
-		}
-
+		current_temp_activity.activity_date = dateToTimestamp(current_temp_activity.activity_date);
 		addEntry(current_temp_activity)
 	});
 
@@ -781,10 +742,6 @@ mainModalCloseButton.addEventListener('click', function (event) {
 		// Call the resetForm method in the document's script tag
 		if (typeof mainModalDocument.defaultView.resetForm === 'function') {
 			mainModalDocument.defaultView.resetForm();
-		} else {
-			console.error(
-				"resetForm function is not defined in the document's script tag."
-			);
 		}
 		window.parent.postMessage('closeMainModal', '*');
 	} else {

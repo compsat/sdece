@@ -6,7 +6,28 @@
 		<!-- Import Tailwind CSS output file -->
 		<link href="../css/form.css" rel="stylesheet" />
 
+		<!-- Import Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap"
+			rel="stylesheet"
+		/>
+
 		<script type="module">
+			//import { addLocation } from "./js/firestore.js";
 			import {
 				addEntry,
 				SDECE_RULES_TEST,
@@ -53,6 +74,7 @@
 
 				} else {
 					addEntry(collatedInput);
+
 				}
 
 				function displayErrors(errors) {
@@ -410,6 +432,16 @@
 			function closeModal() {
 				window.parent.postMessage('closeAddModal', '*');
 			}
+
+			// function resetForm() {
+			// 	var inputFields = document.getElementsByTagName('input');
+			// 	for (var i = 0; i < inputFields.length; i++) {
+			// 		var field = inputFields[i];
+			// 		if (!field.readOnly && field.type !== 'button') {
+			// 			field.value = '';
+			// 		}
+			// 	}
+			// }
 
 			function resetForm() {
 				var inputFields = document.getElementsByTagName('input');
