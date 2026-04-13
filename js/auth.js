@@ -1,8 +1,10 @@
 import { 
     getAuth, 
     signInWithEmailAndPassword, 
+    createUserWithEmailAndPassword,
     signOut,
-    onAuthStateChanged
+    onAuthStateChanged,
+    updateProfile
 } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
@@ -19,17 +21,34 @@ const AUTH = getAuth();
 
 // Sign in function
 export function signIn(email, password) {
-    signInWithEmailAndPassword(AUTH, email, password)
+    return signInWithEmailAndPassword(AUTH, email, password)
         .then((userCredential) => {
-            // Signed in successfully
             const USER = userCredential.user;
             alert("Login Successful");
             window.location.replace("/index.html");
         })
         .catch((error) => {
-            // Handle errors
             console.error("Error signing in:", error);
             alert("Error Signing in. Please check username and password");
+            throw error;
+        });
+}
+
+export function signUp({ firstName, lastName, email, password }) {
+    return createUserWithEmailAndPassword(AUTH, email, password)
+        .then(async (userCredential) => {
+            const USER = userCredential.user;
+            const displayName = `${firstName} ${lastName}`.trim();
+            if (displayName) {
+                await updateProfile(USER, { displayName });
+            }
+            alert("Account created successfully");
+            return USER;
+        })
+        .catch((error) => {
+            console.error("Error signing up:", error);
+            alert("Error creating account. Please try again.");
+            throw error;
         });
 }
 
@@ -37,12 +56,10 @@ export function signIn(email, password) {
 export function signOutUser() {
     signOut(AUTH)
         .then(() => {
-            // Signed out successfully
             console.log("User signed out");
             window.location.replace("login.html");
         })
         .catch((error) => {
-            // Handle errors
             console.error("Error signing out:", error);
         });
 }   
