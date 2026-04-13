@@ -121,8 +121,8 @@ body {
 }
 .risk-dropdown-label {
   font-size: 0.75rem;
-  color: #64748b;
-  font-weight: 500;
+  color: #64748B;
+  font-weight: 700;
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.025em;
@@ -172,8 +172,8 @@ body {
 }
 #partners-count {
 	font-size: 0.75rem;
-	color: #6b7280;
-	font-weight: 500;
+	color: #64748B;
+	font-weight: 700;
 	letter-spacing: 0.05em;
 	font-family: 'Geist', sans-serif;
 }
