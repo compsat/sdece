@@ -44,34 +44,49 @@ body {
 
 /* -Side Bar Header */
 .side-nav-header {
-	position: sticky;
-	top: 0;
-	width: 100%;
-	background-color: #ffffff;
-	padding: 1.5rem;
-	box-sizing: border-box;
-	z-index: 10;
+  color: white;
+  border-bottom: none;
 }
 
 /* --Side Bar Header Title Section */
 .side-nav-header-top {
-	display: flex;
-	align-items: center;
-	margin-bottom: 1rem;
+  background-color: #1bb88a; /* green header */
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  padding: 0.4rem 1.25rem;
 }
+
 .logo-image {
 	width: 32px;
 	height: 32px;
+  grid-column: 1;
 	margin-right: 0.65rem;
   margin-bottom: 0.038rem;
 	border-radius: 50%;
 	object-fit: cover;
 }
 .map-title {
+  grid-column: 2;
 	font-size: 1.25rem;
-	font-weight: 600;
-	color: #111827;
+  text-align: left;
+  justify-self: center;
+	font-weight: 700;
+	color: #ffffff;
 	font-family: 'Geist', sans-serif;
+}
+
+.logout-btn {
+  grid-column: 3;
+  justify-self: end;
+  background: white;
+  color: #1bb88a;
+  border: none;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 /* --Side Bar Header Buttons Section */
