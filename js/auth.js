@@ -17,7 +17,7 @@ const SECRETS = await SECRETS_RES.json();
 export const FIREBASE_CONFIG = SECRETS.FIREBASE_CONFIG; 
 
 initializeApp(FIREBASE_CONFIG);
-const AUTH = getAuth();
+export const AUTH = getAuth();
 
 // Sign in function
 export function signIn(email, password) {
@@ -57,15 +57,15 @@ export function signOutUser() {
     signOut(AUTH)
         .then(() => {
             console.log("User signed out");
-            window.location.replace("login.html");
+            window.location.replace("/html/login.html");
         })
         .catch((error) => {
             console.error("Error signing out:", error);
         });
 }   
 
-export function getCurrentUser(thing) {
-    return AUTH.user;
+export function getCurrentUser() {
+    return AUTH.currentUser;
 }
 
 onAuthStateChanged(AUTH, (user) => {

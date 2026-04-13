@@ -51,7 +51,7 @@
         <div class="side-nav-header-top">
           <img src="static/logo-buklod-tao.png" alt="Buklod Tao Logo" class="logo-image">
           <h1 class="map-title">Buklod Tao</h1>
-          <button class="logout-btn">Logout</button>
+          <button class="logout-btn" id="authBtn">Login</button>
         </div>
 
       <div class="partners-header">
@@ -322,6 +322,26 @@
       }
       if (event.data === 'closeEditModal') {
         hideModalContainer('editModal');
+      }
+    });
+  </script>
+
+  <script type="module">
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
+    import { signOutUser, AUTH } from "/js/auth.js";
+
+    const loginURL = "/html/login.html";
+    const btn = document.getElementById("authBtn");
+
+    onAuthStateChanged(AUTH, (user) => {
+      if (user) {
+        btn.textContent = "Logout";
+        btn.onclick = () => signOutUser();
+      } else {
+        btn.textContent = "Login";
+        btn.onclick = () => {
+          window.location.href = loginURL;
+        };
       }
     });
   </script>
