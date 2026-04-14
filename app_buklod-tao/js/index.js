@@ -116,40 +116,64 @@ function populateNavBar(condition){
 
     listItem.setAttribute('data-name', partner.household_name);
 
-    
     // Set attributes
     anchor.href = '#';
-    
+
     listItem.addEventListener('click', async () => {
       const docId = await getDocIdByPartnerName(partner.household_name);
       const doc = await getDocByID(docId);
 
-      map.setView(partner.marker.getLatLng()); // change zoom: 1, you can see america and europe. 18, banaba area
+      map.setView(partner.marker.getLatLng());
       onPinClick(doc).then(popupHTML => {
         partner.marker.bindPopup(popupHTML, {
           className: 'household-popup'
-        }).openPopup(); // this replaces fire('popupopen')
+        }).openPopup();
       });
     });
-
 
     // Adding classes and setting text content
     nameDiv.classList.add('name');
     addressDiv.classList.add('address');
-    
+
     nameDiv.textContent = partner.household_name;
-    addressDiv.textContent =
-    partner.household_address + ' ' + partner.household_phase;
-    
+    addressDiv.textContent = partner.household_address + ' ' + partner.household_phase;
+
     listItem.classList.add('accordion');
     anchor.classList.add('accordion', 'link');
     containerDiv.classList.add('container-entry');
-    
+
+    // Inline edit button (pencil icon, top-right of card)
+    const editBtn = document.createElement('button');
+    editBtn.classList.add('sidebar-edit-btn');
+    editBtn.title = 'Edit household';
+    editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+    // Force positioning inline so browser button defaults can't override
+    editBtn.style.cssText = 'position:absolute;top:8px;right:8px;width:28px;height:28px;border:none;background:transparent;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b7280;padding:0;opacity:0;transition:opacity 0.15s ease,background-color 0.15s ease,color 0.15s ease;';
+    listItem.style.position = 'relative';
+    editBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // don't trigger the listItem map-open click
+      const editFormModal = document.getElementById('editModal');
+      editFormModal.style.display = 'flex';
+      editFormModal.classList.remove('closing');
+      populateEditForm(partner, editFormModal);
+    });
+    editBtn.addEventListener('mouseenter', () => {
+      editBtn.style.backgroundColor = '#e5e7eb';
+      editBtn.style.color = '#1a357b';
+    });
+    editBtn.addEventListener('mouseleave', () => {
+      editBtn.style.backgroundColor = 'transparent';
+      editBtn.style.color = '#6b7280';
+    });
+    listItem.addEventListener('mouseenter', () => { editBtn.style.opacity = '1'; });
+    listItem.addEventListener('mouseleave', () => { editBtn.style.opacity = '0'; });
+
     // Append elements to the DOM
     anchor.appendChild(nameDiv);
     anchor.appendChild(addressDiv);
-    
+
     listItem.appendChild(anchor);
+    listItem.appendChild(editBtn);
     containerDiv.appendChild(img);
     containerDiv.appendChild(listItem);
     locationList.appendChild(containerDiv);

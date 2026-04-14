@@ -230,7 +230,8 @@ li.accordion {
   box-sizing: border-box;
   width: 100%;
   max-width: 100%; /* Spans full width */
-    
+  position: relative; /* needed for the absolute-positioned edit button */
+
   /* 1. SEPARATE BOX LOOK */
   display: flex;
   flex-direction: column; /* Stack name and address vertically */
@@ -240,7 +241,7 @@ li.accordion {
   background-color: #f7f7f8; /* The subtle gray background color of the boxes */
   border-radius: 8px;        /* Softly rounded corners */
   border: none;              /* Ensure no border-bottom is used anymore */
-    
+
   /* 3. INTERNAL SPACING */
   padding: 1rem 1.25rem;    /* Padding inside the box (Top/Bottom, Left/Right) */
   transition: background-color 0.15s ease; /* Smooth interaction */
@@ -248,7 +249,34 @@ li.accordion {
 
 /* Add a subtle interactive hover state if you like, but optional */
 li.accordion:hover {
-  background-color: #f0f0f1; 
+  background-color: #f0f0f1;
+}
+
+/* Sidebar inline edit button */
+.sidebar-edit-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  opacity: 0;
+  transition: opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+  padding: 0;
+}
+li.accordion:hover .sidebar-edit-btn {
+  opacity: 1;
+}
+.sidebar-edit-btn:hover {
+  background-color: #e5e7eb;
+  color: #1a357b;
 }
 
 /* The Surname/Given Name */
