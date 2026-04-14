@@ -621,7 +621,13 @@ function updateRiskIcons() {
   
   clearMarkers();
 
-  partnersArray.forEach((partner) => {
+  partnersArray.forEach((partner, docId) => {
+    // Respect active filter: skip partners excluded by the last applied filter
+    if (activeFilteredIds !== null && !activeFilteredIds.has(docId)) {
+      partner.marker = null;
+      return;
+    }
+
     const coord = partner.location_coordinates;
     if (!coord) return;   // Skip household entry if no coordinates were listed
 
@@ -696,6 +702,7 @@ function updateRiskIcons() {
 }
 
 let appliedShelterTypes = []; // empty = show all types
+let activeFilteredIds = null; // null = no filter active; Set<docId> = only show these
 
 function addEvacCenters() {
   evacCenters.forEach(center => {
@@ -813,6 +820,19 @@ function initializeFilterModal() {
     const filteredData = await presentFilteredData();
     clearMarkers();
     const filteredWithMarkers = attachMarkers(filteredData);
+
+    // Track which doc IDs passed the filter so updateRiskIcons and
+    // filterMarkersBySearch both respect the active filter.
+    activeFilteredIds = new Set(filteredWithMarkers.keys());
+
+    // Sync new marker references back into partnersArray so filterMarkersBySearch
+    // operates on correct markers and can't reveal filter-excluded partners.
+    partnersArray.forEach((partner) => { partner.marker = null; });
+    filteredWithMarkers.forEach((filteredPartner, docId) => {
+      const original = partnersArray.get(docId);
+      if (original) original.marker = filteredPartner.marker;
+    });
+
     addEvacCenters();
     populateNavBar(filteredWithMarkers);
     if (window.reapplySort) window.reapplySort();
