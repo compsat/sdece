@@ -699,6 +699,11 @@ function updateRiskIcons() {
   });
 
   addEvacCenters();
+
+  // Re-apply active search so only searched households are visible on the map
+  if (window.activeSearchQuery && window.filterMarkersBySearch) {
+    window.filterMarkersBySearch(window.activeSearchQuery);
+  }
 }
 
 let appliedShelterTypes = []; // empty = show all types
@@ -836,6 +841,7 @@ function initializeFilterModal() {
     addEvacCenters();
     populateNavBar(filteredWithMarkers);
     if (window.reapplySort) window.reapplySort();
+    if (window.reapplySearch) window.reapplySearch();
     updateFilterButtonState();
     closeFilterModal(false); // already saved — don't discard
   });

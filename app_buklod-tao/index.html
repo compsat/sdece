@@ -217,6 +217,7 @@
 
     function searchEntries(query) {
       const input = query.trim();
+      window.activeSearchQuery = input; // track for risk type / filter changes
       const entries = document.querySelectorAll('#locationList .container-entry');
       let visibleCount = 0;
 
@@ -335,6 +336,11 @@
 
     // Call the sort button function
     const sortController = sortButton();
+
+    // Re-apply current search to a freshly-populated sidebar list
+    window.reapplySearch = function() {
+      if (window.activeSearchQuery) searchEntries(window.activeSearchQuery);
+    };
 
     // Function to hide the div containing the iframe with animation
     // Also reloads the iframe so form data is cleared on close
