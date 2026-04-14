@@ -694,8 +694,12 @@ function updateRiskIcons() {
   addEvacCenters();
 }
 
+let appliedShelterTypes = []; // empty = show all types
+
 function addEvacCenters() {
   evacCenters.forEach(center => {
+    if (appliedShelterTypes.length > 0 && !appliedShelterTypes.includes(center.type)) return;
+
     const marker_icon = L.icon({
       iconUrl: "/app_buklod-tao/hardcode/evac_center_v2.svg",
       iconSize: [39,39],
@@ -803,6 +807,7 @@ function initializeFilterModal() {
   // Apply: save current UI as the new applied state, then update map/list
   applyFilters.addEventListener('click', async () => {
     appliedFilterState = captureFilterState();
+    appliedShelterTypes = getCheckedValuesByFilter('shelter_type');
     syncRiskSort(riskTypeFilterEl.value);
     const filteredData = await presentFilteredData();
     clearMarkers();
