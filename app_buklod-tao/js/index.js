@@ -691,28 +691,28 @@ function updateRiskIcons() {
     clearAllHighlights();
   });
 
-  // Code logic for displaying evac centers
+  addEvacCenters();
+}
+
+function addEvacCenters() {
   evacCenters.forEach(center => {
-    
     const marker_icon = L.icon({
       iconUrl: "/app_buklod-tao/hardcode/evac_center_v2.svg",
       iconSize: [39,39],
       popupAnchor: [0.5, -15]
-    })
-    
-    const marker = L.marker([center.latitude, center.longitude], {icon: marker_icon})
+    });
 
+    const marker = L.marker([center.latitude, center.longitude], { icon: marker_icon });
     marker.bindPopup(`
-      <div class = "evac-marker-header">${center.type}</div>
-      <div style = "text-align:center;">
-      <b>${center.name}</b>
-      <br>Location: ${center.latitude}, ${center.longitude}
+      <div class="evac-marker-header">${center.type}</div>
+      <div style="text-align:center;">
+        <b>${center.name}</b>
+        <br>Location: ${center.latitude}, ${center.longitude}
       </div>`, {
         className: 'evacuation-center-popup'
       });
-      map.addLayer(marker);
-      
-    });
+    map.addLayer(marker);
+  });
 }
 
 // Code logic for automatically changing pin color depending on selected option on dropbox
@@ -807,6 +807,7 @@ function initializeFilterModal() {
     const filteredData = await presentFilteredData();
     clearMarkers();
     const filteredWithMarkers = attachMarkers(filteredData);
+    addEvacCenters();
     populateNavBar(filteredWithMarkers);
     if (window.reapplySort) window.reapplySort();
     updateFilterButtonState();
