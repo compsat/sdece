@@ -33,10 +33,13 @@ const LEGACY_FIELD_MAP = {
   awareness_readiness: 'knowledge_readiness',
 };
 
-// Returns { normalized, legacyKeys } where legacyKeys is a list of old field names found
+// Returns { normalized, legacyKeys, fieldUpdates }
+// legacyKeys  — old field names to delete from Firestore
+// fieldUpdates — field values that were normalized and need writing back
 function normalizeLegacyDoc(data) {
   const normalized = Object.assign({}, data);
   const legacyKeys = [];
+  const fieldUpdates = {};
 
   // Rename legacy fields
   for (const [oldKey, newKey] of Object.entries(LEGACY_FIELD_MAP)) {
@@ -67,11 +70,31 @@ function normalizeLegacyDoc(data) {
     delete normalized.house_coordinates;
   }
 
+  // Normalize household_material long-form values → canonical short form
+  if (normalized.household_material) {
+    const mat = normalized.household_material.trim().toLowerCase();
+    let canonical = null;
+    if (mat.startsWith('natural'))                            canonical = 'Natural';
+    else if (mat.startsWith('semi'))                          canonical = 'Semi-Concrete';
+    else if (mat.startsWith('concrete'))                      canonical = 'Concrete';
+    else if (mat.startsWith('light'))                         canonical = 'Light materials';
+    else if (mat.startsWith('makeshift'))                     canonical = 'Makeshift';
+    if (canonical && canonical !== normalized.household_material) {
+      normalized.household_material = canonical;
+      fieldUpdates.household_material = canonical;
+    }
+  }
+
   // Normalize residency_status casing
   if (normalized.residency_status) {
     const rs = normalized.residency_status.trim().toLowerCase();
-    if (rs === 'may-ari' || rs === 'may ari') normalized.residency_status = 'May-Ari';
-    else if (rs === 'umuupa') normalized.residency_status = 'Umuupa';
+    let canonical = null;
+    if (rs === 'may-ari' || rs === 'may ari') canonical = 'May-Ari';
+    else if (rs === 'umuupa')                 canonical = 'Umuupa';
+    if (canonical && canonical !== normalized.residency_status) {
+      normalized.residency_status = canonical;
+      fieldUpdates.residency_status = canonical;
+    }
   }
 
   // Derive household_address from house_number + street if missing
@@ -80,10 +103,11 @@ function normalizeLegacyDoc(data) {
     const street   = (normalized.street || '').toString().trim();
     if (houseNum || street) {
       normalized.household_address = [houseNum, street].filter(Boolean).join(', ');
+      fieldUpdates.household_address = normalized.household_address;
     }
   }
 
-  return { normalized, legacyKeys };
+  return { normalized, legacyKeys, fieldUpdates };
 }
 
 // get docs from firestore
@@ -99,21 +123,26 @@ const loadData = async() => {
 		const writebacks = [];
 
 		querySnapshot.forEach((snapshot) => {
-      const { normalized, legacyKeys } = normalizeLegacyDoc(snapshot.data());
+      const { normalized, legacyKeys, fieldUpdates } = normalizeLegacyDoc(snapshot.data());
       const docID = snapshot.id;
 			partnersArray.set(docID, normalized);
 
-      // If legacy fields were found, queue a write-back to fix Firestore in place
-      if (legacyKeys.length > 0) {
+      const hasLegacyKeys = legacyKeys.length > 0;
+      const hasFieldUpdates = Object.keys(fieldUpdates).length > 0;
+
+      if (hasLegacyKeys || hasFieldUpdates) {
         const update = {};
-        // Write the normalized values
-        for (const key of Object.keys(normalized)) {
-          update[key] = normalized[key];
+        if (hasLegacyKeys) {
+          // Full field-rename: write all normalized values and delete old keys
+          for (const key of Object.keys(normalized)) {
+            update[key] = normalized[key];
+          }
+          for (const oldKey of legacyKeys) {
+            update[oldKey] = deleteField();
+          }
         }
-        // Delete the old keys
-        for (const oldKey of legacyKeys) {
-          update[oldKey] = deleteField();
-        }
+        // Write back any value-only normalizations (material, residency, address)
+        Object.assign(update, fieldUpdates);
         writebacks.push({ docID, update });
       }
 		});
