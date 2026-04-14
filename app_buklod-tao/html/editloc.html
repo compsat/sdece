@@ -53,11 +53,25 @@
                         <input type="text" id="household_name" name="household_name" class="form-input" placeholder="Enter household name (Ex. Juan Cruz)" required/>
                         <div class="field-error" id="household_name_error"></div>
                     </div>
-                        
+
                     <div class="form-group">
                         <label class="form-label" for="household_phase">Phase</label>
                         <input type="text" id="household_phase" name="household_phase" class="form-input" placeholder="Enter phase number (Ex. Phase 1)" />
                         <div class="field-error" id="household_phase_error"></div>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="house_number">House Number</label>
+                        <input type="text" id="house_number" name="house_number" class="form-input" placeholder="Enter house number (Ex. 12B)" />
+                        <div class="field-error" id="house_number_error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="street">Street</label>
+                        <input type="text" id="street" name="street" class="form-input" placeholder="Enter street name (Ex. Sampaguita St.)" />
+                        <div class="field-error" id="street_error"></div>
                     </div>
                 </div>
 
@@ -199,6 +213,20 @@
                         <div class="field-error" id="sickness_present_error"></div>
                     </div>
                 </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="number_families">Number of Families</label>
+                        <input type="number" id="number_families" name="number_families" class="form-input" placeholder="0" min="0" />
+                        <div class="field-error" id="number_families_error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="number_healthy">Healthy Residents</label>
+                        <input type="number" id="number_healthy" name="number_healthy" class="form-input" placeholder="0" min="0" />
+                        <div class="field-error" id="number_healthy_error"></div>
+                    </div>
+                </div>
             </div>
 
             <!-- Risk Assessment Section -->
@@ -291,6 +319,69 @@
                 </div>
 
 
+                <!-- Disaster Preparedness Section -->
+                <div class="section">
+                    <div class="section-header">
+                        <svg class="section-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                        <h2 class="section-title">Disaster Preparedness</h2>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="exit_points">Exit Points</label>
+                            <input type="number" id="exit_points" name="exit_points" class="form-input" placeholder="0" min="0" step="1" />
+                            <div class="field-error" id="exit_points_error"></div>
+                        </div>
+                        <div></div>
+                    </div>
+
+                    <div class="form-grid single">
+                        <div class="form-group">
+                            <label class="form-label" for="disaster_response_plan">Disaster Response Plan</label>
+                            <textarea id="disaster_response_plan" name="disaster_response_plan" class="form-textarea" placeholder="Describe the household's disaster response plan"></textarea>
+                            <div class="field-error" id="disaster_response_plan_error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="knowledge_readiness">Disaster Knowledge Rating (1–5)</label>
+                            <input type="number" id="knowledge_readiness" name="knowledge_readiness" class="form-input" placeholder="1" min="1" max="5" step="1" />
+                            <div class="field-error" id="knowledge_readiness_error"></div>
+                        </div>
+                        <div></div>
+                    </div>
+
+                    <div class="form-grid single">
+                        <div class="form-group">
+                            <label class="form-label" for="before_disaster_actions">Actions Before Disaster</label>
+                            <textarea id="before_disaster_actions" name="before_disaster_actions" class="form-textarea" placeholder="Describe actions taken before a disaster"></textarea>
+                            <div class="field-error" id="before_disaster_actions_error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid single">
+                        <div class="form-group">
+                            <label class="form-label" for="during_disaster_actions">Actions During Disaster</label>
+                            <textarea id="during_disaster_actions" name="during_disaster_actions" class="form-textarea" placeholder="Describe actions taken during a disaster"></textarea>
+                            <div class="field-error" id="during_disaster_actions_error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid single">
+                        <div class="form-group">
+                            <label class="form-label" for="after_disaster_actions">Actions After Disaster</label>
+                            <textarea id="after_disaster_actions" name="after_disaster_actions" class="form-textarea" placeholder="Describe actions taken after a disaster"></textarea>
+                            <div class="field-error" id="after_disaster_actions_error"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hidden fields -->
+                <input type="hidden" id="timestamp" name="timestamp" />
+                <input type="hidden" id="source_dataset" name="source_dataset" />
             </div>
         </div>
 
