@@ -913,5 +913,5 @@ export async function presentFilteredData() {
 
 
 
-// Initialize filter modal when DOM is ready
-document.addEventListener('DOMContentLoaded', initializeFilterModal);
+// Module scripts run after DOM is parsed, so call directly
+initializeFilterModal();
