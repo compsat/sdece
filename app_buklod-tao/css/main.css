@@ -114,24 +114,6 @@ body {
 	background-color: #f9fafb;
 }
 
-#addModal {
-  display: none;
-}
-
-#addHouseholdBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-  width: 100%;
-  padding: 10px 16px;
-  white-space: nowrap;
-}
-
-#addHouseholdBtn svg {
-  flex-shrink: 0;
-}
-
 /* Risk Type Dropdown */
 .risk-dropdown-container {
   width: 100%;
