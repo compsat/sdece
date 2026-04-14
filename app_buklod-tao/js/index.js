@@ -162,10 +162,15 @@ if (window.reapplySort) window.reapplySort(); // reapply current sorting if any
 
 // CODE LOGIC FOR OPENING MAIN MODAL
 // ------------------------------------------
+let cachedModalHtml = null;
+
 // Function to access the main_modal.html and populate it with data
 async function onPinClick(doc) {
-  const modal = await fetch('/app_buklod-tao/html/main_modal.html');
-  const html = await modal.text();
+  if (!cachedModalHtml) {
+    const modal = await fetch('/app_buklod-tao/html/main_modal.html');
+    cachedModalHtml = await modal.text();
+  }
+  const html = cachedModalHtml;
 
   const wrapper = document.createElement('div');
   wrapper.innerHTML = html;
@@ -377,7 +382,6 @@ window.addEventListener('message', function(event) {
   }
 });
 
-addListeners();
 // ------------------------------------------
 
 
@@ -641,7 +645,7 @@ function updateRiskIcons() {
     });
 
     partner.marker = marker; // store reference here
-    map.addLayer(marker);
+    map.addLayer(marker); // add marker once
 
     marker.on('popupopen', () => {
       // Use setTimeout to defer this to after the popup DOM is actually rendered
@@ -680,10 +684,7 @@ function updateRiskIcons() {
         listItem.classList.add('highlight');
         }
       }, 0);
-      
     });
-
-    map.addLayer(marker);
   });
 
   // Add popup close handler
@@ -914,6 +915,3 @@ export async function presentFilteredData() {
 
 // Initialize filter modal when DOM is ready
 document.addEventListener('DOMContentLoaded', initializeFilterModal);
-
-// Also initialize after a short delay to ensure all elements are loaded
-setTimeout(initializeFilterModal, 1000);
