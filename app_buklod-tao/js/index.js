@@ -358,7 +358,7 @@ if(closeForm) {
 // Closing the modal if the user clicks outside of it
 window.onclick = function (event) {
   if (event.target == formModal) {
-    formModal.style.display = 'none';
+    hideModalContainer('addModal');
   }
   if (event.target == partnerModal) {
     partnerModal.style.display = 'none';

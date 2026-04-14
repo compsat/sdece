@@ -396,6 +396,7 @@
 
             <!-- Modal Footer -->
             <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="clear_form">Clear All</button>
                 <button type="submit" class="btn btn-primary" id="submit_form">Save Household</button>
             </div>
         </div>
@@ -413,11 +414,34 @@
                 closeModal();
             });
 
-            // Auto-fill coordinates from OpenStreetMap link
+            // Clear all form fields and error states
+            function clearForm() {
+                document.querySelectorAll('.form-input, .form-textarea').forEach(input => {
+                    input.value = '';
+                    input.classList.remove('error');
+                });
+                document.querySelectorAll('.form-select').forEach(select => {
+                    select.selectedIndex = 0;
+                    select.classList.remove('error');
+                });
+                document.querySelectorAll('.field-error').forEach(err => {
+                    err.textContent = '';
+                    err.classList.remove('show');
+                });
+                document.querySelectorAll('.form-label').forEach(label => {
+                    label.classList.remove('error');
+                });
+            }
+
+            document.getElementById('clear_form').addEventListener('click', clearForm);
+
+            // Auto-fill coordinates from OpenStreetMap link, clear if link is removed
             document.getElementById('location_link').addEventListener('input', function() {
                 const match = this.value.match(/#map=\d+\/([\d.-]+)\/([\d.-]+)/);
                 if (match) {
                     document.getElementById('location_coordinates').value = match[1] + ',' + match[2];
+                } else {
+                    document.getElementById('location_coordinates').value = '';
                 }
             });
 

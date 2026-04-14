@@ -319,13 +319,16 @@
     const sortController = sortButton();
 
     // Function to hide the div containing the iframe with animation
+    // Also reloads the iframe so form data is cleared on close
     function hideModalContainer(modal) {
-      var iframe = document.getElementById(modal);
-      if (iframe) {
-        iframe.classList.add('closing');
+      var modalEl = document.getElementById(modal);
+      if (modalEl) {
+        modalEl.classList.add('closing');
         setTimeout(() => {
-          iframe.style.display = 'none';
-          iframe.classList.remove('closing');
+          modalEl.style.display = 'none';
+          modalEl.classList.remove('closing');
+          const iframe = modalEl.querySelector('iframe');
+          if (iframe) iframe.src = iframe.src;
         }, 300); // Match the animation duration
       }
     }
