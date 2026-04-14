@@ -34,5 +34,11 @@
         "latitude": 14.680388604968686,
         "longitude": 121.11038906016722,
         "type": "Temporary Shelter"
+    },
+    {
+        "name": "Banaba Elementary School",
+        "latitude": 14.672590705396779,
+        "longitude": 121.1127555370331,
+        "type":"Temporary Shelter"
     }
 ]
