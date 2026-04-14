@@ -715,8 +715,33 @@ function updateRiskIcons() {
     });
 }
 
-// Code logic for automatically changing pin color depending on selected option on dropbox 
-document.getElementById('risk-sort').addEventListener('change', updateRiskIcons);
+// Code logic for automatically changing pin color depending on selected option on dropbox
+// and keeping the filter modal's Risk Type in sync
+const riskSortEl = document.getElementById('risk-sort');
+const riskTypeFilterEl = document.getElementById('riskTypeFilter');
+
+function syncRiskTypeFilter(sidebarValue) {
+  if (riskTypeFilterEl) {
+    riskTypeFilterEl.value = sidebarValue.replace('-sort', '_risk');
+  }
+}
+
+function syncRiskSort(filterValue) {
+  riskSortEl.value = filterValue.replace('_risk', '-sort');
+}
+
+riskSortEl.addEventListener('change', () => {
+  syncRiskTypeFilter(riskSortEl.value);
+  updateRiskIcons();
+});
+
+riskTypeFilterEl.addEventListener('change', () => {
+  syncRiskSort(riskTypeFilterEl.value);
+  updateRiskIcons();
+});
+
+// Initialize filter modal in sync with sidebar on load
+syncRiskTypeFilter(riskSortEl.value);
 updateRiskIcons();
 // ------------------------------------------
 
