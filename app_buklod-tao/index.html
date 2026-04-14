@@ -221,11 +221,32 @@
 
     let originalItems = [];
 
+    let sortState = 'none'; // Start with no sort applied
+    let isActive = false;
+
+    function reapplySort() {
+      if (sortState === 'none') return;
+      const locationList = document.getElementById('locationList');
+      const items = Array.from(locationList.querySelectorAll('.container-entry'));
+      items.sort((a, b) => {
+        const nameA = a.querySelector('.name').textContent.trim().toUpperCase();
+        const nameB = b.querySelector('.name').textContent.trim().toUpperCase();
+        return sortState === 'asc'
+          ? nameA.localeCompare(nameB)
+          : nameB.localeCompare(nameA);
+      });
+
+      console.log(`Sorted ${sortState === 'asc' ? 'ascending' : 'descending'}`);
+
+      // Clear and re-append sorted items
+      locationList.innerHTML = '';
+      items.forEach(item => locationList.appendChild(item));
+    }
+
+    
     function sortButton() {
       const sortBtn = document.getElementById('sortBtn');
       const locationList = document.getElementById('locationList');
-      let sortState = 'none'; // Start with no sort applied
-      let isActive = false;
 
       // Function to update the sort button appearance
       function updateSortButton() {
@@ -265,26 +286,9 @@
           isActive = false;
         }
 
-        // Only sort if not in 'none' state
-        if (sortState !== 'none') {
-          items.sort((a, b) => {
-            const nameA = a.querySelector('.name').textContent.trim().toUpperCase();
-            const nameB = b.querySelector('.name').textContent.trim().toUpperCase();
-
-            return sortState === 'asc'
-              ? nameA.localeCompare(nameB)
-              : nameB.localeCompare(nameA);
-          });
-
-          console.log(`Sorted ${sortState === 'asc' ? 'ascending' : 'descending'}`);
-
-          // Clear and re-append sorted items
-          locationList.innerHTML = '';
-          items.forEach(item => locationList.appendChild(item));
-        } 
-
         // Update button appearance
         updateSortButton();
+        reapplySort();  
       });
 
       // Initialize button appearance
