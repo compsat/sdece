@@ -3,6 +3,9 @@
 import {
   getDocs,
   GeoPoint,
+  doc,
+  updateDoc,
+  deleteField,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import {
   getCollection,
@@ -21,6 +24,61 @@ setCollection(collection_value);
 const colRef = getCollection();
 let partnersArray = new Map();
 
+// Normalize legacy field names from CSV-imported documents
+const LEGACY_FIELD_MAP = {
+  ownership_status:    'residency_status',
+  bilang_walang_sakit: 'number_healthy',
+  materyales_bahay:    'household_material',
+  evacuation_area:     'nearest_evac',
+  awareness_readiness: 'knowledge_readiness',
+};
+
+// Returns { normalized, legacyKeys } where legacyKeys is a list of old field names found
+function normalizeLegacyDoc(data) {
+  const normalized = Object.assign({}, data);
+  const legacyKeys = [];
+
+  // Rename legacy fields
+  for (const [oldKey, newKey] of Object.entries(LEGACY_FIELD_MAP)) {
+    if (oldKey in normalized) {
+      legacyKeys.push(oldKey);
+      if (!(newKey in normalized)) {
+        normalized[newKey] = normalized[oldKey];
+      }
+      delete normalized[oldKey];
+    }
+  }
+
+  // Parse house_coordinates → location_coordinates GeoPoint + location_link
+  if ('house_coordinates' in normalized) {
+    legacyKeys.push('house_coordinates');
+    if (!normalized.location_coordinates) {
+      const raw = (normalized.house_coordinates || '').toString().trim();
+      const parts = raw.split(',').map(s => s.trim());
+      if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+        const lat = parseFloat(parseFloat(parts[0]).toFixed(5));
+        const lng = parseFloat(parseFloat(parts[1]).toFixed(5));
+        normalized.location_coordinates = new GeoPoint(lat, lng);
+        if (!normalized.location_link) {
+          normalized.location_link = `https://www.openstreetmap.org/#map=19/${lat}/${lng}`;
+        }
+      }
+    }
+    delete normalized.house_coordinates;
+  }
+
+  // Derive household_address from house_number + street if missing
+  if (!normalized.household_address) {
+    const houseNum = (normalized.house_number || '').toString().trim();
+    const street   = (normalized.street || '').toString().trim();
+    if (houseNum || street) {
+      normalized.household_address = [houseNum, street].filter(Boolean).join(', ');
+    }
+  }
+
+  return { normalized, legacyKeys };
+}
+
 // get docs from firestore
 
 export function getPartnersArray() {
@@ -30,13 +88,36 @@ export function getPartnersArray() {
 const loadData = async() => {
 	const getRefs = async() => {
 		await getDocs(colRef)
-	.then((querySnapshot) => {
-		querySnapshot.forEach((doc) => {
-      let docData = doc.data();
-      let docID = doc.id;
-			partnersArray.set(docID,docData);
-    
+	.then(async (querySnapshot) => {
+		const writebacks = [];
+
+		querySnapshot.forEach((snapshot) => {
+      const { normalized, legacyKeys } = normalizeLegacyDoc(snapshot.data());
+      const docID = snapshot.id;
+			partnersArray.set(docID, normalized);
+
+      // If legacy fields were found, queue a write-back to fix Firestore in place
+      if (legacyKeys.length > 0) {
+        const update = {};
+        // Write the normalized values
+        for (const key of Object.keys(normalized)) {
+          update[key] = normalized[key];
+        }
+        // Delete the old keys
+        for (const oldKey of legacyKeys) {
+          update[oldKey] = deleteField();
+        }
+        writebacks.push({ docID, update });
+      }
 		});
+
+    // Fire write-backs silently in the background
+    for (const { docID, update } of writebacks) {
+      const docRef = doc(colRef, docID);
+      updateDoc(docRef, update).catch((err) => {
+        console.warn(`Failed to normalize doc ${docID}:`, err);
+      });
+    }
 	})
 	.catch((error) => {
 		console.error('Error getting documents: ', error);
