@@ -17,6 +17,18 @@
 
         document.getElementById("submit_form").addEventListener("click", submitEditForm);
     </script>
+
+    <script type="module">
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
+        import { AUTH } from "/js/auth.js";
+
+        const loginURL = "/html/login.html";
+        onAuthStateChanged(AUTH, (user) => {
+            if (!user) {
+                window.top.location.href = loginURL;
+            }
+        });
+    </script>
 </head>
 
 <body>
@@ -383,6 +395,7 @@
             }
         });
     </script>
+    
 </body>
 
 </html>

@@ -335,13 +335,11 @@
 
     onAuthStateChanged(AUTH, (user) => {
       if (user) {
+        document.body.style.visibility = 'visible'; 
         btn.textContent = "Logout";
         btn.onclick = () => signOutUser();
       } else {
-        btn.textContent = "Login";
-        btn.onclick = () => {
-          window.location.href = loginURL;
-        };
+        window.location.replace(loginURL); // redirect if not logged in
       }
     });
   </script>
