@@ -915,3 +915,24 @@ export async function presentFilteredData() {
 
 // Module scripts run after DOM is parsed, so call directly
 initializeFilterModal();
+
+window.filterMarkersBySearch = function(query) {
+  const input = query.trim();
+  const escaped = input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = escaped ? new RegExp('\\b' + escaped + '\\b', 'i') : null;
+
+  partnersArray.forEach((partner) => {
+    if (!partner.marker) return;
+    if (!regex) {
+      map.addLayer(partner.marker);
+    } else {
+      const nameMatch = regex.test(partner.household_name || '');
+      const addressMatch = regex.test(partner.household_address || '');
+      if (nameMatch || addressMatch) {
+        map.addLayer(partner.marker);
+      } else {
+        map.removeLayer(partner.marker);
+      }
+    }
+  });
+};

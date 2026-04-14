@@ -216,18 +216,36 @@
     });
 
     function searchEntries(query) {
-      const input = query.toUpperCase();
+      const input = query.trim();
       const entries = document.querySelectorAll('#locationList .container-entry');
+      let visibleCount = 0;
+
+      // Escape regex special chars, then require word boundary on both ends
+      const escaped = input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = escaped ? new RegExp('\\b' + escaped + '\\b', 'i') : null;
 
       entries.forEach(entry => {
-        const nameDiv = entry.querySelector('.name');
-        const txtValue = nameDiv ? nameDiv.textContent : '';
-        if (txtValue.toUpperCase().indexOf(input) > -1) {
-          entry.style.display = "";
+        const nameText = entry.querySelector('.name')?.textContent ?? '';
+        const addressText = entry.querySelector('.address')?.textContent ?? '';
+        const matches = !regex || regex.test(nameText) || regex.test(addressText);
+        if (matches) {
+          entry.style.display = '';
+          visibleCount++;
         } else {
-          entry.style.display = "none";
+          entry.style.display = 'none';
         }
       });
+
+      // Update household counter
+      const partnersCount = document.getElementById('partners-count');
+      if (partnersCount) {
+        partnersCount.textContent = `HOUSEHOLDS (${visibleCount})`;
+      }
+
+      // Update map markers
+      if (window.filterMarkersBySearch) {
+        window.filterMarkersBySearch(query);
+      }
     }
 
     let originalItems = [];
