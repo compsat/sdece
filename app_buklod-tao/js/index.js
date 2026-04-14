@@ -746,7 +746,6 @@ updateRiskIcons();
 // ------------------------------------------
 // Initialize filter modal functionality when DOM is loaded
 function initializeFilterModal() {
-  // Filter Modal Controls
   const filterBtn = document.getElementById('filterBtn');
   const filterModal = document.getElementById('filterModal');
   const filterClose = document.getElementById('filterClose');
@@ -758,57 +757,68 @@ function initializeFilterModal() {
     return;
   }
 
-  // Open filter modal
+  // Capture the current modal UI into a state object
+  function captureFilterState() {
+    const checkboxes = {};
+    document.querySelectorAll('#filterModal input[type="checkbox"]').forEach(cb => {
+      checkboxes[`${cb.getAttribute('data-filter')}::${cb.value}`] = cb.checked;
+    });
+    return { checkboxes, riskType: riskTypeFilterEl.value };
+  }
+
+  // Restore the modal UI to a previously captured state
+  function restoreFilterState(state) {
+    document.querySelectorAll('#filterModal input[type="checkbox"]').forEach(cb => {
+      const key = `${cb.getAttribute('data-filter')}::${cb.value}`;
+      cb.checked = state.checkboxes[key] || false;
+    });
+    riskTypeFilterEl.value = state.riskType;
+  }
+
+  // Tracks what was last applied — modal always shows this on open
+  let appliedFilterState = captureFilterState();
+
+  // Open: restore to last applied state so unapplied changes don't persist
   filterBtn.addEventListener('click', () => {
+    restoreFilterState(appliedFilterState);
     filterModal.style.display = 'flex';
     filterModal.classList.remove('closing');
   });
 
-  // Close filter modal with animation
-  function closeFilterModal() {
+  // Close with animation; optionally discard unapplied changes
+  function closeFilterModal(discardChanges = true) {
+    if (discardChanges) restoreFilterState(appliedFilterState);
     filterModal.classList.add('closing');
     setTimeout(() => {
       filterModal.style.display = 'none';
       filterModal.classList.remove('closing');
-    }, 300); // Match the animation duration
+    }, 300);
   }
 
-  filterClose.addEventListener('click', closeFilterModal);
+  filterClose.addEventListener('click', () => closeFilterModal(true));
   filterModal.addEventListener('click', (e) => {
-    if (e.target === filterModal) {
-      closeFilterModal();
-    }
+    if (e.target === filterModal) closeFilterModal(true);
   });
 
-  // Apply filters
+  // Apply: save current UI as the new applied state, then update map/list
   applyFilters.addEventListener('click', async () => {
-    syncRiskSort(riskTypeFilterEl.value); // sync sidebar color filter with selected risk type
+    appliedFilterState = captureFilterState();
+    syncRiskSort(riskTypeFilterEl.value);
     const filteredData = await presentFilteredData();
-
-    clearMarkers(); // remove old markers from map
-
+    clearMarkers();
     const filteredWithMarkers = attachMarkers(filteredData);
-
     populateNavBar(filteredWithMarkers);
-    if (window.reapplySort) window.reapplySort(); // reapply current sorting if any
+    if (window.reapplySort) window.reapplySort();
     updateFilterButtonState();
-    closeFilterModal();
+    closeFilterModal(false); // already saved — don't discard
   });
 
-  // Clear all filters
+  // Clear All: resets UI only, not saved until Apply is clicked
   clearFilters.addEventListener('click', () => {
-    // Reset all checkboxes
-    document.querySelectorAll('#filterModal input[type="checkbox"]').forEach(checkbox => {
-      checkbox.checked = false;
+    document.querySelectorAll('#filterModal input[type="checkbox"]').forEach(cb => {
+      cb.checked = false;
     });
-    
-    // Reset risk type dropdown
-    const riskTypeFilter = document.getElementById('riskTypeFilter');
-    if (riskTypeFilter) {
-      riskTypeFilter.value = '';
-    }
-    
-    // Reset visual state
+    riskTypeFilterEl.value = riskTypeFilterEl.options[0]?.value || '';
     updateFilterButtonState();
   });
 }
