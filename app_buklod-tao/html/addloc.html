@@ -413,6 +413,14 @@
                 closeModal();
             });
 
+            // Auto-fill coordinates from OpenStreetMap link
+            document.getElementById('location_link').addEventListener('input', function() {
+                const match = this.value.match(/#map=\d+\/([\d.-]+)\/([\d.-]+)/);
+                if (match) {
+                    document.getElementById('location_coordinates').value = match[1] + ',' + match[2];
+                }
+            });
+
             // Hide error messages when user starts typing
             const inputs = document.querySelectorAll('.form-input, .form-select, .form-textarea');
             inputs.forEach(input => {
