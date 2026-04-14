@@ -468,6 +468,45 @@
             closeModal();
         });
 
+        // Auto-fill risk descriptions when a risk level is selected
+        const riskDescriptions = {
+            flood_risk: {
+                'HIGH RISK': 'Critical Level (3rd Alarm), 20.00-M Force Evacuation, Near water ways',
+                'MEDIUM RISK': 'Alert Level (2nd Alarm): 19.00-M, 50.00-M away from water ways',
+                'LOW RISK': 'Alarm Level (1st Alarm), 50.00-M away from water ways',
+            },
+            storm_risk: {
+                'HIGH RISK': 'House built in light materials/ Near the sea shore, river, lake/ Built in mountainous area/ House not approved by engineers',
+                'MEDIUM RISK': 'Semi-concrete house/ House build is strong but not checked by engineers',
+                'LOW RISK': 'Concrete House/Checked by engineers/ Far away from sea shore, river, or any slope land area',
+            },
+            fire_risk: {
+                'HIGH RISK': 'Informal Settlement/ No access road/ No fire hydrant/ Light materials house',
+                'MEDIUM RISK': 'Semi-concrete house/ House plan not checked by engineers',
+                'LOW RISK': 'Concrete House/ Approved by engineers/ Have access road and fire hydrant/ House plan approve by engineers',
+            },
+            landslide_risk: {
+                'HIGH RISK': 'Stability of a certain slope is House built is weak due to continuous heavy rain/near from any slope land',
+                'MEDIUM RISK': 'House built is strong but built near slope area and near water ways/ house is not checked by an engineer',
+                'LOW RISK': 'House built check and approved by engineers/ House built far away from the sloped area, river and mountain area',
+            },
+            earthquake_risk: {
+                'HIGH RISK': 'Liquefaction/ Soil Classification type of structures',
+                'MEDIUM RISK': 'strong built houses but never been approved by engineers/ clay type soil',
+                'LOW RISK': 'Adobe structure have been check by engineers/ far away from any water ways',
+            },
+        };
+
+        ['flood_risk', 'storm_risk', 'fire_risk', 'landslide_risk', 'earthquake_risk'].forEach(riskType => {
+            const select = document.getElementById(riskType);
+            if (select) {
+                select.addEventListener('change', function() {
+                    const descField = document.getElementById(riskType + '_description');
+                    if (descField) descField.value = riskDescriptions[riskType][this.value] || '';
+                });
+            }
+        });
+
         // Hide error messages when user starts typing
         const inputs = document.querySelectorAll('.form-input, .form-select, .form-textarea');
         inputs.forEach(input => {
