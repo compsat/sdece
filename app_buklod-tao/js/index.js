@@ -926,6 +926,7 @@ const STANDARD_MATERIALS = ['Concrete', 'Semi-Concrete', 'Light materials', 'Mak
 
 export async function presentFilteredData() {
   const rawInput = collectAllFilterSelections();
+  const selectedShelterTypes = getCheckedValuesByFilter('shelter_type');
 
   const riskType = (rawInput.risk_type && rawInput.risk_type !== 'all' && rawInput.risk_type !== '')
     ? rawInput.risk_type
@@ -982,6 +983,13 @@ export async function presentFilteredData() {
       if (isNonStandard || isSelectedStandard) filtered.set(id, doc);
     });
     finalData = filtered;
+  }
+
+  // Shelter type options map to dedicated shelter markers, not household docs.
+  // When a shelter type is selected, hide all households and let addEvacCenters()
+  // render only the chosen shelter markers.
+  if (selectedShelterTypes.length > 0) {
+    finalData = new Map();
   }
 
   return finalData;
