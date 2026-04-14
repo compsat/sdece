@@ -254,7 +254,7 @@ export function submitAddForm(){
       let fieldName = BUKLOD_RULES[2][i];
       let inputValue = document.getElementById(fieldName).value;
 
-      if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick' || fieldName == 'number_seniors') {
+      if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick' || fieldName == 'number_seniors' || fieldName == 'number_families' || fieldName == 'number_healthy' || fieldName == 'exit_points' || fieldName == 'knowledge_readiness') {
           collatedInput[fieldName] = Number(inputValue);
       } else if (fieldName == 'location_coordinates') {
           const geoPoint = getCoordinates(inputValue);
