@@ -735,10 +735,7 @@ riskSortEl.addEventListener('change', () => {
   updateRiskIcons();
 });
 
-riskTypeFilterEl.addEventListener('change', () => {
-  syncRiskSort(riskTypeFilterEl.value);
-  updateRiskIcons();
-});
+// riskTypeFilter changes only take effect when Apply Filters is clicked
 
 // Initialize filter modal in sync with sidebar on load
 syncRiskTypeFilter(riskSortEl.value);
@@ -785,6 +782,7 @@ function initializeFilterModal() {
 
   // Apply filters
   applyFilters.addEventListener('click', async () => {
+    syncRiskSort(riskTypeFilterEl.value); // sync sidebar color filter with selected risk type
     const filteredData = await presentFilteredData();
 
     clearMarkers(); // remove old markers from map
