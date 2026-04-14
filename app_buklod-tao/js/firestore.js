@@ -1,52 +1,25 @@
 // FIRESTORE DATABASE
 
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 import {
-  getFirestore,
   getDocs,
-  doc,
-  getDoc,
   GeoPoint,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-import { 
-  getCollection, 
-  setCollection, 
-  BUKLOD_RULES, 
-  validateData, 
+import {
+  getCollection,
+  setCollection,
+  BUKLOD_RULES,
+  validateData,
   editEntry,
   addEntry,
   getCoordinates,
   getDocIdByPartnerName,
 } from '/js/firestore_UNIV.js';
-// Your Firestore code here
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const FIREBASE_CONFIG = {
-  apiKey: 'AIzaSyA8QWgic_hjbDL-EYIkvSRRII_yfTRdtOQ',
-  authDomain: 'discs-osci-prj.firebaseapp.com',
-  projectId: 'discs-osci-prj',
-  storageBucket: 'discs-osci-prj.appspot.com',
-  messagingSenderId: '601571823960',
-  appId: '1:601571823960:web:1f1278ecb86aa654e6152d',
-  measurementId: 'G-9N9ELDEMX9',
-};
 
 var collection_value = 'buklod-official'
 
-initializeApp(FIREBASE_CONFIG);
-const db = getFirestore();
 setCollection(collection_value);
 const colRef = getCollection();
 let partnersArray = new Map();
-
-export function getDocByID(docId) {
-  const docReference = doc(db, 'nstp-3', docId);
-  let docObj = {};
-  return getDoc(docReference).then((doc) => {
-    docObj = doc.data();
-    return docObj;
-  });
-}
 
 // get docs from firestore
 
