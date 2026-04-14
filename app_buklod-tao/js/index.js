@@ -922,6 +922,8 @@ function updateFilterButtonState() {
   }
 }
 
+const STANDARD_MATERIALS = ['Concrete', 'Semi-Concrete', 'Light materials', 'Makeshift', 'Natural'];
+
 export async function presentFilteredData() {
   const rawInput = collectAllFilterSelections();
 
@@ -930,10 +932,16 @@ export async function presentFilteredData() {
     : null;
   const riskLevels = rawInput.risk_level; // always an array
 
+  // Separate "Other" catchall from standard material selections
+  const rawMaterials = rawInput.household_material || [];
+  const hasOtherMaterial = rawMaterials.includes('__other__');
+  const standardMaterialsSelected = rawMaterials.filter(m => m !== '__other__');
+
   // Build transformedData without risk_type and risk_level
   const transformedData = {
     residency_status: rawInput.residency_status,
-    household_material: rawInput.household_material,
+    // If "Other" is checked, skip material filter in Firestore — handle client-side below
+    household_material: hasOtherMaterial ? [] : standardMaterialsSelected,
     is_hoa_noa: rawInput.is_hoa_noa,
   };
 
@@ -954,7 +962,7 @@ export async function presentFilteredData() {
   if (needsAnyRiskFilter) {
     const baseData = await filterData("buklod-tao", transformedData);
     const riskFields = ['earthquake_risk', 'fire_risk', 'flood_risk', 'landslide_risk', 'storm_risk'];
-    
+
     finalData = new Map();
     baseData.forEach((doc, id) => {
       const matchesRisk = riskFields.some(field => riskLevels.includes(doc[field]));
@@ -962,6 +970,18 @@ export async function presentFilteredData() {
     });
   } else {
     finalData = await filterData("buklod-tao", transformedData);
+  }
+
+  // Client-side pass: apply "Other" material catchall
+  if (hasOtherMaterial) {
+    const filtered = new Map();
+    finalData.forEach((doc, id) => {
+      const mat = doc.household_material || '';
+      const isNonStandard = !STANDARD_MATERIALS.includes(mat);
+      const isSelectedStandard = standardMaterialsSelected.includes(mat);
+      if (isNonStandard || isSelectedStandard) filtered.set(id, doc);
+    });
+    finalData = filtered;
   }
 
   return finalData;
