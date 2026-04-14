@@ -74,7 +74,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="household_phase">Phase</label>
+                            <label class="form-label" for="household_phase">Phase (if applicable)</label>
                             <input type="text" id="household_phase" name="household_phase" class="form-input" placeholder="Enter phase number (Ex. Phase 1)" />
                             <div class="field-error" id="household_phase_error"></div>
                         </div>
@@ -97,7 +97,7 @@
                     <div class="form-grid single">
                         <div class="form-group">
                             <label class="form-label" for="household_address">Address</label>
-                            <textarea id="household_address" name="household_address" class="form-textarea" placeholder="Enter house address (Ex. 1 Sampaguita St. Banaba)" required></textarea>
+                            <textarea id="household_address" name="household_address" class="form-textarea" placeholder="Enter house address (Ex. 12B Sampaguita St.)" required></textarea>
                             <div class="field-error" id="household_address_error"></div>
                         </div>
                     </div>
@@ -105,7 +105,7 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label class="form-label" for="contact_number">Contact Number</label>
-                            <input type="tel" id="contact_number" name="contact_number" class="form-input" placeholder="Enter contact number (Ex. 09XXXXXXXXX, 09XX-XXX-XXXX, or N/A)" pattern="(09[0-9]{9}|09[0-9]{2}-[0-9]{3}-[0-9]{4}|N/A)" maxlength="13" />
+                            <input type="tel" id="contact_number" name="contact_number" class="form-input" placeholder="Enter contact number (Ex. 09XXXXXXXXX)" pattern="(09[0-9]{9}|09[0-9]{2}-[0-9]{3}-[0-9]{4}|N/A)" maxlength="13" />
                             <div class="field-error" id="contact_number_error"></div>
                         </div>
 
@@ -150,8 +150,19 @@
 
                     <div class="form-grid single">
                         <div class="form-group">
-                            <label class="form-label" for="nearest_evac">Nearest Evacuation Area</label>
-                            <input type="text" id="nearest_evac" name="nearest_evac" class="form-input" placeholder="Enter nearest evac center (Ex. Doña Pepeng Elementary School)" required/>
+                            <label class="form-label">Nearest Evacuation Area</label>
+                            <div id="evac_checkboxes" style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
+                                <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Banaba Elementary School"> Banaba Elementary School</label>
+                                <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Doña Pepeng Elementary School"> Doña Pepeng Elementary School</label>
+                                <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Doña Pepeng Multipurpose Court"> Doña Pepeng Multipurpose Court</label>
+                                <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Buklod Tao, Inc."> Buklod Tao, Inc.</label>
+                                <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Healthcare Center"> Healthcare Center</label>
+                                <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Daycare Center"> Daycare Center</label>
+                                <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Agape Church"> Agape Church</label>
+                                <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" id="evac_other_check" name="evac_choice" value="__other__"> Other</label>
+                            </div>
+                            <input type="text" id="evac_other_input" class="form-input" placeholder="Specify other evacuation area" style="display:none; margin-top:8px;" />
+                            <input type="hidden" id="nearest_evac" name="nearest_evac" />
                             <div class="field-error" id="nearest_evac_error"></div>
                         </div>
                     </div>
@@ -444,10 +455,39 @@
                 document.querySelectorAll('.form-label').forEach(label => {
                     label.classList.remove('error');
                 });
+                // Reset evac checkboxes
+                document.querySelectorAll('input[name="evac_choice"]').forEach(cb => cb.checked = false);
+                document.getElementById('evac_other_input').style.display = 'none';
+                document.getElementById('evac_other_input').value = '';
+                document.getElementById('nearest_evac').value = '';
                 const otherInput = document.getElementById('household_material_other');
                 otherInput.style.display = 'none';
                 otherInput.value = '';
             }
+
+            // Evacuation area checkbox logic
+            function updateEvacValue() {
+                const selected = Array.from(document.querySelectorAll('input[name="evac_choice"]:checked'))
+                    .filter(cb => cb.value !== '__other__')
+                    .map(cb => cb.value);
+                const otherCheck = document.getElementById('evac_other_check');
+                const otherInput = document.getElementById('evac_other_input');
+                if (otherCheck.checked && otherInput.value.trim()) {
+                    selected.push(otherInput.value.trim());
+                }
+                document.getElementById('nearest_evac').value = selected.join(', ');
+            }
+
+            document.getElementById('evac_other_check').addEventListener('change', function() {
+                const otherInput = document.getElementById('evac_other_input');
+                otherInput.style.display = this.checked ? 'block' : 'none';
+                if (!this.checked) otherInput.value = '';
+                updateEvacValue();
+            });
+            document.querySelectorAll('input[name="evac_choice"]').forEach(cb => {
+                cb.addEventListener('change', updateEvacValue);
+            });
+            document.getElementById('evac_other_input').addEventListener('input', updateEvacValue);
 
             document.getElementById('clear_form').addEventListener('click', clearForm);
 

@@ -226,6 +226,11 @@ export function populateEditForm(partner, editFormModal) {
       materialOther.style.display = 'block';
     }
   }
+
+  // Sync evacuation area checkboxes from the stored nearest_evac value
+  if (iframe.contentWindow.syncEvacCheckboxes) {
+    iframe.contentWindow.syncEvacCheckboxes();
+  }
 }
 
 // CODE LOGIC FOR SUBMIT FORMS

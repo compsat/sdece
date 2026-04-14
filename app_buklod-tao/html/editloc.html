@@ -154,8 +154,19 @@
 
                 <div class="form-grid single">
                     <div class="form-group">
-                        <label class="form-label" for="nearest_evac">Nearest Evacuation Area</label>
-                        <input type="text" id="nearest_evac" name="nearest_evac" class="form-input" placeholder="Enter nearest evac center (Ex. Doña Pepeng Elementary School)" required/>
+                        <label class="form-label">Nearest Evacuation Area</label>
+                        <div id="evac_checkboxes" style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
+                            <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Banaba Elementary School"> Banaba Elementary School</label>
+                            <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Doña Pepeng Elementary School"> Doña Pepeng Elementary School</label>
+                            <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Doña Pepeng Multipurpose Court"> Doña Pepeng Multipurpose Court</label>
+                            <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Buklod Tao, Inc."> Buklod Tao, Inc.</label>
+                            <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Healthcare Center"> Healthcare Center</label>
+                            <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Daycare Center"> Daycare Center</label>
+                            <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Agape Church"> Agape Church</label>
+                            <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" id="evac_other_check" name="evac_choice" value="__other__"> Other</label>
+                        </div>
+                        <input type="text" id="evac_other_input" class="form-input" placeholder="Specify other evacuation area" style="display:none; margin-top:8px;" />
+                        <input type="hidden" id="nearest_evac" name="nearest_evac" />
                         <div class="field-error" id="nearest_evac_error"></div>
                     </div>
                 </div>
@@ -449,8 +460,70 @@
                 const otherInput = document.getElementById('household_material_other');
                 otherInput.style.display = 'none';
                 otherInput.value = '';
+
+                // Reset evac checkboxes
+                document.querySelectorAll('input[name="evac_choice"]').forEach(cb => cb.checked = false);
+                document.getElementById('evac_other_input').style.display = 'none';
+                document.getElementById('evac_other_input').value = '';
+                document.getElementById('nearest_evac').value = '';
             }
         }
+
+        // Evacuation area checkbox logic
+        const KNOWN_EVAC_OPTIONS = [
+            'Banaba Elementary School',
+            'Doña Pepeng Elementary School',
+            'Doña Pepeng Multipurpose Court',
+            'Buklod Tao, Inc.',
+            'Healthcare Center',
+            'Daycare Center',
+            'Agape Church',
+        ];
+
+        function updateEvacValue() {
+            const selected = Array.from(document.querySelectorAll('input[name="evac_choice"]:checked'))
+                .filter(cb => cb.value !== '__other__')
+                .map(cb => cb.value);
+            const otherCheck = document.getElementById('evac_other_check');
+            const otherInput = document.getElementById('evac_other_input');
+            if (otherCheck.checked && otherInput.value.trim()) {
+                selected.push(otherInput.value.trim());
+            }
+            document.getElementById('nearest_evac').value = selected.join(', ');
+        }
+
+        document.getElementById('evac_other_check').addEventListener('change', function() {
+            const otherInput = document.getElementById('evac_other_input');
+            otherInput.style.display = this.checked ? 'block' : 'none';
+            if (!this.checked) otherInput.value = '';
+            updateEvacValue();
+        });
+        document.querySelectorAll('input[name="evac_choice"]').forEach(cb => {
+            cb.addEventListener('change', updateEvacValue);
+        });
+        document.getElementById('evac_other_input').addEventListener('input', updateEvacValue);
+
+        // Called by populateEditForm after setting nearest_evac value
+        window.syncEvacCheckboxes = function() {
+            const value = document.getElementById('nearest_evac').value || '';
+            const parts = value.split(',').map(s => s.trim()).filter(Boolean);
+            document.querySelectorAll('input[name="evac_choice"]').forEach(cb => cb.checked = false);
+            document.getElementById('evac_other_input').style.display = 'none';
+            document.getElementById('evac_other_input').value = '';
+            const otherValues = [];
+            parts.forEach(part => {
+                let matched = false;
+                document.querySelectorAll('input[name="evac_choice"]').forEach(cb => {
+                    if (cb.value === part) { cb.checked = true; matched = true; }
+                });
+                if (!matched) otherValues.push(part);
+            });
+            if (otherValues.length > 0) {
+                document.getElementById('evac_other_check').checked = true;
+                document.getElementById('evac_other_input').style.display = 'block';
+                document.getElementById('evac_other_input').value = otherValues.join(', ');
+            }
+        };
 
         // Show/hide the "Other" text input for House Materials
         document.getElementById('household_material').addEventListener('change', function() {
