@@ -449,7 +449,7 @@ document.getElementById('download-report').addEventListener('click', async () =>
 
 	// Generate risk sheets
 	for (const riskType of riskTypes) {
-		const sheetData = [['Household Name', 'Address', 'Phase', 'Contact Number', 'Number of Residents', 'Residency Status', 'Risk Level', 'Risk Description', 'House Material']];
+		const sheetData = [['Household Name', 'Address', 'Contact Number', 'Number of Residents', 'Residency Status', 'Risk Level', 'Risk Description', 'House Material']];
 
 		const households = [...allHouseholds].sort((a, b) => sortByHouseholdName(a, b));
 
@@ -463,7 +463,6 @@ document.getElementById('download-report').addEventListener('click', async () =>
 			sheetData.push([
 				h.household_name || '',
 				h.household_address || '',
-				h.phase || '',
 				h.contact_number || '',
 				h.number_residents || 0,
 				h.residency_status || '',
