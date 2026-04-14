@@ -89,6 +89,24 @@ body {
   cursor: pointer;
 }
 
+#addModal {
+  display: none;
+}
+
+#addHouseholdBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  width: 100%;
+  padding: 10px 16px;
+  white-space: nowrap;
+}
+
+#addHouseholdBtn svg {
+  flex-shrink: 0;
+}
+
 /* --Side Bar Header Buttons Section */
 .actions-container {
   display: flex;
