@@ -14,7 +14,7 @@ import {
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
+import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 
 import { FILTER_RULES } from '/js/ruleEngines.js'
 import {
@@ -73,7 +73,7 @@ const SECRETS = await SECRETS_RES.json();
 
 export const FIREBASE_CONFIG = SECRETS.FIREBASE_CONFIG;
 
-var app = initializeApp(FIREBASE_CONFIG);
+var app = getApps().length > 0 ? getApps()[0] : initializeApp(FIREBASE_CONFIG);
 export const DB = getFirestore(app);
 
 var collection_reference = null;
@@ -106,6 +106,8 @@ export const DB_RULES_AND_DATA = [
 			'household_address',
 			'household_material',
 			'household_phase',
+			'house_number',
+			'street',
 			'landslide_risk',
 			'landslide_risk_description',
 			'earthquake_risk',
@@ -117,6 +119,16 @@ export const DB_RULES_AND_DATA = [
 			'storm_risk',
 			'storm_risk_description',
 			'nearest_evac',
+			'number_families',
+			'number_healthy',
+			'exit_points',
+			'disaster_response_plan',
+			'before_disaster_actions',
+			'knowledge_readiness',
+			'during_disaster_actions',
+			'after_disaster_actions',
+			'timestamp',
+			'source_dataset',
 		],
 	],
 	[
@@ -139,6 +151,8 @@ export const DB_RULES_AND_DATA = [
 			'household_address',
 			'household_material',
 			'household_phase',
+			'house_number',
+			'street',
 			'landslide_risk',
 			'landslide_risk_description',
 			'earthquake_risk',
@@ -150,6 +164,16 @@ export const DB_RULES_AND_DATA = [
 			'storm_risk',
 			'storm_risk_description',
 			'nearest_evac',
+			'number_families',
+			'number_healthy',
+			'exit_points',
+			'disaster_response_plan',
+			'before_disaster_actions',
+			'knowledge_readiness',
+			'during_disaster_actions',
+			'after_disaster_actions',
+			'timestamp',
+			'source_dataset',
 		],
 	],
 	[
@@ -257,6 +281,18 @@ const VALIDATION_RULES = {
 		storm_risk_description: { label: 'Storm Risk Description', type: 'string', required: false},
 
 		nearest_evac: { label: 'Nearest Evacuation Area', type: 'string', required: true, maxLength: 255 },
+		house_number: { label: 'House Number', type: 'string', required: false },
+		street: { label: 'Street', type: 'string', required: false },
+		number_families: { label: 'Number of Families', type: 'number', minimum: 0 },
+		number_healthy: { label: 'Number of Healthy Residents', type: 'number', minimum: 0 },
+		exit_points: { label: 'Exit Points', type: 'string', required: false },
+		disaster_response_plan: { label: 'Disaster Response Plan', type: 'string', required: false },
+		before_disaster_actions: { label: 'Before Disaster Actions', type: 'string', required: false },
+		knowledge_readiness: { label: 'Knowledge Readiness', type: 'string', required: false },
+		during_disaster_actions: { label: 'During Disaster Actions', type: 'string', required: false },
+		after_disaster_actions: { label: 'After Disaster Actions', type: 'string', required: false },
+		timestamp: { label: 'Timestamp', type: 'string', required: false },
+		source_dataset: { label: 'Source Dataset', type: 'string', required: false },
 	},
 	'buklod-official': {
     household_name: { label: "Household Name", type: 'string', required: true, maxLength: 127 },
@@ -317,7 +353,19 @@ const VALIDATION_RULES = {
 		storm_risk: { label: 'Storm Risk', type: 'string', required: true },
 		storm_risk_description: { label: 'Storm Risk Description', type: 'string', required: false},
 
-		nearest_evac: { type: 'string', required: true, maxLength: 255 },
+		nearest_evac: { label: 'Nearest Evacuation Area', type: 'string', required: true, maxLength: 255 },
+		house_number: { label: 'House Number', type: 'string', required: false },
+		street: { label: 'Street', type: 'string', required: false },
+		number_families: { label: 'Number of Families', type: 'number', minimum: 0 },
+		number_healthy: { label: 'Number of Healthy Residents', type: 'number', minimum: 0 },
+		exit_points: { label: 'Exit Points', type: 'string', required: false },
+		disaster_response_plan: { label: 'Disaster Response Plan', type: 'string', required: false },
+		before_disaster_actions: { label: 'Before Disaster Actions', type: 'string', required: false },
+		knowledge_readiness: { label: 'Knowledge Readiness', type: 'string', required: false },
+		during_disaster_actions: { label: 'During Disaster Actions', type: 'string', required: false },
+		after_disaster_actions: { label: 'After Disaster Actions', type: 'string', required: false },
+		timestamp: { label: 'Timestamp', type: 'string', required: false },
+		source_dataset: { label: 'Source Dataset', type: 'string', required: false },
 	},
 	'seeds-official-TEST': {
     partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
