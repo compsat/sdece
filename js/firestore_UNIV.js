@@ -2,6 +2,7 @@ import {
 	getDocs,
 	addDoc,
 	updateDoc,
+	deleteDoc,
 	doc,
 	query,
   or,
@@ -529,6 +530,19 @@ export function addEntry(inp_obj) {
 	return Promise.reject(new Error('Collection not found'));
 }
 
+
+export function deleteEntry(docId) {
+	const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
+	return deleteDoc(DOC_REFERENCE)
+		.then(() => {
+			alert("Household deleted successfully.");
+			window.location.reload();
+		})
+		.catch((error) => {
+			console.error('Error deleting document: ', error);
+			alert("Error deleting household. Please try again.");
+		});
+}
 
 export function editEntry(inp_obj, docId) {
 	const DOC_REFERENCE = doc(DB, rule_reference[0], docId);

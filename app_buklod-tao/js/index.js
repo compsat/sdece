@@ -7,6 +7,7 @@ import {
   setCollection,
   getCollection,
   filterData,
+  deleteEntry,
   DB,
   BUKLOD_RULES,
 } from '../../js/firestore_UNIV.js';
@@ -541,7 +542,7 @@ function attachMarkers(partners) {
 
     marker.on('popupopen', () => {
       setTimeout(() => {
-        const edit_button = document.querySelectorAll(".popup-edit-btn");
+        const edit_button = document.querySelectorAll(".popup-edit-btn:not(.popup-delete-btn)");
 
         edit_button.forEach((btn) => {
           btn.addEventListener('click', function() {
@@ -553,13 +554,22 @@ function attachMarkers(partners) {
           });
         });
 
+        const delete_button = document.getElementById("delete-household-popup");
+        if (delete_button) {
+          delete_button.addEventListener('click', async function() {
+            if (!confirm(`Delete "${partner.household_name}"? This cannot be undone.`)) return;
+            const docId = await getDocIdByPartnerName(partner.household_name);
+            if (docId) deleteEntry(docId);
+          });
+        }
+
         const close_button = document.getElementById("close-btn");
         if (close_button) {
           close_button.addEventListener('click', () => {
             marker.closePopup();
           });
         }
-        
+
       }, 0);
     });
 
@@ -630,11 +640,11 @@ function updateRiskIcons() {
     marker.on('popupopen', () => {
       // Use setTimeout to defer this to after the popup DOM is actually rendered
       setTimeout(() => {
-        const edit_button = document.querySelectorAll(".popup-edit-btn");
+        const edit_button = document.querySelectorAll(".popup-edit-btn:not(.popup-delete-btn)");
 
         edit_button.forEach((btn) => {
           btn.addEventListener('click', function() {
-            
+
             const modal = document.getElementById('partnerModal');
             var editFormModal = document.getElementById('editModal');
             editFormModal.style.display = 'flex';
@@ -643,6 +653,15 @@ function updateRiskIcons() {
             populateEditForm(partner, editFormModal);
           });
         });
+
+        const delete_button = document.getElementById("delete-household-popup");
+        if (delete_button) {
+          delete_button.addEventListener('click', async function() {
+            if (!confirm(`Delete "${partner.household_name}"? This cannot be undone.`)) return;
+            const docId = await getDocIdByPartnerName(partner.household_name);
+            if (docId) deleteEntry(docId);
+          });
+        }
 
         
         // Function for sidebar scrolling and highlighting when clicking from sidebar or pin

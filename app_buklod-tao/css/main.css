@@ -564,6 +564,16 @@ h1.entries {
 .popup-edit-btn:hover {
   background-color: #2542a3;
 }
+.popup-delete-btn {
+  background: #b91c1c;
+  width: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  flex-shrink: 0;
+}
+.popup-delete-btn:hover {
+  background-color: #dc2626;
+}
 
 /* Main body */
 .popup-card {
