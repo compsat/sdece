@@ -136,7 +136,7 @@ function populateNavBar(condition){
     addressDiv.classList.add('address');
 
     nameDiv.textContent = partner.household_name;
-    addressDiv.textContent = partner.household_address + ' ' + partner.household_phase;
+    addressDiv.textContent = [partner.household_address, partner.household_phase].filter(Boolean).join(' ');
 
     listItem.classList.add('accordion');
     anchor.classList.add('accordion', 'link');
