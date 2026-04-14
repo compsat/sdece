@@ -67,6 +67,13 @@ function normalizeLegacyDoc(data) {
     delete normalized.house_coordinates;
   }
 
+  // Normalize residency_status casing
+  if (normalized.residency_status) {
+    const rs = normalized.residency_status.trim().toLowerCase();
+    if (rs === 'may-ari' || rs === 'may ari') normalized.residency_status = 'May-Ari';
+    else if (rs === 'umuupa') normalized.residency_status = 'Umuupa';
+  }
+
   // Derive household_address from house_number + street if missing
   if (!normalized.household_address) {
     const houseNum = (normalized.house_number || '').toString().trim();
