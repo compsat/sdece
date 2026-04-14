@@ -23,7 +23,7 @@ import evacCenters from '../hardcode/evac-centers.json' with {type: 'json'};
 // CODE LOGIC FOR SET-UP
 // ------------------------------------------
 // Pans map to Banaba area upon loading the page
-map.panTo(new L.LatLng(14.673, 121.11215));
+map.setView([14.674043754743689, 121.11081361770631], 18);
 
 // Load Map Tile Layer
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
