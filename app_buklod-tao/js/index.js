@@ -271,7 +271,7 @@ async function onPinClick(doc) {
     }
   });
 
-  // Risk card color display dependent on rosk level
+  // Risk card color display dependent on risk level
   wrapper.querySelectorAll('[data-risk-card]').forEach(ul => {
     const key = ul.getAttribute('data-risk-card');
     const raw = doc[key] || '';
@@ -289,6 +289,12 @@ async function onPinClick(doc) {
         ul.classList.add('risk-low');
         break;
     }
+  });
+
+  // Show only the risk card matching the active risk type filter
+  const activeRiskType = riskSortEl.value.replace('-sort', '_risk');
+  wrapper.querySelectorAll('.risk-card').forEach(card => {
+    card.style.display = card.getAttribute('data-risk-card') === activeRiskType ? '' : 'none';
   });
 
   return wrapper.innerHTML;
