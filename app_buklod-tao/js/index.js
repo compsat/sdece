@@ -190,6 +190,9 @@ async function onPinClick(doc) {
       case 'is_hoa_noa':
         ul.textContent = doc.is_hoa_noa || 'N/A';
         break;
+      case 'risk_level':
+        ul.textContent = doc.risk_level || 'N/A';
+        break;
       case 'nearest_evac':
         ul.textContent = doc.nearest_evac || '';
         break;
@@ -451,6 +454,7 @@ document.getElementById('download-report').addEventListener('click', async () =>
 			h.contact_number || '',
 			h.residency_status || '',
 			h.is_hoa_noa || '',
+      h.risk_level || '',
 			h.number_residents || 0,
 			h.number_minors || 0,
 			h.number_seniors || 0,
@@ -492,6 +496,7 @@ document.getElementById('download-report').addEventListener('click', async () =>
 			h.contact_number || '',
 			h.residency_status || '',
 			h.is_hoa_noa || '',
+      h.risk_level || '',
 			h.number_residents || 0,
 			h.number_minors || 0,
 			h.number_seniors || 0,
@@ -823,22 +828,45 @@ function updateFilterButtonState() {
 
 export async function presentFilteredData() {
   const rawInput = collectAllFilterSelections();
-  console.log("Raw input:", rawInput);
 
-  const transformedData = { ...rawInput };
+  const riskType = (rawInput.risk_type && rawInput.risk_type !== 'all' && rawInput.risk_type !== '')
+    ? rawInput.risk_type
+    : null;
+  const riskLevels = rawInput.risk_level; // always an array
 
-  // map risk_type + risk_level into fire_risk: HIGH
-  if (rawInput.risk_type && rawInput.risk_level) {
-    transformedData[rawInput.risk_type] = rawInput.risk_level;
-    delete transformedData.risk_type;
-    delete transformedData.risk_level;
+  // Build transformedData without risk_type and risk_level
+  const transformedData = {
+    residency_status: rawInput.residency_status,
+    household_material: rawInput.household_material,
+    is_hoa_noa: rawInput.is_hoa_noa,
+  };
+
+  if (riskLevels.length > 0) {
+    if (riskType) {
+      // Specific risk type selected
+      transformedData[riskType] = riskLevels;
+    } else {
+      // No risk type
+      transformedData._riskLevelAny = riskLevels;
+    }
   }
 
-  console.log("Mapped:", transformedData);
+  const needsAnyRiskFilter = riskLevels.length > 0 && !riskType;
 
-  const finalData = await filterData("buklod-tao", transformedData);
+  let finalData;
 
-  console.log("Final:", finalData);
+  if (needsAnyRiskFilter) {
+    const baseData = await filterData("buklod-tao", transformedData);
+    const riskFields = ['earthquake_risk', 'fire_risk', 'flood_risk', 'landslide_risk', 'storm_risk'];
+    
+    finalData = new Map();
+    baseData.forEach((doc, id) => {
+      const matchesRisk = riskFields.some(field => riskLevels.includes(doc[field]));
+      if (matchesRisk) finalData.set(id, doc);
+    });
+  } else {
+    finalData = await filterData("buklod-tao", transformedData);
+  }
 
   return finalData;
 }
