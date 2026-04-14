@@ -15,7 +15,18 @@
         import { editEntry, BUKLOD_RULES, getDocIdByPartnerName, getDocByID } from "/js/firestore_UNIV.js";
         import { submitEditForm } from "../js/firestore.js";
 
-        document.getElementById("submit_form").addEventListener("click", submitEditForm);
+        document.getElementById("submit_form").addEventListener("click", function() {
+            const materialSelect = document.getElementById('household_material');
+            if (materialSelect.value === 'Other') {
+                const custom = document.getElementById('household_material_other').value.trim();
+                if (custom) {
+                    const tempOption = new Option(custom, custom);
+                    materialSelect.add(tempOption);
+                    materialSelect.value = custom;
+                }
+            }
+            submitEditForm();
+        });
     </script>
 
     <script type="module">
@@ -134,7 +145,9 @@
                             <option value="Light materials">Light materials</option>
                             <option value="Makeshift">Makeshift</option>
                             <option value="Natural">Natural</option>
+                            <option value="Other">Other</option>
                         </select>
+                        <input type="text" id="household_material_other" class="form-input" placeholder="Specify material" style="display: none; margin-top: 8px;" />
                         <div class="field-error" id="household_material_error"></div>
                     </div>
                 </div>
@@ -431,8 +444,20 @@
                         field.value = '';
                     }
                 }
+
+                // Hide "Other" material input
+                const otherInput = document.getElementById('household_material_other');
+                otherInput.style.display = 'none';
+                otherInput.value = '';
             }
         }
+
+        // Show/hide the "Other" text input for House Materials
+        document.getElementById('household_material').addEventListener('change', function() {
+            const otherInput = document.getElementById('household_material_other');
+            otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
+            if (this.value !== 'Other') otherInput.value = '';
+        });
 
         function closeModal() {
             window.parent.postMessage('closeEditModal', '*');

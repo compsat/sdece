@@ -60,6 +60,8 @@ export function populateEditForm(partner, editFormModal) {
   editForm.body.appendChild(originalField);
 
 
+  const standardMaterials = ['Concrete', 'Semi-Concrete', 'Light materials', 'Makeshift', 'Natural'];
+
   for (var data in partner) {
     // some households have a 'marker' or 'status' attribute. Check database for status fields. 
     // Not sure yet where the marker came from 
@@ -94,6 +96,18 @@ export function populateEditForm(partner, editFormModal) {
       editForm.getElementById(data).value = riskLevel;
     }
 
+  }
+
+  // If the stored material is not a standard option, select "Other" and show the custom input
+  const storedMaterial = partner.household_material;
+  if (storedMaterial && !standardMaterials.includes(storedMaterial)) {
+    const materialSelect = editForm.getElementById('household_material');
+    const materialOther = editForm.getElementById('household_material_other');
+    if (materialSelect) materialSelect.value = 'Other';
+    if (materialOther) {
+      materialOther.value = storedMaterial;
+      materialOther.style.display = 'block';
+    }
   }
 }
 

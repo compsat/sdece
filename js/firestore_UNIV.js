@@ -260,13 +260,6 @@ const VALIDATION_RULES = {
       label: "Household Material",
 			type: 'string',
 			required: true,
-			enum: [
-				'Concrete',
-				'Semi-Concrete',
-				'Light materials',
-				'Makeshift',
-				'Natural',
-			],
 		},
 	household_phase: { label: "Household Phase", type: 'string', required: true },
 		
@@ -333,13 +326,6 @@ const VALIDATION_RULES = {
       label: "Household Material",
 			type: 'string',
 			required: true,
-			enum: [
-				'Concrete',
-				'Semi-Concrete',
-				'Light materials',
-				'Makeshift',
-				'Natural',
-			],
 		},
 		household_phase: { label: "Household Phase", type: 'string', required: true },
 
