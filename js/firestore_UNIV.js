@@ -227,10 +227,8 @@ const VALIDATION_RULES = {
 	contact_number: {
 		label: "Contact Number",
 		type: 'string',
-		required: true,
-		minLength: 11,
-		maxLength: 11,
-		regex: /^09[0-9]{9}$/,
+		required: false,
+		regex: /^(09\d{9}|09\d{2}-\d{3}-\d{4}|N\/A)$/,
 		},
     number_residents: { label: "Number of Residents", type: 'number', required: true , 'minimum': 1},
 		number_minors: { label: "Number of Minor Residents", type: 'number', 'minimum': 0 },
@@ -248,9 +246,7 @@ const VALIDATION_RULES = {
 		is_hoa_noa: {
       label: "HOA Status",
 			type: 'string',
-			required: true,
-			minLength: 3,
-			maxLength: 3,
+			required: false,
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
     location_coordinates: {label: "Location Coordinates", type: 'object', required: true },
@@ -261,7 +257,7 @@ const VALIDATION_RULES = {
 			type: 'string',
 			required: true,
 		},
-	household_phase: { label: "Household Phase", type: 'string', required: true },
+	household_phase: { label: "Household Phase", type: 'string', required: false },
 		
     landslide_risk: { label: 'Landslide Risk', type: 'string', required: true },
 		landslide_risk_description:{ label: 'Landslide Risk Description', type: 'string', required: false},
@@ -293,10 +289,8 @@ const VALIDATION_RULES = {
 		contact_number: {
       label: "Contact Number",
 			type: 'string',
-			required: true,
-			minLength: 11,
-			maxLength: 11,
-			regex: /^09[0-9]{9}$/,
+			required: false,
+			regex: /^(09\d{9}|09\d{2}-\d{3}-\d{4}|N\/A)$/,
 		},
     number_residents: { label: "Number of Residents", type: 'number', required: true , 'minimum': 1},
 		number_minors: { label: "Number of Minor Residents", type: 'number', 'minimum': 0 },
@@ -314,9 +308,7 @@ const VALIDATION_RULES = {
 		is_hoa_noa: {
       label: "HOA Status",
 			type: 'string',
-			required: true,
-			minLength: 3,
-			maxLength: 3,
+			required: false,
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
     location_coordinates: { label: "Location Coordinates", type: 'object', required: true },
@@ -327,7 +319,7 @@ const VALIDATION_RULES = {
 			type: 'string',
 			required: true,
 		},
-		household_phase: { label: "Household Phase", type: 'string', required: true },
+		household_phase: { label: "Household Phase", type: 'string', required: false },
 
     landslide_risk: { label: 'Landslide Risk', type: 'string', required: true },
 		landslide_risk_description:{ label: 'Landslide Risk Description', type: 'string', required: false},
@@ -601,31 +593,31 @@ export function validateData(collectionName, data) {
 			continue;
 		}
 
+		let validationFailed = false;
 		for (const x of VALIDATION_TEST.keys()) {
 			if (VALIDATION_TEST.get(x)) {
-				errors.push(ERROR_MESSAGES.get(x));
+				if (x === 'regex_test') {
+					// Use field-specific message for regex failures
+					if (fieldLabel == 'Contact Number') {
+						errors.push(`${fieldLabel} is not in the correct format. Number must be 09XXXXXXXXX or 09XX-XXX-XXXX.`);
+					} else if (fieldLabel == 'Location Link') {
+						errors.push(`${fieldLabel} is not in the correct format. Link must start with: https://`);
+					} else {
+						errors.push(ERROR_MESSAGES.get(x));
+					}
+				} else {
+					errors.push(ERROR_MESSAGES.get(x));
+				}
+				validationFailed = true;
 				break;
 			}
 		}
 
+		if (validationFailed) continue;
 
 		if (rule.enum && !rule.enum.includes(value)) {
-			errors.push(`${fieldLabel}' must be one of ${rule.enum.join(', ')}.`);
+			errors.push(`${fieldLabel} must be one of ${rule.enum.join(', ')}.`);
 			continue;
-		}
-
-		// Check for regex pattern
-		if (rule.regex && typeof value === 'string') {
-			if (!rule.regex.test(value)) {
-				if (fieldLabel == 'Contact Number') {
-					errors.push(`${fieldLabel} is not in the correct format. Number be in the format: 09xxxxxxxxx.`);
-					continue;
-				}
-				if (fieldLabel == 'Location Link') {
-					errors.push(`${fieldLabel} is not in the correct format. Link must start with: https://`);
-					continue;
-				}
-			}
 		}
 
 	}
