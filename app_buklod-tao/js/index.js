@@ -52,6 +52,7 @@ document.addEventListener('click', function(event) {
     
     const lat = event.target.getAttribute('data-lat');
     const lng = event.target.getAttribute('data-lng');
+    const osmLink = `https://www.openstreetmap.org/#map=19/${lat}/${lng}`;
 
     var modal = document.getElementById('addModal');
 
@@ -61,22 +62,30 @@ document.addEventListener('click', function(event) {
 
     // Set the coordinates in the iframe form
     var iframe = modal.getElementsByTagName('iframe')[0];
-    var iframeDocument = iframe.contentWindow.document;
+    
+    function populateAddLocationFields() {
+      var iframeDocument = iframe.contentWindow.document;
+      var locationField = iframeDocument.getElementById('location_coordinates');
+      var locationLinkField = iframeDocument.getElementById('location_link');
+
+      if (locationField) {
+        locationField.value = `${lat},${lng}`;
+      }
+
+      if (locationLinkField) {
+        locationLinkField.value = osmLink;
+        locationLinkField.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    }
     
     // Wait for iframe to load then set coordinates
     iframe.onload = function() {
-      var locationField = iframeDocument.getElementById('location_coordinates');
-      if (locationField) {
-        locationField.value = lat + ',' + lng;
-      }
+      populateAddLocationFields();
     };
     
-    // If iframe is already loaded, set coordinates immediately
+    // If iframe is already loaded, set fields immediately
     if (iframe.contentWindow.document.readyState === 'complete') {
-      var locationField = iframeDocument.getElementById('location_coordinates');
-      if (locationField) {
-        locationField.value = lat + ',' + lng;
-      }
+      populateAddLocationFields();
     }
 
     // Close the popup after opening modal
