@@ -776,9 +776,15 @@ function syncRiskSort(filterValue) {
   riskSortEl.value = filterValue.replace('_risk', '-sort');
 }
 
-riskSortEl.addEventListener('change', () => {
+riskSortEl.addEventListener('change', async () => {
   syncRiskTypeFilter(riskSortEl.value);
-  updateRiskIcons();
+  // If risk level checkboxes are active, re-apply the filter for the new risk type
+  const activeRiskLevels = getCheckedValuesByFilter('risk_level');
+  if (activeRiskLevels.length > 0) {
+    await applyFilterAndUpdate();
+  } else {
+    updateRiskIcons();
+  }
 });
 
 // riskTypeFilter changes only take effect when Apply Filters is clicked
@@ -790,6 +796,47 @@ updateRiskIcons();
 
 // CODE LOGIC FOR FILTER MODAL UI
 // ------------------------------------------
+
+// Capture the current modal UI into a state object (module-level so sidebar can access)
+function captureFilterState() {
+  const checkboxes = {};
+  document.querySelectorAll('#filterModal input[type="checkbox"]').forEach(cb => {
+    checkboxes[`${cb.getAttribute('data-filter')}::${cb.value}`] = cb.checked;
+  });
+  return { checkboxes, riskType: riskTypeFilterEl.value };
+}
+
+// Tracks what was last applied — module-level so sidebar changes can update it
+let appliedFilterState = null; // initialized after DOM is ready in initializeFilterModal
+
+// Core filter-apply logic shared by the Apply button and sidebar risk type changes
+async function applyFilterAndUpdate() {
+  appliedFilterState = captureFilterState();
+  appliedShelterTypes = getCheckedValuesByFilter('shelter_type');
+  syncRiskSort(riskTypeFilterEl.value);
+  const filteredData = await presentFilteredData();
+  clearMarkers();
+  const filteredWithMarkers = attachMarkers(filteredData);
+
+  // Track which doc IDs passed the filter so updateRiskIcons and
+  // filterMarkersBySearch both respect the active filter.
+  activeFilteredIds = new Set(filteredWithMarkers.keys());
+
+  // Sync new marker references back into partnersArray so filterMarkersBySearch
+  // operates on correct markers and can't reveal filter-excluded partners.
+  partnersArray.forEach((partner) => { partner.marker = null; });
+  filteredWithMarkers.forEach((filteredPartner, docId) => {
+    const original = partnersArray.get(docId);
+    if (original) original.marker = filteredPartner.marker;
+  });
+
+  addEvacCenters();
+  populateNavBar(filteredWithMarkers);
+  if (window.reapplySort) window.reapplySort();
+  if (window.reapplySearch) window.reapplySearch();
+  updateFilterButtonState();
+}
+
 // Initialize filter modal functionality when DOM is loaded
 function initializeFilterModal() {
   const filterBtn = document.getElementById('filterBtn');
@@ -803,15 +850,6 @@ function initializeFilterModal() {
     return;
   }
 
-  // Capture the current modal UI into a state object
-  function captureFilterState() {
-    const checkboxes = {};
-    document.querySelectorAll('#filterModal input[type="checkbox"]').forEach(cb => {
-      checkboxes[`${cb.getAttribute('data-filter')}::${cb.value}`] = cb.checked;
-    });
-    return { checkboxes, riskType: riskTypeFilterEl.value };
-  }
-
   // Restore the modal UI to a previously captured state
   function restoreFilterState(state) {
     document.querySelectorAll('#filterModal input[type="checkbox"]').forEach(cb => {
@@ -821,8 +859,8 @@ function initializeFilterModal() {
     riskTypeFilterEl.value = state.riskType;
   }
 
-  // Tracks what was last applied — modal always shows this on open
-  let appliedFilterState = captureFilterState();
+  // Initialize applied state now that DOM is ready
+  appliedFilterState = captureFilterState();
 
   // Open: restore to last applied state so unapplied changes don't persist
   filterBtn.addEventListener('click', () => {
@@ -846,32 +884,9 @@ function initializeFilterModal() {
     if (e.target === filterModal) closeFilterModal(true);
   });
 
-  // Apply: save current UI as the new applied state, then update map/list
+  // Apply: run shared apply logic then close modal
   applyFilters.addEventListener('click', async () => {
-    appliedFilterState = captureFilterState();
-    appliedShelterTypes = getCheckedValuesByFilter('shelter_type');
-    syncRiskSort(riskTypeFilterEl.value);
-    const filteredData = await presentFilteredData();
-    clearMarkers();
-    const filteredWithMarkers = attachMarkers(filteredData);
-
-    // Track which doc IDs passed the filter so updateRiskIcons and
-    // filterMarkersBySearch both respect the active filter.
-    activeFilteredIds = new Set(filteredWithMarkers.keys());
-
-    // Sync new marker references back into partnersArray so filterMarkersBySearch
-    // operates on correct markers and can't reveal filter-excluded partners.
-    partnersArray.forEach((partner) => { partner.marker = null; });
-    filteredWithMarkers.forEach((filteredPartner, docId) => {
-      const original = partnersArray.get(docId);
-      if (original) original.marker = filteredPartner.marker;
-    });
-
-    addEvacCenters();
-    populateNavBar(filteredWithMarkers);
-    if (window.reapplySort) window.reapplySort();
-    if (window.reapplySearch) window.reapplySearch();
-    updateFilterButtonState();
+    await applyFilterAndUpdate();
     closeFilterModal(false); // already saved — don't discard
   });
 
