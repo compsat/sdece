@@ -330,6 +330,19 @@ async function onPinClick(doc) {
     card.style.display = card.getAttribute('data-risk-card') === activeRiskType ? '' : 'none';
   });
 
+  // Show the important notes section if there are important notes, and hide the default one if there aren't
+  const editSection = wrapper.querySelector('.popup-edit-section');
+  if (editSection) {
+    const notesSection = document.createElement('div');
+    notesSection.className = 'popup-section';
+    notesSection.style.marginTop = '1.2rem';
+    notesSection.innerHTML = `
+      <div class="popup-label risk-header">Important Notes</div>
+      <div class="popup-value" style="white-space: pre-wrap;">${doc.important_notes || 'None'}</div>
+    `;
+    editSection.parentNode.insertBefore(notesSection, editSection);
+  }
+
   return wrapper.innerHTML;
 }
 // ------------------------------------------
