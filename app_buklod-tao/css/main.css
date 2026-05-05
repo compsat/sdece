@@ -93,7 +93,7 @@ body {
   display: none;
 }
 
-#addHouseholdBtn {
+#addHouseholdBtn, #addEvacCenterBtn  {
   display: inline-flex;
   align-items: center;
   gap: 10px;
