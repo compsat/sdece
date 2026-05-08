@@ -68,49 +68,45 @@ document.addEventListener('click', function(event) {
   }
 });
 
-// Handle Add Household button clicks (event delegation)
+// Handle Add Household / Add Evacuation Center button clicks from the map popup (event delegation)
 document.addEventListener('click', function(event) {
   if (event.target.matches('.addButton')) {
     event.preventDefault();
     event.stopPropagation();
-    
+
     const lat = event.target.getAttribute('data-lat');
     const lng = event.target.getAttribute('data-lng');
+    const target = event.target.getAttribute('data-target') || 'household';
     const osmLink = `https://www.openstreetmap.org/#map=19/${lat}/${lng}`;
 
     var modal = document.getElementById('addModal');
+    var iframe = modal.getElementsByTagName('iframe')[0];
 
-    // Display the modal
+    // Switch the iframe to the right form before showing the modal.
+    iframe.src = target === 'evac' ? 'html/addevac.html' : 'html/addloc.html';
+
     modal.style.display = 'flex';
     modal.classList.remove('closing');
 
-    // Set the coordinates in the iframe form
-    var iframe = modal.getElementsByTagName('iframe')[0];
-    
     function populateAddLocationFields() {
       var iframeDocument = iframe.contentWindow.document;
       var locationField = iframeDocument.getElementById('location_coordinates');
       var locationLinkField = iframeDocument.getElementById('location_link');
+      var latField = iframeDocument.getElementById('latitude');
+      var lngField = iframeDocument.getElementById('longitude');
 
-      if (locationField) {
-        locationField.value = `${lat},${lng}`;
-      }
+      if (locationField) locationField.value = `${lat},${lng}`;
+      if (latField) latField.value = lat;
+      if (lngField) lngField.value = lng;
 
       if (locationLinkField) {
         locationLinkField.value = osmLink;
         locationLinkField.dispatchEvent(new Event('input', { bubbles: true }));
       }
     }
-    
-    // Wait for iframe to load then set coordinates
-    iframe.onload = function() {
-      populateAddLocationFields();
-    };
-    
-    // If iframe is already loaded, set fields immediately
-    if (iframe.contentWindow.document.readyState === 'complete') {
-      populateAddLocationFields();
-    }
+
+    // The iframe.src was just reassigned, so onload always fires fresh.
+    iframe.onload = populateAddLocationFields;
 
     // Close the popup after opening modal
     map.closePopup();
@@ -439,7 +435,8 @@ function onMapClick(e) {
       Latitude: ${lat}<br>
       Longitude: ${lng}
     </div>
-    <button class="addButton" data-lat="${lat}" data-lng="${lng}">Add Household</button>
+    <button class="addButton" data-target="household" data-lat="${lat}" data-lng="${lng}">Add Household</button>
+    <button class="addButton" data-target="evac" data-lat="${lat}" data-lng="${lng}">Add Evacuation Center</button>
   `;
 
   // Custom popup for add household
