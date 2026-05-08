@@ -16,6 +16,8 @@ import {
   getFirestore,
   collection,
   getDocs,
+  doc,
+  deleteDoc,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 // Evacuation centers are loaded exclusively from the `buklod-evac-centers` Firestore collection.
 let evacCenters = [];
@@ -27,6 +29,7 @@ async function loadEvacCentersFromFirestore() {
       const d = snap.data();
       if (!d || d.latitude == null || d.longitude == null || !d.name || !d.type) return;
       evacCenters.push({
+        id: snap.id,
         name: d.name,
         latitude: Number(d.latitude),
         longitude: Number(d.longitude),
@@ -209,6 +212,73 @@ function populateNavBar(condition){
     locationList.appendChild(containerDiv);
   });
 }
+
+// Sidebar entries for evacuation centers — only used when the shelter-type filter is active.
+function populateNavBarWithEvacCenters(centers) {
+  const locationList = document.getElementById('locationList');
+  locationList.innerHTML = '';
+
+  const partnersCount = document.getElementById('partners-count');
+  if (partnersCount) {
+    partnersCount.textContent = `EVACUATION CENTERS (${centers.length})`;
+  }
+
+  centers.forEach((center) => {
+    const containerDiv = document.createElement('div');
+    const listItem = document.createElement('li');
+    const anchor = document.createElement('a');
+    const nameDiv = document.createElement('div');
+    const addressDiv = document.createElement('div');
+
+    listItem.setAttribute('data-name', center.name);
+    anchor.href = '#';
+
+    listItem.addEventListener('click', () => {
+      if (center.marker) {
+        map.setView(center.marker.getLatLng());
+        center.marker.openPopup();
+      }
+    });
+
+    nameDiv.classList.add('name');
+    addressDiv.classList.add('address');
+    nameDiv.textContent = center.name;
+    addressDiv.textContent = center.type;
+
+    listItem.classList.add('accordion');
+    anchor.classList.add('accordion', 'link');
+    containerDiv.classList.add('container-entry');
+
+    const editBtn = document.createElement('button');
+    editBtn.classList.add('sidebar-edit-btn');
+    editBtn.title = 'Edit evacuation center';
+    editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+    editBtn.style.cssText = 'position:absolute;top:8px;right:8px;width:28px;height:28px;border:none;background:transparent;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b7280;padding:0;opacity:0;transition:opacity 0.15s ease,background-color 0.15s ease,color 0.15s ease;';
+    listItem.style.position = 'relative';
+    editBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openEditEvacModal(center.id);
+    });
+    editBtn.addEventListener('mouseenter', () => {
+      editBtn.style.backgroundColor = '#e5e7eb';
+      editBtn.style.color = '#1a357b';
+    });
+    editBtn.addEventListener('mouseleave', () => {
+      editBtn.style.backgroundColor = 'transparent';
+      editBtn.style.color = '#6b7280';
+    });
+    listItem.addEventListener('mouseenter', () => { editBtn.style.opacity = '1'; });
+    listItem.addEventListener('mouseleave', () => { editBtn.style.opacity = '0'; });
+
+    anchor.appendChild(nameDiv);
+    anchor.appendChild(addressDiv);
+    listItem.appendChild(anchor);
+    listItem.appendChild(editBtn);
+    containerDiv.appendChild(listItem);
+    locationList.appendChild(containerDiv);
+  });
+}
+
 populateNavBar();
 if (window.reapplySort) window.reapplySort(); // reapply current sorting if any
 // ------------------------------------------
@@ -770,7 +840,10 @@ let activeFilteredIds = null; // null = no filter active; Set<docId> = only show
 
 function addEvacCenters() {
   evacCenters.forEach(center => {
-    if (appliedShelterTypes.length > 0 && !appliedShelterTypes.includes(center.type)) return;
+    if (appliedShelterTypes.length > 0 && !appliedShelterTypes.includes(center.type)) {
+      center.marker = null;
+      return;
+    }
 
     const marker_icon = L.icon({
       iconUrl: "/app_buklod-tao/hardcode/evac_center_v2.svg",
@@ -779,16 +852,53 @@ function addEvacCenters() {
     });
 
     const marker = L.marker([center.latitude, center.longitude], { icon: marker_icon });
-    marker.bindPopup(`
+    const popupHtml = `
       <div class="evac-marker-header">${center.type}</div>
       <div style="text-align:center;">
         <b>${center.name}</b>
         <br>Location: ${center.latitude}, ${center.longitude}
-      </div>`, {
-        className: 'evacuation-center-popup'
-      });
+      </div>
+      <div class="evac-popup-actions" style="display:flex;gap:8px;justify-content:center;margin-top:10px;">
+        <button class="evac-edit-btn" data-evac-id="${center.id}" style="flex:1;padding:6px 12px;border:1px solid #1a357b;background:#fff;color:#1a357b;border-radius:6px;cursor:pointer;font-weight:500;">Edit</button>
+        <button class="evac-delete-btn" data-evac-id="${center.id}" style="flex:1;padding:6px 12px;border:1px solid #dc2626;background:#fff;color:#dc2626;border-radius:6px;cursor:pointer;font-weight:500;">Delete</button>
+      </div>`;
+    marker.bindPopup(popupHtml, { className: 'evacuation-center-popup' });
+
+    marker.on('popupopen', () => {
+      setTimeout(() => {
+        const editBtn = document.querySelector(`.evac-edit-btn[data-evac-id="${center.id}"]`);
+        const deleteBtn = document.querySelector(`.evac-delete-btn[data-evac-id="${center.id}"]`);
+
+        if (editBtn) {
+          editBtn.addEventListener('click', () => openEditEvacModal(center.id));
+        }
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', async () => {
+            if (!confirm(`Delete "${center.name}"? This cannot be undone.`)) return;
+            try {
+              await deleteDoc(doc(DB, 'buklod-evac-centers', center.id));
+              window.location.reload();
+            } catch (err) {
+              console.error('Error deleting evacuation center:', err);
+              alert('Error deleting evacuation center. Please try again.');
+            }
+          });
+        }
+      }, 0);
+    });
+
+    center.marker = marker;
     map.addLayer(marker);
   });
+}
+
+function openEditEvacModal(docId) {
+  const addModal = document.getElementById('addModal');
+  const iframe = addModal.querySelector('iframe');
+  iframe.src = `html/editevac.html?id=${encodeURIComponent(docId)}`;
+  addModal.style.display = 'flex';
+  addModal.classList.remove('closing');
+  map.closePopup();
 }
 
 // Code logic for automatically changing pin color depending on selected option on dropbox
@@ -861,7 +971,12 @@ async function applyFilterAndUpdate() {
   });
 
   addEvacCenters();
-  populateNavBar(filteredWithMarkers);
+  if (appliedShelterTypes.length > 0) {
+    const shownCenters = evacCenters.filter(c => appliedShelterTypes.includes(c.type));
+    populateNavBarWithEvacCenters(shownCenters);
+  } else {
+    populateNavBar(filteredWithMarkers);
+  }
   if (window.reapplySort) window.reapplySort();
   if (window.reapplySearch) window.reapplySearch();
   updateFilterButtonState();
