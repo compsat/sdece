@@ -7,22 +7,72 @@
         <link href="https://fonts.googleapis.com/css?family=Hind" rel='stylesheet'>
             
         <script type="module">
-            //Call function from firestore.js to add new household from input fields after pressing submit button
-            import { addEntry, BUKLOD_RULES, setCollection, validateData, getCoordinates } from "/js/firestore_UNIV.js";
-            import { submitAddForm } from '../js/firestore.js';
+            // Save a new evacuation center to the `buklod-evac-centers` Firestore collection.
+            import { addDoc, collection } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
+            import { DB } from "/js/firestore_UNIV.js";
 
-            setCollection("buklod-official");
-            document.getElementById("submit_form").addEventListener("click", function() {
-                const materialSelect = document.getElementById('household_material');
-                if (materialSelect.value === 'Other') {
-                    const custom = document.getElementById('household_material_other').value.trim();
-                    if (custom) {
-                        const tempOption = new Option(custom, custom);
-                        materialSelect.add(tempOption);
-                        materialSelect.value = custom;
-                    }
+            const EVAC_TYPES = ['Evacuation Center', 'Temporary Shelter'];
+
+            function setFieldError(fieldId, message) {
+                const field = document.getElementById(fieldId);
+                const errorContainer = document.getElementById(`${fieldId}_error`);
+                const label = document.querySelector(`label[for="${fieldId}"]`);
+                if (field) field.classList.add('error');
+                if (label) label.classList.add('error');
+                if (errorContainer) {
+                    errorContainer.textContent = message;
+                    errorContainer.classList.add('show');
                 }
-                submitAddForm();
+            }
+
+            function validateEvacForm({ name, type, latitude, longitude }) {
+                const errors = [];
+                if (!name) errors.push(['evaccenter_name', 'Evacuation center name is required.']);
+                if (!type) errors.push(['evaccenter_material', 'Evacuation center type is required.']);
+                else if (!EVAC_TYPES.includes(type)) errors.push(['evaccenter_material', `Type must be one of ${EVAC_TYPES.join(', ')}.`]);
+                if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90) {
+                    errors.push(['latitude', 'Latitude must be a number between -90 and 90.']);
+                }
+                if (!Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
+                    errors.push(['longitude', 'Longitude must be a number between -180 and 180.']);
+                }
+                return errors;
+            }
+
+            document.getElementById("submit_form").addEventListener("click", async function() {
+                const submitBtn = this;
+                const name = document.getElementById('evaccenter_name').value.trim();
+                const type = document.getElementById('evaccenter_material').value;
+                const latitude = parseFloat(document.getElementById('latitude').value);
+                const longitude = parseFloat(document.getElementById('longitude').value);
+                const location_link = document.getElementById('location_link').value.trim();
+
+                const errors = validateEvacForm({ name, type, latitude, longitude });
+                if (errors.length > 0) {
+                    errors.forEach(([fieldId, msg]) => setFieldError(fieldId, msg));
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                const originalLabel = submitBtn.textContent;
+                submitBtn.textContent = 'Saving...';
+
+                try {
+                    await addDoc(collection(DB, 'buklod-evac-centers'), {
+                        name,
+                        type,
+                        latitude,
+                        longitude,
+                        location_link: location_link || null,
+                        timestamp: new Date().toISOString(),
+                    });
+                    window.parent.location.reload();
+                } catch (err) {
+                    console.error('Error saving evacuation center:', err);
+                    alert('Error saving evacuation center. Please try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalLabel;
+                }
             });
 
         </script>
@@ -69,31 +119,32 @@
                     <div class="form-grid single">
                         <div class="form-group">
                             <label class="form-label" for="evaccenter_name">Evacuation Center Name</label>
-                            <input type="text" id="evaccenter_name" name="evaccenter_name" class="form-input" placeholder="Enter Evacuation Center name (Ex. DELA CRUZ, Juan)" required/>
+                            <input type="text" id="evaccenter_name" name="evaccenter_name" class="form-input" placeholder="Enter evacuation center name (Ex. Banaba Elementary School)" required/>
                             <div class="field-error" id="evaccenter_name_error"></div>
                         </div>
                     </div>
-                        <div class="form-group single">
+                    <div class="form-grid single">
+                        <div class="form-group">
                             <label class="form-label" for="evaccenter_material">Type</label>
                             <select name="evaccenter_material" id="evaccenter_material" class="form-select" required>
                                 <option value="" disabled selected hidden>Select Evacuation Center Type</option>
-                                <option value="Evacuation center">Evacuation Center</option>
-                                <option value="Temporary shelter">Temporary Shelter</option>
+                                <option value="Evacuation Center">Evacuation Center</option>
+                                <option value="Temporary Shelter">Temporary Shelter</option>
                             </select>
                             <div class="field-error" id="evaccenter_material_error"></div>
                         </div>
                     </div>
                      <div class="form-grid">
                         <div class="form-group">
-                            <label class="form-label" for="house_number">Latitude</label>
-                            <input type="text" id="house_number" name="house_number" class="form-input" placeholder="Enter house number (Ex. 12B)" />
-                            <div class="field-error" id="house_number_error"></div>
+                            <label class="form-label" for="latitude">Latitude</label>
+                            <input type="text" id="latitude" name="latitude" class="form-input" placeholder="Enter latitude (Ex. 14.67459)" required/>
+                            <div class="field-error" id="latitude_error"></div>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="street">Longitude</label>
-                            <input type="text" id="street" name="street" class="form-input" placeholder="Enter street name (Ex. Sampaguita St.)" />
-                            <div class="field-error" id="street_error"></div>
+                            <label class="form-label" for="longitude">Longitude</label>
+                            <input type="text" id="longitude" name="longitude" class="form-input" placeholder="Enter longitude (Ex. 121.11038)" required/>
+                            <div class="field-error" id="longitude_error"></div>
                         </div>
                     </div>
                     <div class="form-grid">
@@ -166,10 +217,15 @@
             // Auto-fill coordinates from OpenStreetMap link, clear if link is removed
             document.getElementById('location_link').addEventListener('input', function() {
                 const match = this.value.match(/#map=\d+\/([\d.-]+)\/([\d.-]+)/);
+                const latInput = document.getElementById('latitude');
+                const lngInput = document.getElementById('longitude');
+                const coordsInput = document.getElementById('location_coordinates');
                 if (match) {
-                    document.getElementById('location_coordinates').value = match[1] + ',' + match[2];
+                    latInput.value = match[1];
+                    lngInput.value = match[2];
+                    coordsInput.value = match[1] + ',' + match[2];
                 } else {
-                    document.getElementById('location_coordinates').value = '';
+                    coordsInput.value = '';
                 }
             });
 
@@ -198,6 +254,8 @@
 
                         locationLinkInput.value = osmLink;
                         locationCoordinatesInput.value = `${lat},${lng}`;
+                        document.getElementById('latitude').value = lat;
+                        document.getElementById('longitude').value = lng;
 
                         locationLinkInput.classList.remove('error');
                         const locationLinkLabel = document.querySelector('label[for="location_link"]');
