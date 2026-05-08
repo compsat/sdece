@@ -17,22 +17,15 @@ import {
   collection,
   getDocs,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-import hardcodedEvacCenters from '../hardcode/evac-centers.json' with {type: 'json'};
-
-// Combined list of evac centers — hardcoded JSON plus any docs saved in Firestore.
-let evacCenters = [...hardcodedEvacCenters];
+// Evacuation centers are loaded exclusively from the `buklod-evac-centers` Firestore collection.
+let evacCenters = [];
 
 async function loadEvacCentersFromFirestore() {
   try {
     const snapshot = await getDocs(collection(DB, 'buklod-evac-centers'));
-    console.log(`[evac] Firestore returned ${snapshot.size} doc(s) from buklod-evac-centers`);
     snapshot.forEach(snap => {
       const d = snap.data();
-      console.log('[evac] doc', snap.id, d);
-      if (!d || d.latitude == null || d.longitude == null || !d.name || !d.type) {
-        console.warn('[evac] skipped — missing required field', snap.id, d);
-        return;
-      }
+      if (!d || d.latitude == null || d.longitude == null || !d.name || !d.type) return;
       evacCenters.push({
         name: d.name,
         latitude: Number(d.latitude),
@@ -40,7 +33,6 @@ async function loadEvacCentersFromFirestore() {
         type: d.type,
       });
     });
-    console.log(`[evac] total markers to render: ${evacCenters.length}`);
   } catch (err) {
     console.warn('Failed to load evacuation centers from Firestore:', err);
   }
