@@ -7,6 +7,7 @@ import {
   setCollection,
   getCollection,
   filterData,
+  deleteEntry,
   DB,
   BUKLOD_RULES,
 } from '../../js/firestore_UNIV.js';
@@ -23,7 +24,7 @@ import evacCenters from '../hardcode/evac-centers.json' with {type: 'json'};
 // CODE LOGIC FOR SET-UP
 // ------------------------------------------
 // Pans map to Banaba area upon loading the page
-map.panTo(new L.LatLng(14.673, 121.11215));
+map.setView([14.674043754743689, 121.11081361770631], 18);
 
 // Load Map Tile Layer
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -51,6 +52,7 @@ document.addEventListener('click', function(event) {
     
     const lat = event.target.getAttribute('data-lat');
     const lng = event.target.getAttribute('data-lng');
+    const osmLink = `https://www.openstreetmap.org/#map=19/${lat}/${lng}`;
 
     var modal = document.getElementById('addModal');
 
@@ -60,22 +62,30 @@ document.addEventListener('click', function(event) {
 
     // Set the coordinates in the iframe form
     var iframe = modal.getElementsByTagName('iframe')[0];
-    var iframeDocument = iframe.contentWindow.document;
+    
+    function populateAddLocationFields() {
+      var iframeDocument = iframe.contentWindow.document;
+      var locationField = iframeDocument.getElementById('location_coordinates');
+      var locationLinkField = iframeDocument.getElementById('location_link');
+
+      if (locationField) {
+        locationField.value = `${lat},${lng}`;
+      }
+
+      if (locationLinkField) {
+        locationLinkField.value = osmLink;
+        locationLinkField.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    }
     
     // Wait for iframe to load then set coordinates
     iframe.onload = function() {
-      var locationField = iframeDocument.getElementById('location_coordinates');
-      if (locationField) {
-        locationField.value = lat + ',' + lng;
-      }
+      populateAddLocationFields();
     };
     
-    // If iframe is already loaded, set coordinates immediately
+    // If iframe is already loaded, set fields immediately
     if (iframe.contentWindow.document.readyState === 'complete') {
-      var locationField = iframeDocument.getElementById('location_coordinates');
-      if (locationField) {
-        locationField.value = lat + ',' + lng;
-      }
+      populateAddLocationFields();
     }
 
     // Close the popup after opening modal
@@ -115,55 +125,85 @@ function populateNavBar(condition){
 
     listItem.setAttribute('data-name', partner.household_name);
 
-    
     // Set attributes
     anchor.href = '#';
-    
+
     listItem.addEventListener('click', async () => {
       const docId = await getDocIdByPartnerName(partner.household_name);
       const doc = await getDocByID(docId);
 
-      map.setView(partner.marker.getLatLng()); // change zoom: 1, you can see america and europe. 18, banaba area
+      map.setView(partner.marker.getLatLng());
       onPinClick(doc).then(popupHTML => {
         partner.marker.bindPopup(popupHTML, {
           className: 'household-popup'
-        }).openPopup(); // this replaces fire('popupopen')
+        }).openPopup();
       });
     });
-
 
     // Adding classes and setting text content
     nameDiv.classList.add('name');
     addressDiv.classList.add('address');
-    
+
     nameDiv.textContent = partner.household_name;
-    addressDiv.textContent =
-    partner.household_address + ' ' + partner.household_phase;
-    
+    addressDiv.textContent = [partner.household_address, partner.household_phase].filter(Boolean).join(' ');
+
     listItem.classList.add('accordion');
     anchor.classList.add('accordion', 'link');
     containerDiv.classList.add('container-entry');
-    
+
+    // Inline edit button (pencil icon, top-right of card)
+    const editBtn = document.createElement('button');
+    editBtn.classList.add('sidebar-edit-btn');
+    editBtn.title = 'Edit household';
+    editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+    // Force positioning inline so browser button defaults can't override
+    editBtn.style.cssText = 'position:absolute;top:8px;right:8px;width:28px;height:28px;border:none;background:transparent;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b7280;padding:0;opacity:0;transition:opacity 0.15s ease,background-color 0.15s ease,color 0.15s ease;';
+    listItem.style.position = 'relative';
+    editBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // don't trigger the listItem map-open click
+      const editFormModal = document.getElementById('editModal');
+      editFormModal.style.display = 'flex';
+      editFormModal.classList.remove('closing');
+      populateEditForm(partner, editFormModal);
+    });
+    editBtn.addEventListener('mouseenter', () => {
+      editBtn.style.backgroundColor = '#e5e7eb';
+      editBtn.style.color = '#1a357b';
+    });
+    editBtn.addEventListener('mouseleave', () => {
+      editBtn.style.backgroundColor = 'transparent';
+      editBtn.style.color = '#6b7280';
+    });
+    listItem.addEventListener('mouseenter', () => { editBtn.style.opacity = '1'; });
+    listItem.addEventListener('mouseleave', () => { editBtn.style.opacity = '0'; });
+
     // Append elements to the DOM
     anchor.appendChild(nameDiv);
     anchor.appendChild(addressDiv);
-    
+
     listItem.appendChild(anchor);
+    listItem.appendChild(editBtn);
     containerDiv.appendChild(img);
     containerDiv.appendChild(listItem);
     locationList.appendChild(containerDiv);
   });
 }
 populateNavBar();
+if (window.reapplySort) window.reapplySort(); // reapply current sorting if any
 // ------------------------------------------
 
 
 // CODE LOGIC FOR OPENING MAIN MODAL
 // ------------------------------------------
+let cachedModalHtml = null;
+
 // Function to access the main_modal.html and populate it with data
 async function onPinClick(doc) {
-  const modal = await fetch('/app_buklod-tao/html/main_modal.html');
-  const html = await modal.text();
+  if (!cachedModalHtml) {
+    const modal = await fetch('/app_buklod-tao/html/main_modal.html');
+    cachedModalHtml = await modal.text();
+  }
+  const html = cachedModalHtml;
 
   const wrapper = document.createElement('div');
   wrapper.innerHTML = html;
@@ -187,6 +227,9 @@ async function onPinClick(doc) {
         break;
       case 'is_hoa_noa':
         ul.textContent = doc.is_hoa_noa || 'N/A';
+        break;
+      case 'risk_level':
+        ul.textContent = doc.risk_level || 'N/A';
         break;
       case 'nearest_evac':
         ul.textContent = doc.nearest_evac || '';
@@ -261,7 +304,7 @@ async function onPinClick(doc) {
     }
   });
 
-  // Risk card color display dependent on rosk level
+  // Risk card color display dependent on risk level
   wrapper.querySelectorAll('[data-risk-card]').forEach(ul => {
     const key = ul.getAttribute('data-risk-card');
     const raw = doc[key] || '';
@@ -279,6 +322,12 @@ async function onPinClick(doc) {
         ul.classList.add('risk-low');
         break;
     }
+  });
+
+  // Show only the risk card matching the active risk type filter
+  const activeRiskType = riskSortEl.value.replace('-sort', '_risk');
+  wrapper.querySelectorAll('.risk-card').forEach(card => {
+    card.style.display = card.getAttribute('data-risk-card') === activeRiskType ? '' : 'none';
   });
 
   return wrapper.innerHTML;
@@ -353,7 +402,7 @@ if(closeForm) {
 // Closing the modal if the user clicks outside of it
 window.onclick = function (event) {
   if (event.target == formModal) {
-    formModal.style.display = 'none';
+    hideModalContainer('addModal');
   }
   if (event.target == partnerModal) {
     partnerModal.style.display = 'none';
@@ -372,7 +421,6 @@ window.addEventListener('message', function(event) {
   }
 });
 
-addListeners();
 // ------------------------------------------
 
 
@@ -410,7 +458,7 @@ document.getElementById('download-report').addEventListener('click', async () =>
 
 	// Generate risk sheets
 	for (const riskType of riskTypes) {
-		const sheetData = [['Household Name', 'Address', 'Phase', 'Contact Number', 'Number of Residents', 'Residency Status', 'Risk Level', 'Risk Description', 'House Material']];
+		const sheetData = [['Household Name', 'Address', 'Contact Number', 'Number of Residents', 'Residency Status', 'Risk Level', 'Risk Description', 'House Material']];
 
 		const households = [...allHouseholds].sort((a, b) => sortByHouseholdName(a, b));
 
@@ -424,7 +472,6 @@ document.getElementById('download-report').addEventListener('click', async () =>
 			sheetData.push([
 				h.household_name || '',
 				h.household_address || '',
-				h.phase || '',
 				h.contact_number || '',
 				h.number_residents || 0,
 				h.residency_status || '',
@@ -449,6 +496,7 @@ document.getElementById('download-report').addEventListener('click', async () =>
 			h.contact_number || '',
 			h.residency_status || '',
 			h.is_hoa_noa || '',
+      h.risk_level || '',
 			h.number_residents || 0,
 			h.number_minors || 0,
 			h.number_seniors || 0,
@@ -490,6 +538,7 @@ document.getElementById('download-report').addEventListener('click', async () =>
 			h.contact_number || '',
 			h.residency_status || '',
 			h.is_hoa_noa || '',
+      h.risk_level || '',
 			h.number_residents || 0,
 			h.number_minors || 0,
 			h.number_seniors || 0,
@@ -541,7 +590,7 @@ function attachMarkers(partners) {
 
     marker.on('popupopen', () => {
       setTimeout(() => {
-        const edit_button = document.querySelectorAll(".popup-edit-btn");
+        const edit_button = document.querySelectorAll(".popup-edit-btn:not(.popup-delete-btn)");
 
         edit_button.forEach((btn) => {
           btn.addEventListener('click', function() {
@@ -553,13 +602,22 @@ function attachMarkers(partners) {
           });
         });
 
+        const delete_button = document.getElementById("delete-household-popup");
+        if (delete_button) {
+          delete_button.addEventListener('click', async function() {
+            if (!confirm(`Delete "${partner.household_name}"? This cannot be undone.`)) return;
+            const docId = await getDocIdByPartnerName(partner.household_name);
+            if (docId) deleteEntry(docId);
+          });
+        }
+
         const close_button = document.getElementById("close-btn");
         if (close_button) {
           close_button.addEventListener('click', () => {
             marker.closePopup();
           });
         }
-        
+
       }, 0);
     });
 
@@ -601,7 +659,13 @@ function updateRiskIcons() {
   
   clearMarkers();
 
-  partnersArray.forEach((partner) => {
+  partnersArray.forEach((partner, docId) => {
+    // Respect active filter: skip partners excluded by the last applied filter
+    if (activeFilteredIds !== null && !activeFilteredIds.has(docId)) {
+      partner.marker = null;
+      return;
+    }
+
     const coord = partner.location_coordinates;
     if (!coord) return;   // Skip household entry if no coordinates were listed
 
@@ -625,16 +689,16 @@ function updateRiskIcons() {
     });
 
     partner.marker = marker; // store reference here
-    map.addLayer(marker);
+    map.addLayer(marker); // add marker once
 
     marker.on('popupopen', () => {
       // Use setTimeout to defer this to after the popup DOM is actually rendered
       setTimeout(() => {
-        const edit_button = document.querySelectorAll(".popup-edit-btn");
+        const edit_button = document.querySelectorAll(".popup-edit-btn:not(.popup-delete-btn)");
 
         edit_button.forEach((btn) => {
           btn.addEventListener('click', function() {
-            
+
             const modal = document.getElementById('partnerModal');
             var editFormModal = document.getElementById('editModal');
             editFormModal.style.display = 'flex';
@@ -643,6 +707,15 @@ function updateRiskIcons() {
             populateEditForm(partner, editFormModal);
           });
         });
+
+        const delete_button = document.getElementById("delete-household-popup");
+        if (delete_button) {
+          delete_button.addEventListener('click', async function() {
+            if (!confirm(`Delete "${partner.household_name}"? This cannot be undone.`)) return;
+            const docId = await getDocIdByPartnerName(partner.household_name);
+            if (docId) deleteEntry(docId);
+          });
+        }
 
         
         // Function for sidebar scrolling and highlighting when clicking from sidebar or pin
@@ -655,10 +728,7 @@ function updateRiskIcons() {
         listItem.classList.add('highlight');
         }
       }, 0);
-      
     });
-
-    map.addLayer(marker);
   });
 
   // Add popup close handler
@@ -666,40 +736,118 @@ function updateRiskIcons() {
     clearAllHighlights();
   });
 
-  // Code logic for displaying evac centers
+  addEvacCenters();
+
+  // Re-apply active search so only searched households are visible on the map
+  if (window.activeSearchQuery && window.filterMarkersBySearch) {
+    window.filterMarkersBySearch(window.activeSearchQuery);
+  }
+}
+
+let appliedShelterTypes = []; // empty = show all types
+let activeFilteredIds = null; // null = no filter active; Set<docId> = only show these
+
+function addEvacCenters() {
   evacCenters.forEach(center => {
-    
+    if (appliedShelterTypes.length > 0 && !appliedShelterTypes.includes(center.type)) return;
+
     const marker_icon = L.icon({
       iconUrl: "/app_buklod-tao/hardcode/evac_center_v2.svg",
       iconSize: [39,39],
       popupAnchor: [0.5, -15]
-    })
-    
-    const marker = L.marker([center.latitude, center.longitude], {icon: marker_icon})
+    });
 
+    const marker = L.marker([center.latitude, center.longitude], { icon: marker_icon });
     marker.bindPopup(`
-      <div class = "evac-marker-header">${center.type}</div>
-      <div style = "text-align:center;">
-      <b>${center.name}</b>
-      <br>Location: ${center.latitude}, ${center.longitude}
+      <div class="evac-marker-header">${center.type}</div>
+      <div style="text-align:center;">
+        <b>${center.name}</b>
+        <br>Location: ${center.latitude}, ${center.longitude}
       </div>`, {
         className: 'evacuation-center-popup'
       });
-      map.addLayer(marker);
-      
-    });
+    map.addLayer(marker);
+  });
 }
 
-// Code logic for automatically changing pin color depending on selected option on dropbox 
-document.getElementById('risk-sort').addEventListener('change', updateRiskIcons);
+// Code logic for automatically changing pin color depending on selected option on dropbox
+// and keeping the filter modal's Risk Type in sync
+const riskSortEl = document.getElementById('risk-sort');
+const riskTypeFilterEl = document.getElementById('riskTypeFilter');
+
+function syncRiskTypeFilter(sidebarValue) {
+  if (riskTypeFilterEl) {
+    riskTypeFilterEl.value = sidebarValue.replace('-sort', '_risk');
+  }
+}
+
+function syncRiskSort(filterValue) {
+  riskSortEl.value = filterValue.replace('_risk', '-sort');
+}
+
+riskSortEl.addEventListener('change', async () => {
+  syncRiskTypeFilter(riskSortEl.value);
+  // If risk level checkboxes are active, re-apply the filter for the new risk type
+  const activeRiskLevels = getCheckedValuesByFilter('risk_level');
+  if (activeRiskLevels.length > 0) {
+    await applyFilterAndUpdate();
+  } else {
+    updateRiskIcons();
+  }
+});
+
+// riskTypeFilter changes only take effect when Apply Filters is clicked
+
+// Initialize filter modal in sync with sidebar on load
+syncRiskTypeFilter(riskSortEl.value);
 updateRiskIcons();
 // ------------------------------------------
 
 // CODE LOGIC FOR FILTER MODAL UI
 // ------------------------------------------
+
+// Capture the current modal UI into a state object (module-level so sidebar can access)
+function captureFilterState() {
+  const checkboxes = {};
+  document.querySelectorAll('#filterModal input[type="checkbox"]').forEach(cb => {
+    checkboxes[`${cb.getAttribute('data-filter')}::${cb.value}`] = cb.checked;
+  });
+  return { checkboxes, riskType: riskTypeFilterEl.value };
+}
+
+// Tracks what was last applied — module-level so sidebar changes can update it
+let appliedFilterState = null; // initialized after DOM is ready in initializeFilterModal
+
+// Core filter-apply logic shared by the Apply button and sidebar risk type changes
+async function applyFilterAndUpdate() {
+  appliedFilterState = captureFilterState();
+  appliedShelterTypes = getCheckedValuesByFilter('shelter_type');
+  syncRiskSort(riskTypeFilterEl.value);
+  const filteredData = await presentFilteredData();
+  clearMarkers();
+  const filteredWithMarkers = attachMarkers(filteredData);
+
+  // Track which doc IDs passed the filter so updateRiskIcons and
+  // filterMarkersBySearch both respect the active filter.
+  activeFilteredIds = new Set(filteredWithMarkers.keys());
+
+  // Sync new marker references back into partnersArray so filterMarkersBySearch
+  // operates on correct markers and can't reveal filter-excluded partners.
+  partnersArray.forEach((partner) => { partner.marker = null; });
+  filteredWithMarkers.forEach((filteredPartner, docId) => {
+    const original = partnersArray.get(docId);
+    if (original) original.marker = filteredPartner.marker;
+  });
+
+  addEvacCenters();
+  populateNavBar(filteredWithMarkers);
+  if (window.reapplySort) window.reapplySort();
+  if (window.reapplySearch) window.reapplySearch();
+  updateFilterButtonState();
+}
+
 // Initialize filter modal functionality when DOM is loaded
 function initializeFilterModal() {
-  // Filter Modal Controls
   const filterBtn = document.getElementById('filterBtn');
   const filterModal = document.getElementById('filterModal');
   const filterClose = document.getElementById('filterClose');
@@ -711,55 +859,52 @@ function initializeFilterModal() {
     return;
   }
 
-  // Open filter modal
+  // Restore the modal UI to a previously captured state
+  function restoreFilterState(state) {
+    document.querySelectorAll('#filterModal input[type="checkbox"]').forEach(cb => {
+      const key = `${cb.getAttribute('data-filter')}::${cb.value}`;
+      cb.checked = state.checkboxes[key] || false;
+    });
+    riskTypeFilterEl.value = state.riskType;
+  }
+
+  // Initialize applied state now that DOM is ready
+  appliedFilterState = captureFilterState();
+
+  // Open: restore to last applied state so unapplied changes don't persist
   filterBtn.addEventListener('click', () => {
+    restoreFilterState(appliedFilterState);
     filterModal.style.display = 'flex';
     filterModal.classList.remove('closing');
   });
 
-  // Close filter modal with animation
-  function closeFilterModal() {
+  // Close with animation; optionally discard unapplied changes
+  function closeFilterModal(discardChanges = true) {
+    if (discardChanges) restoreFilterState(appliedFilterState);
     filterModal.classList.add('closing');
     setTimeout(() => {
       filterModal.style.display = 'none';
       filterModal.classList.remove('closing');
-    }, 300); // Match the animation duration
+    }, 300);
   }
 
-  filterClose.addEventListener('click', closeFilterModal);
+  filterClose.addEventListener('click', () => closeFilterModal(true));
   filterModal.addEventListener('click', (e) => {
-    if (e.target === filterModal) {
-      closeFilterModal();
-    }
+    if (e.target === filterModal) closeFilterModal(true);
   });
 
-  // Apply filters
+  // Apply: run shared apply logic then close modal
   applyFilters.addEventListener('click', async () => {
-    const filteredData = await presentFilteredData();
-
-    clearMarkers(); // remove old markers from map
-
-    const filteredWithMarkers = attachMarkers(filteredData);
-
-    populateNavBar(filteredWithMarkers);
-    updateFilterButtonState();
-    closeFilterModal();
+    await applyFilterAndUpdate();
+    closeFilterModal(false); // already saved — don't discard
   });
 
-  // Clear all filters
+  // Clear All: resets UI only, not saved until Apply is clicked
   clearFilters.addEventListener('click', () => {
-    // Reset all checkboxes
-    document.querySelectorAll('#filterModal input[type="checkbox"]').forEach(checkbox => {
-      checkbox.checked = false;
+    document.querySelectorAll('#filterModal input[type="checkbox"]').forEach(cb => {
+      cb.checked = false;
     });
-    
-    // Reset risk type dropdown
-    const riskTypeFilter = document.getElementById('riskTypeFilter');
-    if (riskTypeFilter) {
-      riskTypeFilter.value = '';
-    }
-    
-    // Reset visual state
+    riskTypeFilterEl.value = riskTypeFilterEl.options[0]?.value || '';
     updateFilterButtonState();
   });
 }
@@ -800,32 +945,101 @@ function updateFilterButtonState() {
   }
 }
 
+const STANDARD_MATERIALS = ['Concrete', 'Semi-Concrete', 'Light materials', 'Makeshift', 'Natural'];
+
 export async function presentFilteredData() {
   const rawInput = collectAllFilterSelections();
-  console.log("Raw input:", rawInput);
+  const selectedShelterTypes = getCheckedValuesByFilter('shelter_type');
 
-  const transformedData = { ...rawInput };
+  const riskType = (rawInput.risk_type && rawInput.risk_type !== 'all' && rawInput.risk_type !== '')
+    ? rawInput.risk_type
+    : null;
+  const riskLevels = rawInput.risk_level; // always an array
 
-  // map risk_type + risk_level into fire_risk: HIGH
-  if (rawInput.risk_type && rawInput.risk_level) {
-    transformedData[rawInput.risk_type] = rawInput.risk_level;
-    delete transformedData.risk_type;
-    delete transformedData.risk_level;
+  // Separate "Other" catchall from standard material selections
+  const rawMaterials = rawInput.household_material || [];
+  const hasOtherMaterial = rawMaterials.includes('__other__');
+  const standardMaterialsSelected = rawMaterials.filter(m => m !== '__other__');
+
+  // Build transformedData without risk_type and risk_level
+  const transformedData = {
+    residency_status: rawInput.residency_status,
+    // If "Other" is checked, skip material filter in Firestore — handle client-side below
+    household_material: hasOtherMaterial ? [] : standardMaterialsSelected,
+    is_hoa_noa: rawInput.is_hoa_noa,
+  };
+
+  if (riskLevels.length > 0) {
+    if (riskType) {
+      // Specific risk type selected
+      transformedData[riskType] = riskLevels;
+    } else {
+      // No risk type
+      transformedData._riskLevelAny = riskLevels;
+    }
   }
 
-  console.log("Mapped:", transformedData);
+  const needsAnyRiskFilter = riskLevels.length > 0 && !riskType;
 
-  const finalData = await filterData("buklod-tao", transformedData);
+  let finalData;
 
-  console.log("Final:", finalData);
+  if (needsAnyRiskFilter) {
+    const baseData = await filterData("buklod-tao", transformedData);
+    const riskFields = ['earthquake_risk', 'fire_risk', 'flood_risk', 'landslide_risk', 'storm_risk'];
+
+    finalData = new Map();
+    baseData.forEach((doc, id) => {
+      const matchesRisk = riskFields.some(field => riskLevels.includes(doc[field]));
+      if (matchesRisk) finalData.set(id, doc);
+    });
+  } else {
+    finalData = await filterData("buklod-tao", transformedData);
+  }
+
+  // Client-side pass: apply "Other" material catchall
+  if (hasOtherMaterial) {
+    const filtered = new Map();
+    finalData.forEach((doc, id) => {
+      const mat = doc.household_material || '';
+      const isNonStandard = !STANDARD_MATERIALS.includes(mat);
+      const isSelectedStandard = standardMaterialsSelected.includes(mat);
+      if (isNonStandard || isSelectedStandard) filtered.set(id, doc);
+    });
+    finalData = filtered;
+  }
+
+  // Shelter type options map to dedicated shelter markers, not household docs.
+  // When a shelter type is selected, hide all households and let addEvacCenters()
+  // render only the chosen shelter markers.
+  if (selectedShelterTypes.length > 0) {
+    finalData = new Map();
+  }
 
   return finalData;
 }
 
 
 
-// Initialize filter modal when DOM is ready
-document.addEventListener('DOMContentLoaded', initializeFilterModal);
+// Module scripts run after DOM is parsed, so call directly
+initializeFilterModal();
 
-// Also initialize after a short delay to ensure all elements are loaded
-setTimeout(initializeFilterModal, 1000);
+window.filterMarkersBySearch = function(query) {
+  const input = query.trim();
+  const escaped = input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = escaped ? new RegExp('\\b' + escaped + '\\b', 'i') : null;
+
+  partnersArray.forEach((partner) => {
+    if (!partner.marker) return;
+    if (!regex) {
+      map.addLayer(partner.marker);
+    } else {
+      const nameMatch = regex.test(partner.household_name || '');
+      const addressMatch = regex.test(partner.household_address || '');
+      if (nameMatch || addressMatch) {
+        map.addLayer(partner.marker);
+      } else {
+        map.removeLayer(partner.marker);
+      }
+    }
+  });
+};

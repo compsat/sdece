@@ -1,51 +1,113 @@
 // FIRESTORE DATABASE
 
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 import {
-  getFirestore,
   getDocs,
-  doc,
-  getDoc,
   GeoPoint,
+  doc,
+  updateDoc,
+  deleteField,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-import { 
-  getCollection, 
-  setCollection, 
-  BUKLOD_RULES, 
-  validateData, 
+import {
+  getCollection,
+  setCollection,
+  BUKLOD_RULES,
+  validateData,
   editEntry,
   addEntry,
   getCoordinates,
   getDocIdByPartnerName,
 } from '/js/firestore_UNIV.js';
-// Your Firestore code here
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const FIREBASE_CONFIG = {
-  apiKey: 'AIzaSyA8QWgic_hjbDL-EYIkvSRRII_yfTRdtOQ',
-  authDomain: 'discs-osci-prj.firebaseapp.com',
-  projectId: 'discs-osci-prj',
-  storageBucket: 'discs-osci-prj.appspot.com',
-  messagingSenderId: '601571823960',
-  appId: '1:601571823960:web:1f1278ecb86aa654e6152d',
-  measurementId: 'G-9N9ELDEMX9',
-};
 
 var collection_value = 'buklod-official'
 
-initializeApp(FIREBASE_CONFIG);
-const db = getFirestore();
 setCollection(collection_value);
 const colRef = getCollection();
 let partnersArray = new Map();
 
-export function getDocByID(docId) {
-  const docReference = doc(db, 'nstp-3', docId);
-  let docObj = {};
-  return getDoc(docReference).then((doc) => {
-    docObj = doc.data();
-    return docObj;
-  });
+// Normalize legacy field names from CSV-imported documents
+const LEGACY_FIELD_MAP = {
+  ownership_status:    'residency_status',
+  bilang_walang_sakit: 'number_healthy',
+  materyales_bahay:    'household_material',
+  evacuation_area:     'nearest_evac',
+  awareness_readiness: 'knowledge_readiness',
+};
+
+// Returns { normalized, legacyKeys, fieldUpdates }
+// legacyKeys  — old field names to delete from Firestore
+// fieldUpdates — field values that were normalized and need writing back
+function normalizeLegacyDoc(data) {
+  const normalized = Object.assign({}, data);
+  const legacyKeys = [];
+  const fieldUpdates = {};
+
+  // Rename legacy fields
+  for (const [oldKey, newKey] of Object.entries(LEGACY_FIELD_MAP)) {
+    if (oldKey in normalized) {
+      legacyKeys.push(oldKey);
+      if (!(newKey in normalized)) {
+        normalized[newKey] = normalized[oldKey];
+      }
+      delete normalized[oldKey];
+    }
+  }
+
+  // Parse house_coordinates → location_coordinates GeoPoint + location_link
+  if ('house_coordinates' in normalized) {
+    legacyKeys.push('house_coordinates');
+    if (!normalized.location_coordinates) {
+      const raw = (normalized.house_coordinates || '').toString().trim();
+      const parts = raw.split(',').map(s => s.trim());
+      if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+        const lat = parseFloat(parseFloat(parts[0]).toFixed(5));
+        const lng = parseFloat(parseFloat(parts[1]).toFixed(5));
+        normalized.location_coordinates = new GeoPoint(lat, lng);
+        if (!normalized.location_link) {
+          normalized.location_link = `https://www.openstreetmap.org/#map=19/${lat}/${lng}`;
+        }
+      }
+    }
+    delete normalized.house_coordinates;
+  }
+
+  // Normalize household_material long-form values → canonical short form
+  if (normalized.household_material) {
+    const mat = normalized.household_material.trim().toLowerCase();
+    let canonical = null;
+    if (mat.startsWith('natural'))                            canonical = 'Natural';
+    else if (mat.startsWith('semi'))                          canonical = 'Semi-Concrete';
+    else if (mat.startsWith('concrete'))                      canonical = 'Concrete';
+    else if (mat.startsWith('light'))                         canonical = 'Light materials';
+    else if (mat.startsWith('makeshift'))                     canonical = 'Makeshift';
+    if (canonical && canonical !== normalized.household_material) {
+      normalized.household_material = canonical;
+      fieldUpdates.household_material = canonical;
+    }
+  }
+
+  // Normalize residency_status casing
+  if (normalized.residency_status) {
+    const rs = normalized.residency_status.trim().toLowerCase();
+    let canonical = null;
+    if (rs === 'may-ari' || rs === 'may ari') canonical = 'May-Ari';
+    else if (rs === 'umuupa')                 canonical = 'Umuupa';
+    if (canonical && canonical !== normalized.residency_status) {
+      normalized.residency_status = canonical;
+      fieldUpdates.residency_status = canonical;
+    }
+  }
+
+  // Derive household_address from house_number + street if missing
+  if (!normalized.household_address) {
+    const houseNum = (normalized.house_number || '').toString().trim();
+    const street   = (normalized.street || '').toString().trim();
+    if (houseNum || street) {
+      normalized.household_address = [houseNum, street].filter(Boolean).join(', ');
+      fieldUpdates.household_address = normalized.household_address;
+    }
+  }
+
+  return { normalized, legacyKeys, fieldUpdates };
 }
 
 // get docs from firestore
@@ -57,13 +119,41 @@ export function getPartnersArray() {
 const loadData = async() => {
 	const getRefs = async() => {
 		await getDocs(colRef)
-	.then((querySnapshot) => {
-		querySnapshot.forEach((doc) => {
-      let docData = doc.data();
-      let docID = doc.id;
-			partnersArray.set(docID,docData);
-    
+	.then(async (querySnapshot) => {
+		const writebacks = [];
+
+		querySnapshot.forEach((snapshot) => {
+      const { normalized, legacyKeys, fieldUpdates } = normalizeLegacyDoc(snapshot.data());
+      const docID = snapshot.id;
+			partnersArray.set(docID, normalized);
+
+      const hasLegacyKeys = legacyKeys.length > 0;
+      const hasFieldUpdates = Object.keys(fieldUpdates).length > 0;
+
+      if (hasLegacyKeys || hasFieldUpdates) {
+        const update = {};
+        if (hasLegacyKeys) {
+          // Full field-rename: write all normalized values and delete old keys
+          for (const key of Object.keys(normalized)) {
+            update[key] = normalized[key];
+          }
+          for (const oldKey of legacyKeys) {
+            update[oldKey] = deleteField();
+          }
+        }
+        // Write back any value-only normalizations (material, residency, address)
+        Object.assign(update, fieldUpdates);
+        writebacks.push({ docID, update });
+      }
 		});
+
+    // Fire write-backs silently in the background
+    for (const { docID, update } of writebacks) {
+      const docRef = doc(colRef, docID);
+      updateDoc(docRef, update).catch((err) => {
+        console.warn(`Failed to normalize doc ${docID}:`, err);
+      });
+    }
 	})
 	.catch((error) => {
 		console.error('Error getting documents: ', error);
@@ -86,6 +176,8 @@ export function populateEditForm(partner, editFormModal) {
   originalField.value = partner.household_name;
   editForm.body.appendChild(originalField);
 
+
+  const standardMaterials = ['Concrete', 'Semi-Concrete', 'Light materials', 'Makeshift', 'Natural'];
 
   for (var data in partner) {
     // some households have a 'marker' or 'status' attribute. Check database for status fields. 
@@ -121,6 +213,23 @@ export function populateEditForm(partner, editFormModal) {
       editForm.getElementById(data).value = riskLevel;
     }
 
+  }
+
+  // If the stored material is not a standard option, select "Other" and show the custom input
+  const storedMaterial = partner.household_material;
+  if (storedMaterial && !standardMaterials.includes(storedMaterial)) {
+    const materialSelect = editForm.getElementById('household_material');
+    const materialOther = editForm.getElementById('household_material_other');
+    if (materialSelect) materialSelect.value = 'Other';
+    if (materialOther) {
+      materialOther.value = storedMaterial;
+      materialOther.style.display = 'block';
+    }
+  }
+
+  // Sync evacuation area checkboxes from the stored nearest_evac value
+  if (iframe.contentWindow.syncEvacCheckboxes) {
+    iframe.contentWindow.syncEvacCheckboxes();
   }
 }
 
@@ -281,7 +390,7 @@ export function submitAddForm(){
       let fieldName = BUKLOD_RULES[2][i];
       let inputValue = document.getElementById(fieldName).value;
 
-      if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick' || fieldName == 'number_seniors') {
+      if (fieldName == 'number_residents' || fieldName == 'number_minors' || fieldName == 'number_pregnant' || fieldName == 'number_pwd' || fieldName == 'number_sick' || fieldName == 'number_seniors' || fieldName == 'number_families' || fieldName == 'number_healthy' || fieldName == 'exit_points' || fieldName == 'knowledge_readiness') {
           collatedInput[fieldName] = Number(inputValue);
       } else if (fieldName == 'location_coordinates') {
           const geoPoint = getCoordinates(inputValue);
