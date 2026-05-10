@@ -706,6 +706,35 @@ h1.entries {
 }
 /* --------------------------- */
 
+#togglePinsBtn span {
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+.sidebar-legend {
+  padding: 12px 16px;
+  font-family: 'Geist', sans-serif;
+  font-size: 13px;
+  color: #374151 !important;
+}
+
+.sidebar-legend .legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #374151 !important;
+}
+
+.sidebar-legend .legend-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
 /* Add Household Modal
 --------------------------- */
 .partner-geolocation {

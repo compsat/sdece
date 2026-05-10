@@ -153,6 +153,15 @@ function populateNavBar(condition){
       const doc = await getDocByID(docId);
 
       map.setView(partner.marker.getLatLng());
+      
+      if (!map.hasLayer(partner.marker)) {
+        map.addLayer(partner.marker);
+        
+        partner.marker.once('popupclose', () => {
+          if (!window.pinsVisible) map.removeLayer(partner.marker);
+        });
+      }
+      
       onPinClick(doc).then(popupHTML => {
         partner.marker.bindPopup(popupHTML, {
           className: 'household-popup'
@@ -232,6 +241,16 @@ function populateNavBarWithEvacCenters(centers) {
     listItem.addEventListener('click', () => {
       if (center.marker) {
         map.setView(center.marker.getLatLng());
+        
+        if (!map.hasLayer(center.marker)) {
+          map.addLayer(center.marker);
+          
+          // Hide the pin again when the popup closes (if pins are toggled off)
+          center.marker.once('popupclose', () => {
+            if (!window.pinsVisible) map.removeLayer(center.marker);
+          });
+        }
+        
         center.marker.openPopup();
       }
     });
@@ -674,7 +693,9 @@ function attachMarkers(partners) {
     });
 
     partner.marker = marker;
-    map.addLayer(marker);
+    if (window.pinsVisible) {
+      map.addLayer(marker);
+    }
 
     marker.on('popupopen', () => {
       setTimeout(() => {
@@ -777,7 +798,9 @@ function updateRiskIcons() {
     });
 
     partner.marker = marker; // store reference here
-    map.addLayer(marker); // add marker once
+    if (window.pinsVisible) {
+      map.addLayer(marker);
+    }
 
     marker.on('popupopen', () => {
       // Use setTimeout to defer this to after the popup DOM is actually rendered
@@ -822,6 +845,10 @@ function updateRiskIcons() {
   // Add popup close handler
   map.on('popupclose', (e) => {
     clearAllHighlights();
+
+    if (!window.pinsVisible && e.popup._source) {
+      map.removeLayer(e.popup._source);
+    }
   });
 
   addEvacCenters();
@@ -885,7 +912,9 @@ function addEvacCenters() {
     });
 
     center.marker = marker;
-    map.addLayer(marker);
+    if (window.pinsVisible) {
+      map.addLayer(marker);
+    }
   });
 }
 
@@ -1163,16 +1192,54 @@ window.filterMarkersBySearch = function(query) {
 
   partnersArray.forEach((partner) => {
     if (!partner.marker) return;
+    
     if (!regex) {
+      if (window.pinsVisible) map.addLayer(partner.marker);
+      else map.removeLayer(partner.marker);
+      return;
+    }
+
+    const nameMatch = regex ? regex.test(partner.household_name || '') : true;
+    const addressMatch = regex ? regex.test(partner.household_address || '') : true;
+    
+    if (nameMatch || addressMatch || window.pinsVisible) {
       map.addLayer(partner.marker);
     } else {
-      const nameMatch = regex.test(partner.household_name || '');
-      const addressMatch = regex.test(partner.household_address || '');
-      if (nameMatch || addressMatch) {
-        map.addLayer(partner.marker);
-      } else {
-        map.removeLayer(partner.marker);
-      }
+      map.removeLayer(partner.marker);
     }
   });
 };
+
+// Pinpoint Toggle
+
+window.pinsVisible = false; 
+
+const togglePinsBtn = document.getElementById('togglePinsBtn');
+const togglePinsText = document.getElementById('togglePinsText');
+
+togglePinsBtn.addEventListener('click', () => {
+  window.pinsVisible = !window.pinsVisible;
+
+  if (window.pinsVisible) {
+    togglePinsBtn.classList.add('filter-active');
+    togglePinsText.textContent = 'Hide Pins';
+  } else {
+    togglePinsBtn.classList.remove('filter-active');
+    togglePinsText.textContent = 'Show Pins';
+  }
+
+  // Loop through existing data and add/remove markers from map
+  partnersArray.forEach((partner) => {
+    if (partner.marker) {
+      if (window.pinsVisible) map.addLayer(partner.marker);
+      else map.removeLayer(partner.marker);
+    }
+  });
+
+  evacCenters.forEach((center) => {
+    if (center.marker) {
+      if (window.pinsVisible) map.addLayer(center.marker);
+      else map.removeLayer(center.marker);
+    }
+  });
+});
