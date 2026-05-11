@@ -395,15 +395,24 @@
     const addModal = document.getElementById('addModal');
     const addModalIframe = addModal.querySelector('iframe');
 
-    addBtn.addEventListener('click', () => {
-      addModalIframe.src = 'html/addloc.html';
-      addModal.style.display = 'flex'; // show modal
-    });
+    // Switch the iframe to the requested form before showing the modal.
+    // Hide the iframe during load so the previously-loaded form (e.g.
+    // addevac.html left over from a prior open) doesn't flash through.
+    function showAddModal(targetSrc) {
+      addModal.style.display = 'flex';
+      if (addModalIframe.src.endsWith(targetSrc)) {
+        addModalIframe.style.visibility = 'visible';
+        return;
+      }
+      addModalIframe.style.visibility = 'hidden';
+      addModalIframe.onload = function() {
+        addModalIframe.style.visibility = 'visible';
+      };
+      addModalIframe.src = targetSrc;
+    }
 
-    addEvacBtn.addEventListener('click', () => {
-      addModalIframe.src = 'html/addevac.html';
-      addModal.style.display = 'flex'; // show modal
-    });
+    addBtn.addEventListener('click', () => showAddModal('html/addloc.html'));
+    addEvacBtn.addEventListener('click', () => showAddModal('html/addevac.html'));
   </script>
 
 </body>

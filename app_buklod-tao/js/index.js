@@ -81,12 +81,7 @@ document.addEventListener('click', function(event) {
 
     var modal = document.getElementById('addModal');
     var iframe = modal.getElementsByTagName('iframe')[0];
-
-    // Switch the iframe to the right form before showing the modal.
-    iframe.src = target === 'evac' ? 'html/addevac.html' : 'html/addloc.html';
-
-    modal.style.display = 'flex';
-    modal.classList.remove('closing');
+    var targetSrc = target === 'evac' ? 'html/addevac.html' : 'html/addloc.html';
 
     function populateAddLocationFields() {
       var iframeDocument = iframe.contentWindow.document;
@@ -105,8 +100,22 @@ document.addEventListener('click', function(event) {
       }
     }
 
-    // The iframe.src was just reassigned, so onload always fires fresh.
-    iframe.onload = populateAddLocationFields;
+    modal.style.display = 'flex';
+    modal.classList.remove('closing');
+
+    if (iframe.src.endsWith(targetSrc)) {
+      iframe.style.visibility = 'visible';
+      populateAddLocationFields();
+    } else {
+      // Hide the iframe while the new form loads so the previously-loaded
+      // form doesn't briefly show through.
+      iframe.style.visibility = 'hidden';
+      iframe.onload = function() {
+        iframe.style.visibility = 'visible';
+        populateAddLocationFields();
+      };
+      iframe.src = targetSrc;
+    }
 
     // Close the popup after opening modal
     map.closePopup();
