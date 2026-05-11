@@ -382,7 +382,7 @@ function displayErrors(errors) {
 }
 
 // Function for submission of Add Household form
-export function submitAddForm(){
+export async function submitAddForm(){
   var collatedInput = {};
 
   for (let i = 0; i < BUKLOD_RULES[2].length; i++) {
@@ -405,8 +405,20 @@ export function submitAddForm(){
   if (errors.length > 0) {
       displayErrors(errors);
   } else {
-      addEntry(collatedInput);
-      window.parent.document.getElementById('addModal').style.display = 'none';
+      // Suppress the reload-prompt alert from addEntry, then auto-reload
+      const originalAlert = window.alert;
+      window.alert = (msg) => {
+          if (msg && msg.toLowerCase().includes('reload')) {
+              window.alert = originalAlert;
+              window.parent.location.reload();
+          } else {
+              originalAlert(msg);
+          }
+      };
+
+      await addEntry(collatedInput);
+      window.alert = originalAlert; // restore in case addEntry showed no alert
+      window.parent.location.reload();
   };
 }
 // ------------------------------------------

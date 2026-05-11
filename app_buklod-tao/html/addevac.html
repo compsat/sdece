@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Add Evacuation Center</title>
+        <link rel="stylesheet" href="../css/form.css">
+        <link rel="stylesheet" href="../css/main.css">
+        <link href="https://fonts.googleapis.com/css?family=Hind" rel='stylesheet'>
+            
+        <script type="module">
+            // Save a new evacuation center to the `buklod-evac-centers` Firestore collection.
+            import { addDoc, collection } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
+            import { DB } from "/js/firestore_UNIV.js";
+
+            const EVAC_TYPES = ['Evacuation Center', 'Temporary Shelter'];
+
+            function setFieldError(fieldId, message) {
+                const field = document.getElementById(fieldId);
+                const errorContainer = document.getElementById(`${fieldId}_error`);
+                const label = document.querySelector(`label[for="${fieldId}"]`);
+                if (field) field.classList.add('error');
+                if (label) label.classList.add('error');
+                if (errorContainer) {
+                    errorContainer.textContent = message;
+                    errorContainer.classList.add('show');
+                }
+            }
+
+            function validateEvacForm({ name, type, latitude, longitude }) {
+                const errors = [];
+                if (!name) errors.push(['evaccenter_name', 'Evacuation center name is required.']);
+                if (!type) errors.push(['evaccenter_material', 'Evacuation center type is required.']);
+                else if (!EVAC_TYPES.includes(type)) errors.push(['evaccenter_material', `Type must be one of ${EVAC_TYPES.join(', ')}.`]);
+                if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90) {
+                    errors.push(['latitude', 'Latitude must be a number between -90 and 90.']);
+                }
+                if (!Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
+                    errors.push(['longitude', 'Longitude must be a number between -180 and 180.']);
+                }
+                return errors;
+            }
+
+            document.getElementById("submit_form").addEventListener("click", async function() {
+                const submitBtn = this;
+                const name = document.getElementById('evaccenter_name').value.trim();
+                const type = document.getElementById('evaccenter_material').value;
+                const latitude = parseFloat(document.getElementById('latitude').value);
+                const longitude = parseFloat(document.getElementById('longitude').value);
+                const location_link = document.getElementById('location_link').value.trim();
+
+                const errors = validateEvacForm({ name, type, latitude, longitude });
+                if (errors.length > 0) {
+                    errors.forEach(([fieldId, msg]) => setFieldError(fieldId, msg));
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                const originalLabel = submitBtn.textContent;
+                submitBtn.textContent = 'Saving...';
+
+                try {
+                    await addDoc(collection(DB, 'buklod-evac-centers'), {
+                        name,
+                        type,
+                        latitude,
+                        longitude,
+                        location_link: location_link || null,
+                        timestamp: new Date().toISOString(),
+                    });
+                    window.parent.location.reload();
+                } catch (err) {
+                    console.error('Error saving evacuation center:', err);
+                    alert('Error saving evacuation center. Please try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalLabel;
+                }
+            });
+
+        </script>
+
+        <script type="module">
+            import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
+            import { AUTH } from "/js/auth.js";
+
+            const loginURL = "/html/login.html";
+            onAuthStateChanged(AUTH, (user) => {
+                if (!user) {
+                    window.top.location.href = loginURL;
+                }
+            });
+        </script>
+    </head>
+    
+    <body>
+        <div class="modal-container">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <div>
+                    <h1 class="modal-title">Add Evacuation Center</h1>
+                    <p class="modal-subtitle">Register a new evacuation center in the system</p>
+                </div>
+                <button type="button" class="close-btn" id="close-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="modal-content">
+                <!-- Evacuation Center Information Section -->
+                <div class="section">
+                    <div class="section-header">
+                        <svg class="section-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        <h2 class="section-title">Evacuation Center Information</h2>
+                    </div>
+                    
+                    <div class="form-grid single">
+                        <div class="form-group">
+                            <label class="form-label" for="evaccenter_name">Evacuation Center Name</label>
+                            <input type="text" id="evaccenter_name" name="evaccenter_name" class="form-input" placeholder="Enter evacuation center name (Ex. Banaba Elementary School)" required/>
+                            <div class="field-error" id="evaccenter_name_error"></div>
+                        </div>
+                    </div>
+                    <div class="form-grid single">
+                        <div class="form-group">
+                            <label class="form-label" for="evaccenter_material">Type</label>
+                            <select name="evaccenter_material" id="evaccenter_material" class="form-select" required>
+                                <option value="" disabled selected hidden>Select Evacuation Center Type</option>
+                                <option value="Evacuation Center">Evacuation Center</option>
+                                <option value="Temporary Shelter">Temporary Shelter</option>
+                            </select>
+                            <div class="field-error" id="evaccenter_material_error"></div>
+                        </div>
+                    </div>
+                     <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="latitude">Latitude</label>
+                            <input type="text" id="latitude" name="latitude" class="form-input" placeholder="Enter latitude (Ex. 14.67459)" required/>
+                            <div class="field-error" id="latitude_error"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="longitude">Longitude</label>
+                            <input type="text" id="longitude" name="longitude" class="form-input" placeholder="Enter longitude (Ex. 121.11038)" required/>
+                            <div class="field-error" id="longitude_error"></div>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="location_link">Location Link</label>
+                            <input type="text" id="location_link" name="location_link" class="form-input" placeholder="Enter location link (Ex. https://www.openstreetmap.org/ss)" />
+                            <button type="button" id="use_current_location" class="btn btn-secondary" style="margin-top: 8px; width: 100%;">Use Current Location</button>
+                            <div class="field-error" id="location_link_error"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="location_coordinates">
+                                <svg style="display: inline; width: 16px; height: 16px; margin-right: 6px;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                Location Coordinates
+                            </label>
+                            <input type="text" id="location_coordinates" name="location_coordinates" class="form-input" readonly />
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Hidden fields -->
+                <input type="hidden" id="timestamp" name="timestamp" />
+                <input type="hidden" id="source_dataset" name="source_dataset" />
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="clear_form">Clear All</button>
+                <button type="submit" class="btn btn-primary" id="submit_form">Save Evacuation Center</button>
+            </div>
+        </div>
+        
+
+        
+
+        <script>
+
+            function closeModal() {
+                window.parent.postMessage('closeAddModal', '*');
+            }
+
+            // Close button handlers
+            document.getElementById('close-btn').addEventListener('click', function (event) {
+                event.preventDefault();
+                console.log('The user has closed the Add Evacuation Center modal.');
+                closeModal();
+            });
+
+            // Clear all form fields and error states
+            function clearForm() {
+                document.querySelectorAll('.form-input, .form-textarea').forEach(input => {
+                    input.value = '';
+                    input.classList.remove('error');
+                });
+                document.querySelectorAll('.form-select').forEach(select => {
+                    select.selectedIndex = 0;
+                    select.classList.remove('error');
+                });
+                document.querySelectorAll('.field-error').forEach(err => {
+                    err.textContent = '';
+                    err.classList.remove('show');
+                });
+                document.querySelectorAll('.form-label').forEach(label => {
+                    label.classList.remove('error');
+                });
+            }
+
+            // Auto-fill coordinates from OpenStreetMap link, clear if link is removed
+            document.getElementById('location_link').addEventListener('input', function() {
+                const match = this.value.match(/#map=\d+\/([\d.-]+)\/([\d.-]+)/);
+                const latInput = document.getElementById('latitude');
+                const lngInput = document.getElementById('longitude');
+                const coordsInput = document.getElementById('location_coordinates');
+                if (match) {
+                    latInput.value = match[1];
+                    lngInput.value = match[2];
+                    coordsInput.value = match[1] + ',' + match[2];
+                } else {
+                    coordsInput.value = '';
+                }
+            });
+
+            document.getElementById('use_current_location').addEventListener('click', function() {
+                const locationButton = this;
+                const locationLinkInput = document.getElementById('location_link');
+                const locationCoordinatesInput = document.getElementById('location_coordinates');
+                const locationLinkError = document.getElementById('location_link_error');
+
+                if (!navigator.geolocation) {
+                    locationLinkError.textContent = 'Geolocation is not supported by this browser.';
+                    locationLinkError.classList.add('show');
+                    return;
+                }
+
+                locationButton.disabled = true;
+                locationButton.textContent = 'Getting Current Location...';
+                locationLinkError.textContent = '';
+                locationLinkError.classList.remove('show');
+
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude.toFixed(6);
+                        const lng = position.coords.longitude.toFixed(6);
+                        const osmLink = `https://www.openstreetmap.org/#map=19/${lat}/${lng}`;
+
+                        locationLinkInput.value = osmLink;
+                        locationCoordinatesInput.value = `${lat},${lng}`;
+                        document.getElementById('latitude').value = lat;
+                        document.getElementById('longitude').value = lng;
+
+                        locationLinkInput.classList.remove('error');
+                        const locationLinkLabel = document.querySelector('label[for="location_link"]');
+                        if (locationLinkLabel) {
+                            locationLinkLabel.classList.remove('error');
+                        }
+
+                        locationButton.disabled = false;
+                        locationButton.textContent = 'Use Current Location';
+                    },
+                    function(error) {
+                        let message = 'Unable to get current location.';
+
+                        if (error.code === error.PERMISSION_DENIED) {
+                            message = 'Location access was denied. Please allow location permission and try again.';
+                        } else if (error.code === error.POSITION_UNAVAILABLE) {
+                            message = 'Current location is unavailable right now.';
+                        } else if (error.code === error.TIMEOUT) {
+                            message = 'Getting current location timed out. Please try again.';
+                        }
+
+                        locationLinkError.textContent = message;
+                        locationLinkError.classList.add('show');
+                        locationButton.disabled = false;
+                        locationButton.textContent = 'Use Current Location';
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            });
+
+           
+
+            // Hide error messages when user starts typing
+            const inputs = document.querySelectorAll('.form-input, .form-select, .form-textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    // Clear error state for this specific field
+                    this.classList.remove('error');
+                    
+                    // Clear error message for this field
+                    const errorContainer = document.getElementById(`${this.id}_error`);
+                    if (errorContainer) {
+                        errorContainer.textContent = '';
+                        errorContainer.classList.remove('show');
+                    }
+                    
+                    // Clear error state for the label
+                    const label = document.querySelector(`label[for="${this.id}"]`);
+                    if (label) {
+                        label.classList.remove('error');
+                    }
+                });
+                
+                // Also handle change events for select elements
+                if (input.tagName === 'SELECT') {
+                    input.addEventListener('change', function() {
+                        // Clear error state for this specific field
+                        this.classList.remove('error');
+                        
+                        // Clear error message for this field
+                        const errorContainer = document.getElementById(`${this.id}_error`);
+                        if (errorContainer) {
+                            errorContainer.textContent = '';
+                            errorContainer.classList.remove('show');
+                        }
+                        
+                        // Clear error state for the label
+                        const label = document.querySelector(`label[for="${this.id}"]`);
+                        if (label) {
+                            label.classList.remove('error');
+                        }
+                    });
+                }
+            });
+        </script>
+
+
+    </body> 
+</html>
