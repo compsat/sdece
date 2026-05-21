@@ -15,16 +15,26 @@
         import { editEntry, BUKLOD_RULES, getDocIdByPartnerName, getDocByID } from "/js/firestore_UNIV.js";
         import { submitEditForm } from "../js/firestore.js";
 
-        document.getElementById("submit_form").addEventListener("click", function() {
+        document.getElementById("submit_form").addEventListener("click", function(event) {
+            event.preventDefault();
+
+            // ADDED: validation gate before saving household edits
+            if (!validateRequiredFields()) {
+                return;
+            }
+
             const materialSelect = document.getElementById('household_material');
+
             if (materialSelect.value === 'Other') {
                 const custom = document.getElementById('household_material_other').value.trim();
+
                 if (custom) {
                     const tempOption = new Option(custom, custom);
                     materialSelect.add(tempOption);
                     materialSelect.value = custom;
                 }
             }
+
             submitEditForm();
         });
     </script>
@@ -631,6 +641,137 @@
             }
         });
     </script>
+
+    <script>
+            // Reusable banner and validation functions 
+            function getFieldLabel(field) {
+                const label = document.querySelector(`label[for="${field.id}"]`);
+                return label ? label.textContent.trim() : field.name || field.id;
+            }
+
+            function ensureFormBanner() {
+                let banner = document.getElementById('form_error_banner');
+
+                if (!banner) {
+                    banner = document.createElement('div');
+                    banner.id = 'form_error_banner';
+                    banner.className = 'form-banner';
+                    banner.innerHTML = `
+                        <div class="form-banner-title">Please check the form.</div>
+                        <p class="form-banner-message"></p>
+                    `;
+
+                    const modalContent = document.querySelector('.modal-content');
+                    const modalContainer = document.querySelector('.modal-container');
+
+                    if (modalContent) {
+                        modalContent.prepend(banner);
+                    } else if (modalContainer) {
+                        modalContainer.prepend(banner);
+                    }
+                }
+
+                return banner;
+            }
+
+            window.showFormBanner = function(message) {
+                const banner = ensureFormBanner();
+                banner.querySelector('.form-banner-message').textContent = message;
+                banner.classList.add('show');
+                banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            function hideFormBanner() {
+                const banner = document.getElementById('form_error_banner');
+                if (banner) {
+                    banner.classList.remove('show');
+                }
+            }
+
+            function clearFieldError(field) {
+                field.classList.remove('error');
+
+                const errorContainer = document.getElementById(`${field.id}_error`);
+                if (errorContainer) {
+                    errorContainer.textContent = '';
+                    errorContainer.classList.remove('show');
+                }
+
+                const label = document.querySelector(`label[for="${field.id}"]`);
+                if (label) {
+                    label.classList.remove('error');
+                }
+            }
+
+            function validateRequiredFields() {
+                hideFormBanner();
+
+                const errors = [];
+
+                document.querySelectorAll('[required]').forEach(field => {
+                    const value = field.value.trim();
+
+                    if (!value) {
+                        const label = getFieldLabel(field);
+                        errors.push(label);
+
+                        if (typeof setFieldError === 'function') {
+                            setFieldError(field.id, `${label} is required.`);
+                        }
+                    }
+                });
+
+                const contactNumber = document.getElementById('contact_number');
+                if (contactNumber && contactNumber.value.trim()) {
+                    const pattern = /^(09[0-9]{9}|09[0-9]{2}-[0-9]{3}-[0-9]{4}|N\/A)$/;
+
+                    if (!pattern.test(contactNumber.value.trim())) {
+                        errors.push('Contact Number');
+
+                        if (typeof setFieldError === 'function') {
+                            setFieldError(
+                                'contact_number',
+                                'Contact number must be 09XXXXXXXXX, 09XX-XXX-XXXX, or N/A.'
+                            );
+                        }
+                    }
+                }
+
+                const material = document.getElementById('household_material');
+                const materialOther = document.getElementById('household_material_other');
+
+                if (material && material.value === 'Other' && materialOther && !materialOther.value.trim()) {
+                    errors.push('Specify material');
+
+                    if (typeof setFieldError === 'function') {
+                        setFieldError('household_material', 'Please specify the house material.');
+                    }
+
+                    materialOther.classList.add('error');
+                }
+
+                if (errors.length > 0) {
+                    window.showFormBanner(`Required or invalid fields: ${errors.join(', ')}`);
+                    return false;
+                }
+
+                return true;
+            }
+
+            document.addEventListener('input', function(event) {
+                if (event.target.matches('.form-input, .form-select, .form-textarea')) {
+                    clearFieldError(event.target);
+                    hideFormBanner();
+                }
+            });
+
+            document.addEventListener('change', function(event) {
+                if (event.target.matches('.form-input, .form-select, .form-textarea')) {
+                    clearFieldError(event.target);
+                    hideFormBanner();
+                }
+            });
+        </script>
     
 </body>
 

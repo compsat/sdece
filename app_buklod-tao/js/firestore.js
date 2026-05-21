@@ -303,6 +303,11 @@ export function submitEditForm(){
 function displayInlineErrors(errors) {
     // Clear all previous errors
     clearAllErrors();
+
+    // Show banner popup for validationData() errors
+    if (errors.length > 0 && typeof window.showFormBanner === 'function') {
+        window.showFormBanner(`Please fix the following: ${errors.join(' | ')}`);
+    }
     
     // Create a mapping of field names to error containers
     const fieldMappings = {
@@ -348,6 +353,7 @@ function displayInlineErrors(errors) {
                         errorContainer.classList.add('show');
                     }
                 }
+
                 break;
             }
         }
