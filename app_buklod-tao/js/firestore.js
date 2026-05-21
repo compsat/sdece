@@ -30,7 +30,20 @@ const LEGACY_FIELD_MAP = {
   bilang_walang_sakit: 'number_healthy',
   materyales_bahay:    'household_material',
   evacuation_area:     'nearest_evac',
+  nearest_evac_area:   'nearest_evac',
   awareness_readiness: 'knowledge_readiness',
+  num_residents:       'number_residents',
+  num_residents_minor: 'number_minors',
+  num_residents_senior: 'number_seniors',
+  num_residents_pwd:   'number_pwd',
+  num_residents_sick:  'number_sick',
+  num_residents_preg:  'number_pregnant',
+  risk_level_flood:    'flood_risk',
+  risk_level_storm:    'storm_risk',
+  risk_level_fire:     'fire_risk',
+  risk_level_earthquake: 'earthquake_risk',
+  risk_level_landslide: 'landslide_risk',
+  address:             'household_address',
 };
 
 // Returns { normalized, legacyKeys, fieldUpdates }

@@ -543,13 +543,10 @@ window.addEventListener('message', function(event) {
 // CODE LOGIC FOR EXPORTING OF DATA
 // ------------------------------------------
 document.getElementById('download-report').addEventListener('click', async () => {
-  const colRef = getCollection();
-	const snapshot = await getDocs(colRef);
+	// Use the normalized data already present in the app
+	const allHouseholds = Array.from(partnersArray.values());
 
-	const allHouseholds = [];
-	snapshot.forEach(doc => allHouseholds.push(doc.data()));
-
-	// Sort by household name (for later use)
+	// Sort by household name
 	const sortByHouseholdName = (a, b) =>
 		(a.household_name || '').localeCompare(b.household_name || '');
 
@@ -572,15 +569,25 @@ document.getElementById('download-report').addEventListener('click', async () =>
 		storm_risk: 'Storm'
 	};
 
-	// Generate risk sheets
+	// Generate individual risk sheets
 	for (const riskType of riskTypes) {
-		const sheetData = [['Household Name', 'Address', 'Contact Number', 'Number of Residents', 'Residency Status', 'Risk Level', 'Risk Description', 'House Material']];
+		const sheetData = [[
+			'Household Name', 
+			'Address', 
+			'Contact Number', 
+			'Number of Residents', 
+			'Residency Status', 
+			'Risk Level', 
+			'Risk Description', 
+			'House Material', 
+			'Important Notes'
+		]];
 
-		const households = [...allHouseholds].sort((a, b) => sortByHouseholdName(a, b));
+		const households = [...allHouseholds].sort(sortByHouseholdName);
 
 		const sortedHouseholds = households.sort((a, b) => {
-			const riskA = a[riskType];
-			const riskB = b[riskType];
+			const riskA = a[riskType] || '';
+			const riskB = b[riskType] || '';
 			return sortByRiskLevel(riskA) - sortByRiskLevel(riskB);
 		});
 
@@ -593,7 +600,8 @@ document.getElementById('download-report').addEventListener('click', async () =>
 				h.residency_status || '',
 				h[riskType] || '',
 				h[riskType + '_description'] || '',
-				h.household_material || ''
+				h.household_material || '',
+				h.important_notes || ''
 			]);
 		});
 
@@ -602,7 +610,22 @@ document.getElementById('download-report').addEventListener('click', async () =>
 	}
 
 	// Residency Demographic Sheet
-	const residencyData = [['Household Name', 'Address', 'Phase', 'Contact Number', 'Residency Status', 'HOA/NOA/Others', 'Total Residents', 'Minors', 'Seniors', 'PWD', 'Sick', 'Pregnant']];
+	const residencyHeaders = [
+		'Household Name', 
+		'Address', 
+		'Phase', 
+		'Contact Number', 
+		'Residency Status', 
+		'HOA/NOA/Others', 
+		'Overall Risk Level', 
+		'Total Residents', 
+		'Minors', 
+		'Seniors', 
+		'PWD', 
+		'Sick', 
+		'Pregnant'
+	];
+	const residencyData = [residencyHeaders];
 
 	allHouseholds.sort(sortByHouseholdName).forEach(h => {
 		residencyData.push([
@@ -612,7 +635,7 @@ document.getElementById('download-report').addEventListener('click', async () =>
 			h.contact_number || '',
 			h.residency_status || '',
 			h.is_hoa_noa || '',
-      h.risk_level || '',
+			h.risk_level || '',
 			h.number_residents || 0,
 			h.number_minors || 0,
 			h.number_seniors || 0,
@@ -633,20 +656,22 @@ document.getElementById('download-report').addEventListener('click', async () =>
 		'Contact Number',
 		'Residency Status',
 		'HOA/NOA/Others',
+		'Overall Risk Level',
 		'Number of Residents',
 		'Minors',
 		'Seniors',
 		'PWD',
 		'Sick',
 		'Pregnant',
-		// Risk levels and descriptions
-		...riskTypes.flatMap(r => [r, r + '_description']),
-		'House Material'
+		// Interleaved Risk levels and descriptions
+		...riskTypes.flatMap(r => [riskLabels[r] + ' Risk', riskLabels[r] + ' Description']),
+		'House Material',
+		'Important Notes'
 	];
 
 	const masterData = [masterHeaders];
 
-	allHouseholds.forEach(h => {
+	allHouseholds.sort(sortByHouseholdName).forEach(h => {
 		const row = [
 			h.household_name || '',
 			h.household_address || '',
@@ -654,16 +679,16 @@ document.getElementById('download-report').addEventListener('click', async () =>
 			h.contact_number || '',
 			h.residency_status || '',
 			h.is_hoa_noa || '',
-      h.risk_level || '',
+			h.risk_level || '',
 			h.number_residents || 0,
 			h.number_minors || 0,
 			h.number_seniors || 0,
 			h.number_pwd || 0,
 			h.number_sick || 0,
 			h.number_pregnant || 0,
-			...riskTypes.map(r => h[r] || ''),
-			...riskTypes.map(r => h[r + '_description'] || ''),
-			h.household_material || ''
+			...riskTypes.flatMap(r => [h[r] || '', h[r + '_description'] || '']),
+			h.household_material || '',
+			h.important_notes || ''
 		];
 		masterData.push(row);
 	});
