@@ -545,7 +545,7 @@ window.addEventListener('message', function(event) {
 document.getElementById('download-report').addEventListener('click', async () => {
 	// Use the normalized data already present in the app
 	const allHouseholds = Array.from(partnersArray.values());
-
+  
 	// Sort by household name
 	const sortByHouseholdName = (a, b) =>
 		(a.household_name || '').localeCompare(b.household_name || '');
@@ -648,50 +648,98 @@ document.getElementById('download-report').addEventListener('click', async () =>
 	const residencySheet = XLSX.utils.aoa_to_sheet(residencyData);
 	XLSX.utils.book_append_sheet(workbook, residencySheet, 'Residency Demographics');
 
-	// Master Sheet
-	const masterHeaders = [
-		'Household Name',
-		'Address',
-		'Phase',
-		'Contact Number',
-		'Residency Status',
-		'HOA/NOA/Others',
-		'Overall Risk Level',
-		'Number of Residents',
-		'Minors',
-		'Seniors',
-		'PWD',
-		'Sick',
-		'Pregnant',
-		// Interleaved Risk levels and descriptions
-		...riskTypes.flatMap(r => [riskLabels[r] + ' Risk', riskLabels[r] + ' Description']),
-		'House Material',
-		'Important Notes'
-	];
+  // Master Sheet
+  const masterHeaders = [
+    'Household Name',
+    'Address',
+    'Street',
+    'Phase',
+    'Contact Number',
+    'Residency Status',
+    'Source Dataset',
 
-	const masterData = [masterHeaders];
+    'Location Link',
+    'Latitude',
+    'Longitude',
 
-	allHouseholds.sort(sortByHouseholdName).forEach(h => {
-		const row = [
-			h.household_name || '',
-			h.household_address || '',
-			h.phase || '',
-			h.contact_number || '',
-			h.residency_status || '',
-			h.is_hoa_noa || '',
-			h.risk_level || '',
-			h.number_residents || 0,
-			h.number_minors || 0,
-			h.number_seniors || 0,
-			h.number_pwd || 0,
-			h.number_sick || 0,
-			h.number_pregnant || 0,
-			...riskTypes.flatMap(r => [h[r] || '', h[r + '_description'] || '']),
-			h.household_material || '',
-			h.important_notes || ''
-		];
-		masterData.push(row);
-	});
+    'Nearest Evacuation Center',
+    'Disaster Response Plan',
+    'Before Disaster Actions',
+    'During Disaster Actions',
+    'After Disaster Actions',
+    'Knowledge Readiness',
+    'Exit Points',
+
+    'Overall Risk Level',
+    'Number of Families',
+    'Number of Residents',
+    'Healthy',
+    'Minors',
+    'Seniors',
+    'PWD',
+    'Sick',
+    'Pregnant',
+    'Sickness Present',
+
+    // Risk fields
+    ...riskTypes.flatMap(r => [
+      riskLabels[r] + ' Risk',
+      riskLabels[r] + ' Description'
+    ]),
+
+    'House Material',
+    'Important Notes',
+    'Notes'
+  ];
+
+  const masterData = [masterHeaders];
+
+  allHouseholds.sort(sortByHouseholdName).forEach(h => {
+    const row = [
+      h.household_name || '',
+      h.household_address || '',
+      h.street || '',
+      h.phase || '',
+      h.contact_number || '',
+      h.residency_status || '',
+      h.is_hoa_noa || '',
+      h.source_dataset || '',
+
+      h.location_link || '',
+      h.location_coordinates?._lat || '',
+      h.location_coordinates?._long || '',
+
+      h.nearest_evac || '',
+      h.disaster_response_plan || '',
+      h.before_disaster_actions || '',
+      h.during_disaster_actions || '',
+      h.after_disaster_actions || '',
+      h.knowledge_readiness || '',
+      h.exit_points || '',
+
+      h.risk_level || '',
+      h.number_families || 0,
+      h.number_residents || 0,
+      h.number_healthy || 0,
+      h.number_minors || 0,
+      h.number_seniors || 0,
+      h.number_pwd || 0,
+      h.number_sick || 0,
+      h.number_pregnant || 0,
+      h.sickness_present || '',
+
+      ...riskTypes.flatMap(r => [
+        h[r] || '',
+        h[r + '_description'] || ''
+      ]),
+
+      h.household_material || '',
+      h.important_notes || '',
+      h.notes || ''
+    ];
+
+    masterData.push(row);
+  });
 
 	const masterSheet = XLSX.utils.aoa_to_sheet(masterData);
 	XLSX.utils.book_append_sheet(workbook, masterSheet, 'Master Sheet');
