@@ -623,7 +623,14 @@ document.getElementById('download-report').addEventListener('click', async () =>
 		'Seniors', 
 		'PWD', 
 		'Sick', 
-		'Pregnant'
+		'Pregnant',
+    'Nearest Evacuation Center',
+    'Disaster Response Plan',
+    'Before Disaster Actions',
+    'During Disaster Actions',
+    'After Disaster Actions',
+    'Knowledge Readiness',
+    'Exit Points',
 	];
 	const residencyData = [residencyHeaders];
 
@@ -641,7 +648,14 @@ document.getElementById('download-report').addEventListener('click', async () =>
 			h.number_seniors || 0,
 			h.number_pwd || 0,
 			h.number_sick || 0,
-			h.number_pregnant || 0
+			h.number_pregnant || 0,
+      h.nearest_evac || '',
+      h.disaster_response_plan || '',
+      h.before_disaster_actions || '',
+      h.during_disaster_actions || '',
+      h.after_disaster_actions || '',
+      h.knowledge_readiness || '',
+      h.exit_points || '',
 		]);
 	});
 
@@ -656,6 +670,7 @@ document.getElementById('download-report').addEventListener('click', async () =>
     'Phase',
     'Contact Number',
     'Residency Status',
+    'HOA/NOA/Others',
     'Source Dataset',
 
     'Location Link',
