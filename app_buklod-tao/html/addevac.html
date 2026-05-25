@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="../css/form.css">
         <link rel="stylesheet" href="../css/main.css">
         <link href="https://fonts.googleapis.com/css?family=Hind" rel='stylesheet'>
-            
+
         <script type="module">
             // Save a new evacuation center to the `buklod-evac-centers` Firestore collection.
             import { addDoc, collection } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
@@ -50,6 +50,13 @@
                 const errors = validateEvacForm({ name, type, latitude, longitude });
                 if (errors.length > 0) {
                     errors.forEach(([fieldId, msg]) => setFieldError(fieldId, msg));
+
+                    const fieldNames = errors.map(([fieldId]) => {
+                        const field = document.getElementById(fieldId);
+                        return field ? window.getFieldLabel(field) : fieldId;
+                    });
+
+                    window.showFormBanner(`Required or invalid fields: ${fieldNames.join(', ')}`);
                     return;
                 }
 
@@ -108,6 +115,11 @@
             <!-- Modal Content -->
             <div class="modal-content">
                 <!-- Evacuation Center Information Section -->
+                <div id="form_error_banner" class="form-banner">
+                    <div class="form-banner-title">Please check the form.</div>
+                    <p class="form-banner-message"></p>
+                </div>
+                
                 <div class="section">
                     <div class="section-header">
                         <svg class="section-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -296,6 +308,8 @@
             const inputs = document.querySelectorAll('.form-input, .form-select, .form-textarea');
             inputs.forEach(input => {
                 input.addEventListener('input', function() {
+                    window.hideFormBanner();
+                    
                     // Clear error state for this specific field
                     this.classList.remove('error');
                     
@@ -332,6 +346,137 @@
                             label.classList.remove('error');
                         }
                     });
+                }
+            });
+        </script>
+
+        <script>
+            // Reusable banner and validation functions
+            function getFieldLabel(field) {
+                const label = document.querySelector(`label[for="${field.id}"]`);
+                return label ? label.textContent.trim() : field.name || field.id;
+            }
+
+            function ensureFormBanner() {
+                let banner = document.getElementById('form_error_banner');
+
+                if (!banner) {
+                    banner = document.createElement('div');
+                    banner.id = 'form_error_banner';
+                    banner.className = 'form-banner';
+                    banner.innerHTML = `
+                        <div class="form-banner-title">Please check the form.</div>
+                        <p class="form-banner-message"></p>
+                    `;
+
+                    const modalContent = document.querySelector('.modal-content');
+                    const modalContainer = document.querySelector('.modal-container');
+
+                    if (modalContent) {
+                        modalContent.prepend(banner);
+                    } else if (modalContainer) {
+                        modalContainer.prepend(banner);
+                    }
+                }
+
+                return banner;
+            }
+
+            window.showFormBanner = function(message) {
+                const banner = ensureFormBanner();
+                banner.querySelector('.form-banner-message').textContent = message;
+                banner.classList.add('show');
+                banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            function hideFormBanner() {
+                const banner = document.getElementById('form_error_banner');
+                if (banner) {
+                    banner.classList.remove('show');
+                }
+            }
+
+            function clearFieldError(field) {
+                field.classList.remove('error');
+
+                const errorContainer = document.getElementById(`${field.id}_error`);
+                if (errorContainer) {
+                    errorContainer.textContent = '';
+                    errorContainer.classList.remove('show');
+                }
+
+                const label = document.querySelector(`label[for="${field.id}"]`);
+                if (label) {
+                    label.classList.remove('error');
+                }
+            }
+
+            function validateRequiredFields() {
+                hideFormBanner();
+
+                const errors = [];
+
+                document.querySelectorAll('[required]').forEach(field => {
+                    const value = field.value.trim();
+
+                    if (!value) {
+                        const label = getFieldLabel(field);
+                        errors.push(label);
+
+                        if (typeof setFieldError === 'function') {
+                            setFieldError(field.id, `${label} is required.`);
+                        }
+                    }
+                });
+
+                const contactNumber = document.getElementById('contact_number');
+                if (contactNumber && contactNumber.value.trim()) {
+                    const pattern = /^(09[0-9]{9}|09[0-9]{2}-[0-9]{3}-[0-9]{4}|N\/A)$/;
+
+                    if (!pattern.test(contactNumber.value.trim())) {
+                        errors.push('Contact Number');
+
+                        if (typeof setFieldError === 'function') {
+                            setFieldError(
+                                'contact_number',
+                                'Contact number must be 09XXXXXXXXX, 09XX-XXX-XXXX, or N/A.'
+                            );
+                        }
+                    }
+                }
+
+                const material = document.getElementById('household_material');
+                const materialOther = document.getElementById('household_material_other');
+
+                if (material && material.value === 'Other' && materialOther && !materialOther.value.trim()) {
+                    errors.push('Specify material');
+
+                    if (typeof setFieldError === 'function') {
+                        setFieldError('household_material', 'Please specify the house material.');
+                    }
+
+                    materialOther.classList.add('error');
+                }
+
+                if (errors.length > 0) {
+                    window.showFormBanner(`Required or invalid fields: ${errors.join(', ')}`);
+                    return false;
+                }
+
+                return true;
+            }
+
+            document.addEventListener('input', function(event) {
+                if (event.target.matches('.form-input, .form-select, .form-textarea')) {
+                    clearFieldError(event.target);
+                    hideFormBanner();
+                }
+            });
+
+            document.addEventListener('change', function(event) {
+                if (event.target.matches('.form-input, .form-select, .form-textarea')) {
+                    clearFieldError(event.target);
+                    hideFormBanner();
                 }
             });
         </script>

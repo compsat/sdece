@@ -7,24 +7,32 @@
         <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
             
         <script type="module">
-            //Call function from firestore.js to add new household from input fields after pressing submit button
             import { addEntry, BUKLOD_RULES, setCollection, validateData, getCoordinates } from "/js/firestore_UNIV.js";
             import { submitAddForm } from '../js/firestore.js';
 
             setCollection("buklod-official");
-            document.getElementById("submit_form").addEventListener("click", function() {
+            document.getElementById("submit_form").addEventListener("click", function(event) {
+                event.preventDefault();
+
+                // ADDED: validation gate before saving household
+                if (!validateRequiredFields()) {
+                    return;
+                }
+
                 const materialSelect = document.getElementById('household_material');
+
                 if (materialSelect.value === 'Other') {
                     const custom = document.getElementById('household_material_other').value.trim();
+
                     if (custom) {
                         const tempOption = new Option(custom, custom);
                         materialSelect.add(tempOption);
                         materialSelect.value = custom;
                     }
                 }
+
                 submitAddForm();
             });
-
         </script>
 
         <script type="module">
@@ -57,6 +65,16 @@
 
             <!-- Modal Content -->
             <div class="modal-content">
+
+                
+
+                <!-- banner error popup -->
+                <div id="form_error_banner" class="form-banner">
+                    <div class="form-banner-title">Please check the form.</div>
+                    <p class="form-banner-message"></p>
+                </div>
+
+
                 <!-- Household Information Section -->
                 <div class="section">
                     <div class="section-header">
@@ -350,9 +368,7 @@
                             <div class="field-error" id="storm_risk_error"></div>
                         </div>
                     </div>
-
                 </div>
-
 
                 <!-- Disaster Preparedness Section -->
                 <div class="section">
@@ -436,18 +452,94 @@
 
         <script>
 
+            // ── Error banner helpers ──────────────────────────────────────────
+            function showErrorBanner(message) {
+                const banner = document.getElementById('form_error_banner');
+                banner.textContent = '⚠️ ' + message;
+                banner.style.display = 'block';
+                banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            function hideErrorBanner() {
+                document.getElementById('form_error_banner').style.display = 'none';
+            }
+
+            // ── Per-field error helpers ───────────────────────────────────────
+            function setFieldError(fieldId, message) {
+                const field = document.getElementById(fieldId);
+                const errorContainer = document.getElementById(`${fieldId}_error`);
+                const label = document.querySelector(`label[for="${fieldId}"]`);
+                if (field) field.classList.add('error');
+                if (label) label.classList.add('error');
+                if (errorContainer) {
+                    errorContainer.textContent = message;
+                    errorContainer.classList.add('show');
+                }
+            }
+
+            // ── Validation ────────────────────────────────────────────────────
+            function validateForm() {
+                let isValid = true;
+
+                // Household name
+                const name = document.getElementById('household_name').value.trim();
+                if (!name) {
+                    setFieldError('household_name', 'Household name is required.');
+                    isValid = false;
+                }
+
+                // Address
+                const address = document.getElementById('household_address').value.trim();
+                if (!address) {
+                    setFieldError('household_address', 'Address is required.');
+                    isValid = false;
+                }
+
+                // House material
+                const material = document.getElementById('household_material').value;
+                if (!material) {
+                    setFieldError('household_material', 'Please select a house material.');
+                    isValid = false;
+                }
+
+                // If material is "Other", the custom text must be filled in
+                if (material === 'Other') {
+                    const custom = document.getElementById('household_material_other').value.trim();
+                    if (!custom) {
+                        setFieldError('household_material', 'Please specify the house material.');
+                        isValid = false;
+                    }
+                }
+
+                // Total residents
+                const residents = parseInt(document.getElementById('number_residents').value);
+                if (!residents || residents < 1) {
+                    setFieldError('number_residents', 'At least 1 resident is required.');
+                    isValid = false;
+                }
+
+                // Earthquake risk (the only required risk field per the original HTML)
+                const eqRisk = document.getElementById('earthquake_risk').value;
+                if (!eqRisk) {
+                    setFieldError('earthquake_risk', 'Please select an earthquake risk level.');
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            // ── Modal close ───────────────────────────────────────────────────
             function closeModal() {
                 window.parent.postMessage('closeAddModal', '*');
             }
 
-            // Close button handlers
             document.getElementById('close-btn').addEventListener('click', function (event) {
                 event.preventDefault();
                 console.log('The user has closed the Add Household modal.');
                 closeModal();
             });
 
-            // Clear all form fields and error states
+            // ── Clear form ────────────────────────────────────────────────────
             function clearForm() {
                 document.querySelectorAll('.form-input, .form-textarea').forEach(input => {
                     input.value = '';
@@ -472,9 +564,12 @@
                 const otherInput = document.getElementById('household_material_other');
                 otherInput.style.display = 'none';
                 otherInput.value = '';
+                hideErrorBanner();
             }
 
-            // Evacuation area checkbox logic
+            document.getElementById('clear_form').addEventListener('click', clearForm);
+
+            // ── Evacuation checkboxes ─────────────────────────────────────────
             function updateEvacValue() {
                 const selected = Array.from(document.querySelectorAll('input[name="evac_choice"]:checked'))
                     .filter(cb => cb.value !== '__other__')
@@ -498,9 +593,7 @@
             });
             document.getElementById('evac_other_input').addEventListener('input', updateEvacValue);
 
-            document.getElementById('clear_form').addEventListener('click', clearForm);
-
-            // Show/hide the "Other" text input for House Materials
+            // ── House material "Other" toggle ─────────────────────────────────
             document.getElementById('household_material').addEventListener('change', function() {
                 const otherInput = document.getElementById('household_material_other');
                 otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
@@ -517,6 +610,7 @@
                 }
             });
 
+            // ── Use current location ──────────────────────────────────────────
             document.getElementById('use_current_location').addEventListener('click', function() {
                 const locationButton = this;
                 const locationLinkInput = document.getElementById('location_link');
@@ -542,19 +636,16 @@
 
                         locationLinkInput.value = osmLink;
                         locationCoordinatesInput.value = `${lat},${lng}`;
-
                         locationLinkInput.classList.remove('error');
+
                         const locationLinkLabel = document.querySelector('label[for="location_link"]');
-                        if (locationLinkLabel) {
-                            locationLinkLabel.classList.remove('error');
-                        }
+                        if (locationLinkLabel) locationLinkLabel.classList.remove('error');
 
                         locationButton.disabled = false;
                         locationButton.textContent = 'Use Current Location';
                     },
                     function(error) {
                         let message = 'Unable to get current location.';
-
                         if (error.code === error.PERMISSION_DENIED) {
                             message = 'Location access was denied. Please allow location permission and try again.';
                         } else if (error.code === error.POSITION_UNAVAILABLE) {
@@ -562,21 +653,16 @@
                         } else if (error.code === error.TIMEOUT) {
                             message = 'Getting current location timed out. Please try again.';
                         }
-
                         locationLinkError.textContent = message;
                         locationLinkError.classList.add('show');
                         locationButton.disabled = false;
                         locationButton.textContent = 'Use Current Location';
                     },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 10000,
-                        maximumAge: 0
-                    }
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
                 );
             });
 
-            // Auto-fill risk descriptions when a risk level is selected
+            // ── Risk level → auto-fill description ───────────────────────────
             const riskDescriptions = {
                 flood_risk: {
                     'HIGH RISK': 'Critical Level (3rd Alarm), 20.00-M Force Evacuation, Near water ways',
@@ -615,50 +701,166 @@
                 }
             });
 
-            // Hide error messages when user starts typing
+            // ── Clear field errors on input/change ────────────────────────────
             const inputs = document.querySelectorAll('.form-input, .form-select, .form-textarea');
             inputs.forEach(input => {
                 input.addEventListener('input', function() {
-                    // Clear error state for this specific field
+                    hideErrorBanner();
                     this.classList.remove('error');
-                    
-                    // Clear error message for this field
                     const errorContainer = document.getElementById(`${this.id}_error`);
                     if (errorContainer) {
                         errorContainer.textContent = '';
                         errorContainer.classList.remove('show');
                     }
-                    
-                    // Clear error state for the label
                     const label = document.querySelector(`label[for="${this.id}"]`);
-                    if (label) {
-                        label.classList.remove('error');
-                    }
+                    if (label) label.classList.remove('error');
                 });
-                
-                // Also handle change events for select elements
+
                 if (input.tagName === 'SELECT') {
                     input.addEventListener('change', function() {
-                        // Clear error state for this specific field
+                        hideErrorBanner();
                         this.classList.remove('error');
-                        
-                        // Clear error message for this field
                         const errorContainer = document.getElementById(`${this.id}_error`);
                         if (errorContainer) {
                             errorContainer.textContent = '';
                             errorContainer.classList.remove('show');
                         }
-                        
-                        // Clear error state for the label
                         const label = document.querySelector(`label[for="${this.id}"]`);
-                        if (label) {
-                            label.classList.remove('error');
-                        }
+                        if (label) label.classList.remove('error');
                     });
                 }
             });
         </script>
 
+        <script>
+            // ADDED: reusable banner + validation helper functions
+            function getFieldLabel(field) {
+                const label = document.querySelector(`label[for="${field.id}"]`);
+                return label ? label.textContent.trim() : field.name || field.id;
+            }
 
+            function ensureFormBanner() {
+                let banner = document.getElementById('form_error_banner');
+
+                if (!banner) {
+                    banner = document.createElement('div');
+                    banner.id = 'form_error_banner';
+                    banner.className = 'form-banner';
+                    banner.innerHTML = `
+                        <div class="form-banner-title">Please check the form.</div>
+                        <p class="form-banner-message"></p>
+                    `;
+
+                    const modalContent = document.querySelector('.modal-content');
+                    const modalContainer = document.querySelector('.modal-container');
+
+                    if (modalContent) {
+                        modalContent.prepend(banner);
+                    } else if (modalContainer) {
+                        modalContainer.prepend(banner);
+                    }
+                }
+
+                return banner;
+            }
+
+            window.showFormBanner = function(message) {
+                const banner = ensureFormBanner();
+                banner.querySelector('.form-banner-message').textContent = message;
+                banner.classList.add('show');
+                banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            function hideFormBanner() {
+                const banner = document.getElementById('form_error_banner');
+                if (banner) {
+                    banner.classList.remove('show');
+                }
+            }
+
+            function clearFieldError(field) {
+                field.classList.remove('error');
+
+                const errorContainer = document.getElementById(`${field.id}_error`);
+                if (errorContainer) {
+                    errorContainer.textContent = '';
+                    errorContainer.classList.remove('show');
+                }
+
+                const label = document.querySelector(`label[for="${field.id}"]`);
+                if (label) {
+                    label.classList.remove('error');
+                }
+            }
+
+            function validateRequiredFields() {
+                hideFormBanner();
+
+                const errors = [];
+
+                document.querySelectorAll('[required]').forEach(field => {
+                    const value = field.value.trim();
+
+                    if (!value) {
+                        const label = getFieldLabel(field);
+                        errors.push(label);
+
+                        if (typeof setFieldError === 'function') {
+                            setFieldError(field.id, `${label} is required.`);
+                        }
+                    }
+                });
+
+                const contactNumber = document.getElementById('contact_number');
+                if (contactNumber && contactNumber.value.trim()) {
+                    const pattern = /^(09[0-9]{9}|09[0-9]{2}-[0-9]{3}-[0-9]{4}|N\/A)$/;
+
+                    if (!pattern.test(contactNumber.value.trim())) {
+                        errors.push('Contact Number');
+
+                        if (typeof setFieldError === 'function') {
+                            setFieldError(
+                                'contact_number',
+                                'Contact number must be 09XXXXXXXXX, 09XX-XXX-XXXX, or N/A.'
+                            );
+                        }
+                    }
+                }
+
+                const material = document.getElementById('household_material');
+                const materialOther = document.getElementById('household_material_other');
+
+                if (material && material.value === 'Other' && materialOther && !materialOther.value.trim()) {
+                    errors.push('Specify material');
+
+                    if (typeof setFieldError === 'function') {
+                        setFieldError('household_material', 'Please specify the house material.');
+                    }
+
+                    materialOther.classList.add('error');
+                }
+
+                if (errors.length > 0) {
+                    window.showFormBanner(`Required or invalid fields: ${errors.join(', ')}`);
+                    return false;
+                }
+
+                return true;
+            }
+
+            document.addEventListener('input', function(event) {
+                if (event.target.matches('.form-input, .form-select, .form-textarea')) {
+                    clearFieldError(event.target);
+                    hideFormBanner();
+                }
+            });
+
+            document.addEventListener('change', function(event) {
+                if (event.target.matches('.form-input, .form-select, .form-textarea')) {
+                    clearFieldError(event.target);
+                    hideFormBanner();
+                }
+            });
+        </script>
     </body> 
 </html>
