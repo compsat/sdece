@@ -51,35 +51,65 @@
         <div class="side-nav-header-top">
           <img src="static/logo-buklod-tao.png" alt="Buklod Tao Logo" class="logo-image">
           <h1 class="map-title">Buklod Tao</h1>
+          <button class="logout-btn" id="authBtn">Login</button>
         </div>
-        <search-bar id="search-bar-component"></search-bar>
-        <div class="actions-container">
-          <button class="action-btn" id="filterBtn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"><path d="M5 7C5 6.17157 5.67157 5.5 6.5 5.5C7.32843 5.5 8 6.17157 8 7C8 7.82843 7.32843 8.5 6.5 8.5C5.67157 8.5 5 7.82843 5 7ZM6.5 3.5C4.567 3.5 3 5.067 3 7C3 8.933 4.567 10.5 6.5 10.5C8.433 10.5 10 8.933 10 7C10 5.067 8.433 3.5 6.5 3.5ZM12 8H20V6H12V8ZM16 17C16 16.1716 16.6716 15.5 17.5 15.5C18.3284 15.5 19 16.1716 19 17C19 17.8284 18.3284 18.5 17.5 18.5C16.6716 18.5 16 17.8284 16 17ZM17.5 13.5C15.567 13.5 14 15.067 14 17C14 18.933 15.567 20.5 17.5 20.5C19.433 20.5 21 18.933 21 17C21 15.067 19.433 13.5 17.5 13.5ZM4 16V18H12V16H4Z"></path></svg>
-            Filter
-          </button>
-          <button class="action-btn" id="sortBtn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"><path d="M18.2072 9.0428 12.0001 2.83569 5.793 9.0428 7.20721 10.457 12.0001 5.66412 16.793 10.457 18.2072 9.0428ZM5.79285 14.9572 12 21.1643 18.2071 14.9572 16.7928 13.543 12 18.3359 7.20706 13.543 5.79285 14.9572Z"></path></svg>
-            Sort
-          </button>
-          <button class="action-btn" id="download-report">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"><path d="M3 19H21V21H3V19ZM13 13.1716L19.0711 7.1005L20.4853 8.51472L12 17L3.51472 8.51472L4.92893 7.1005L11 13.1716V2H13V13.1716Z"></path></svg>
-            Export data
-          </button>
-        </div>
-        <div class="risk-dropdown-container">
-          <label class="risk-dropdown-label">Risk Type Color Filter</label>
-          <select name="risk" id="risk-sort">
-            <option value="earthquake-sort">Earthquake</option>
-            <option value="fire-sort">Fire</option>
-            <option value="flood-sort">Flood</option>
-            <option value="landslide-sort">Landslide</option>
-            <option value="storm-sort">Storm</option>
-          </select>
-        </div>
-      </div>
+
       <div class="partners-header">
+          <div class="risk-dropdown-container">
+            <label class="risk-dropdown-label">Risk Type Color Filter</label>
+            <select name="risk" id="risk-sort">
+              <option value="earthquake-sort">Earthquake</option>
+              <option value="fire-sort">Fire</option>
+              <option value="flood-sort">Flood</option>
+              <option value="landslide-sort">Landslide</option>
+              <option value="storm-sort">Storm</option>
+            </select>
+          </div>
+        </div>
+      <div class="partners-header2">
         <span id="partners-count">HOUSEHOLDS</span>
+        <search-bar id="search-bar-component"></search-bar>
+        <button class="action-btn" id="addHouseholdBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" style="margin-right: 6px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14M5 12h14" /></svg>
+          Add Household
+        </button>
+        <button class="action-btn" id="addEvacCenterBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" style="margin-right: 6px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14M5 12h14" /></svg>
+          Add Evacuation Center
+        </button>
+          <div class="actions-container">
+            <button class="action-btn" id="togglePinsBtn">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+              <span id="togglePinsText">Show Pins</span>
+            </button>
+            <button class="action-btn" id="filterBtn">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"><path d="M5 7C5 6.17157 5.67157 5.5 6.5 5.5C7.32843 5.5 8 6.17157 8 7C8 7.82843 7.32843 8.5 6.5 8.5C5.67157 8.5 5 7.82843 5 7ZM6.5 3.5C4.567 3.5 3 5.067 3 7C3 8.933 4.567 10.5 6.5 10.5C8.433 10.5 10 8.933 10 7C10 5.067 8.433 3.5 6.5 3.5ZM12 8H20V6H12V8ZM16 17C16 16.1716 16.6716 15.5 17.5 15.5C18.3284 15.5 19 16.1716 19 17C19 17.8284 18.3284 18.5 17.5 18.5C16.6716 18.5 16 17.8284 16 17ZM17.5 13.5C15.567 13.5 14 15.067 14 17C14 18.933 15.567 20.5 17.5 20.5C19.433 20.5 21 18.933 21 17C21 15.067 19.433 13.5 17.5 13.5ZM4 16V18H12V16H4Z"></path></svg>
+              Filter
+            </button>
+            <button class="action-btn" id="sortBtn">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"><path d="M18.2072 9.0428 12.0001 2.83569 5.793 9.0428 7.20721 10.457 12.0001 5.66412 16.793 10.457 18.2072 9.0428ZM5.79285 14.9572 12 21.1643 18.2071 14.9572 16.7928 13.543 12 18.3359 7.20706 13.543 5.79285 14.9572Z"></path></svg>
+              Sort
+            </button>
+            <button class="action-btn" id="download-report">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"><path d="M3 19H21V21H3V19ZM13 13.1716L19.0711 7.1005L20.4853 8.51472L12 17L3.51472 8.51472L4.92893 7.1005L11 13.1716V2H13V13.1716Z"></path></svg>
+              Export data
+            </button>
+          </div>
+          <div class="sidebar-legend">
+            <div class="legend-item">
+              <img src="/app_buklod-tao/hardcode/high_risk.svg" width="20" height="20" style="margin-right: 8px; vertical-align: middle;"> High Risk
+            </div>
+            <div class="legend-item">
+              <img src="/app_buklod-tao/hardcode/mid_risk.svg" width="20" height="20" style="margin-right: 8px; vertical-align: middle;"> Medium Risk
+            </div>
+            <div class="legend-item">
+              <img src="/app_buklod-tao/hardcode/low_risk.svg" width="20" height="20" style="margin-right: 8px; vertical-align: middle;"> Low Risk
+            </div>
+            <div class="legend-item">
+              <img src="/app_buklod-tao/hardcode/evac_center_v2.svg" width="20" height="20" style="margin-right: 8px; vertical-align: middle;"> Evacuation Center
+            </div>
+          </div>
+        </div>
       </div>
       <div class="entries">
         <ul id="locationList"></ul>
@@ -132,6 +162,7 @@
             <label><input type="checkbox" value="Light materials" data-filter="household_material"> Light materials</label>
             <label><input type="checkbox" value="Makeshift" data-filter="household_material"> Makeshift</label>
             <label><input type="checkbox" value="Natural" data-filter="household_material"> Natural</label>
+            <label><input type="checkbox" value="__other__" data-filter="household_material"> Other</label>
           </div>
         </div>
         
@@ -154,9 +185,16 @@
         </div>
         
         <div class="filter-section">
+          <h3>Shelter Type</h3>
+          <div class="filter-options">
+            <label><input type="checkbox" value="Temporary Shelter" data-filter="shelter_type"> Temporary Shelter</label>
+            <label><input type="checkbox" value="Evacuation Center" data-filter="shelter_type"> Evacuation Center</label>
+          </div>
+        </div>
+
+        <div class="filter-section">
           <h3>Risk Type</h3>
           <select id="riskTypeFilter" data-filter="risk_type">
-            <option value="">All Risk Types</option>
             <option value="earthquake_risk">Earthquake</option>
             <option value="fire_risk">Fire</option>
             <option value="flood_risk">Flood</option>
@@ -201,27 +239,67 @@
     });
 
     function searchEntries(query) {
-      const input = query.toUpperCase();
+      const input = query.trim();
+      window.activeSearchQuery = input; // track for risk type / filter changes
       const entries = document.querySelectorAll('#locationList .container-entry');
+      let visibleCount = 0;
+
+      // Escape regex special chars, then require word boundary on both ends
+      const escaped = input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = escaped ? new RegExp('\\b' + escaped + '\\b', 'i') : null;
 
       entries.forEach(entry => {
-        const nameDiv = entry.querySelector('.name');
-        const txtValue = nameDiv ? nameDiv.textContent : '';
-        if (txtValue.toUpperCase().indexOf(input) > -1) {
-          entry.style.display = "";
+        const nameText = entry.querySelector('.name')?.textContent ?? '';
+        const addressText = entry.querySelector('.address')?.textContent ?? '';
+        const matches = !regex || regex.test(nameText) || regex.test(addressText);
+        if (matches) {
+          entry.style.display = '';
+          visibleCount++;
         } else {
-          entry.style.display = "none";
+          entry.style.display = 'none';
         }
       });
+
+      // Update household counter
+      const partnersCount = document.getElementById('partners-count');
+      if (partnersCount) {
+        partnersCount.textContent = `HOUSEHOLDS (${visibleCount})`;
+      }
+
+      // Update map markers
+      if (window.filterMarkersBySearch) {
+        window.filterMarkersBySearch(query);
+      }
     }
 
     let originalItems = [];
 
+    let sortState = 'none'; // Start with no sort applied
+    let isActive = false;
+
+    function reapplySort() {
+      if (sortState === 'none') return;
+      const locationList = document.getElementById('locationList');
+      const items = Array.from(locationList.querySelectorAll('.container-entry'));
+      items.sort((a, b) => {
+        const nameA = a.querySelector('.name').textContent.trim().toUpperCase();
+        const nameB = b.querySelector('.name').textContent.trim().toUpperCase();
+        return sortState === 'asc'
+          ? nameA.localeCompare(nameB)
+          : nameB.localeCompare(nameA);
+      });
+
+      console.log(`Sorted ${sortState === 'asc' ? 'ascending' : 'descending'}`);
+
+      // Clear and re-append sorted items
+      locationList.innerHTML = '';
+      items.forEach(item => locationList.appendChild(item));
+    }
+
+    
     function sortButton() {
       const sortBtn = document.getElementById('sortBtn');
       const locationList = document.getElementById('locationList');
-      let sortState = 'none'; // Start with no sort applied
-      let isActive = false;
 
       // Function to update the sort button appearance
       function updateSortButton() {
@@ -261,26 +339,9 @@
           isActive = false;
         }
 
-        // Only sort if not in 'none' state
-        if (sortState !== 'none') {
-          items.sort((a, b) => {
-            const nameA = a.querySelector('.name').textContent.trim().toUpperCase();
-            const nameB = b.querySelector('.name').textContent.trim().toUpperCase();
-
-            return sortState === 'asc'
-              ? nameA.localeCompare(nameB)
-              : nameB.localeCompare(nameA);
-          });
-
-          console.log(`Sorted ${sortState === 'asc' ? 'ascending' : 'descending'}`);
-
-          // Clear and re-append sorted items
-          locationList.innerHTML = '';
-          items.forEach(item => locationList.appendChild(item));
-        } 
-
         // Update button appearance
         updateSortButton();
+        reapplySort();  
       });
 
       // Initialize button appearance
@@ -299,14 +360,22 @@
     // Call the sort button function
     const sortController = sortButton();
 
+    // Re-apply current search to a freshly-populated sidebar list
+    window.reapplySearch = function() {
+      if (window.activeSearchQuery) searchEntries(window.activeSearchQuery);
+    };
+
     // Function to hide the div containing the iframe with animation
+    // Also reloads the iframe so form data is cleared on close
     function hideModalContainer(modal) {
-      var iframe = document.getElementById(modal);
-      if (iframe) {
-        iframe.classList.add('closing');
+      var modalEl = document.getElementById(modal);
+      if (modalEl) {
+        modalEl.classList.add('closing');
         setTimeout(() => {
-          iframe.style.display = 'none';
-          iframe.classList.remove('closing');
+          modalEl.style.display = 'none';
+          modalEl.classList.remove('closing');
+          const iframe = modalEl.querySelector('iframe');
+          if (iframe) iframe.src = iframe.src;
         }, 300); // Match the animation duration
       }
     }
@@ -320,6 +389,48 @@
         hideModalContainer('editModal');
       }
     });
+  </script>
+
+  <script type="module">
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
+    import { signOutUser, AUTH } from "/js/auth.js";
+
+    const loginURL = "/html/login.html";
+    const btn = document.getElementById("authBtn");
+
+    onAuthStateChanged(AUTH, (user) => {
+      if (user) {
+        document.body.style.visibility = 'visible'; 
+        btn.textContent = "Logout";
+        btn.onclick = () => signOutUser();
+      } else {
+        window.location.replace(loginURL); // redirect if not logged in
+      }
+    });
+
+    const addBtn = document.getElementById('addHouseholdBtn');
+    const addEvacBtn = document.getElementById('addEvacCenterBtn');
+    const addModal = document.getElementById('addModal');
+    const addModalIframe = addModal.querySelector('iframe');
+
+    // Switch the iframe to the requested form before showing the modal.
+    // Hide the iframe during load so the previously-loaded form (e.g.
+    // addevac.html left over from a prior open) doesn't flash through.
+    function showAddModal(targetSrc) {
+      addModal.style.display = 'flex';
+      if (addModalIframe.src.endsWith(targetSrc)) {
+        addModalIframe.style.visibility = 'visible';
+        return;
+      }
+      addModalIframe.style.visibility = 'hidden';
+      addModalIframe.onload = function() {
+        addModalIframe.style.visibility = 'visible';
+      };
+      addModalIframe.src = targetSrc;
+    }
+
+    addBtn.addEventListener('click', () => showAddModal('html/addloc.html'));
+    addEvacBtn.addEventListener('click', () => showAddModal('html/addevac.html'));
   </script>
 
 </body>

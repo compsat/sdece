@@ -11,6 +11,11 @@ export const FILTER_RULES = {
       type: 'string',
       enum: ['HOA', 'NOA', 'N/A'],
     },
+    risk_level: {
+      label: "risk_level",
+      type: 'string',
+      enum: ['HIGH RISK', 'MEDIUM RISK', 'LOW RISK'],
+    },
 		household_material: {
       label: "household_material",
 			type: 'string',
