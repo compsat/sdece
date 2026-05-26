@@ -12,6 +12,7 @@ import {
   GeoPoint,
   getFirestore,
   collection,
+  persistentMultipleTabManager,
 } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
 // Your web app's Firebase configuration
@@ -76,7 +77,13 @@ const SECRETS = await SECRETS_RES.json();
 
 export const FIREBASE_CONFIG = SECRETS.FIREBASE_CONFIG;
 
-var app = getApps().length > 0 ? getApps()[0] : initializeApp(FIREBASE_CONFIG);
+export const app =
+  getApps().length > 0
+    ? getApps()[0]
+    : initializeApp({
+        ...FIREBASE_CONFIG,
+        tabManager: persistentMultipleTabManager,
+      });
 export const DB = getFirestore(app);
 
 var collection_reference = null;

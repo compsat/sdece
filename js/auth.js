@@ -9,6 +9,8 @@ import {
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
+import { app } from "./firestore_UNIV.js";
+
 const SECRETS_PATH = "/js/secrets.json";
 const SECRETS_REQ = new Request(SECRETS_PATH);
 const SECRETS_RES = await fetch(SECRETS_REQ);
@@ -16,7 +18,6 @@ const SECRETS = await SECRETS_RES.json();
 
 export const FIREBASE_CONFIG = SECRETS.FIREBASE_CONFIG;
 
-initializeApp(FIREBASE_CONFIG);
 export const AUTH = getAuth();
 
 // Sign in function
