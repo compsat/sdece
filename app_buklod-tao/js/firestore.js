@@ -25,7 +25,7 @@ const colRef = getCollection();
 let partnersArray = new Map();
 
 // Normalize legacy field names from CSV-imported documents
-const LEGACY_FIELD_MAP = {
+const LEGACY_FIELD_MAP = {  
   ownership_status:    'residency_status',
   bilang_walang_sakit: 'number_healthy',
   materyales_bahay:    'household_material',
@@ -180,69 +180,72 @@ const loadData = async() => {
 await loadData();
 
 export function populateEditForm(partner, editFormModal) {
-  var iframe = editFormModal.getElementsByClassName('form-modal')[0]
-  var editForm = iframe.contentWindow.document
+  var iframe = editFormModal.getElementsByClassName('form-modal')[0];
+  
+  const populateLogic = () => {
+    var editForm = iframe.contentWindow.document;
 
-  const originalField = editForm.createElement('input');
-  originalField.type = 'hidden';
-  originalField.id = 'original_household_name';
-  originalField.value = partner.household_name;
-  editForm.body.appendChild(originalField);
+    editForm.getElementById('edit_doc_id').value = partner.id || '';
 
+    const originalField = editForm.createElement('input');
+    originalField.type = 'hidden';
+    originalField.id = 'original_household_name';
+    originalField.value = partner.household_name;
+    editForm.body.appendChild(originalField);
 
-  const standardMaterials = ['Concrete', 'Semi-Concrete', 'Light materials', 'Makeshift', 'Natural'];
+    const standardMaterials = ['Concrete', 'Semi-Concrete', 'Light materials', 'Makeshift', 'Natural'];
 
-  for (var data in partner) {
-    // some households have a 'marker' or 'status' attribute. Check database for status fields. 
-    // Not sure yet where the marker came from 
-    // this skips over them so no errors are logged
-    if (!editForm.getElementById(data.toString())) { 
-      // console.warn(`Element with ID "${data}" not found`); 
-      continue;
-    }
-
-    if (partner[data] instanceof Object){
-      editForm.getElementById(data.toString()).value = partner[data]._lat + " " + partner[data]._long
-    } 
-    
-    else {
-      if (partner[data] != null) {
-        editForm.getElementById(data.toString()).value = partner[data].toString();
-      } else {
-        console.log(data +" blank")
-        editForm.getElementById(data.toString()).value = '';
-      }
-    }
-        
-    if (data.includes('risk') && !data.includes('description')) {
-      // Get the level text: remove description part
-      var riskLevel = partner[data].split(':')[0].trim().toUpperCase();
-
-      // Normalize: if it’s just 'HIGH', append ' RISK'
-      if (!riskLevel.includes('RISK')) {
-        riskLevel = `${riskLevel} RISK`;
+    for (var data in partner) {
+      if (!editForm.getElementById(data.toString())) { 
+        continue;
       }
 
-      editForm.getElementById(data).value = riskLevel;
+      if (partner[data] instanceof Object){
+        editForm.getElementById(data.toString()).value = partner[data]._lat + "," + partner[data]._lng;
+      } 
+      else {
+        if (partner[data] != null) {
+          editForm.getElementById(data.toString()).value = partner[data].toString();
+        } else {
+          editForm.getElementById(data.toString()).value = '';
+        }
+      }
+          
+      if (data.includes('risk') && !data.includes('description')) {
+        var riskLevel = partner[data]?.split(':')[0]?.trim().toUpperCase();
+
+        if (riskLevel && !riskLevel.includes('RISK')) {
+          riskLevel = `${riskLevel} RISK`;
+        }
+
+        if (riskLevel) editForm.getElementById(data).value = riskLevel;
+      }
     }
 
-  }
-
-  // If the stored material is not a standard option, select "Other" and show the custom input
-  const storedMaterial = partner.household_material;
-  if (storedMaterial && !standardMaterials.includes(storedMaterial)) {
-    const materialSelect = editForm.getElementById('household_material');
-    const materialOther = editForm.getElementById('household_material_other');
-    if (materialSelect) materialSelect.value = 'Other';
-    if (materialOther) {
-      materialOther.value = storedMaterial;
-      materialOther.style.display = 'block';
+    // If the stored material is not a standard option, select "Other" and show the custom input
+    const storedMaterial = partner.household_material;
+    if (storedMaterial && !standardMaterials.includes(storedMaterial)) {
+      const materialSelect = editForm.getElementById('household_material');
+      const materialOther = editForm.getElementById('household_material_other');
+      if (materialSelect) materialSelect.value = 'Other';
+      if (materialOther) {
+        materialOther.value = storedMaterial;
+        materialOther.style.display = 'block';
+      }
     }
-  }
 
-  // Sync evacuation area checkboxes from the stored nearest_evac value
-  if (iframe.contentWindow.syncEvacCheckboxes) {
-    iframe.contentWindow.syncEvacCheckboxes();
+    // Sync evacuation area checkboxes from the stored nearest_evac value
+    if (iframe.contentWindow.syncEvacCheckboxes) {
+      iframe.contentWindow.syncEvacCheckboxes();
+    }
+  };
+
+  // Check if the iframe is already loaded, if so, run immediately. 
+  // Otherwise, wait for it to load.
+  if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+    populateLogic();
+  } else {
+    iframe.onload = populateLogic;
   }
 }
 

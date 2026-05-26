@@ -7,33 +7,110 @@
         <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
             
         <script type="module">
-            import { addEntry, BUKLOD_RULES, setCollection, validateData, getCoordinates } from "/js/firestore_UNIV.js";
-            import { submitAddForm } from '../js/firestore.js';
+        document.getElementById("submit_form").addEventListener("click", async function(event) {
+            event.preventDefault();
+            
+            // 1. Validation gate (Uses the functions already built into the HTML)
+            if (!validateRequiredFields()) {
+                return;
+            }
 
-            setCollection("buklod-official");
-            document.getElementById("submit_form").addEventListener("click", function(event) {
-                event.preventDefault();
+            // 2. Handle "Other" material selection
+            const materialSelect = document.getElementById('household_material');
+            if (materialSelect.value === 'Other') {
+                const custom = document.getElementById('household_material_other').value.trim();
+                if (custom) {
+                    const tempOption = new Option(custom, custom);
+                    materialSelect.add(tempOption);
+                    materialSelect.value = custom;
+                }
+            }
 
-                // ADDED: validation gate before saving household
-                if (!validateRequiredFields()) {
+            // 3. Helper to parse the coordinate string back into an object
+            function parseCoordinates(coordString) {
+                if (!coordString) return { _lat: 0, _lng: 0 };
+                const parts = coordString.includes(',') ? coordString.split(',') : coordString.split('+');
+                const lat = parseFloat(parts[0]);
+                const lng = parseFloat(parts[1]);
+                if (isNaN(lat) || isNaN(lng)) return { _lat: 0, _lng: 0 };
+                return { _lat: lat, _lng: lng };
+            }
+
+            // 4. Gather all form data
+            const formData = {
+                household_name: document.getElementById('household_name').value.trim(),
+                household_phase: document.getElementById('household_phase').value.trim(),
+                house_number: document.getElementById('house_number').value.trim(),
+                street: document.getElementById('street').value.trim(),
+                household_address: document.getElementById('household_address').value.trim(),
+                contact_number: document.getElementById('contact_number').value.trim(),
+                residency_status: document.getElementById('residency_status').value,
+                is_hoa_noa: document.getElementById('is_hoa_noa').value,
+                household_material: document.getElementById('household_material').value,
+                nearest_evac: document.getElementById('nearest_evac').value,
+                location_link: document.getElementById('location_link').value.trim(),
+                location_coordinates: parseCoordinates(document.getElementById('location_coordinates').value),
+                
+                number_residents: parseInt(document.getElementById('number_residents').value) || 0,
+                number_minors: parseInt(document.getElementById('number_minors').value) || 0,
+                number_seniors: parseInt(document.getElementById('number_seniors').value) || 0,
+                number_pwd: parseInt(document.getElementById('number_pwd').value) || 0,
+                number_sick: parseInt(document.getElementById('number_sick').value) || 0,
+                number_pregnant: parseInt(document.getElementById('number_pregnant').value) || 0,
+                sickness_present: document.getElementById('sickness_present').value.trim(),
+                number_families: parseInt(document.getElementById('number_families').value) || 0,
+                number_healthy: parseInt(document.getElementById('number_healthy').value) || 0,
+                
+                earthquake_risk: document.getElementById('earthquake_risk').value,
+                earthquake_risk_description: document.getElementById('earthquake_risk_description').value.trim(),
+                fire_risk: document.getElementById('fire_risk').value,
+                fire_risk_description: document.getElementById('fire_risk_description').value.trim(),
+                flood_risk: document.getElementById('flood_risk').value,
+                flood_risk_description: document.getElementById('flood_risk_description').value.trim(),
+                landslide_risk: document.getElementById('landslide_risk').value,
+                landslide_risk_description: document.getElementById('landslide_risk_description').value.trim(),
+                storm_risk: document.getElementById('storm_risk').value,
+                storm_risk_description: document.getElementById('storm_risk_description').value.trim(),
+                
+                exit_points: parseInt(document.getElementById('exit_points').value) || 0,
+                disaster_response_plan: document.getElementById('disaster_response_plan').value.trim(),
+                knowledge_readiness: parseInt(document.getElementById('knowledge_readiness').value) || 0,
+                before_disaster_actions: document.getElementById('before_disaster_actions').value.trim(),
+                during_disaster_actions: document.getElementById('during_disaster_actions').value.trim(),
+                after_disaster_actions: document.getElementById('after_disaster_actions').value.trim(),
+                important_notes: document.getElementById('important_notes').value.trim(),
+                
+                timestamp: document.getElementById('timestamp').value || new Date().toISOString(),
+                source_dataset: document.getElementById('source_dataset').value || 'Local App',
+                
+                updatedAt: Date.now(),
+                _deleted: false
+            };
+
+            try {
+                // FETCH DB HERE: Grab the database from the parent window right when saving
+                const db = window.parent.db;
+                
+                if (!db) {
+                    alert("Local database is not ready yet. Please wait a moment and try again.");
                     return;
                 }
 
-                const materialSelect = document.getElementById('household_material');
-
-                if (materialSelect.value === 'Other') {
-                    const custom = document.getElementById('household_material_other').value.trim();
-
-                    if (custom) {
-                        const tempOption = new Option(custom, custom);
-                        materialSelect.add(tempOption);
-                        materialSelect.value = custom;
-                    }
-                }
-
-                submitAddForm();
-            });
-        </script>
+                // ADD: Generate a unique ID and insert into local database
+                formData.id = 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                await db.buklod.insert(formData);
+                console.log("Document added locally!");
+                
+                // 6. Close the modal. 
+                // The UI will update automatically because of the RxDB subscription in index.js!
+                closeModal(); 
+                
+            } catch (err) {
+                console.error("Error saving to local DB:", err);
+                alert("Error adding household: " + err.message);
+            }
+        });
+    </script>
 
         <script type="module">
             import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";

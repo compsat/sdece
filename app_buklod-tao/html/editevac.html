@@ -7,109 +7,54 @@
         <link href="https://fonts.googleapis.com/css?family=Hind" rel='stylesheet'>
 
         <script type="module">
-            // Edit an existing evacuation center in the `buklod-evac-centers` Firestore collection.
-            import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
-            import { DB } from "/js/firestore_UNIV.js";
+            document.getElementById("submit_form").addEventListener("click", async function(event) {
+                event.preventDefault();
 
-            const EVAC_TYPES = ['Evacuation Center', 'Temporary Shelter'];
+                // Keep your existing validation call here if you have one
+                // if (typeof validateRequiredFields === 'function' && !validateRequiredFields()) return;
 
-            const params = new URLSearchParams(window.location.search);
-            const docId = params.get('id');
-            if (!docId) {
-                alert('Missing evacuation center ID.');
-                window.parent.postMessage('closeAddModal', '*');
-            }
-
-            const docRef = doc(DB, 'buklod-evac-centers', docId);
-
-            // Pre-fill form from existing doc
-            try {
-                const snap = await getDoc(docRef);
-                if (!snap.exists()) {
-                    alert('Evacuation center not found.');
-                    window.parent.postMessage('closeAddModal', '*');
-                } else {
-                    const d = snap.data();
-                    document.getElementById('evaccenter_name').value = d.name || '';
-                    document.getElementById('evaccenter_material').value = d.type || '';
-                    document.getElementById('latitude').value = d.latitude ?? '';
-                    document.getElementById('longitude').value = d.longitude ?? '';
-                    document.getElementById('location_link').value = d.location_link || '';
-                    if (d.latitude != null && d.longitude != null) {
-                        document.getElementById('location_coordinates').value = `${d.latitude},${d.longitude}`;
-                    }
-                }
-            } catch (err) {
-                console.error('Error loading evacuation center:', err);
-                alert('Error loading evacuation center.');
-            }
-
-            function setFieldError(fieldId, message) {
-                const field = document.getElementById(fieldId);
-                const errorContainer = document.getElementById(`${fieldId}_error`);
-                const label = document.querySelector(`label[for="${fieldId}"]`);
-                if (field) field.classList.add('error');
-                if (label) label.classList.add('error');
-                if (errorContainer) {
-                    errorContainer.textContent = message;
-                    errorContainer.classList.add('show');
-                }
-            }
-
-            function validateEvacForm({ name, type, latitude, longitude }) {
-                const errors = [];
-                if (!name) errors.push(['evaccenter_name', 'Evacuation center name is required.']);
-                if (!type) errors.push(['evaccenter_material', 'Evacuation center type is required.']);
-                else if (!EVAC_TYPES.includes(type)) errors.push(['evaccenter_material', `Type must be one of ${EVAC_TYPES.join(', ')}.`]);
-                if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90) {
-                    errors.push(['latitude', 'Latitude must be a number between -90 and 90.']);
-                }
-                if (!Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
-                    errors.push(['longitude', 'Longitude must be a number between -180 and 180.']);
-                }
-                return errors;
-            }
-
-            document.getElementById("submit_form").addEventListener("click", async function() {
-                const submitBtn = this;
                 const name = document.getElementById('evaccenter_name').value.trim();
                 const type = document.getElementById('evaccenter_material').value;
                 const latitude = parseFloat(document.getElementById('latitude').value);
                 const longitude = parseFloat(document.getElementById('longitude').value);
                 const location_link = document.getElementById('location_link').value.trim();
 
-                const errors = validateEvacForm({ name, type, latitude, longitude });
-                if (errors.length > 0) {
-                    errors.forEach(([fieldId, msg]) => setFieldError(fieldId, msg));
-
-                    // ADDED: show banner popup
-                    const fieldNames = errors.map(([fieldId]) => {
-                        const field = document.getElementById(fieldId);
-                        return field ? window.getFieldLabel(field) : fieldId;
-                    });
-
-                    window.showFormBanner(`Required or invalid fields: ${fieldNames.join(', ')}`);
-                    return;
-                }
-
-                submitBtn.disabled = true;
-                const originalLabel = submitBtn.textContent;
-                submitBtn.textContent = 'Saving...';
-
                 try {
-                    await updateDoc(docRef, {
-                        name,
-                        type,
-                        latitude,
-                        longitude,
+                    const db = window.parent.db;
+                    
+                    if (!db) {
+                        alert("Local database is not ready yet. Please wait a moment and try again.");
+                        return;
+                    }
+
+                    const editId = document.getElementById('edit_doc_id').value;
+
+                    const formData = {
+                        name: name,
+                        type: type,
+                        latitude: latitude,
+                        longitude: longitude,
                         location_link: location_link || null,
-                    });
-                    window.parent.location.reload();
+                        timestamp: document.getElementById('timestamp').value || new Date().toISOString(),
+                        _deleted: false,
+                        updatedAt: Date.now()
+                    };
+
+                    if (editId) {
+                        formData.id = editId;
+                        await db.evacCenters.incrementalUpsert(formData);
+                        console.log("Evac center updated locally!");
+                    } else {
+                        formData.id = 'evac_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                        await db.evacCenters.insert(formData);
+                        console.log("Evac center added locally!");
+                    }
+                    
+                    closeModal(); 
+                    
                 } catch (err) {
-                    console.error('Error updating evacuation center:', err);
-                    alert('Error updating evacuation center. Please try again.');
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = originalLabel;
+                    console.error("Error saving evac center to local DB:", err);
+                    alert("Error saving evacuation center: " + err.message);
                 }
             });
         </script>
@@ -205,9 +150,14 @@
                             <input type="text" id="location_coordinates" name="location_coordinates" class="form-input" readonly />
                         </div>
                     </div>
+                    
+                    <!-- Hidden fields -->
+                    <input type="hidden" id="edit_doc_id" name="edit_doc_id" />
+                    <input type="hidden" id="timestamp" name="timestamp" />
+                    <input type="hidden" id="source_dataset" name="source_dataset" />
                 </div>
             </div>
-
+            
             <!-- Modal Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="cancel_form">Cancel</button>
@@ -447,6 +397,33 @@
                     hideFormBanner();
                 }
             });
+        </script>
+
+        <script type="module">
+            // 1. Check if we are editing by looking at the URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const editId = urlParams.get('id');
+
+            if (editId) {
+                // Set the hidden ID field
+                document.getElementById('edit_doc_id').value = editId;
+
+                // 2. Grab the database from the parent and fetch the document
+                const db = window.parent.db;
+                if (db) {
+                    const doc = await db.evacCenters.findOne(editId).exec();
+                    if (doc) {
+                        // 3. Pre-populate the form fields
+                        document.getElementById('evaccenter_name').value = doc.name || '';
+                        document.getElementById('evaccenter_material').value = doc.type || '';
+                        document.getElementById('latitude').value = doc.latitude || '';
+                        document.getElementById('longitude').value = doc.longitude || '';
+                        document.getElementById('location_link').value = doc.location_link || '';
+                        document.getElementById('location_coordinates').value = `${doc.latitude},${doc.longitude}`;
+                        document.getElementById('timestamp').value = doc.timestamp || '';
+                    }
+                }
+            }
         </script>
     </body>
 </html>

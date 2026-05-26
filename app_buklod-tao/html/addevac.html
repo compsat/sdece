@@ -7,10 +7,6 @@
         <link href="https://fonts.googleapis.com/css?family=Hind" rel='stylesheet'>
 
         <script type="module">
-            // Save a new evacuation center to the `buklod-evac-centers` Firestore collection.
-            import { addDoc, collection } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
-            import { DB } from "/js/firestore_UNIV.js";
-
             const EVAC_TYPES = ['Evacuation Center', 'Temporary Shelter'];
 
             function setFieldError(fieldId, message) {
@@ -65,23 +61,43 @@
                 submitBtn.textContent = 'Saving...';
 
                 try {
-                    await addDoc(collection(DB, 'buklod-evac-centers'), {
-                        name,
-                        type,
-                        latitude,
-                        longitude,
+                    // FETCH DB HERE: Grab the database from the parent window right when saving
+                    const db = window.parent.db;
+                    
+                    if (!db) {
+                        alert("Local database is not ready yet. Please wait a moment and try again.");
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalLabel;
+                        return;
+                    }
+
+                    // Map form data to the RxDB Evac Centers Schema
+                    const formData = {
+                        id: 'evac_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                        name: name,
+                        type: type,
+                        latitude: latitude,
+                        longitude: longitude,
                         location_link: location_link || null,
                         timestamp: new Date().toISOString(),
-                    });
-                    window.parent.location.reload();
+                        _deleted: false,
+                        updatedAt: Date.now()
+                    };
+
+                    // INSERT locally
+                    await db.evacCenters.insert(formData);
+                    console.log("Evacuation center added locally!");
+                    
+                    // Close modal. The subscription in index.js will update the map instantly!
+                    closeModal(); 
+                    
                 } catch (err) {
-                    console.error('Error saving evacuation center:', err);
-                    alert('Error saving evacuation center. Please try again.');
+                    console.error('Error saving evacuation center locally:', err);
+                    alert('Error saving evacuation center: ' + err.message);
                     submitBtn.disabled = false;
                     submitBtn.textContent = originalLabel;
                 }
             });
-
         </script>
 
         <script type="module">

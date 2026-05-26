@@ -11,31 +11,59 @@
 
     
     <script type="module">
-        //Call function from firestore.js to edit new household from input fields after pressing Save Changes button
-        import { editEntry, BUKLOD_RULES, getDocIdByPartnerName, getDocByID } from "/js/firestore_UNIV.js";
-        import { submitEditForm } from "../js/firestore.js";
-
-        document.getElementById("submit_form").addEventListener("click", function(event) {
+        document.getElementById("submit_form").addEventListener("click", async function(event) {
             event.preventDefault();
 
-            // ADDED: validation gate before saving household edits
-            if (!validateRequiredFields()) {
-                return;
-            }
+            // Keep whatever validation you already have built into the HTML here!
+            // if (typeof validateRequiredFields === 'function' && !validateRequiredFields()) return;
 
-            const materialSelect = document.getElementById('household_material');
+            const name = document.getElementById('evaccenter_name').value.trim();
+            const type = document.getElementById('evaccenter_material').value;
+            const latitude = parseFloat(document.getElementById('latitude').value);
+            const longitude = parseFloat(document.getElementById('longitude').value);
+            const location_link = document.getElementById('location_link').value.trim();
 
-            if (materialSelect.value === 'Other') {
-                const custom = document.getElementById('household_material_other').value.trim();
-
-                if (custom) {
-                    const tempOption = new Option(custom, custom);
-                    materialSelect.add(tempOption);
-                    materialSelect.value = custom;
+            try {
+                // FETCH DB HERE: Grab the database from the parent window right when saving
+                const db = window.parent.db;
+                
+                if (!db) {
+                    alert("Local database is not ready yet. Please wait a moment and try again.");
+                    return;
                 }
-            }
 
-            submitEditForm();
+                const editId = document.getElementById('edit_doc_id').value;
+
+                const formData = {
+                    name: name,
+                    type: type,
+                    latitude: latitude,
+                    longitude: longitude,
+                    location_link: location_link || null,
+                    timestamp: document.getElementById('timestamp').value || new Date().toISOString(),
+                    _deleted: false,
+                    updatedAt: Date.now()
+                };
+
+                if (editId) {
+                    // EDIT: Update existing local document
+                    formData.id = editId;
+                    await db.evacCenters.incrementalUpsert(formData);
+                    console.log("Evac center updated locally!");
+                } else {
+                    // ADD: Fallback just in case it's used to create
+                    formData.id = 'evac_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    await db.evacCenters.insert(formData);
+                    console.log("Evac center added locally!");
+                }
+                
+                // Close modal. The subscription in index.js will update the map instantly!
+                closeModal(); 
+                
+            } catch (err) {
+                console.error("Error saving evac center to local DB:", err);
+                alert("Error saving evacuation center: " + err.message);
+            }
         });
     </script>
 
@@ -434,6 +462,7 @@
                 </div>
 
                 <!-- Hidden fields -->
+                <input type="hidden" id="edit_doc_id" name="edit_doc_id" />
                 <input type="hidden" id="timestamp" name="timestamp" />
                 <input type="hidden" id="source_dataset" name="source_dataset" />
             </div>
