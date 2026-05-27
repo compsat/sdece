@@ -2,6 +2,7 @@ import {
 	getDocs,
 	addDoc,
 	updateDoc,
+	deleteDoc,
 	doc,
 	query,
   or,
@@ -14,7 +15,7 @@ import {
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
+import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 
 import { FILTER_RULES } from '/js/ruleEngines.js'
 import {
@@ -73,7 +74,7 @@ const SECRETS = await SECRETS_RES.json();
 
 export const FIREBASE_CONFIG = SECRETS.FIREBASE_CONFIG;
 
-var app = initializeApp(FIREBASE_CONFIG);
+var app = getApps().length > 0 ? getApps()[0] : initializeApp(FIREBASE_CONFIG);
 export const DB = getFirestore(app);
 
 var collection_reference = null;
@@ -106,6 +107,8 @@ export const DB_RULES_AND_DATA = [
 			'household_address',
 			'household_material',
 			'household_phase',
+			'house_number',
+			'street',
 			'landslide_risk',
 			'landslide_risk_description',
 			'earthquake_risk',
@@ -117,6 +120,17 @@ export const DB_RULES_AND_DATA = [
 			'storm_risk',
 			'storm_risk_description',
 			'nearest_evac',
+			'number_families',
+			'number_healthy',
+			'exit_points',
+			'disaster_response_plan',
+			'before_disaster_actions',
+			'knowledge_readiness',
+			'during_disaster_actions',
+			'after_disaster_actions',
+			'important_notes',
+			'timestamp',
+			'source_dataset',
 		],
 	],
 	[
@@ -139,6 +153,8 @@ export const DB_RULES_AND_DATA = [
 			'household_address',
 			'household_material',
 			'household_phase',
+			'house_number',
+			'street',
 			'landslide_risk',
 			'landslide_risk_description',
 			'earthquake_risk',
@@ -150,6 +166,17 @@ export const DB_RULES_AND_DATA = [
 			'storm_risk',
 			'storm_risk_description',
 			'nearest_evac',
+			'number_families',
+			'number_healthy',
+			'exit_points',
+			'disaster_response_plan',
+			'before_disaster_actions',
+			'knowledge_readiness',
+			'during_disaster_actions',
+			'after_disaster_actions',
+			'important_notes',
+			'timestamp',
+			'source_dataset',
 		],
 	],
 	[
@@ -202,10 +229,8 @@ const VALIDATION_RULES = {
 	contact_number: {
 		label: "Contact Number",
 		type: 'string',
-		required: true,
-		minLength: 11,
-		maxLength: 11,
-		regex: /^09[0-9]{9}$/,
+		required: false,
+		regex: /^(09\d{9}|09\d{2}-\d{3}-\d{4}|N\/A)$/,
 		},
     number_residents: { label: "Number of Residents", type: 'number', required: true , 'minimum': 1},
 		number_minors: { label: "Number of Minor Residents", type: 'number', 'minimum': 0 },
@@ -223,9 +248,7 @@ const VALIDATION_RULES = {
 		is_hoa_noa: {
       label: "HOA Status",
 			type: 'string',
-			required: true,
-			minLength: 3,
-			maxLength: 3,
+			required: false,
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
     location_coordinates: {label: "Location Coordinates", type: 'object', required: true },
@@ -235,15 +258,8 @@ const VALIDATION_RULES = {
       label: "Household Material",
 			type: 'string',
 			required: true,
-			enum: [
-				'Concrete',
-				'Semi-Concrete',
-				'Light materials',
-				'Makeshift',
-				'Natural',
-			],
 		},
-	household_phase: { label: "Household Phase", type: 'string', required: true },
+	household_phase: { label: "Household Phase", type: 'string', required: false },
 		
     landslide_risk: { label: 'Landslide Risk', type: 'string', required: true },
 		landslide_risk_description:{ label: 'Landslide Risk Description', type: 'string', required: false},
@@ -257,16 +273,26 @@ const VALIDATION_RULES = {
 		storm_risk_description: { label: 'Storm Risk Description', type: 'string', required: false},
 
 		nearest_evac: { label: 'Nearest Evacuation Area', type: 'string', required: true, maxLength: 255 },
+		house_number: { label: 'House Number', type: 'string', required: false },
+		street: { label: 'Street', type: 'string', required: false },
+		number_families: { label: 'Number of Families', type: 'number', minimum: 0 },
+		number_healthy: { label: 'Number of Healthy Residents', type: 'number', minimum: 0 },
+		exit_points: { label: 'Exit Points', type: 'number', minimum: 0 },
+		disaster_response_plan: { label: 'Disaster Response Plan', type: 'string', required: false },
+		before_disaster_actions: { label: 'Before Disaster Actions', type: 'string', required: false },
+		knowledge_readiness: { label: 'Disaster Knowledge Rating', type: 'number', minimum: 1 },
+		during_disaster_actions: { label: 'During Disaster Actions', type: 'string', required: false },
+		after_disaster_actions: { label: 'After Disaster Actions', type: 'string', required: false },
+		timestamp: { label: 'Timestamp', type: 'string', required: false },
+		source_dataset: { label: 'Source Dataset', type: 'string', required: false },
 	},
 	'buklod-official': {
     household_name: { label: "Household Name", type: 'string', required: true, maxLength: 127 },
 		contact_number: {
       label: "Contact Number",
 			type: 'string',
-			required: true,
-			minLength: 11,
-			maxLength: 11,
-			regex: /^09[0-9]{9}$/,
+			required: false,
+			regex: /^(09\d{9}|09\d{2}-\d{3}-\d{4}|N\/A)$/,
 		},
     number_residents: { label: "Number of Residents", type: 'number', required: true , 'minimum': 1},
 		number_minors: { label: "Number of Minor Residents", type: 'number', 'minimum': 0 },
@@ -284,9 +310,7 @@ const VALIDATION_RULES = {
 		is_hoa_noa: {
       label: "HOA Status",
 			type: 'string',
-			required: true,
-			minLength: 3,
-			maxLength: 3,
+			required: false,
 			enum: ['HOA', 'NOA', 'N/A'],
 		},
     location_coordinates: { label: "Location Coordinates", type: 'object', required: true },
@@ -296,15 +320,8 @@ const VALIDATION_RULES = {
       label: "Household Material",
 			type: 'string',
 			required: true,
-			enum: [
-				'Concrete',
-				'Semi-Concrete',
-				'Light materials',
-				'Makeshift',
-				'Natural',
-			],
 		},
-		household_phase: { label: "Household Phase", type: 'string', required: true },
+		household_phase: { label: "Household Phase", type: 'string', required: false },
 
     landslide_risk: { label: 'Landslide Risk', type: 'string', required: true },
 		landslide_risk_description:{ label: 'Landslide Risk Description', type: 'string', required: false},
@@ -317,7 +334,19 @@ const VALIDATION_RULES = {
 		storm_risk: { label: 'Storm Risk', type: 'string', required: true },
 		storm_risk_description: { label: 'Storm Risk Description', type: 'string', required: false},
 
-		nearest_evac: { type: 'string', required: true, maxLength: 255 },
+		nearest_evac: { label: 'Nearest Evacuation Area', type: 'string', required: true, maxLength: 255 },
+		house_number: { label: 'House Number', type: 'string', required: false },
+		street: { label: 'Street', type: 'string', required: false },
+		number_families: { label: 'Number of Families', type: 'number', minimum: 0 },
+		number_healthy: { label: 'Number of Healthy Residents', type: 'number', minimum: 0 },
+		exit_points: { label: 'Exit Points', type: 'number', minimum: 0 },
+		disaster_response_plan: { label: 'Disaster Response Plan', type: 'string', required: false },
+		before_disaster_actions: { label: 'Before Disaster Actions', type: 'string', required: false },
+		knowledge_readiness: { label: 'Disaster Knowledge Rating', type: 'number', minimum: 1 },
+		during_disaster_actions: { label: 'During Disaster Actions', type: 'string', required: false },
+		after_disaster_actions: { label: 'After Disaster Actions', type: 'string', required: false },
+		timestamp: { label: 'Timestamp', type: 'string', required: false },
+		source_dataset: { label: 'Source Dataset', type: 'string', required: false },
 	},
 	'seeds-official-TEST': {
     partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
@@ -482,6 +511,19 @@ export function addEntry(inp_obj) {
 }
 
 
+export function deleteEntry(docId) {
+	const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
+	return deleteDoc(DOC_REFERENCE)
+		.then(() => {
+			alert("Household deleted successfully.");
+			window.location.reload();
+		})
+		.catch((error) => {
+			console.error('Error deleting document: ', error);
+			alert("Error deleting household. Please try again.");
+		});
+}
+
 export function editEntry(inp_obj, docId) {
 	const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
 	updateDoc(DOC_REFERENCE, inp_obj)
@@ -553,31 +595,31 @@ export function validateData(collectionName, data) {
 			continue;
 		}
 
+		let validationFailed = false;
 		for (const x of VALIDATION_TEST.keys()) {
 			if (VALIDATION_TEST.get(x)) {
-				errors.push(ERROR_MESSAGES.get(x));
+				if (x === 'regex_test') {
+					// Use field-specific message for regex failures
+					if (fieldLabel == 'Contact Number') {
+						errors.push(`${fieldLabel} is not in the correct format. Number must be 09XXXXXXXXX or 09XX-XXX-XXXX.`);
+					} else if (fieldLabel == 'Location Link') {
+						errors.push(`${fieldLabel} is not in the correct format. Link must start with: https://`);
+					} else {
+						errors.push(ERROR_MESSAGES.get(x));
+					}
+				} else {
+					errors.push(ERROR_MESSAGES.get(x));
+				}
+				validationFailed = true;
 				break;
 			}
 		}
 
+		if (validationFailed) continue;
 
 		if (rule.enum && !rule.enum.includes(value)) {
-			errors.push(`${fieldLabel}' must be one of ${rule.enum.join(', ')}.`);
+			errors.push(`${fieldLabel} must be one of ${rule.enum.join(', ')}.`);
 			continue;
-		}
-
-		// Check for regex pattern
-		if (rule.regex && typeof value === 'string') {
-			if (!rule.regex.test(value)) {
-				if (fieldLabel == 'Contact Number') {
-					errors.push(`${fieldLabel} is not in the correct format. Number be in the format: 09xxxxxxxxx.`);
-					continue;
-				}
-				if (fieldLabel == 'Location Link') {
-					errors.push(`${fieldLabel} is not in the correct format. Link must start with: https://`);
-					continue;
-				}
-			}
 		}
 
 	}
