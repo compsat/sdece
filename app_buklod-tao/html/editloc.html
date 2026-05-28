@@ -14,55 +14,101 @@
         document.getElementById("submit_form").addEventListener("click", async function(event) {
             event.preventDefault();
 
-            // Keep whatever validation you already have built into the HTML here!
-            // if (typeof validateRequiredFields === 'function' && !validateRequiredFields()) return;
+            if (typeof validateRequiredFields === 'function' && !validateRequiredFields()) return;
 
-            const name = document.getElementById('evaccenter_name').value.trim();
-            const type = document.getElementById('evaccenter_material').value;
-            const latitude = parseFloat(document.getElementById('latitude').value);
-            const longitude = parseFloat(document.getElementById('longitude').value);
-            const location_link = document.getElementById('location_link').value.trim();
+            // Handle "Other" material selection
+            const materialSelect = document.getElementById('household_material');
+            if (materialSelect.value === 'Other') {
+                const custom = document.getElementById('household_material_other').value.trim();
+                if (custom) {
+                    const tempOption = new Option(custom, custom);
+                    materialSelect.add(tempOption);
+                    materialSelect.value = custom;
+                }
+            }
+
+            function parseCoordinates(coordString) {
+                if (!coordString) return { _lat: 0, _lng: 0 };
+                const parts = coordString.includes(',') ? coordString.split(',') : coordString.split('+');
+                const lat = parseFloat(parts[0]);
+                const lng = parseFloat(parts[1]);
+                if (isNaN(lat) || isNaN(lng)) return { _lat: 0, _lng: 0 };
+                return { _lat: lat, _lng: lng };
+            }
+
+            const editId = document.getElementById('edit_doc_id').value;
+
+            const formData = {
+                id: editId,
+                household_name: document.getElementById('household_name').value.trim(),
+                household_phase: document.getElementById('household_phase').value.trim(),
+                house_number: document.getElementById('house_number').value.trim(),
+                street: document.getElementById('street').value.trim(),
+                household_address: document.getElementById('household_address').value.trim(),
+                contact_number: document.getElementById('contact_number').value.trim(),
+                residency_status: document.getElementById('residency_status').value,
+                is_hoa_noa: document.getElementById('is_hoa_noa').value,
+                household_material: document.getElementById('household_material').value,
+                nearest_evac: document.getElementById('nearest_evac').value,
+                location_link: document.getElementById('location_link').value.trim(),
+                location_coordinates: parseCoordinates(document.getElementById('location_coordinates').value),
+
+                number_residents: parseInt(document.getElementById('number_residents').value) || 0,
+                number_minors: parseInt(document.getElementById('number_minors').value) || 0,
+                number_seniors: parseInt(document.getElementById('number_seniors').value) || 0,
+                number_pwd: parseInt(document.getElementById('number_pwd').value) || 0,
+                number_sick: parseInt(document.getElementById('number_sick').value) || 0,
+                number_pregnant: parseInt(document.getElementById('number_pregnant').value) || 0,
+                sickness_present: document.getElementById('sickness_present').value.trim(),
+                number_families: parseInt(document.getElementById('number_families').value) || 0,
+                number_healthy: parseInt(document.getElementById('number_healthy').value) || 0,
+
+                earthquake_risk: document.getElementById('earthquake_risk').value,
+                earthquake_risk_description: document.getElementById('earthquake_risk_description').value.trim(),
+                fire_risk: document.getElementById('fire_risk').value,
+                fire_risk_description: document.getElementById('fire_risk_description').value.trim(),
+                flood_risk: document.getElementById('flood_risk').value,
+                flood_risk_description: document.getElementById('flood_risk_description').value.trim(),
+                landslide_risk: document.getElementById('landslide_risk').value,
+                landslide_risk_description: document.getElementById('landslide_risk_description').value.trim(),
+                storm_risk: document.getElementById('storm_risk').value,
+                storm_risk_description: document.getElementById('storm_risk_description').value.trim(),
+
+                exit_points: parseInt(document.getElementById('exit_points').value) || 0,
+                disaster_response_plan: document.getElementById('disaster_response_plan').value.trim(),
+                knowledge_readiness: parseInt(document.getElementById('knowledge_readiness').value) || 0,
+                before_disaster_actions: document.getElementById('before_disaster_actions').value.trim(),
+                during_disaster_actions: document.getElementById('during_disaster_actions').value.trim(),
+                after_disaster_actions: document.getElementById('after_disaster_actions').value.trim(),
+                important_notes: document.getElementById('important_notes').value.trim(),
+
+                timestamp: document.getElementById('timestamp').value || new Date().toISOString(),
+                source_dataset: document.getElementById('source_dataset').value || 'Local App',
+
+                updatedAt: Date.now(),
+                _deleted: false
+            };
 
             try {
-                // FETCH DB HERE: Grab the database from the parent window right when saving
                 const db = window.parent.db;
-                
+
                 if (!db) {
                     alert("Local database is not ready yet. Please wait a moment and try again.");
                     return;
                 }
 
-                const editId = document.getElementById('edit_doc_id').value;
-
-                const formData = {
-                    name: name,
-                    type: type,
-                    latitude: latitude,
-                    longitude: longitude,
-                    location_link: location_link || null,
-                    timestamp: document.getElementById('timestamp').value || new Date().toISOString(),
-                    _deleted: false,
-                    updatedAt: Date.now()
-                };
-
-                if (editId) {
-                    // EDIT: Update existing local document
-                    formData.id = editId;
-                    await db.evacCenters.incrementalUpsert(formData);
-                    console.log("Evac center updated locally!");
-                } else {
-                    // ADD: Fallback just in case it's used to create
-                    formData.id = 'evac_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                    await db.evacCenters.insert(formData);
-                    console.log("Evac center added locally!");
+                if (!editId) {
+                    alert("Error: No household ID found. Cannot update.");
+                    return;
                 }
-                
-                // Close modal. The subscription in index.js will update the map instantly!
-                closeModal(); 
-                
+
+                await db.buklod.incrementalUpsert(formData);
+                console.log("Household updated locally!");
+                closeModal();
+
             } catch (err) {
-                console.error("Error saving evac center to local DB:", err);
-                alert("Error saving evacuation center: " + err.message);
+                console.error("Error saving household to local DB:", err);
+                alert("Error saving household: " + err.message);
             }
         });
     </script>
@@ -225,6 +271,10 @@
                             Location Coordinates
                         </label>
                         <input type="text" id="location_coordinates" name="location_coordinates" class="form-input" readonly />
+                        <button type="button" id="get-location-btn" style="margin-top:6px;display:flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid #1a357b;background:#fff;color:#1a357b;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            Get Current Location
+                        </button>
                     </div>
                 </div>
             </div>
@@ -801,7 +851,44 @@
                 }
             });
         </script>
-    
+
+    <script>
+        const locationIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>`;
+
+        document.getElementById('get-location-btn').addEventListener('click', function() {
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser.');
+                return;
+            }
+            const btn = this;
+            btn.disabled = true;
+            btn.style.opacity = '0.6';
+            btn.style.cursor = 'not-allowed';
+            btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Getting location...`;
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude.toFixed(7);
+                    const lng = position.coords.longitude.toFixed(7);
+                    document.getElementById('location_coordinates').value = lat + ',' + lng;
+                    document.getElementById('location_link').value = 'https://www.openstreetmap.org/#map=19/' + lat + '/' + lng;
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                    btn.innerHTML = locationIcon + ' Get Current Location';
+                },
+                function(error) {
+                    alert('Unable to get location: ' + error.message);
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                    btn.innerHTML = locationIcon + ' Get Current Location';
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        });
+    </script>
+
 </body>
 
 </html>
