@@ -7,5 +7,3 @@ export function showAddModal() {
 	var addModal = document.getElementById('addModal');
 	addModal.style.display = 'flex';
 }
-
-
