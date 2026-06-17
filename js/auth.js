@@ -57,7 +57,7 @@ export function signOutUser() {
     signOut(AUTH)
         .then(() => {
             console.log("User signed out");
-            window.location.replace("/html/login.html");
+            window.location.replace("/html/seeds-login.html");
         })
         .catch((error) => {
             console.error("Error signing out:", error);
