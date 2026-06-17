@@ -1,22 +1,25 @@
 // CODE LOGIC FOR IMPORTING OF FUNCTIONS
 // ------------------------------------------
 import { populateEditForm } from './firestore.js';
-import { initDb, startFirestoreSync } from '../../js/dexie.js'; 
+import { initDb, resetDatabase, startFirestoreSync, parseData } from '../../js/dexie.js'; 
 import { addListeners, clearMarkers, map } from '../../js/index_UNIV.js';
+import { cancelReplication } from '../../js/dexie.js';
 
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js';
 import { AUTH } from '../../js/auth.js';
 
+
 let db = null;
 let evacCenters = [];
 let partnersArray = new Map(); // Map of partner ID to partner data
+let currUid = null;
 
 onAuthStateChanged(AUTH, async (user) => {
   if (user) {
-    console.log(`User logged in: ${user.uid}`);
+    currUid = user.uid;
     await main(user.uid);
   } else {
-    console.log("No user logged in. Redirecting...");
+    console.log("No user signed in. Redirecting...");
     
     // Destroy local DB if it exists to protect privacy
     if (db) {
@@ -40,8 +43,28 @@ async function main(uid) {
 
   window.db = db; 
 
+  const wasOffline = localStorage.getItem("wasOffline") === "1";
+  if (wasOffline) {
+    localStorage.removeItem("wasOffline");
+    await resetDatabase(db);
+    db = await initDb(uid); 
+  }
+
   startFirestoreSync(db, uid);
 
+  createSubscriptions(db);
+
+  map.setView([14.674043754743689, 121.11081361770631], 18);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
+
+  initializeFilterModal();
+  addListeners();
+}
+
+
+function createSubscriptions(db) {
   db.evacCenters.find({ selector: { _deleted: { $eq: false } } }).$.subscribe(centers => {
     evacCenters = centers.map(c => c.toJSON());
     addEvacCenters(); 
@@ -56,14 +79,6 @@ async function main(uid) {
     if (window.reapplySearch) window.reapplySearch();
     updateRiskIcons();
   });
-
-  map.setView([14.674043754743689, 121.11081361770631], 18);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
-  }).addTo(map);
-
-  initializeFilterModal();
-  addListeners();
 }
 
 // ------------------------------------------
@@ -495,6 +510,31 @@ document.getElementById('download-report').addEventListener('click', async () =>
     XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(masterData), 'Master Sheet');
 
     XLSX.writeFile(workbook, 'Buklod_Tao_Household_Report.xlsx');
+});
+// ------------------------------------------
+
+// CODE LOGIC FOR IMPORTING OF DATA
+// ------------------------------------------
+document.getElementById('import-report').addEventListener('click', async () => {
+  document.getElementById('import-report-input').click()
+});
+
+document.getElementById('import-report-input').addEventListener('change', async function(e) {
+  console.log('You selected ' + e.target.files?.[0].name);
+  try {
+    const docs = await parseData(e.target.files?.[0])
+    if (docs.length === 0) throw new Error("No valid rows found.");
+    await resetDatabase(db);
+    db = await initDb(currUid);
+    window.db = db;
+    await db.buklod.bulkUpsert(docs);
+    createSubscriptions(db);
+    localStorage.setItem("wasOffline", 1);
+    alert(`Imported ${docs.length} households. Refresh to return to online mode.`)
+  } catch (err) {
+    console.error("Import failed:", err);
+    alert("Import failed.")
+  }
 });
 // ------------------------------------------
 
