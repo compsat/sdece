@@ -298,7 +298,7 @@ export async function parseData(file) {
       }
 
       return {
-        id: generateHash(get("Household Name")),
+        id: String(generateHash(get("Household Name"))),
         household_name: get("Household Name"),
         household_phase: get("Phase"),
         street: get("Street"),
@@ -354,7 +354,6 @@ export async function parseData(file) {
       throw new Error("Spreadsheet is missing a 'Master Sheet' tab.");
     }
     const jsonData = XLSX.utils.sheet_to_json(masterSheet);
-    console.log("Data parsed.")
 
     return jsonData
       .filter((r) => String(r["Household Name"] ?? "").trim() !== "")
