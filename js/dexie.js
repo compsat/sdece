@@ -22,9 +22,11 @@ if (RxDBReplicationPlugin) {
 }
 
 // don't forget to change this.
+// dont change it. it breaks everything.
 const IS_TESTING = false;
 
 // collections variable is used to easily switch from a staging database to the production one
+// dont use it. it breaks everything.
 const collections = {
   "buklod-tao": {
     households: IS_TESTING ? "buklod-official-TEST" : "buklod-official",
@@ -111,9 +113,10 @@ export function startFirestoreSync(db, uid) {
   console.log("Syncing local database with firestore...")
   const firestore = getFirestore(getApps()[0]);
   // --- 1. SYNC BUKLOD (Households) TO TEST COLLECTION ---
+  console.log(`Syncing ${collections["buklod-tao"].households} with firestore...`)
   db.buklodSyncState = replicateRxCollection({ 
     collection: db.buklod,
-    replicationIdentifier: 'buklod-test-sync-v3',
+    replicationIdentifier: 'buklod-test-sync-v4',
     live: true, 
     retryTime: 5 * 1000, 
     
@@ -194,7 +197,7 @@ export function startFirestoreSync(db, uid) {
     }
   });
 
-  // --- 2. SYNC EVAC CENTERS TO TEST COLLECTION ---
+  console.log(`Syncing ${collections["buklod-tao"].evacCenters} with firestore...`)
   db.evacSyncState = replicateRxCollection({
     collection: db.evacCenters,
     replicationIdentifier: 'evac-test-sync-v3',
@@ -277,7 +280,7 @@ export async function cancelReplication(db) {
     db.evacSyncState?.cancel(),
     db.buklodSyncState?.cancel(),
   ]);
-  if (IS_TESTING) console.log("Replication engine has been cancelled.");
+  if (!IS_TESTING) console.log("Replication engine has been cancelled.");
 }
 
 export async function parseData(file) {
