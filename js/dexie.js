@@ -22,7 +22,7 @@ if (RxDBReplicationPlugin) {
 }
 
 // don't forget to change this.
-const IS_TESTING = true;
+const IS_TESTING = false;
 
 // collections variable is used to easily switch from a staging database to the production one
 const collections = {
@@ -108,6 +108,7 @@ export async function initDb(uid) {
 }
 
 export function startFirestoreSync(db, uid) {
+  console.log("Syncing local database with firestore...")
   const firestore = getFirestore(getApps()[0]);
   // --- 1. SYNC BUKLOD (Households) TO TEST COLLECTION ---
   db.buklodSyncState = replicateRxCollection({ 
