@@ -27,7 +27,7 @@ const IS_TESTING = true;
 // collections variable is used to easily switch from a staging database to the production one
 const collections = {
   "buklod-tao": {
-    households: IS_TESTING ? "buklod-official" : "buklod-official-TEST",
+    households: IS_TESTING ? "buklod-official-TEST" : "buklod-official",
     evacCenters: "buklod-evac-centers", // there is no staging collection for evacuation centers.
   }
 }
