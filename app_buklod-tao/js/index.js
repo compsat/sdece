@@ -1,35 +1,43 @@
 // CODE LOGIC FOR IMPORTING OF FUNCTIONS
 // ------------------------------------------
 import { populateEditForm } from './firestore.js';
-import { initDb, resetDatabase, startFirestoreSync, parseData } from '../../js/dexie.js'; 
+import { initDb, startFirestoreSync } from '../../js/dexie.js'; 
+import { 
+  setDatabase, 
+  getDatabase,
+  parseData,
+  importData,
+  removeDatabase, 
+  createSubscriptions,
+  dbExists,
+  getHouseholdCollection,
+  getHouseholds,
+  getEvacCentersCollection,
+  getEvacCenters,
+  setAsOffline,
+} from '../js/dexie.js'; 
 import { addListeners, clearMarkers, map } from '../../js/index_UNIV.js';
-import { cancelReplication } from '../../js/dexie.js';
 
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js';
 import { AUTH } from '../../js/auth.js';
 
-
-let db = null;
-let evacCenters = [];
-let partnersArray = new Map(); // Map of partner ID to partner data
-let currUid = null;
+const partnersArray = () => { return getHouseholds() }; // Map of partner ID to partner data
+const evacCenters = () => { return getEvacCenters() };
 
 onAuthStateChanged(AUTH, async (user) => {
   if (user) {
-    currUid = user.uid;
     await main(user.uid);
   } else {
     console.log("No user signed in. Redirecting...");
     
     // Destroy local DB if it exists to protect privacy
-    if (db) {
+    if (dbExists()) {
       try {
-        await db.remove();
+        removeDatabase();
         console.log("Local database destroyed on logout.");
       } catch (err) {
         console.error("Error removing database on logout:", err);
       }
-      db = null;
     }
     
     window.location.href = '../../html/login.html'; 
@@ -37,22 +45,13 @@ onAuthStateChanged(AUTH, async (user) => {
 });
 
 async function main(uid) {
-  if (db) return;
+  if (dbExists()) return;
+  
+  setDatabase(await initDb(uid)); 
 
-  db = await initDb(uid); 
+  startFirestoreSync(getDatabase(), uid);
 
-  window.db = db; 
-
-  const wasOffline = localStorage.getItem("wasOffline") === "1";
-  if (wasOffline) {
-    localStorage.removeItem("wasOffline");
-    await resetDatabase(db);
-    db = await initDb(uid); 
-  }
-
-  startFirestoreSync(db, uid);
-
-  createSubscriptions(db);
+  createSubscriptions(window);
 
   map.setView([14.674043754743689, 121.11081361770631], 18);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -62,25 +61,6 @@ async function main(uid) {
   initializeFilterModal();
   addListeners();
 }
-
-
-function createSubscriptions(db) {
-  db.evacCenters.find({ selector: { _deleted: { $eq: false } } }).$.subscribe(centers => {
-    evacCenters = centers.map(c => c.toJSON());
-    addEvacCenters(); 
-  });
-
-  db.buklod.find({ selector: { _deleted: { $eq: false } } }).$.subscribe(docs => {
-    partnersArray = new Map(docs.map(d => [d.id, d.toJSON()]));
-
-    // Re-render the UI automatically whenever local data changes
-    populateNavBar(partnersArray);
-    if (window.reapplySort) window.reapplySort();
-    if (window.reapplySearch) window.reapplySearch();
-    updateRiskIcons();
-  });
-}
-
 // ------------------------------------------
 
 
@@ -148,11 +128,11 @@ document.addEventListener('click', function(event) {
 });
 
 // Function for populating the navbar entries with households entries
-function populateNavBar(condition){
+export function populateNavBar(households){
   const locationList = document.getElementById('locationList');
   locationList.innerHTML = '';
   
-  var filtered_partners = condition || partnersArray;
+  var filtered_partners = households;
 
   const partnersCount = document.getElementById('partners-count');
   if (partnersCount) {
@@ -171,7 +151,7 @@ function populateNavBar(condition){
     anchor.href = '#';
 
     listItem.addEventListener('click', async () => {
-      const doc = await db.buklod.findOne(partner.id).exec();
+      const doc = await getHouseholdCollection().findOne(partner.id).exec();
       if (!doc) return;
   
       map.setView(partner.marker.getLatLng());
@@ -426,7 +406,7 @@ window.addEventListener('message', function(event) {
 // CODE LOGIC FOR EXPORTING OF DATA
 // ------------------------------------------
 document.getElementById('download-report').addEventListener('click', async () => {
-    const allHouseholds = Array.from(partnersArray.values());
+    const allHouseholds = Array.from(partnersArray().values());
     const sortByHouseholdName = (a, b) => (a.household_name || '').localeCompare(b.household_name || '');
     const sortByRiskLevel = level => {
         if (level === 'HIGH RISK') return 0;
@@ -524,12 +504,10 @@ document.getElementById('import-report-input').addEventListener('change', async 
   try {
     const docs = await parseData(e.target.files?.[0])
     if (docs.length === 0) throw new Error("No valid rows found.");
-    await resetDatabase(db);
-    db = await initDb(currUid);
-    window.db = db;
-    await db.buklod.bulkUpsert(docs);
-    createSubscriptions(db);
-    localStorage.setItem("wasOffline", 1);
+
+    await importData(docs);
+    setAsOffline();
+    localStorage.setItem("viewingLocal", "1");
     alert(`Imported ${docs.length} households. Refresh to return to online mode.`)
   } catch (err) {
     console.error("Import failed:", err);
@@ -570,7 +548,7 @@ function attachMarkers(partners) {
         if (delete_button) {
           delete_button.addEventListener('click', async function() {
             if (!confirm(`Delete "${partner.household_name}"? This cannot be undone.`)) return;
-            await db.buklod.incrementalUpsert({id: partner.id, _deleted: true }); // Local Delete!
+            await getHouseholdCollection().incrementalUpsert({id: partner.id, _deleted: true }); // Local Delete!
           });
         }
 
@@ -596,11 +574,11 @@ function clearAllHighlights() {
   document.querySelectorAll('.highlight').forEach(item => item.classList.remove('highlight'));
 }
 
-function updateRiskIcons() {
+export function updateRiskIcons() {
   const riskType = document.getElementById('risk-sort').value.replace('-sort', '');
   clearMarkers();
 
-  partnersArray.forEach((partner, docId) => {
+  partnersArray().forEach((partner, docId) => {
     if (activeFilteredIds !== null && !activeFilteredIds.has(docId)) {
       partner.marker = null;
       return;
@@ -634,7 +612,7 @@ function updateRiskIcons() {
         if (delete_button) {
           delete_button.addEventListener('click', async function() {
             if (!confirm(`Delete "${partner.household_name}"? This cannot be undone.`)) return;
-            await db.buklod.incrementalUpsert({id: partner.id, _deleted: true });
+            await getHouseholdCollection().incrementalUpsert({id: partner.id, _deleted: true });
           });
         }
 
@@ -660,8 +638,8 @@ function updateRiskIcons() {
 let appliedShelterTypes = [];
 let activeFilteredIds = null;
 
-function addEvacCenters() {
-  evacCenters.forEach(center => {
+export function addEvacCenters() {
+  evacCenters().forEach(center => {
     if (appliedShelterTypes.length > 0 && !appliedShelterTypes.includes(center.type)) {
       center.marker = null;
       return;
@@ -683,7 +661,7 @@ function addEvacCenters() {
         document.querySelector(`.evac-edit-btn[data-evac-id="${center.id}"]`)?.addEventListener('click', () => openEditEvacModal(center.id));
         document.querySelector(`.evac-delete-btn[data-evac-id="${center.id}"]`)?.addEventListener('click', async () => {
           if (!confirm(`Delete "${center.name}"? This cannot be undone.`)) return;
-          await db.evacCenters.incrementalUpsert({ id: center.id, _deleted: true });
+          await getEvacCentersCollection().incrementalUpsert({ id: center.id, _deleted: true });
         });
       }, 0);
     });
@@ -739,15 +717,15 @@ async function applyFilterAndUpdate() {
   const filteredWithMarkers = attachMarkers(filteredData);
 
   activeFilteredIds = new Set(filteredWithMarkers.keys());
-  partnersArray.forEach((partner) => { partner.marker = null; });
+  partnersArray().forEach((partner) => { partner.marker = null; });
   filteredWithMarkers.forEach((filteredPartner, docId) => {
-    const original = partnersArray.get(docId);
+    const original = partnersArray().get(docId);
     if (original) original.marker = filteredPartner.marker;
   });
 
   addEvacCenters();
   if (appliedShelterTypes.length > 0) {
-    populateNavBarWithEvacCenters(evacCenters.filter(c => appliedShelterTypes.includes(c.type)));
+    populateNavBarWithEvacCenters(evacCenters().filter(c => appliedShelterTypes.includes(c.type)));
   } else {
     populateNavBar(filteredWithMarkers);
   }
@@ -838,7 +816,7 @@ export async function presentFilteredData() {
   if (rawInput.is_hoa_noa.length > 0) selector.is_hoa_noa = { $in: rawInput.is_hoa_noa };
   if (riskLevels.length > 0 && riskType) selector[riskType] = { $in: riskLevels };
 
-  let docs = await db.buklod.find({ selector }).exec();
+  let docs = await getHouseholdCollection().find({ selector }).exec();
   
   let finalData = new Map();
   const needsAnyRiskFilter = riskLevels.length > 0 && !riskType;
@@ -872,7 +850,7 @@ window.filterMarkersBySearch = function(query) {
   const escaped = input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const regex = escaped ? new RegExp('\\b' + escaped + '\\b', 'i') : null;
 
-  partnersArray.forEach((partner) => {
+  partnersArray().forEach((partner) => {
     if (!partner.marker) return;
     if (!regex) {
       if (window.pinsVisible) map.addLayer(partner.marker);
@@ -899,13 +877,13 @@ togglePinsBtn.addEventListener('click', () => {
     togglePinsBtn.classList.remove('filter-active');
     togglePinsText.textContent = 'Show Pins';
   }
-  partnersArray.forEach((partner) => {
+  partnersArray().forEach((partner) => {
     if (partner.marker) {
       if (window.pinsVisible) map.addLayer(partner.marker);
       else map.removeLayer(partner.marker);
     }
   });
-  evacCenters.forEach((center) => {
+  evacCenters().forEach((center) => {
     if (center.marker) {
       if (window.pinsVisible) map.addLayer(center.marker);
       else map.removeLayer(center.marker);
