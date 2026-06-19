@@ -13,6 +13,8 @@ let activeHouseholdSubscription = null;
 let partnersArray = new Map();
 let evacCenters = [];
 
+export function hasDatabase() { return Boolean(db) }
+
 export function setDatabase(database) { 
   db = database;
   activeHouseholdCollection = activeHouseholdCollection ?? db.buklod; 
@@ -24,7 +26,6 @@ export function getHouseholdCollection() { return activeHouseholdCollection; }
 
 export function getEvacCentersCollection() { return db?.evacCenters ?? null; }
 
-export function hasDatabase() { return Boolean(db) }
 
 // For compatibility
 export function dbExists() { return hasDatabase() }

@@ -7,6 +7,7 @@
         <link href="https://fonts.googleapis.com/css?family=Hind" rel='stylesheet'>
 
         <script type="module">
+            import { hasDatabase, getEvacCentersCollection } from 'app_buklod-tao/js/dexie.js'
             document.getElementById("submit_form").addEventListener("click", async function(event) {
                 event.preventDefault();
 
@@ -20,9 +21,7 @@
                 const location_link = document.getElementById('location_link').value.trim();
 
                 try {
-                    const db = window.parent.db;
-                    
-                    if (!db) {
+                    if (!hasDatabase()) {
                         alert("Local database is not ready yet. Please wait a moment and try again.");
                         return;
                     }
@@ -42,11 +41,11 @@
 
                     if (editId) {
                         formData.id = editId;
-                        await db.evacCenters.incrementalUpsert(formData);
+                        await getEvacCentersCollection().incrementalUpsert(formData);
                         console.log("Evac center updated locally!");
                     } else {
                         formData.id = 'evac_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                        await db.evacCenters.insert(formData);
+                        await getEvacCentersCollection().insert(formData);
                         console.log("Evac center added locally!");
                     }
                     
@@ -400,7 +399,6 @@
         </script>
 
         <script type="module">
-            // 1. Check if we are editing by looking at the URL parameter
             const urlParams = new URLSearchParams(window.location.search);
             const editId = urlParams.get('id');
 
@@ -408,12 +406,9 @@
                 // Set the hidden ID field
                 document.getElementById('edit_doc_id').value = editId;
 
-                // 2. Grab the database from the parent and fetch the document
-                const db = window.parent.db;
-                if (db) {
-                    const doc = await db.evacCenters.findOne(editId).exec();
+                if (hasDatabase()) {
+                    const doc = await getEvacCentersCollection().findOne(editId).exec();
                     if (doc) {
-                        // 3. Pre-populate the form fields
                         document.getElementById('evaccenter_name').value = doc.name || '';
                         document.getElementById('evaccenter_material').value = doc.type || '';
                         document.getElementById('latitude').value = doc.latitude || '';

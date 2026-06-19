@@ -11,6 +11,7 @@
 
     
     <script type="module">
+        import { hasDatabase, getHouseholdCollection } from 'app_buklod-tao/js/dexie.js'
         document.getElementById("submit_form").addEventListener("click", async function(event) {
             event.preventDefault();
 
@@ -90,9 +91,7 @@
             };
 
             try {
-                const db = window.parent.db;
-
-                if (!db) {
+                if (hasDatabase()) {
                     alert("Local database is not ready yet. Please wait a moment and try again.");
                     return;
                 }
@@ -102,7 +101,7 @@
                     return;
                 }
 
-                await db.buklod.incrementalUpsert(formData);
+                await getHouseholdCollection().incrementalUpsert(formData);
                 console.log("Household updated locally!");
                 closeModal();
 
