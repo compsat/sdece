@@ -26,7 +26,6 @@ export function getHouseholdCollection() { return activeHouseholdCollection; }
 
 export function getEvacCentersCollection() { return db?.evacCenters ?? null; }
 
-
 // For compatibility
 export function dbExists() { return hasDatabase() }
 

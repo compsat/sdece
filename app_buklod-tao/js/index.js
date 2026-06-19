@@ -46,7 +46,7 @@ onAuthStateChanged(AUTH, async (user) => {
 
 async function main(uid) {
   if (dbExists()) return;
-  
+
   setDatabase(await initDb(uid)); 
 
   startFirestoreSync(getDatabase(), uid);

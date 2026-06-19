@@ -7,10 +7,11 @@
         <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
             
         <script type="module">
-        import { hasDatabase, getHouseholdCollection } from 'app_buklod-tao/js/dexie.js'
+        import { hasDatabase, getHouseholdCollection } from '/app_buklod-tao/js/dexie.js'
         document.getElementById("submit_form").addEventListener("click", async function(event) {
             event.preventDefault();
             
+            console.log("The user has clicked on save")
             // 1. Validation gate (Uses the functions already built into the HTML)
             if (!validateRequiredFields()) {
                 return;

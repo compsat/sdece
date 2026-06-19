@@ -7,7 +7,7 @@
         <link href="https://fonts.googleapis.com/css?family=Hind" rel='stylesheet'>
 
         <script type="module">
-            import { hasDatabase, getEvacCentersCollection } from 'app_buklod-tao/js/dexie.js'
+            import { hasDatabase, getEvacCentersCollection } from '/app_buklod-tao/js/dexie.js'
             document.getElementById("submit_form").addEventListener("click", async function(event) {
                 event.preventDefault();
 
@@ -49,6 +49,7 @@
                         console.log("Evac center added locally!");
                     }
                     
+                    console.log("Closing modal.")
                     closeModal(); 
                     
                 } catch (err) {
