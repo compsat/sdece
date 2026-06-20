@@ -86,7 +86,7 @@ export function createSubscriptions(window) {
     .find({ selector: { _deleted: { $eq: false } } })
     .$.subscribe(centers => {
       evacCenters = centers.map(c => c.toJSON());
-      addEvacCenters(); 
+      updateRiskIcons();
   });
 
   setHouseholdSubscription(db.buklod);

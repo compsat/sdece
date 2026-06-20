@@ -559,7 +559,7 @@ function attachMarkers(partners) {
         if (delete_button) {
           delete_button.addEventListener('click', async function() {
             if (!confirm(`Delete "${partner.household_name}"? This cannot be undone.`)) return;
-            await getHouseholdCollection().incrementalUpsert({id: partner.id, _deleted: true }); // Local Delete!
+            await deleteDoc(getHouseholdCollection(), partner.id);
           });
         }
 
@@ -623,7 +623,7 @@ export function updateRiskIcons() {
         if (delete_button) {
           delete_button.addEventListener('click', async function() {
             if (!confirm(`Delete "${partner.household_name}"? This cannot be undone.`)) return;
-            await getHouseholdCollection().incrementalUpsert({id: partner.id, _deleted: true });
+            await deleteDoc(getHouseholdCollection(), partner.id);
           });
         }
 
