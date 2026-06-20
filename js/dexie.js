@@ -266,3 +266,24 @@ export function startFirestoreSync(db, uid) {
     console.error("Evac Centers Sync Error:", err);
   });
 }
+
+/**
+ * Generic function that deletes a document from an RxDB collection by its primary key.
+ *
+ * @param {RxCollection} collection - The RxDB collection to delete from.
+ * @param {string} id - The primary key of the document to delete.
+ * @returns {Promise<boolean>} `true` if deleted, `false` if not found.
+ * @throws {Error} If `collection` is null or `id` is empty.
+ *
+ * @example
+ * await deleteDoc(getEvacCentersCollection(), 'evac_123');
+ */
+export async function deleteDoc(collection, id) {
+  const doc = await collection.findOne(id).exec();
+  if (!doc) {
+    console.warn(`Document not found: ${id}`);
+    return false;
+  }
+  doc.remove();
+  return true;
+}

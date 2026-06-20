@@ -20,6 +20,7 @@ export function setDatabase(database) {
   activeHouseholdCollection = activeHouseholdCollection ?? db.buklod; 
 }
 
+// Use sparingly.
 export function getDatabase() { return db; }
 
 export function getHouseholdCollection() { return activeHouseholdCollection; }
