@@ -7,7 +7,7 @@
         <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
             
         <script type="module">
-        import { hasDatabase, getHouseholdCollection } from '/app_buklod-tao/js/dexie.js'
+        const api = window.parent.api;
         document.getElementById("submit_form").addEventListener("click", async function(event) {
             event.preventDefault();
             
@@ -90,14 +90,14 @@
             };
 
             try {
-                if (!hasDatabase()) {
+                if (!api?.hasDatabase?.()) {
                     alert("Local database is not ready yet. Please wait a moment and try again.");
                     return;
                 }
 
                 // ADD: Generate a unique ID and insert into local database
                 formData.id = 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                await getHouseholdCollection().insert(formData);
+                await api?.getHouseholdCollection?.().insert(formData);
                 console.log("Document added locally!");
                 
                 // 6. Close the modal. 

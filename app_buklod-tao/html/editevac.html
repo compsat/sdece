@@ -7,7 +7,8 @@
         <link href="https://fonts.googleapis.com/css?family=Hind" rel='stylesheet'>
 
         <script type="module">
-            import { hasDatabase, getEvacCentersCollection } from '/app_buklod-tao/js/dexie.js'
+            const api = window.parent.api;
+
             document.getElementById("submit_form").addEventListener("click", async function(event) {
                 event.preventDefault();
 
@@ -21,7 +22,7 @@
                 const location_link = document.getElementById('location_link').value.trim();
 
                 try {
-                    if (!hasDatabase()) {
+                    if (!api?.hasDatabase?.()) {
                         alert("Local database is not ready yet. Please wait a moment and try again.");
                         return;
                     }
@@ -41,11 +42,11 @@
 
                     if (editId) {
                         formData.id = editId;
-                        await getEvacCentersCollection().incrementalUpsert(formData);
+                        await api?.getEvacCentersCollection?.().incrementalUpsert(formData);
                         console.log("Evac center updated locally!");
                     } else {
                         formData.id = 'evac_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                        await getEvacCentersCollection().insert(formData);
+                        await api?.getEvacCentersCollection?.().insert(formData);
                         console.log("Evac center added locally!");
                     }
                     
@@ -407,8 +408,8 @@
                 // Set the hidden ID field
                 document.getElementById('edit_doc_id').value = editId;
 
-                if (hasDatabase()) {
-                    const doc = await getEvacCentersCollection().findOne(editId).exec();
+                if (api?.hasDatabase?.()) {
+                    const doc = await api?.getEvacCentersCollection?.().findOne(editId).exec();
                     if (doc) {
                         document.getElementById('evaccenter_name').value = doc.name || '';
                         document.getElementById('evaccenter_material').value = doc.type || '';

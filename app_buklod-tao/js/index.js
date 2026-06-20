@@ -1,7 +1,7 @@
 // CODE LOGIC FOR IMPORTING OF FUNCTIONS
 // ------------------------------------------
 import { populateEditForm } from './firestore.js';
-import { initDb, startFirestoreSync } from '../../js/dexie.js'; 
+import { initDb, startFirestoreSync, deleteDoc } from '../../js/dexie.js'; 
 import { 
   setDatabase, 
   getDatabase,
@@ -15,6 +15,7 @@ import {
   getEvacCentersCollection,
   getEvacCenters,
   setAsOffline,
+  hasDatabase,
 } from '../js/dexie.js'; 
 import { addListeners, clearMarkers, map } from '../../js/index_UNIV.js';
 
@@ -62,6 +63,16 @@ async function main(uid) {
   addListeners();
 }
 // ------------------------------------------
+
+
+// OPENING API TO MODALS (e.g. addevac.html, editloc.html, etc.)
+// ------------------------------------------
+
+window.api = {
+  hasDatabase,
+  getEvacCentersCollection,
+  getHouseholdCollection
+}
 
 
 // CODE LOGIC FOR SET-UP
@@ -661,7 +672,7 @@ export function addEvacCenters() {
         document.querySelector(`.evac-edit-btn[data-evac-id="${center.id}"]`)?.addEventListener('click', () => openEditEvacModal(center.id));
         document.querySelector(`.evac-delete-btn[data-evac-id="${center.id}"]`)?.addEventListener('click', async () => {
           if (!confirm(`Delete "${center.name}"? This cannot be undone.`)) return;
-          await getEvacCentersCollection().incrementalUpsert({ id: center.id, _deleted: true });
+          await deleteDoc(getEvacCentersCollection(), center.id);
         });
       }, 0);
     });

@@ -7,7 +7,7 @@
         <link href="https://fonts.googleapis.com/css?family=Hind" rel='stylesheet'>
 
         <script type="module">
-            import { hasDatabase, getEvacCentersCollection } from '/app_buklod-tao/js/dexie.js'
+            const api = window.parent.api;
 
             const EVAC_TYPES = ['Evacuation Center', 'Temporary Shelter'];
 
@@ -63,7 +63,7 @@
                 submitBtn.textContent = 'Saving...';
 
                 try {
-                    if (!hasDatabase()) {
+                    if (!api?.hasDatabase?.()) {
                         alert("Local database is not ready yet. Please wait a moment and try again.");
                         submitBtn.disabled = false;
                         submitBtn.textContent = originalLabel;
@@ -83,7 +83,7 @@
                         updatedAt: Date.now()
                     };
 
-                    await getEvacCentersCollection().insert(formData);
+                    await api?.getEvacCentersCollection?.().insert(formData);
                     console.log("Evacuation center added locally!");
                     
                     closeModal(); 

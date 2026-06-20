@@ -11,7 +11,7 @@
 
     
     <script type="module">
-        import { hasDatabase, getHouseholdCollection } from '/app_buklod-tao/js/dexie.js'
+        const api = window.parent.api;
         document.getElementById("submit_form").addEventListener("click", async function(event) {
             event.preventDefault();
 
@@ -91,7 +91,7 @@
             };
 
             try {
-                if (hasDatabase()) {
+                if (api?.hasDatabase?.()) {
                     alert("Local database is not ready yet. Please wait a moment and try again.");
                     return;
                 }
@@ -101,7 +101,7 @@
                     return;
                 }
 
-                await getHouseholdCollection().incrementalUpsert(formData);
+                await api?.getHouseholdCollection?.().incrementalUpsert(formData);
                 console.log("Household updated locally!");
                 closeModal();
 
