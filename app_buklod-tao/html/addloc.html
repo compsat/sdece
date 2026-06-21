@@ -7,13 +7,121 @@
         <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
             
         <script type="module">
-            //Call function from firestore.js to add new household from input fields after pressing submit button
-            import { addEntry, BUKLOD_RULES, setCollection, validateData, getCoordinates } from "/js/firestore_UNIV.js";
-            import { submitAddForm } from '../js/firestore.js';
+        document.getElementById("submit_form").addEventListener("click", async function(event) {
+            event.preventDefault();
+            
+            // 1. Validation gate (Uses the functions already built into the HTML)
+            if (!validateRequiredFields()) {
+                return;
+            }
 
-            setCollection("buklod-official");
-            document.getElementById("submit_form").addEventListener("click", submitAddForm);
+            // 2. Handle "Other" material selection
+            const materialSelect = document.getElementById('household_material');
+            if (materialSelect.value === 'Other') {
+                const custom = document.getElementById('household_material_other').value.trim();
+                if (custom) {
+                    const tempOption = new Option(custom, custom);
+                    materialSelect.add(tempOption);
+                    materialSelect.value = custom;
+                }
+            }
 
+            // 3. Helper to parse the coordinate string back into an object
+            function parseCoordinates(coordString) {
+                if (!coordString) return { _lat: 0, _lng: 0 };
+                const parts = coordString.includes(',') ? coordString.split(',') : coordString.split('+');
+                const lat = parseFloat(parts[0]);
+                const lng = parseFloat(parts[1]);
+                if (isNaN(lat) || isNaN(lng)) return { _lat: 0, _lng: 0 };
+                return { _lat: lat, _lng: lng };
+            }
+
+            // 4. Gather all form data
+            const formData = {
+                household_name: document.getElementById('household_name').value.trim(),
+                household_phase: document.getElementById('household_phase').value.trim(),
+                house_number: document.getElementById('house_number').value.trim(),
+                street: document.getElementById('street').value.trim(),
+                household_address: document.getElementById('household_address').value.trim(),
+                contact_number: document.getElementById('contact_number').value.trim(),
+                residency_status: document.getElementById('residency_status').value,
+                is_hoa_noa: document.getElementById('is_hoa_noa').value,
+                household_material: document.getElementById('household_material').value,
+                nearest_evac: document.getElementById('nearest_evac').value,
+                location_link: document.getElementById('location_link').value.trim(),
+                location_coordinates: parseCoordinates(document.getElementById('location_coordinates').value),
+                
+                number_residents: parseInt(document.getElementById('number_residents').value) || 0,
+                number_minors: parseInt(document.getElementById('number_minors').value) || 0,
+                number_seniors: parseInt(document.getElementById('number_seniors').value) || 0,
+                number_pwd: parseInt(document.getElementById('number_pwd').value) || 0,
+                number_sick: parseInt(document.getElementById('number_sick').value) || 0,
+                number_pregnant: parseInt(document.getElementById('number_pregnant').value) || 0,
+                sickness_present: document.getElementById('sickness_present').value.trim(),
+                number_families: parseInt(document.getElementById('number_families').value) || 0,
+                number_healthy: parseInt(document.getElementById('number_healthy').value) || 0,
+                
+                earthquake_risk: document.getElementById('earthquake_risk').value,
+                earthquake_risk_description: document.getElementById('earthquake_risk_description').value.trim(),
+                fire_risk: document.getElementById('fire_risk').value,
+                fire_risk_description: document.getElementById('fire_risk_description').value.trim(),
+                flood_risk: document.getElementById('flood_risk').value,
+                flood_risk_description: document.getElementById('flood_risk_description').value.trim(),
+                landslide_risk: document.getElementById('landslide_risk').value,
+                landslide_risk_description: document.getElementById('landslide_risk_description').value.trim(),
+                storm_risk: document.getElementById('storm_risk').value,
+                storm_risk_description: document.getElementById('storm_risk_description').value.trim(),
+                
+                exit_points: parseInt(document.getElementById('exit_points').value) || 0,
+                disaster_response_plan: document.getElementById('disaster_response_plan').value.trim(),
+                knowledge_readiness: parseInt(document.getElementById('knowledge_readiness').value) || 0,
+                before_disaster_actions: document.getElementById('before_disaster_actions').value.trim(),
+                during_disaster_actions: document.getElementById('during_disaster_actions').value.trim(),
+                after_disaster_actions: document.getElementById('after_disaster_actions').value.trim(),
+                important_notes: document.getElementById('important_notes').value.trim(),
+                
+                timestamp: document.getElementById('timestamp').value || new Date().toISOString(),
+                source_dataset: document.getElementById('source_dataset').value || 'Local App',
+                
+                updatedAt: Date.now(),
+                _deleted: false
+            };
+
+            try {
+                // FETCH DB HERE: Grab the database from the parent window right when saving
+                const db = window.parent.db;
+                
+                if (!db) {
+                    alert("Local database is not ready yet. Please wait a moment and try again.");
+                    return;
+                }
+
+                // ADD: Generate a unique ID and insert into local database
+                formData.id = 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                await db.buklod.insert(formData);
+                console.log("Document added locally!");
+                
+                // 6. Close the modal. 
+                // The UI will update automatically because of the RxDB subscription in index.js!
+                closeModal(); 
+                
+            } catch (err) {
+                console.error("Error saving to local DB:", err);
+                alert("Error adding household: " + err.message);
+            }
+        });
+    </script>
+
+        <script type="module">
+            import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
+            import { AUTH } from "/js/auth.js";
+
+            const loginURL = "/html/login.html";
+            onAuthStateChanged(AUTH, (user) => {
+                if (!user) {
+                    window.top.location.href = loginURL;
+                }
+            });
         </script>
     </head>
     
@@ -34,6 +142,16 @@
 
             <!-- Modal Content -->
             <div class="modal-content">
+
+                
+
+                <!-- banner error popup -->
+                <div id="form_error_banner" class="form-banner">
+                    <div class="form-banner-title">Please check the form.</div>
+                    <p class="form-banner-message"></p>
+                </div>
+
+
                 <!-- Household Information Section -->
                 <div class="section">
                     <div class="section-header">
@@ -45,22 +163,36 @@
                     
                     <div class="form-grid">
                         <div class="form-group">
-                            <label class="form-label" for="household_name">Household Name</label>
-                            <input type="text" id="household_name" name="household_name" class="form-input" placeholder="Enter household name (Ex. Juan Cruz)" required/>
+                            <label class="form-label" for="household_name">Household Name (LAST NAME, First Name)</label>
+                            <input type="text" id="household_name" name="household_name" class="form-input" placeholder="Enter household name (Ex. DELA CRUZ, Juan)" required/>
                             <div class="field-error" id="household_name_error"></div>
                         </div>
-                        
+
                         <div class="form-group">
-                            <label class="form-label" for="household_phase">Phase</label>
-                            <input type="text" id="household_phase" name="household_phase" class="form-input" placeholder="Enter phase number (Ex. Phase 1)" required/>
+                            <label class="form-label" for="household_phase">Phase (if applicable)</label>
+                            <input type="text" id="household_phase" name="household_phase" class="form-input" placeholder="Enter phase number (Ex. Phase 1)" />
                             <div class="field-error" id="household_phase_error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="house_number">House Number</label>
+                            <input type="text" id="house_number" name="house_number" class="form-input" placeholder="Enter house number (Ex. 12B)" />
+                            <div class="field-error" id="house_number_error"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="street">Street</label>
+                            <input type="text" id="street" name="street" class="form-input" placeholder="Enter street name (Ex. Sampaguita St.)" />
+                            <div class="field-error" id="street_error"></div>
                         </div>
                     </div>
 
                     <div class="form-grid single">
                         <div class="form-group">
                             <label class="form-label" for="household_address">Address</label>
-                            <textarea id="household_address" name="household_address" class="form-textarea" placeholder="Enter house address (Ex. 1 Sampaguita St. Banaba)" required></textarea>
+                            <textarea id="household_address" name="household_address" class="form-textarea" placeholder="Enter house address (Ex. 12B Sampaguita St.)" required></textarea>
                             <div class="field-error" id="household_address_error"></div>
                         </div>
                     </div>
@@ -68,7 +200,7 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label class="form-label" for="contact_number">Contact Number</label>
-                            <input type="tel" id="contact_number" name="contact_number" class="form-input" placeholder="Enter contact number (Ex. 09XXXXXXXXX)" inputmode="numeric" pattern="^[0-9]{11}$" maxlength="11" required/>
+                            <input type="tel" id="contact_number" name="contact_number" class="form-input" placeholder="Enter contact number (Ex. 09XXXXXXXXX)" pattern="(09[0-9]{9}|09[0-9]{2}-[0-9]{3}-[0-9]{4}|N/A)" maxlength="13" />
                             <div class="field-error" id="contact_number_error"></div>
                         </div>
 
@@ -87,7 +219,7 @@
                         <div class="form-group">
                             <label class="form-label" for="is_hoa_noa">Part of HOA/NOA</label>
                             <select id="is_hoa_noa" name="is_hoa_noa" class="form-select">
-                                <option value="" disabled selected hidden>Select HOA/NOA</option>
+                                <option value="" selected>— None —</option>
                                 <option value="HOA">HOA</option>
                                 <option value="NOA">NOA</option>
                                 <option value="N/A">N/A</option>
@@ -104,15 +236,28 @@
                                 <option value="Light materials">Light materials</option>
                                 <option value="Makeshift">Makeshift</option>
                                 <option value="Natural">Natural</option>
+                                <option value="Other">Other</option>
                             </select>
+                            <input type="text" id="household_material_other" class="form-input" placeholder="Specify material" style="display: none; margin-top: 8px;" />
                             <div class="field-error" id="household_material_error"></div>
                         </div>
                     </div>
 
                     <div class="form-grid single">
                         <div class="form-group">
-                            <label class="form-label" for="nearest_evac">Nearest Evacuation Area</label>
-                            <input type="text" id="nearest_evac" name="nearest_evac" class="form-input" placeholder="Enter nearest evac center (Ex. Doña Pepeng Elementary School)" required/>
+                            <label class="form-label">Nearest Evacuation Area</label>
+                            <div id="evac_checkboxes" style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
+                                <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Banaba Elementary School"> Banaba Elementary School</label>
+                                <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Doña Pepeng Elementary School"> Doña Pepeng Elementary School</label>
+                                <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Doña Pepeng Multipurpose Court"> Doña Pepeng Multipurpose Court</label>
+                                <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Buklod Tao, Inc."> Buklod Tao, Inc.</label>
+                                <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Healthcare Center"> Healthcare Center</label>
+                                <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Daycare Center"> Daycare Center</label>
+                                <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" name="evac_choice" value="Agape Church"> Agape Church</label>
+                                <label style="display:flex; align-items:center; gap:8px; font-weight:normal; cursor:pointer;"><input type="checkbox" id="evac_other_check" name="evac_choice" value="__other__"> Other</label>
+                            </div>
+                            <input type="text" id="evac_other_input" class="form-input" placeholder="Specify other evacuation area" style="display:none; margin-top:8px;" />
+                            <input type="hidden" id="nearest_evac" name="nearest_evac" />
                             <div class="field-error" id="nearest_evac_error"></div>
                         </div>
                     </div>
@@ -121,6 +266,7 @@
                         <div class="form-group">
                             <label class="form-label" for="location_link">Location Link</label>
                             <input type="text" id="location_link" name="location_link" class="form-input" placeholder="Enter location link (Ex. https://www.openstreetmap.org/ss)" />
+                            <button type="button" id="use_current_location" class="btn btn-secondary" style="margin-top: 8px; width: 100%;">Use Current Location</button>
                             <div class="field-error" id="location_link_error"></div>
                         </div>
 
@@ -193,6 +339,20 @@
                             <label class="form-label" for="sickness_present">Current Sickness/Health Issues</label>
                             <textarea id="sickness_present" name="sickness_present" class="form-textarea" placeholder="Describe any current health issues or sickness present (Ex. Diabetes, asthma)"></textarea>
                             <div class="field-error" id="sickness_present_error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="number_families">Number of Families</label>
+                            <input type="number" id="number_families" name="number_families" class="form-input" placeholder="0" min="0" />
+                            <div class="field-error" id="number_families_error"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="number_healthy">Healthy Residents</label>
+                            <input type="number" id="number_healthy" name="number_healthy" class="form-input" placeholder="0" min="0" />
+                            <div class="field-error" id="number_healthy_error"></div>
                         </div>
                     </div>
                 </div>
@@ -285,74 +445,499 @@
                             <div class="field-error" id="storm_risk_error"></div>
                         </div>
                     </div>
-
                 </div>
 
+                <!-- Disaster Preparedness Section -->
+                <div class="section">
+                    <div class="section-header">
+                        <svg class="section-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                        <h2 class="section-title">Disaster Preparedness</h2>
+                    </div>
 
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="exit_points">Exit Points</label>
+                            <input type="number" id="exit_points" name="exit_points" class="form-input" placeholder="0" min="0" step="1" />
+                            <div class="field-error" id="exit_points_error"></div>
+                        </div>
+                        <div></div>
+                    </div>
+
+                    <div class="form-grid single">
+                        <div class="form-group">
+                            <label class="form-label" for="disaster_response_plan">Disaster Response Plan</label>
+                            <textarea id="disaster_response_plan" name="disaster_response_plan" class="form-textarea" placeholder="Describe the household's disaster response plan"></textarea>
+                            <div class="field-error" id="disaster_response_plan_error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="knowledge_readiness">Disaster Knowledge Rating (1–5)</label>
+                            <input type="number" id="knowledge_readiness" name="knowledge_readiness" class="form-input" placeholder="1" min="1" max="5" step="1" />
+                            <div class="field-error" id="knowledge_readiness_error"></div>
+                        </div>
+                        <div></div>
+                    </div>
+
+                    <div class="form-grid single">
+                        <div class="form-group">
+                            <label class="form-label" for="before_disaster_actions">Actions Before Disaster</label>
+                            <textarea id="before_disaster_actions" name="before_disaster_actions" class="form-textarea" placeholder="Describe actions taken before a disaster"></textarea>
+                            <div class="field-error" id="before_disaster_actions_error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid single">
+                        <div class="form-group">
+                            <label class="form-label" for="during_disaster_actions">Actions During Disaster</label>
+                            <textarea id="during_disaster_actions" name="during_disaster_actions" class="form-textarea" placeholder="Describe actions taken during a disaster"></textarea>
+                            <div class="field-error" id="during_disaster_actions_error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid single">
+                        <div class="form-group">
+                            <label class="form-label" for="after_disaster_actions">Actions After Disaster</label>
+                            <textarea id="after_disaster_actions" name="after_disaster_actions" class="form-textarea" placeholder="Describe actions taken after a disaster"></textarea>
+                            <div class="field-error" id="after_disaster_actions_error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid single">
+                        <div class="form-group">
+                            <label class="form-label" for="important_notes">Important Notes</label>
+                            <textarea id="important_notes" name="important_notes" class="form-textarea" placeholder="Any important notes or observations about this household"></textarea>
+                            <div class="field-error" id="important_notes_error"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hidden fields -->
+                <input type="hidden" id="timestamp" name="timestamp" />
+                <input type="hidden" id="source_dataset" name="source_dataset" />
             </div>
 
             <!-- Modal Footer -->
             <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="clear_form">Clear All</button>
                 <button type="submit" class="btn btn-primary" id="submit_form">Save Household</button>
             </div>
         </div>
 
         <script>
 
+            // ── Error banner helpers ──────────────────────────────────────────
+            function showErrorBanner(message) {
+                const banner = document.getElementById('form_error_banner');
+                banner.textContent = '⚠️ ' + message;
+                banner.style.display = 'block';
+                banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            function hideErrorBanner() {
+                document.getElementById('form_error_banner').style.display = 'none';
+            }
+
+            // ── Per-field error helpers ───────────────────────────────────────
+            function setFieldError(fieldId, message) {
+                const field = document.getElementById(fieldId);
+                const errorContainer = document.getElementById(`${fieldId}_error`);
+                const label = document.querySelector(`label[for="${fieldId}"]`);
+                if (field) field.classList.add('error');
+                if (label) label.classList.add('error');
+                if (errorContainer) {
+                    errorContainer.textContent = message;
+                    errorContainer.classList.add('show');
+                }
+            }
+
+            // ── Validation ────────────────────────────────────────────────────
+            function validateForm() {
+                let isValid = true;
+
+                // Household name
+                const name = document.getElementById('household_name').value.trim();
+                if (!name) {
+                    setFieldError('household_name', 'Household name is required.');
+                    isValid = false;
+                }
+
+                // Address
+                const address = document.getElementById('household_address').value.trim();
+                if (!address) {
+                    setFieldError('household_address', 'Address is required.');
+                    isValid = false;
+                }
+
+                // House material
+                const material = document.getElementById('household_material').value;
+                if (!material) {
+                    setFieldError('household_material', 'Please select a house material.');
+                    isValid = false;
+                }
+
+                // If material is "Other", the custom text must be filled in
+                if (material === 'Other') {
+                    const custom = document.getElementById('household_material_other').value.trim();
+                    if (!custom) {
+                        setFieldError('household_material', 'Please specify the house material.');
+                        isValid = false;
+                    }
+                }
+
+                // Total residents
+                const residents = parseInt(document.getElementById('number_residents').value);
+                if (!residents || residents < 1) {
+                    setFieldError('number_residents', 'At least 1 resident is required.');
+                    isValid = false;
+                }
+
+                // Earthquake risk (the only required risk field per the original HTML)
+                const eqRisk = document.getElementById('earthquake_risk').value;
+                if (!eqRisk) {
+                    setFieldError('earthquake_risk', 'Please select an earthquake risk level.');
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            // ── Modal close ───────────────────────────────────────────────────
             function closeModal() {
                 window.parent.postMessage('closeAddModal', '*');
             }
 
-            // Close button handlers
             document.getElementById('close-btn').addEventListener('click', function (event) {
                 event.preventDefault();
                 console.log('The user has closed the Add Household modal.');
                 closeModal();
             });
 
-            // Hide error messages when user starts typing
+            // ── Clear form ────────────────────────────────────────────────────
+            function clearForm() {
+                document.querySelectorAll('.form-input, .form-textarea').forEach(input => {
+                    input.value = '';
+                    input.classList.remove('error');
+                });
+                document.querySelectorAll('.form-select').forEach(select => {
+                    select.selectedIndex = 0;
+                    select.classList.remove('error');
+                });
+                document.querySelectorAll('.field-error').forEach(err => {
+                    err.textContent = '';
+                    err.classList.remove('show');
+                });
+                document.querySelectorAll('.form-label').forEach(label => {
+                    label.classList.remove('error');
+                });
+                // Reset evac checkboxes
+                document.querySelectorAll('input[name="evac_choice"]').forEach(cb => cb.checked = false);
+                document.getElementById('evac_other_input').style.display = 'none';
+                document.getElementById('evac_other_input').value = '';
+                document.getElementById('nearest_evac').value = '';
+                const otherInput = document.getElementById('household_material_other');
+                otherInput.style.display = 'none';
+                otherInput.value = '';
+                hideErrorBanner();
+            }
+
+            document.getElementById('clear_form').addEventListener('click', clearForm);
+
+            // ── Evacuation checkboxes ─────────────────────────────────────────
+            function updateEvacValue() {
+                const selected = Array.from(document.querySelectorAll('input[name="evac_choice"]:checked'))
+                    .filter(cb => cb.value !== '__other__')
+                    .map(cb => cb.value);
+                const otherCheck = document.getElementById('evac_other_check');
+                const otherInput = document.getElementById('evac_other_input');
+                if (otherCheck.checked && otherInput.value.trim()) {
+                    selected.push(otherInput.value.trim());
+                }
+                document.getElementById('nearest_evac').value = selected.join(', ');
+            }
+
+            document.getElementById('evac_other_check').addEventListener('change', function() {
+                const otherInput = document.getElementById('evac_other_input');
+                otherInput.style.display = this.checked ? 'block' : 'none';
+                if (!this.checked) otherInput.value = '';
+                updateEvacValue();
+            });
+            document.querySelectorAll('input[name="evac_choice"]').forEach(cb => {
+                cb.addEventListener('change', updateEvacValue);
+            });
+            document.getElementById('evac_other_input').addEventListener('input', updateEvacValue);
+
+            // ── House material "Other" toggle ─────────────────────────────────
+            document.getElementById('household_material').addEventListener('change', function() {
+                const otherInput = document.getElementById('household_material_other');
+                otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
+                if (this.value !== 'Other') otherInput.value = '';
+            });
+
+            // Auto-fill coordinates from OpenStreetMap link, clear if link is removed
+            document.getElementById('location_link').addEventListener('input', function() {
+                const match = this.value.match(/#map=\d+\/([\d.-]+)\/([\d.-]+)/);
+                if (match) {
+                    document.getElementById('location_coordinates').value = match[1] + ',' + match[2];
+                } else {
+                    document.getElementById('location_coordinates').value = '';
+                }
+            });
+
+            // ── Use current location ──────────────────────────────────────────
+            document.getElementById('use_current_location').addEventListener('click', function() {
+                const locationButton = this;
+                const locationLinkInput = document.getElementById('location_link');
+                const locationCoordinatesInput = document.getElementById('location_coordinates');
+                const locationLinkError = document.getElementById('location_link_error');
+
+                if (!navigator.geolocation) {
+                    locationLinkError.textContent = 'Geolocation is not supported by this browser.';
+                    locationLinkError.classList.add('show');
+                    return;
+                }
+
+                locationButton.disabled = true;
+                locationButton.textContent = 'Getting Current Location...';
+                locationLinkError.textContent = '';
+                locationLinkError.classList.remove('show');
+
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude.toFixed(6);
+                        const lng = position.coords.longitude.toFixed(6);
+                        const osmLink = `https://www.openstreetmap.org/#map=19/${lat}/${lng}`;
+
+                        locationLinkInput.value = osmLink;
+                        locationCoordinatesInput.value = `${lat},${lng}`;
+                        locationLinkInput.classList.remove('error');
+
+                        const locationLinkLabel = document.querySelector('label[for="location_link"]');
+                        if (locationLinkLabel) locationLinkLabel.classList.remove('error');
+
+                        locationButton.disabled = false;
+                        locationButton.textContent = 'Use Current Location';
+                    },
+                    function(error) {
+                        let message = 'Unable to get current location.';
+                        if (error.code === error.PERMISSION_DENIED) {
+                            message = 'Location access was denied. Please allow location permission and try again.';
+                        } else if (error.code === error.POSITION_UNAVAILABLE) {
+                            message = 'Current location is unavailable right now.';
+                        } else if (error.code === error.TIMEOUT) {
+                            message = 'Getting current location timed out. Please try again.';
+                        }
+                        locationLinkError.textContent = message;
+                        locationLinkError.classList.add('show');
+                        locationButton.disabled = false;
+                        locationButton.textContent = 'Use Current Location';
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                );
+            });
+
+            // ── Risk level → auto-fill description ───────────────────────────
+            const riskDescriptions = {
+                flood_risk: {
+                    'HIGH RISK': 'Critical Level (3rd Alarm), 20.00-M Force Evacuation, Near water ways',
+                    'MEDIUM RISK': 'Alert Level (2nd Alarm): 19.00-M, 50.00-M away from water ways',
+                    'LOW RISK': 'Alarm Level (1st Alarm), 50.00-M away from water ways',
+                },
+                storm_risk: {
+                    'HIGH RISK': 'House built in light materials/ Near the sea shore, river, lake/ Built in mountainous area/ House not approved by engineers',
+                    'MEDIUM RISK': 'Semi-concrete house/ House build is strong but not checked by engineers',
+                    'LOW RISK': 'Concrete House/Checked by engineers/ Far away from sea shore, river, or any slope land area',
+                },
+                fire_risk: {
+                    'HIGH RISK': 'Informal Settlement/ No access road/ No fire hydrant/ Light materials house',
+                    'MEDIUM RISK': 'Semi-concrete house/ House plan not checked by engineers',
+                    'LOW RISK': 'Concrete House/ Approved by engineers/ Have access road and fire hydrant/ House plan approve by engineers',
+                },
+                landslide_risk: {
+                    'HIGH RISK': 'Stability of a certain slope is House built is weak due to continuous heavy rain/near from any slope land',
+                    'MEDIUM RISK': 'House built is strong but built near slope area and near water ways/ house is not checked by an engineer',
+                    'LOW RISK': 'House built check and approved by engineers/ House built far away from the sloped area, river and mountain area',
+                },
+                earthquake_risk: {
+                    'HIGH RISK': 'Liquefaction/ Soil Classification type of structures',
+                    'MEDIUM RISK': 'strong built houses but never been approved by engineers/ clay type soil',
+                    'LOW RISK': 'Adobe structure have been check by engineers/ far away from any water ways',
+                },
+            };
+
+            ['flood_risk', 'storm_risk', 'fire_risk', 'landslide_risk', 'earthquake_risk'].forEach(riskType => {
+                const select = document.getElementById(riskType);
+                if (select) {
+                    select.addEventListener('change', function() {
+                        const descField = document.getElementById(riskType + '_description');
+                        if (descField) descField.value = riskDescriptions[riskType][this.value] || '';
+                    });
+                }
+            });
+
+            // ── Clear field errors on input/change ────────────────────────────
             const inputs = document.querySelectorAll('.form-input, .form-select, .form-textarea');
             inputs.forEach(input => {
                 input.addEventListener('input', function() {
-                    // Clear error state for this specific field
+                    hideErrorBanner();
                     this.classList.remove('error');
-                    
-                    // Clear error message for this field
                     const errorContainer = document.getElementById(`${this.id}_error`);
                     if (errorContainer) {
                         errorContainer.textContent = '';
                         errorContainer.classList.remove('show');
                     }
-                    
-                    // Clear error state for the label
                     const label = document.querySelector(`label[for="${this.id}"]`);
-                    if (label) {
-                        label.classList.remove('error');
-                    }
+                    if (label) label.classList.remove('error');
                 });
-                
-                // Also handle change events for select elements
+
                 if (input.tagName === 'SELECT') {
                     input.addEventListener('change', function() {
-                        // Clear error state for this specific field
+                        hideErrorBanner();
                         this.classList.remove('error');
-                        
-                        // Clear error message for this field
                         const errorContainer = document.getElementById(`${this.id}_error`);
                         if (errorContainer) {
                             errorContainer.textContent = '';
                             errorContainer.classList.remove('show');
                         }
-                        
-                        // Clear error state for the label
                         const label = document.querySelector(`label[for="${this.id}"]`);
-                        if (label) {
-                            label.classList.remove('error');
-                        }
+                        if (label) label.classList.remove('error');
                     });
                 }
             });
         </script>
 
+        <script>
+            // ADDED: reusable banner + validation helper functions
+            function getFieldLabel(field) {
+                const label = document.querySelector(`label[for="${field.id}"]`);
+                return label ? label.textContent.trim() : field.name || field.id;
+            }
+
+            function ensureFormBanner() {
+                let banner = document.getElementById('form_error_banner');
+
+                if (!banner) {
+                    banner = document.createElement('div');
+                    banner.id = 'form_error_banner';
+                    banner.className = 'form-banner';
+                    banner.innerHTML = `
+                        <div class="form-banner-title">Please check the form.</div>
+                        <p class="form-banner-message"></p>
+                    `;
+
+                    const modalContent = document.querySelector('.modal-content');
+                    const modalContainer = document.querySelector('.modal-container');
+
+                    if (modalContent) {
+                        modalContent.prepend(banner);
+                    } else if (modalContainer) {
+                        modalContainer.prepend(banner);
+                    }
+                }
+
+                return banner;
+            }
+
+            window.showFormBanner = function(message) {
+                const banner = ensureFormBanner();
+                banner.querySelector('.form-banner-message').textContent = message;
+                banner.classList.add('show');
+                banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            function hideFormBanner() {
+                const banner = document.getElementById('form_error_banner');
+                if (banner) {
+                    banner.classList.remove('show');
+                }
+            }
+
+            function clearFieldError(field) {
+                field.classList.remove('error');
+
+                const errorContainer = document.getElementById(`${field.id}_error`);
+                if (errorContainer) {
+                    errorContainer.textContent = '';
+                    errorContainer.classList.remove('show');
+                }
+
+                const label = document.querySelector(`label[for="${field.id}"]`);
+                if (label) {
+                    label.classList.remove('error');
+                }
+            }
+
+            function validateRequiredFields() {
+                hideFormBanner();
+
+                const errors = [];
+
+                document.querySelectorAll('[required]').forEach(field => {
+                    const value = field.value.trim();
+
+                    if (!value) {
+                        const label = getFieldLabel(field);
+                        errors.push(label);
+
+                        if (typeof setFieldError === 'function') {
+                            setFieldError(field.id, `${label} is required.`);
+                        }
+                    }
+                });
+
+                const contactNumber = document.getElementById('contact_number');
+                if (contactNumber && contactNumber.value.trim()) {
+                    const pattern = /^(09[0-9]{9}|09[0-9]{2}-[0-9]{3}-[0-9]{4}|N\/A)$/;
+
+                    if (!pattern.test(contactNumber.value.trim())) {
+                        errors.push('Contact Number');
+
+                        if (typeof setFieldError === 'function') {
+                            setFieldError(
+                                'contact_number',
+                                'Contact number must be 09XXXXXXXXX, 09XX-XXX-XXXX, or N/A.'
+                            );
+                        }
+                    }
+                }
+
+                const material = document.getElementById('household_material');
+                const materialOther = document.getElementById('household_material_other');
+
+                if (material && material.value === 'Other' && materialOther && !materialOther.value.trim()) {
+                    errors.push('Specify material');
+
+                    if (typeof setFieldError === 'function') {
+                        setFieldError('household_material', 'Please specify the house material.');
+                    }
+
+                    materialOther.classList.add('error');
+                }
+
+                if (errors.length > 0) {
+                    window.showFormBanner(`Required or invalid fields: ${errors.join(', ')}`);
+                    return false;
+                }
+
+                return true;
+            }
+
+            document.addEventListener('input', function(event) {
+                if (event.target.matches('.form-input, .form-select, .form-textarea')) {
+                    clearFieldError(event.target);
+                    hideFormBanner();
+                }
+            });
+
+            document.addEventListener('change', function(event) {
+                if (event.target.matches('.form-input, .form-select, .form-textarea')) {
+                    clearFieldError(event.target);
+                    hideFormBanner();
+                }
+            });
+        </script>
     </body> 
 </html>

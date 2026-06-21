@@ -44,34 +44,67 @@ body {
 
 /* -Side Bar Header */
 .side-nav-header {
-	position: sticky;
-	top: 0;
-	width: 100%;
-	background-color: #ffffff;
-	padding: 1.5rem;
-	box-sizing: border-box;
-	z-index: 10;
+  color: white;
+  border-bottom: none;
 }
 
 /* --Side Bar Header Title Section */
 .side-nav-header-top {
-	display: flex;
-	align-items: center;
-	margin-bottom: 1rem;
+  background-color: #1bb88a; /* green header */
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  padding: 0.4rem 1.25rem;
 }
+
 .logo-image {
 	width: 32px;
 	height: 32px;
+  grid-column: 1;
 	margin-right: 0.65rem;
   margin-bottom: 0.038rem;
 	border-radius: 50%;
 	object-fit: cover;
 }
 .map-title {
+  grid-column: 2;
 	font-size: 1.25rem;
-	font-weight: 600;
-	color: #111827;
+  text-align: left;
+  justify-self: center;
+	font-weight: 700;
+	color: #ffffff;
 	font-family: 'Geist', sans-serif;
+}
+
+.logout-btn {
+  grid-column: 3;
+  justify-self: end;
+  background: white;
+  color: #1bb88a;
+  border: none;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#addModal {
+  display: none;
+}
+
+#addHouseholdBtn, #addEvacCenterBtn  {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  width: 100%;
+  padding: 10px 16px;
+  white-space: nowrap;
+}
+
+#addHouseholdBtn svg {
+  flex-shrink: 0;
 }
 
 /* --Side Bar Header Buttons Section */
@@ -106,8 +139,8 @@ body {
 }
 .risk-dropdown-label {
   font-size: 0.75rem;
-  color: #64748b;
-  font-weight: 500;
+  color: #64748B;
+  font-weight: 700;
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.025em;
@@ -141,14 +174,24 @@ body {
 /* --Side Bar Header Entries Header Section */
 .partners-header {
 	padding: 0 1.5rem 0.75rem;
+  padding-top: 3%;
+	border-bottom: 1px solid #eeeeee;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+.partners-header2 {
+  padding: 0 1.5rem 0.75rem;
+  padding-top: 3%;
+  padding-bottom: 3%;
 	border-bottom: 1px solid #eeeeee;
 	max-width: 100%;
 	box-sizing: border-box;
 }
 #partners-count {
 	font-size: 0.75rem;
-	color: #6b7280;
-	font-weight: 500;
+	color: #64748B;
+	font-weight: 700;
 	letter-spacing: 0.05em;
 	font-family: 'Geist', sans-serif;
 }
@@ -159,49 +202,104 @@ body {
 	flex-grow: 1;
   overflow-y: auto;
   scrollbar-color: rgba(0,0,0,0.01) transparent;
-  background-color: #ffffff;
-	width: 100%;
+  /* Ensure the container itself is white (matches the gaps between boxes) */
+  background-color: #ffffff; 
+  width: 100%;
 }
 .entries:hover {
-  scrollbar-color: rgba(0,0,0,0.2) transparent;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
-.accordion {
-	cursor: pointer;
-	padding: 0.5rem 1rem 1rem;
-	max-width: 75%;
-	width: 100%;
-	box-sizing: border-box;
-	/* border-bottom: 1px solid #eeeeee; */
+
+/* -Side Bar Entries List Container */
+.entries {
+  flex-grow: 1;
+  overflow-y: auto;
+  scrollbar-color: rgba(0,0,0,0.01) transparent;
+    
+  /* Ensure the container itself is white (matches the gaps between boxes) */
+  background-color: #ffffff; 
+  width: 100%;
 }
-.accordion:hover {
-	background-color: #f9fafb;
-}
-.name {
-	font-family: 'Geist', sans-serif;
-	font-weight: 600;
-	font-size: 1rem;
-	line-height: 1.5rem;
-	color: #111827;
-}
-.address {
-	font-family: 'Geist', sans-serif;
-	font-weight: normal;
-	font-size: 0.875rem;
-	color: #6b7280;
-	line-height: 1.25rem;
-	margin-top: 0.25rem;
-}
+
+/* Individual Entry Container - Main Changes Here */
 li.accordion {
-  display: flex;
-  padding: 0.75rem;
-  max-width: 100%;
+  .accordion {
+      text-decoration: none !important; /* Forces the underline away */
+  }
+  cursor: pointer;
   box-sizing: border-box;
-  /* border-bottom: 0.5px solid #bdbdbd; */
+  width: 100%;
+  max-width: 100%; /* Spans full width */
+  position: relative; /* needed for the absolute-positioned edit button */
+
+  /* 1. SEPARATE BOX LOOK */
+  display: flex;
+  flex-direction: column; /* Stack name and address vertically */
+  margin-bottom: 0.75rem;   /* Creates the vertical gap between entries */
+
+  /* 2. COLOR AND EDGES */
+  background-color: #f7f7f8; /* The subtle gray background color of the boxes */
+  border-radius: 8px;        /* Softly rounded corners */
+  border: none;              /* Ensure no border-bottom is used anymore */
+
+  /* 3. INTERNAL SPACING */
+  padding: 1rem 1.25rem;    /* Padding inside the box (Top/Bottom, Left/Right) */
+  transition: background-color 0.15s ease; /* Smooth interaction */
 }
-a.accordion {
-  text-decoration: none;
+
+/* Add a subtle interactive hover state if you like, but optional */
+li.accordion:hover {
+  background-color: #f0f0f1;
 }
-/* --------------------------- */
+
+/* Sidebar inline edit button */
+.sidebar-edit-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  opacity: 0;
+  transition: opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+  padding: 0;
+}
+li.accordion:hover .sidebar-edit-btn {
+  opacity: 1;
+}
+.sidebar-edit-btn:hover {
+  background-color: #e5e7eb;
+  color: #1a357b;
+}
+
+/* The Surname/Given Name */
+.name {
+  text-decoration: none !important;
+  font-family: 'Geist', sans-serif;
+  font-weight: 700;        /* Extra bold for that look */
+  font-size: 1rem;         /* Keep 1rem or try 1.1rem for more presence */
+  line-height: 1.2rem;    
+  color: #111827;
+  margin-bottom: 0.35rem;   /* Space between name and first address line */
+}
+
+/* The Address Line 1 and 2 */
+.address {
+  text-decoration: none !important;
+  font-family: 'Geist', sans-serif;
+  font-weight: 400;        /* Regular weight */
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.25rem;
+  margin-top: 0;           /* Reset margin from previous CSS */
+}
 
 /* IFrame Modal Container
 --------------------------- */
@@ -512,6 +610,16 @@ h1.entries {
 .popup-edit-btn:hover {
   background-color: #2542a3;
 }
+.popup-delete-btn {
+  background: #b91c1c;
+  width: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  flex-shrink: 0;
+}
+.popup-delete-btn:hover {
+  background-color: #dc2626;
+}
 
 /* Main body */
 .popup-card {
@@ -597,6 +705,35 @@ h1.entries {
   color: #64748b !important;
 }
 /* --------------------------- */
+
+#togglePinsBtn span {
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+.sidebar-legend {
+  padding: 12px 16px;
+  font-family: 'Geist', sans-serif;
+  font-size: 13px;
+  color: #374151 !important;
+}
+
+.sidebar-legend .legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #374151 !important;
+}
+
+.sidebar-legend .legend-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
 
 /* Add Household Modal
 --------------------------- */

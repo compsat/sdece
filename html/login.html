@@ -27,43 +27,77 @@
   </head>
 
   <body>
-    <div class="header">
-      <!--header container for logo and organization title-->
-      <img src="../static/logo-osci.png" alt="logo" />
-      <p class="header-text">Office of Social Concern and Involvement</p>
-      <!--OSCI logo and title-->
-    </div>
+    <main class="auth-page">
+      <section class="auth-card" aria-label="Login">
+        <div class="auth-logo-wrap">
+          <img class="auth-logo" src="../static/BT_LOGO.png" alt="Buklod Tao Inc logo" />
+        </div>
 
-    <div class="center">
-      <!--Align items to center-->
-      <form>
-        <!--input form for login-->
-        <input type="email" id="email" placeholder="Enter Email" required />
-        <!--email input-->
-        <input
-          type="password"
-          id="password"
-          placeholder="Enter Password"
-          required
-        />
-        <!--username input-->
-        <button type="button" id="loginButton">Login</button>
-        <!--submit button for login-->
-        <p id="error"></p>
-        <!--error message-->
-      </form>
-    </div>
+        <h1 class="auth-title">Welcome!</h1>
+
+        <form class="auth-form" id="loginForm" novalidate>
+          <div class="auth-field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" required />
+          </div>
+
+          <div class="auth-field">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+
+          <div class="auth-helper">
+            <span>Don't have an account?</span>
+            <a href="./signup.html">Sign up</a>
+          </div>
+
+          <div class="auth-actions">
+            <button class="btn btn-primary" type="submit" id="loginButton">Log In</button>
+          </div>
+
+          <div class="auth-error" id="error" role="alert" aria-live="polite"></div>
+        </form>
+      </section>
+    </main>
 
     <script type="module">
       import { signIn } from "../js/auth.js";
-      // Add event listener to the button to call signIn function
-      document
-        .getElementById("loginButton")
-        .addEventListener("click", function () {
-          const email = document.getElementById("email").value;
-          const password = document.getElementById("password").value;
-          signIn(email, password);
-        });
+      const form = document.getElementById("loginForm");
+      const errorEl = document.getElementById("error");
+
+      function setError(msg) {
+        if (!msg) {
+          errorEl.textContent = "";
+          errorEl.dataset.show = "false";
+          return;
+        }
+        errorEl.textContent = msg;
+        errorEl.dataset.show = "true";
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        setError("");
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        if (!email || !password) {
+          setError("Please enter your email and password.");
+          return;
+        }
+
+        try {
+          await signIn(email, password);
+        } catch {
+          setError("Error signing in. Please check your email and password.");
+        }
+      });
     </script>
   </body>
 </html>

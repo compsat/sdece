@@ -55,7 +55,8 @@
       <div class="side-nav">
         <div class="side-nav-header">
           <div class="side-nav-header-top">
-			<h1 class="map-title">SEEDS</h1>					
+			<h1 class="map-title">SEEDS</h1>
+			<button class="logout-btn" id="authBtn">Login</button>					
 		</div>
           <search-bar id="search-bar-component"></search-bar>
 					<div class="actions-container">
@@ -254,5 +255,25 @@
           }
         });
     </script>
+
+	<!-- USER AUTHENTICATION -->
+	<script type="module">
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
+    import { signOutUser, AUTH } from "/js/auth.js";
+
+    const loginURL = "/html/seeds-login.html";
+    const btn = document.getElementById("authBtn");
+
+    onAuthStateChanged(AUTH, (user) => {
+      if (user) {
+        document.body.style.visibility = 'visible'; 
+        btn.textContent = "Logout";
+        btn.onclick = () => signOutUser();
+      } else {
+        window.location.replace(loginURL); // redirect if not logged in
+      }
+    });
+  </script>
+
   </body>
 </html>
