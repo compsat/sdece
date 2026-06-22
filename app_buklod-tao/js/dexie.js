@@ -101,6 +101,14 @@ export async function importData(docs) {
   await db.buklodImport.bulkUpsert(docs);
 }
 
+/**
+ * Removes the database and sets relevant fields to null. Primarily used at the end of user interaction (e.g. user logs out)
+ * 
+ * @example
+ * if (hasDatabase()) {
+ *  removeDatabase()
+ * }
+ */
 export async function removeDatabase() {
   if (!db) return;
 
@@ -116,7 +124,16 @@ export async function removeDatabase() {
   }
 }
 
-// helper function for parseData
+/**
+ * Parses a row of Excel JSON data into a document that matches a typical Household document
+ *
+ * @param {object} row - A JSON object that represents a row of exported household data. Must have keys that map to their designated fields
+ * @returns {object} An object that matches the fields present in a household document
+ *
+ * @example
+ * const jsonData = XLSX.utils.sheet_to_json(masterSheet);
+ * const docs = jsonData.map(parseRow);
+ */
 function parseRow(row) {
   const get = (header, default_val = "") => {
     return row[header] == null ? default_val : String(row[header]).trim();
@@ -184,9 +201,19 @@ function parseRow(row) {
   }
 }
 
-// Source - https://stackoverflow.com/a/7616484
-// Posted by esmiralha, modified by community. See post 'Timeline' for change history
-// Retrieved 2026-06-17, License - CC BY-SA 4.0
+/**
+ * Generates a hash based on the string provided. Primarily used for generating unique IDs.
+ * 
+ * Source - https://stackoverflow.com/a/7616484
+ * Posted by esmiralha, modified by community. See post 'Timeline' for change history
+ * Retrieved 2026-06-17, License - CC BY-SA 4.0
+ *
+ * @param {string} string - The RxDB collection to delete from.
+ * @returns {int} The resulting hash.
+ *
+ * @example
+ * let id = generateHash("PASCUAL, Eizekiel Pierre");
+ */
 function generateHash(string) {
   let hash = 0;
   for (const char of string) {
