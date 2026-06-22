@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../css/login.css" rel="stylesheet" />
+    <title>Login</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <main class="auth-page">
+      <section class="auth-card" aria-label="Login">
+
+        <h1 class="auth-title">Welcome!</h1>
+
+        <form class="auth-form" id="loginForm" novalidate>
+          <div class="auth-field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" required />
+          </div>
+
+          <div class="auth-field">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+
+          <div class="auth-helper">
+            <span>Don't have an account?</span>
+            <a href="./seeds-signup.html">Sign up</a>
+          </div>
+
+          <div class="auth-actions">
+            <button class="btn btn-primary" type="submit" id="loginButton">Log In</button>
+          </div>
+
+          <div class="auth-error" id="error" role="alert" aria-live="polite"></div>
+        </form>
+      </section>
+    </main>
+
+    <script type="module">
+      import { signIn } from "../js/auth.js";
+      const form = document.getElementById("loginForm");
+      const errorEl = document.getElementById("error");
+
+      function setError(msg) {
+        if (!msg) {
+          errorEl.textContent = "";
+          errorEl.dataset.show = "false";
+          return;
+        }
+        errorEl.textContent = msg;
+        errorEl.dataset.show = "true";
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        setError("");
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        if (!email || !password) {
+          setError("Please enter your email and password.");
+          return;
+        }
+
+        try {
+          await signIn(email, password);
+        } catch {
+          setError("Error signing in. Please check your email and password.");
+        }
+      });
+    </script>
+  </body>
+</html>
