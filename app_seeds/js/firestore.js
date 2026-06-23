@@ -262,20 +262,8 @@ getDocs(collectionRef)
 
 		window.activities = activities;
         window.partners = partners;
-
-		const offices = [];
-		Object.keys(partners).forEach((partner) => {
-			const office = partners[partner][0]["ADMU_office"];
-			// console.log(typeof(office));
-			if (!offices.includes(office)) {
-				offices.push(office);	
-			}
-		});
-		console.log("ADMU Offices:");
-		console.log(offices);
 		
         createMarkersAndSidebar(partners);
-		// getOffices(querySnapshot, partners); 	//TODO: Delete after testing
     });
 
 // === MAIN MODAL SECTION ===
