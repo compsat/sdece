@@ -1,5 +1,5 @@
 // FIRESTORE DATABASE\
-import { getDocs, GeoPoint, Timestamp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+import { query, getDocs, GeoPoint, Timestamp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import { getCollection, setCollection, SEEDS_RULES, validateData, editEntry, addEntry } from '/js/firestore_UNIV.js';
 import { map } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
@@ -262,8 +262,20 @@ getDocs(collectionRef)
 
 		window.activities = activities;
         window.partners = partners;
+
+		const offices = [];
+		Object.keys(partners).forEach((partner) => {
+			const office = partners[partner][0]["ADMU_office"];
+			// console.log(typeof(office));
+			if (!offices.includes(office)) {
+				offices.push(office);	
+			}
+		});
+		console.log("ADMU Offices:");
+		console.log(offices);
 		
         createMarkersAndSidebar(partners);
+		// getOffices(querySnapshot, partners); 	//TODO: Delete after testing
     });
 
 // === MAIN MODAL SECTION ===

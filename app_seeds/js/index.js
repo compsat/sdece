@@ -14,7 +14,6 @@ filterBtn.addEventListener('click', () => showFilterModal())
 
 var filterCloseBtn = document.getElementById
 
-
 function showFilterModal() {
 	var filterModal = document.getElementById('filterModal');
 	filterModal.style.display = 'flex';
