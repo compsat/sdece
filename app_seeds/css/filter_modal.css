@@ -1,0 +1,46 @@
+body {
+  margin: 0;
+  font-family: 'Geist', sans-serif;
+  background-color: white;
+}
+
+.filter-header {
+  background-color: #387181;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filter-content {
+  padding: 1rem;
+}
+
+.filter-options label {
+  display: inline-block;
+  margin: 0.25rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.filter-footer {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #eee;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.filter-apply {
+  background-color: #387181;
+  color: white;
+}
