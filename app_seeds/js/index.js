@@ -14,6 +14,10 @@ filterBtn.addEventListener('click', () => showFilterModal())
 
 var filterCloseBtn = document.getElementById
 
+function initializeFilterModal() {
+	
+}
+
 function showFilterModal() {
 	var filterModal = document.getElementById('filterModal');
 	filterModal.style.display = 'flex';
@@ -23,19 +27,16 @@ function showFilterModal() {
 
 function setUpFilterModal() {
 	getOffices(window.partners);
+	const filterOptionHtml = `<label><input type="checkbox" value="field_option_b" data-filter="field_name"> Field Option B</label>`;
 }
 
 function getOffices(partners) {
 	const offices = []
 	Object.keys(partners).forEach((partner) => {
 			const office = partners[partner][0]["ADMU_office"];
-			// console.log(typeof(office));
-			if (!offices.includes(office)) {
-				offices.push(office);	
-			}
+			if (!offices.includes(office)) {offices.push(office);}
 	});
+
 	offices.sort();
-	console.log("ADMU Offices:");
-	console.log(offices);
 	return offices;
 }
