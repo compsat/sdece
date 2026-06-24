@@ -21,13 +21,24 @@ function initializeFilterModal() {
 function showFilterModal() {
 	var filterModal = document.getElementById('filterModal');
 	filterModal.style.display = 'flex';
-	setUpFilterModal()
+	setUpFilterModal();
 	console.log("showing filter modal");
 }
 
 function setUpFilterModal() {
-	getOffices(window.partners);
-	const filterOptionHtml = `<label><input type="checkbox" value="field_option_b" data-filter="field_name"> Field Option B</label>`;
+	var offices = getOffices(window.partners);
+	// const filterSection = document.getElementById('admu-offices');
+	const filterModalIframe = document.getElementById('filter-modal-id');
+	const filterModal = filterModalIframe.contentDocument;
+	var filterSection = filterModal.getElementById('admu-offices');
+	if (filterSection) {
+		offices.forEach((office) => {
+		const filterOptions = `<label><input type="checkbox" value="${office}" data-filter="office"> ${office} </label>`;
+		filterSection.innerHTML += filterOptions;
+	});
+	}
+	
+
 }
 
 function getOffices(partners) {
@@ -38,5 +49,10 @@ function getOffices(partners) {
 	});
 
 	offices.sort();
+	console.log(offices);
 	return offices;
 }
+
+//
+// CODE LOGIC FOR SORTING
+const sortBtn = document.getElementById
