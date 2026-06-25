@@ -65,20 +65,26 @@ iframe {
 	top: 0;
 	width: 100%;
 	background-color: #ffffff;
-	padding: 1.5rem;
-	z-index: 10;
+	padding: 1rem;
 }
 
 .side-nav-header-top {
-	display: flex;
+	display: grid;
 	align-items: center;
 	margin-bottom: 1.5rem;
+	padding: 0 0 0.75rem;
+	border-bottom: 1px solid #eeeeee;
+	
 }
 
-.sdece-title {
-	font-size: 1.25rem;
-	font-weight: 500;
-	color: #111827;
+.logo-image {
+	grid-column: 1;
+	width: 40px;
+	height: 40px;
+	margin-right: 0.65rem;
+  	margin-bottom: 0.038rem;
+	border-radius: 50%;
+	object-fit: cover;
 }
 
 .actions-container {
@@ -89,12 +95,11 @@ iframe {
 }
 
 .action-btn {
-	width: 100%;
 	background-color: #ffffff;
 	border: 1px solid #e0e0e0;
-	padding: 0.5rem 1rem;
-	border-radius: 0.5rem;
-	font-size: 0.875rem;
+	padding: 0.5rem 0.575rem;
+	border-radius: 1rem;
+	font-size: 0.8rem;
 	color: #374151;
 	cursor: pointer;
 	display: flex;
@@ -399,16 +404,31 @@ iframe {
 }
 
 .map-title {
-	font-size: 1.25rem;
-	font-weight: 500;
+	grid-column: 2;
+	font-size: 1.75rem;
+	font-weight: 600;
 	color: #111827;
 	display: flex;
-	align-items: center;
+	justify-self: center;
+	text-align: left;
 	gap: 0.5rem;
 }
 .map-title span {
 	font-size: 0.85em;
 	margin-left: 0.2em;
+}
+
+.logout-btn {
+	grid-column: 20;
+  	justify-self: end;
+  	background: #374151;
+  	color: white;
+  	border: none;
+  	padding: 0.4rem 0.75rem;
+  	border-radius: 999px;
+  	font-size: 0.75rem;
+  	font-weight: 600;
+  	cursor: pointer;
 }
 
 .dropdown-icon svg {
