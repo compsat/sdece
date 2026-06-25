@@ -5,7 +5,7 @@ body {
 }
 
 .filter-header {
-  background-color: #387181;
+  background-color: #003A6C;
   color: white;
   padding: 1rem;
   display: flex;
@@ -41,6 +41,6 @@ body {
 }
 
 .filter-apply {
-  background-color: #387181;
+  background-color: #003A6C;
   color: white;
 }
