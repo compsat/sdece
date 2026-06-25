@@ -222,16 +222,16 @@ export const DB_RULES_AND_DATA = [
 ];
 
 //validation here
-const VALIDATION_RULES = {
+export const VALIDATION_RULES = {
 	//Rules for Validating Data
 	'buklod-official-TEST': {
     household_name: { label: "Household Name", type: 'string', required: true, maxLength: 127 },
-	contact_number: {
-		label: "Contact Number",
-		type: 'string',
-		required: false,
-		regex: /^(09\d{9}|09\d{2}-\d{3}-\d{4}|N\/A)$/,
-		},
+		contact_number: {
+			label: "Contact Number",
+			type: 'string',
+			required: false,
+			regex: /^(09\d{9}|09\d{2}-\d{3}-\d{4}|N\/A)$/,
+			},
     number_residents: { label: "Number of Residents", type: 'number', required: true , 'minimum': 1},
 		number_minors: { label: "Number of Minor Residents", type: 'number', 'minimum': 0 },
 		number_seniors: { label: "Number of Senior Residents", type: 'number' , 'minimum': 0 },
@@ -259,8 +259,7 @@ const VALIDATION_RULES = {
 			type: 'string',
 			required: true,
 		},
-	household_phase: { label: "Household Phase", type: 'string', required: false },
-		
+		household_phase: { label: "Household Phase", type: 'string', required: false },
     landslide_risk: { label: 'Landslide Risk', type: 'string', required: true },
 		landslide_risk_description:{ label: 'Landslide Risk Description', type: 'string', required: false},
 		earthquake_risk: { label: 'Earthquake Risk', type: 'string', required: true },
@@ -401,7 +400,7 @@ const VALIDATION_RULES = {
 			maxLength: 11,
 			regex: /^09\d{9}$/,
 		},
-    partner_email: { label: 'Email of Contact Person/Partner', type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
+		partner_email: { label: 'Email of Contact Person/Partner', type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
 		activity_name: { label: 'Activity Name', type: 'string', required: true },
 		activity_nature: { label: 'Nature of Activity', type: 'string', required: true, maxLength: 255 },
 		activity_date: { label: 'Date of Partnership', type: 'string', required: true, regex: /^\d{4}-\d{2}-\d{2}$/ },
@@ -410,7 +409,7 @@ const VALIDATION_RULES = {
 		ADMU_office: { label: 'Name of Office', type: 'string', required: true, maxLength: 127 },
 		ADMU_contact_name: { label: 'Name of Ateneo Contact Person', type: 'string', required: true, maxLength: 255 },
 		ADMU_email: {
-      label: "Email of Ateneo Contact Person",
+			label: "Email of Ateneo Contact Person",
 			type: 'string',
 			required: true,
 			// required: true					redundant declaration
