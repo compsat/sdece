@@ -419,15 +419,9 @@ iframe {
 }
 
 .logout-btn {
-	grid-column: 20;
+		grid-column: 25;
+		filter: brightness(25%);
   	justify-self: end;
-  	background: #374151;
-  	color: white;
-  	border: none;
-  	padding: 0.4rem 0.75rem;
-  	border-radius: 999px;
-  	font-size: 0.75rem;
-  	font-weight: 600;
   	cursor: pointer;
 }
 
