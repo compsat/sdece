@@ -538,12 +538,8 @@ export async function setCollection(collection_name) {
 	for (let rule of DB_RULES_AND_DATA) {
 		if (rule['collection_name'] === collection_name) {
 			collection_reference = collection(DB, collection_name);
-      rule_reference = rule;
-	  console.log(rule_reference);
-	  console.log(collection_reference);
-      pullCollection(collection_reference);
-      console.log(collection_name);
-      console.log(document_map);
+      		rule_reference = rule;
+      		pullCollection(collection_reference);
 		}
 	}
 }

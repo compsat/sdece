@@ -255,7 +255,7 @@ export function populateEditForm(partner, editFormModal) {
 export function submitEditForm(){
   var collated_input = {}; 
   var validate_errors =[];
-  for(let i = 0; i < BUKLOD_RULES['fields'].length; i++){=
+  for(let i = 0; i < BUKLOD_RULES['fields'].length; i++){
     let field_name = BUKLOD_RULES['fields'][i];
     let input_value = document.getElementById(field_name).value;
 
