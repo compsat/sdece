@@ -255,10 +255,7 @@ export function populateEditForm(partner, editFormModal) {
 export function submitEditForm(){
   var collated_input = {}; 
   var validate_errors =[];
-  for(let i = 0; i < BUKLOD_RULES['fields'].length; i++){
-    //BUKLOD_RULES[2] are just the field names of each document
-    // let q = document.getElementById(BUKLOD_RULES[2][i]).value;
-    // collated_input[BUKLOD_RULES[2][i]] = q;
+  for(let i = 0; i < BUKLOD_RULES['fields'].length; i++){=
     let field_name = BUKLOD_RULES['fields'][i];
     let input_value = document.getElementById(field_name).value;
 
