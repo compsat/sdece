@@ -85,12 +85,10 @@ export const document_map = new Map();
 
 // General format of the rule engine
 export const DB_RULES_AND_DATA = [
-	// ["collection_name", "identifier",
-	//     ["field1", ... ,"fieldN"] ];
-	[
-		'buklod-official',
-		'household_name',
-		[
+	{
+		'collection_name': 'buklod-official',	
+		'identifier': 'household_name',
+		'fields': [
 			'household_name',
 			'contact_number',
 			'number_residents',
@@ -132,11 +130,63 @@ export const DB_RULES_AND_DATA = [
 			'timestamp',
 			'source_dataset',
 		],
-	],
-	[
-		'buklod-official-TEST',
-		'household_name',
-		[
+		'schemas': {
+			'buklod': {
+				schema: {
+					version: 0,
+					type: 'object',
+					primaryKey: 'id',
+					properties: {
+						id: { type: 'string', maxLength: 100 },
+						household_name: { type: 'string' },
+						household_address: { type: 'string' },
+						contact_number: { type: 'string' },
+						number_residents: { type: 'number' },
+						number_minors: { type: 'number' },
+						number_seniors: { type: 'number' },
+						location_coordinates: { 
+						type: 'object',
+						properties: {
+							_lat: { type: 'number' },
+							_lng: { type: 'number' }
+						}
+						},
+						location_link: { type: 'string' },
+						residency_status: { type: 'string' },
+						is_hoa_noa: { type: 'string' },
+						household_material: { type: 'string' },
+						landslide_risk: { type: 'string' },
+						fire_risk: { type: 'string' },
+						flood_risk: { type: 'string' },
+						earthquake_risk: { type: 'string' },
+						storm_risk: { type: 'string' },
+						_deleted: { type: 'boolean', default: false },
+						updatedAt: { type: 'number', default: 0 }
+					},
+					required: ['id', 'household_name', 'updatedAt', '_deleted']
+				}
+			},
+			'evacCenters': {
+				version: 0,
+				type: 'object',
+				primaryKey: 'id',
+				properties: {
+					id: { type: 'string', maxLength: 100 },
+					name: { type: 'string' },
+					latitude: { type: 'number' },
+					longitude: { type: 'number' },
+					type: { type: 'string' },
+					_deleted: { type: 'boolean', default: false },
+					updatedAt: { type: 'number', default: 0 }
+				},
+				required: ['id', 'name', 'updatedAt', '_deleted']
+			}
+		},
+	},
+	{
+		'collection_name': 'buklod-official-TEST',	
+		'identifier': 'household_name',
+		'fields': [
 			'household_name',
 			'contact_number',
 			'number_residents',
@@ -178,11 +228,63 @@ export const DB_RULES_AND_DATA = [
 			'timestamp',
 			'source_dataset',
 		],
-	],
-	[
-		'seeds-official',
-		'partner_name',
-		[
+		'schemas': {
+			'buklod': {
+				schema: {
+					version: 0,
+					type: 'object',
+					primaryKey: 'id',
+					properties: {
+						id: { type: 'string', maxLength: 100 },
+						household_name: { type: 'string' },
+						household_address: { type: 'string' },
+						contact_number: { type: 'string' },
+						number_residents: { type: 'number' },
+						number_minors: { type: 'number' },
+						number_seniors: { type: 'number' },
+						location_coordinates: { 
+						type: 'object',
+						properties: {
+							_lat: { type: 'number' },
+							_lng: { type: 'number' }
+						}
+						},
+						location_link: { type: 'string' },
+						residency_status: { type: 'string' },
+						is_hoa_noa: { type: 'string' },
+						household_material: { type: 'string' },
+						landslide_risk: { type: 'string' },
+						fire_risk: { type: 'string' },
+						flood_risk: { type: 'string' },
+						earthquake_risk: { type: 'string' },
+						storm_risk: { type: 'string' },
+						_deleted: { type: 'boolean', default: false },
+						updatedAt: { type: 'number', default: 0 }
+					},
+					required: ['id', 'household_name', 'updatedAt', '_deleted']
+				}
+			},
+			'evacCenters': {
+				version: 0,
+				type: 'object',
+				primaryKey: 'id',
+				properties: {
+					id: { type: 'string', maxLength: 100 },
+					name: { type: 'string' },
+					latitude: { type: 'number' },
+					longitude: { type: 'number' },
+					type: { type: 'string' },
+					_deleted: { type: 'boolean', default: false },
+					updatedAt: { type: 'number', default: 0 }
+				},
+				required: ['id', 'name', 'updatedAt', '_deleted']
+			}
+		},
+	},
+	{
+		'collection_name': 'seeds-official',	
+		'identifier': 'partner_name',
+		'fields': [
 			'activity_date',
 			'activity_name',
 			'activity_nature',
@@ -198,11 +300,14 @@ export const DB_RULES_AND_DATA = [
 			'partner_name',
 			'partner_contact_number',
 		],
-	],
-	[
-		'seeds-official-TEST',
-		'partner_name',
-		[
+		'schemas': {
+			
+		},
+	},
+	{
+		'collection_name': 'seeds-official-TEST',	
+		'identifier': 'partner_name',
+		'fields': [
 			'activity_date',
 			'activity_name',
 			'activity_nature',
@@ -218,7 +323,10 @@ export const DB_RULES_AND_DATA = [
 			'partner_name',
 			'partner_contact_number',
 		],
-	],
+		'schemas': {
+			
+		},
+	},
 ];
 
 //validation here
