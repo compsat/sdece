@@ -12,7 +12,21 @@ export function showAddModal() {
 var filterBtn = document.getElementById('filter-btn');
 filterBtn.addEventListener('click', () => showFilterModal())
 
-var filterCloseBtn = document.getElementById
+const filterModalIframe = document.getElementById('filter-modal-id');
+const filterModal = filterModalIframe.contentDocument;
+
+var filterModalClose = filterModal.getElementById("filterClose");
+filterModalClose.addEventListener("click", function(event) {
+              window.parent.postMessage('closeFilterModal', '*');
+			  clearFilterModal();  
+            });
+
+var filterModalApply = filterModal.getElementById("applyFilters");
+filterModalApply.addEventListener("click", function(event){
+	console.log(captureFilterState());
+	// captureFilterState();
+});
+var filterModalClear = filterModal.getElementById("clearFilters");
 
 function initializeFilterModal() {
 	
@@ -27,18 +41,18 @@ function showFilterModal() {
 
 function setUpFilterModal() {
 	var offices = getOffices(window.partners);
-	// const filterSection = document.getElementById('admu-offices');
-	const filterModalIframe = document.getElementById('filter-modal-id');
-	const filterModal = filterModalIframe.contentDocument;
 	var filterSection = filterModal.getElementById('admu-offices');
 	if (filterSection) {
 		offices.forEach((office) => {
 		const filterOptions = `<label><input type="checkbox" value="${office}" data-filter="office"> ${office} </label>`;
 		filterSection.innerHTML += filterOptions;
 	});
-	}
-	
+	}	
+}
 
+function clearFilterModal() {
+	var officeSection = filterModal.getElementById('admu-offices');
+	officeSection.innerHTML = "";
 }
 
 function getOffices(partners) {
@@ -51,6 +65,16 @@ function getOffices(partners) {
 	offices.sort();
 	console.log(offices);
 	return offices;
+}
+
+function captureFilterState() {
+  const checkboxes = {};
+  filterModal.querySelectorAll('.filter-content input[type="checkbox"]').forEach(cb => {
+	// console.log(cb);
+    checkboxes[`${cb.getAttribute('data-filter')}::${cb.value}`] = cb.checked;
+  });
+  console.log("Applied Filter State");
+  return checkboxes;
 }
 
 //
