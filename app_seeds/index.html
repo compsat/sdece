@@ -57,7 +57,9 @@
         	<div class="side-nav-header-top">
 				<img src="static/logo-admu.png" alt="ADMU Logo" class="logo-image">
 				<h1 class="map-title">SEEDS</h1>
-				<button class="logout-btn" id="authBtn">Login</button>			
+				<button class="logout-btn" id="authBtn">
+					<img src="static/logout.256x256.png" alt="Logout" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"></svg>
+				</button>			
 			</div>
         	<search-bar id="search-bar-component"></search-bar>
 			<div class="actions-container">
@@ -278,7 +280,6 @@
     onAuthStateChanged(AUTH, (user) => {
       if (user) {
         document.body.style.visibility = 'visible'; 
-        btn.textContent = "Logout";
         btn.onclick = () => signOutUser();
       } else {
         window.location.replace(loginURL); // redirect if not logged in
