@@ -108,7 +108,7 @@ newButton.addEventListener('click', () => {
 // === SIDEBAR FUNCTIONS SECTION ===
 
 // Load and filter activities
-function loadActivities(querySnapshot) {
+export function loadActivities(querySnapshot) {
     let activities = {};
     querySnapshot.forEach((doc) => {
         let activity = doc.data();
@@ -123,7 +123,7 @@ function loadActivities(querySnapshot) {
 }
 
 // Group activities by partner
-function groupActivities(activities) {
+export function groupActivities(activities) {
     let partners = {};
     Object.values(activities).forEach((activity) => {
         let partner = activity[SEEDS_RULES[1]];
@@ -136,7 +136,7 @@ function groupActivities(activities) {
 }
 
 // Uses activity nature if there's activity name is N/A	
-function getActivity(activity) {
+export function getActivity(activity) {
 	const name = activity['activity_name'];
 	const nature = activity['activity_nature'];
 
@@ -147,7 +147,7 @@ function getActivity(activity) {
 }
 
 // Generate string of activities
-function getActivitiesString(activities) {
+export function getActivitiesString(activities) {
     let activitiesString = '';
     for (const activity of activities) {
         activitiesString += getActivity(activity) + '<br>';
@@ -156,7 +156,7 @@ function getActivitiesString(activities) {
 }
 
 // Clears Highlight on the Side Bar when transitioning
-function clearAllHighlights() {
+export function clearAllHighlights() {
 	const sidebarItems = document.querySelectorAll('.partnerDiv');
 	sidebarItems.forEach((item) => {
 		item.classList.remove('highlight');
@@ -164,7 +164,7 @@ function clearAllHighlights() {
 }
 
 // Create sidebar list item for a partner
-function createSidebarItem(partner, activities, lat, long, marker) {
+export function createSidebarItem(partner, activities, lat, long, marker) {
     const containerDiv = document.createElement('div');
     const img = document.createElement('svg');
     const listItem = document.createElement('li');
@@ -202,7 +202,7 @@ function createSidebarItem(partner, activities, lat, long, marker) {
 }
 
 // Handle marker click: highlight sidebar and show modal
-function handleMarkerClick(partner, partners) {
+export function handleMarkerClick(partner, partners) {
     clearAllHighlights();
 
     // Highlight sidebar item
@@ -219,7 +219,7 @@ function handleMarkerClick(partner, partners) {
 }
 
 // Create map markers and sidebar entries for each partner
-function createMarkersAndSidebar(partners) {
+export function createMarkersAndSidebar(partners) {
     Object.keys(partners).forEach((partner) => {
         let firstActivity = partners[partner][0];
         let partnerCoordinates = firstActivity['partner_coordinates'];

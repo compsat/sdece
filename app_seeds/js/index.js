@@ -1,3 +1,13 @@
+import { loadActivities,
+		groupActivities,
+		getActivity,
+		getActivitiesString,
+		clearAllHighlights,
+		createSidebarItem,
+		handleMarkerClick,
+		createMarkersAndSidebar
+ } from "./firestore.js";
+
 export function showMainModal() {
 	var mainModal = document.getElementById('mainModal');
 	mainModal.style.display = 'flex';
@@ -23,6 +33,7 @@ filterModalClose.addEventListener("click", function(event) {
 
 var filterModalApply = filterModal.getElementById("applyFilters");
 filterModalApply.addEventListener("click", function(event){
+	console.log("Filter States:")
 	console.log(captureFilterState());
 	// captureFilterState();
 });
@@ -73,10 +84,9 @@ function captureFilterState() {
 	// console.log(cb);
     checkboxes[`${cb.getAttribute('data-filter')}::${cb.value}`] = cb.checked;
   });
-  console.log("Applied Filter State");
   return checkboxes;
 }
 
 //
 // CODE LOGIC FOR SORTING
-const sortBtn = document.getElementById
+// const sortBtn = document.getElementById
