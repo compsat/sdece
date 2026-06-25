@@ -10,11 +10,11 @@ export var map = L.map('map').setView([14.5995, 120.9842], 10);
 
 function panLocation(doc, map) {
 	for (let rule of DB_RULES_AND_DATA) {
-		if (getCollection().id === rule[0]) {
+		if (getCollection().id === rule['collection_name']) {
 			var coordinates;
-			for (let i = 0; i < rule[2].length; i++) {
-				if (rule[2][i].includes('location_coordinates')) {
-					coordinates = doc[rule[2][i]];
+			for (let i = 0; i < rule['fields'].length; i++) {
+				if (rule['fields'][i].includes('location_coordinates')) {
+					coordinates = doc[rule['fields'][i]];
 					if(coordinates != null) {
 						map.panTo(
 							new L.LatLng(
@@ -165,9 +165,9 @@ export function createJsCssFiles(file_path) {
 export function loadJsCssFiles() {
 	// script if javascript, css if link or none;
 	for (let rule of JS_CS_ENGINE) {
-		if (rule[0] == getCollection().id) {
-			for (let i = 0; i < rule[1].length; i++) {
-				var new_element = createJsCssFiles(rule[1][i]);
+		if (rule['collection_name'] == getCollection().id) {
+			for (let i = 0; i < rule['identifier'].length; i++) {
+				var new_element = createJsCssFiles(rule['identifier'][i]);
 				new_element.setAttribute('id', 'jscss' + i);
 				document
 					.getElementsByTagName('head')[0]

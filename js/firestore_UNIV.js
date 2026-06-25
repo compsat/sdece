@@ -536,9 +536,11 @@ export const SEEDS_RULES_TEST = DB_RULES_AND_DATA[3];
 
 export async function setCollection(collection_name) {
 	for (let rule of DB_RULES_AND_DATA) {
-		if (rule[0] === collection_name) {
+		if (rule['collection_name'] === collection_name) {
 			collection_reference = collection(DB, collection_name);
-      rule_reference = rule
+      rule_reference = rule;
+	  console.log(rule_reference);
+	  console.log(collection_reference);
       pullCollection(collection_reference);
       console.log(collection_name);
       console.log(document_map);
@@ -572,8 +574,8 @@ export function getDocIdByPartnerName(partner_name) {
   return getDocs(
     query(
       collection_reference,
-      where(rule_reference[1], '>=', partner_name), // let's wait for Luigi's standardization. IF_ELSE nalang muna
-      where(rule_reference[1], '<=', partner_name + endName)
+      where(rule_reference['identifier'], '>=', partner_name), // let's wait for Luigi's standardization. IF_ELSE nalang muna
+      where(rule_reference['identifier'], '<=', partner_name + endName)
     )
   )
     .then((querySnapshot) => {
@@ -592,7 +594,7 @@ export function getDocIdByPartnerName(partner_name) {
 		}
 
 export function getDocByID(docId) {
-  const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
+  const DOC_REFERENCE = doc(DB, rule_reference['collection_name'], docId);
   return getDoc(DOC_REFERENCE).then((docSnap) => {
     if (docSnap.exists()) {
       return docSnap.data();
@@ -620,7 +622,7 @@ export function addEntry(inp_obj) {
 
 
 export function deleteEntry(docId) {
-	const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
+	const DOC_REFERENCE = doc(DB, rule_reference['collection_name'], docId);
 	return deleteDoc(DOC_REFERENCE)
 		.then(() => {
 			alert("Household deleted successfully.");
@@ -633,7 +635,7 @@ export function deleteEntry(docId) {
 }
 
 export function editEntry(inp_obj, docId) {
-	const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
+	const DOC_REFERENCE = doc(DB, rule_reference['collection_name'], docId);
 	updateDoc(DOC_REFERENCE, inp_obj)
 		.then(() => {
 			alert("You may now reload the page for your edit to reflect on this page");
