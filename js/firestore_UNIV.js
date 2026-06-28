@@ -78,215 +78,111 @@ var app = getApps().length > 0 ? getApps()[0] : initializeApp(FIREBASE_CONFIG);
 export const DB = getFirestore(app);
 
 var collection_reference = null;
-var rule_reference = null;
+export var rule_reference = null;
 export const document_map = new Map();
 
 //export let partnersArray = [];
 
 // General format of the rule engine
-export const DB_RULES_AND_DATA = [
-	// ["collection_name", "identifier",
-	//     ["field1", ... ,"fieldN"] ];
-	[
-		'buklod-official',
-		'household_name',
-		[
-			'household_name',
-			'contact_number',
-			'number_residents',
-			'number_minors',
-			'number_seniors',
-			'number_pregnant',
-			'number_pwd',
-			'number_sick',
-			'sickness_present',
-			'residency_status',
-			'is_hoa_noa',
-			'location_coordinates',
-			'location_link',
-			'household_address',
-			'household_material',
-			'household_phase',
-			'house_number',
-			'street',
-			'landslide_risk',
-			'landslide_risk_description',
-			'earthquake_risk',
-			'earthquake_risk_description',
-			'fire_risk',
-			'fire_risk_description',
-			'flood_risk',
-			'flood_risk_description',
-			'storm_risk',
-			'storm_risk_description',
-			'nearest_evac',
-			'number_families',
-			'number_healthy',
-			'exit_points',
-			'disaster_response_plan',
-			'before_disaster_actions',
-			'knowledge_readiness',
-			'during_disaster_actions',
-			'after_disaster_actions',
-			'important_notes',
-			'timestamp',
-			'source_dataset',
-		],
-	],
-	[
-		'buklod-official-TEST',
-		'household_name',
-		[
-			'household_name',
-			'contact_number',
-			'number_residents',
-			'number_minors',
-			'number_seniors',
-			'number_pregnant',
-			'number_pwd',
-			'number_sick',
-			'sickness_present',
-			'residency_status',
-			'is_hoa_noa',
-			'location_coordinates',
-			'location_link',
-			'household_address',
-			'household_material',
-			'household_phase',
-			'house_number',
-			'street',
-			'landslide_risk',
-			'landslide_risk_description',
-			'earthquake_risk',
-			'earthquake_risk_description',
-			'fire_risk',
-			'fire_risk_description',
-			'flood_risk',
-			'flood_risk_description',
-			'storm_risk',
-			'storm_risk_description',
-			'nearest_evac',
-			'number_families',
-			'number_healthy',
-			'exit_points',
-			'disaster_response_plan',
-			'before_disaster_actions',
-			'knowledge_readiness',
-			'during_disaster_actions',
-			'after_disaster_actions',
-			'important_notes',
-			'timestamp',
-			'source_dataset',
-		],
-	],
-	[
-		'seeds-official',
-		'partner_name',
-		[
-			'activity_date',
-			'activity_name',
-			'activity_nature',
-			'additional_partnership',
-			'ADMU_contact_name',
-			'ADMU_email',
-			'ADMU_office',
-			'organization_unit',
-			'partner_address',
-			'partner_contact_name',
-			'partner_coordinates',
-			'partner_email',
-			'partner_name',
-			'partner_contact_number',
-		],
-	],
-	[
-		'seeds-official-TEST',
-		'partner_name',
-		[
-			'activity_date',
-			'activity_name',
-			'activity_nature',
-			'additional_partnership',
-			'ADMU_contact_name',
-			'ADMU_email',
-			'ADMU_office',
-			'organization_unit',
-			'partner_address',
-			'partner_contact_name',
-			'partner_coordinates',
-			'partner_email',
-			'partner_name',
-			'partner_contact_number',
-		],
-	],
-];
-
-//validation here
-const VALIDATION_RULES = {
-	//Rules for Validating Data
-	'buklod-official-TEST': {
-    household_name: { label: "Household Name", type: 'string', required: true, maxLength: 127 },
-	contact_number: {
-		label: "Contact Number",
-		type: 'string',
-		required: false,
-		regex: /^(09\d{9}|09\d{2}-\d{3}-\d{4}|N\/A)$/,
-		},
-    number_residents: { label: "Number of Residents", type: 'number', required: true , 'minimum': 1},
-		number_minors: { label: "Number of Minor Residents", type: 'number', 'minimum': 0 },
-		number_seniors: { label: "Number of Senior Residents", type: 'number' , 'minimum': 0 },
-		number_pregnant: { label: "Number of Pregnant Residents", type: 'number' , 'minimum': 0 },
-		number_pwd: { label: "Number of Persons with Disabilities", type: 'number' , 'minimum': 0 },
-		number_sick: { label: "Number of Sick Residents", type: 'number' , 'minimum': 0 },
-		sickness_present: { label: "Sicknesses Present", type: 'string' },
-		residency_status: {
-      label: "Residency Status",
-			type: 'string',
-			required: true,
-			enum: ['May-Ari', 'Umuupa'],
-		},
-		is_hoa_noa: {
-      label: "HOA Status",
-			type: 'string',
-			required: false,
-			enum: ['HOA', 'NOA', 'N/A'],
-		},
-    location_coordinates: {label: "Location Coordinates", type: 'object', required: true },
-		location_link: { label: "Location Link", type: 'string', required: true, regex: /^https:\/\/.+\..+/ }, // data validation for link
-		household_address: { label: "Household Address", type: 'string', required: true, maxLength: 100 },
-		household_material: {
-      label: "Household Material",
-			type: 'string',
-			required: true,
-		},
-	household_phase: { label: "Household Phase", type: 'string', required: false },
-		
-    landslide_risk: { label: 'Landslide Risk', type: 'string', required: true },
-		landslide_risk_description:{ label: 'Landslide Risk Description', type: 'string', required: false},
-		earthquake_risk: { label: 'Earthquake Risk', type: 'string', required: true },
-		earthquake_risk_description:{ label: 'Earthquake Risk Description', type: 'string', required: false},
-		fire_risk: { label: 'Fire Risk', type: 'string', required: true },
-		fire_risk_description:{ label: 'Fire Risk Description', type: 'string', required: false},
-		flood_risk: { label: 'Flood Risk', type: 'string', required: true },
-		flood_risk_description:{ label: 'Flood Risk Description', type: 'string', required: false},
-		storm_risk: { label: 'Storm Risk', type: 'string', required: true },
-		storm_risk_description: { label: 'Storm Risk Description', type: 'string', required: false},
-
-		nearest_evac: { label: 'Nearest Evacuation Area', type: 'string', required: true, maxLength: 255 },
-		house_number: { label: 'House Number', type: 'string', required: false },
-		street: { label: 'Street', type: 'string', required: false },
-		number_families: { label: 'Number of Families', type: 'number', minimum: 0 },
-		number_healthy: { label: 'Number of Healthy Residents', type: 'number', minimum: 0 },
-		exit_points: { label: 'Exit Points', type: 'number', minimum: 0 },
-		disaster_response_plan: { label: 'Disaster Response Plan', type: 'string', required: false },
-		before_disaster_actions: { label: 'Before Disaster Actions', type: 'string', required: false },
-		knowledge_readiness: { label: 'Disaster Knowledge Rating', type: 'number', minimum: 1 },
-		during_disaster_actions: { label: 'During Disaster Actions', type: 'string', required: false },
-		after_disaster_actions: { label: 'After Disaster Actions', type: 'string', required: false },
-		timestamp: { label: 'Timestamp', type: 'string', required: false },
-		source_dataset: { label: 'Source Dataset', type: 'string', required: false },
-	},
+export const DB_RULES_AND_DATA = {
 	'buklod-official': {
+		'collection_name': 'buklod-official',	
+		'identifier': 'household_name',
+		'fields': [
+			'household_name',
+			'contact_number',
+			'number_residents',
+			'number_minors',
+			'number_seniors',
+			'number_pregnant',
+			'number_pwd',
+			'number_sick',
+			'sickness_present',
+			'residency_status',
+			'is_hoa_noa',
+			'location_coordinates',
+			'location_link',
+			'household_address',
+			'household_material',
+			'household_phase',
+			'house_number',
+			'street',
+			'landslide_risk',
+			'landslide_risk_description',
+			'earthquake_risk',
+			'earthquake_risk_description',
+			'fire_risk',
+			'fire_risk_description',
+			'flood_risk',
+			'flood_risk_description',
+			'storm_risk',
+			'storm_risk_description',
+			'nearest_evac',
+			'number_families',
+			'number_healthy',
+			'exit_points',
+			'disaster_response_plan',
+			'before_disaster_actions',
+			'knowledge_readiness',
+			'during_disaster_actions',
+			'after_disaster_actions',
+			'important_notes',
+			'timestamp',
+			'source_dataset',
+		],
+		'schemas': {
+			'buklod': {
+				schema: {
+					version: 0,
+					type: 'object',
+					primaryKey: 'id',
+					properties: {
+						id: { type: 'string', maxLength: 100 },
+						household_name: { type: 'string' },
+						household_address: { type: 'string' },
+						contact_number: { type: 'string' },
+						number_residents: { type: 'number' },
+						number_minors: { type: 'number' },
+						number_seniors: { type: 'number' },
+						location_coordinates: { 
+						type: 'object',
+						properties: {
+							_lat: { type: 'number' },
+							_lng: { type: 'number' }
+						}
+						},
+						location_link: { type: 'string' },
+						residency_status: { type: 'string' },
+						is_hoa_noa: { type: 'string' },
+						household_material: { type: 'string' },
+						landslide_risk: { type: 'string' },
+						fire_risk: { type: 'string' },
+						flood_risk: { type: 'string' },
+						earthquake_risk: { type: 'string' },
+						storm_risk: { type: 'string' },
+						_deleted: { type: 'boolean', default: false },
+						updatedAt: { type: 'number', default: 0 }
+					},
+					required: ['id', 'household_name', 'updatedAt', '_deleted']
+				}
+			},
+			'evacCenters': {
+				version: 0,
+				type: 'object',
+				primaryKey: 'id',
+				properties: {
+					id: { type: 'string', maxLength: 100 },
+					name: { type: 'string' },
+					latitude: { type: 'number' },
+					longitude: { type: 'number' },
+					type: { type: 'string' },
+					_deleted: { type: 'boolean', default: false },
+					updatedAt: { type: 'number', default: 0 }
+				},
+				required: ['id', 'name', 'updatedAt', '_deleted']
+			}
+		},
+		'validations': {
     household_name: { label: "Household Name", type: 'string', required: true, maxLength: 127 },
 		contact_number: {
       label: "Contact Number",
@@ -347,43 +243,205 @@ const VALIDATION_RULES = {
 		after_disaster_actions: { label: 'After Disaster Actions', type: 'string', required: false },
 		timestamp: { label: 'Timestamp', type: 'string', required: false },
 		source_dataset: { label: 'Source Dataset', type: 'string', required: false },
+		},
+		'js_cs': [
+			'/app_buklod-tao/js/index.js',
+			'/app_buklod-tao/js/firestore.js',
+			'/app_buklod-tao/css/form.css',
+			//   'buklod-tao-branch/css/login.css',
+			'/app_buklod-tao/css/main.css',
+		],
 	},
-	'seeds-official-TEST': {
-    partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
-		partner_address: { label: "Address of Host Partner", type: 'string', required: true, maxLength: 255 },
-		partner_coordinates: { label: "Partner Coordinates"},
-		partner_contact_name: {
-      label: "Name of Contact Person",
+	'buklod-official-TEST': {
+		'collection_name': 'buklod-official-TEST',	
+		'identifier': 'household_name',
+		'fields': [
+			'household_name',
+			'contact_number',
+			'number_residents',
+			'number_minors',
+			'number_seniors',
+			'number_pregnant',
+			'number_pwd',
+			'number_sick',
+			'sickness_present',
+			'residency_status',
+			'is_hoa_noa',
+			'location_coordinates',
+			'location_link',
+			'household_address',
+			'household_material',
+			'household_phase',
+			'house_number',
+			'street',
+			'landslide_risk',
+			'landslide_risk_description',
+			'earthquake_risk',
+			'earthquake_risk_description',
+			'fire_risk',
+			'fire_risk_description',
+			'flood_risk',
+			'flood_risk_description',
+			'storm_risk',
+			'storm_risk_description',
+			'nearest_evac',
+			'number_families',
+			'number_healthy',
+			'exit_points',
+			'disaster_response_plan',
+			'before_disaster_actions',
+			'knowledge_readiness',
+			'during_disaster_actions',
+			'after_disaster_actions',
+			'important_notes',
+			'timestamp',
+			'source_dataset',
+		],
+		'schemas': {
+			'buklod': {
+				schema: {
+					version: 0,
+					type: 'object',
+					primaryKey: 'id',
+					properties: {
+						id: { type: 'string', maxLength: 100 },
+						household_name: { type: 'string' },
+						household_address: { type: 'string' },
+						contact_number: { type: 'string' },
+						number_residents: { type: 'number' },
+						number_minors: { type: 'number' },
+						number_seniors: { type: 'number' },
+						location_coordinates: { 
+						type: 'object',
+						properties: {
+							_lat: { type: 'number' },
+							_lng: { type: 'number' }
+						}
+						},
+						location_link: { type: 'string' },
+						residency_status: { type: 'string' },
+						is_hoa_noa: { type: 'string' },
+						household_material: { type: 'string' },
+						landslide_risk: { type: 'string' },
+						fire_risk: { type: 'string' },
+						flood_risk: { type: 'string' },
+						earthquake_risk: { type: 'string' },
+						storm_risk: { type: 'string' },
+						_deleted: { type: 'boolean', default: false },
+						updatedAt: { type: 'number', default: 0 }
+					},
+					required: ['id', 'household_name', 'updatedAt', '_deleted']
+				}
+			},
+			'evacCenters': {
+				version: 0,
+				type: 'object',
+				primaryKey: 'id',
+				properties: {
+					id: { type: 'string', maxLength: 100 },
+					name: { type: 'string' },
+					latitude: { type: 'number' },
+					longitude: { type: 'number' },
+					type: { type: 'string' },
+					_deleted: { type: 'boolean', default: false },
+					updatedAt: { type: 'number', default: 0 }
+				},
+				required: ['id', 'name', 'updatedAt', '_deleted']
+			}
+		},
+		'validations': {
+    household_name: { label: "Household Name", type: 'string', required: true, maxLength: 127 },
+	contact_number: {
+		label: "Contact Number",
+		type: 'string',
+		required: false,
+		regex: /^(09\d{9}|09\d{2}-\d{3}-\d{4}|N\/A)$/,
+		},
+    number_residents: { label: "Number of Residents", type: 'number', required: true , 'minimum': 1},
+		number_minors: { label: "Number of Minor Residents", type: 'number', 'minimum': 0 },
+		number_seniors: { label: "Number of Senior Residents", type: 'number' , 'minimum': 0 },
+		number_pregnant: { label: "Number of Pregnant Residents", type: 'number' , 'minimum': 0 },
+		number_pwd: { label: "Number of Persons with Disabilities", type: 'number' , 'minimum': 0 },
+		number_sick: { label: "Number of Sick Residents", type: 'number' , 'minimum': 0 },
+		sickness_present: { label: "Sicknesses Present", type: 'string' },
+		residency_status: {
+      label: "Residency Status",
 			type: 'string',
 			required: true,
-			maxLength: 255,
+			enum: ['May-Ari', 'Umuupa'],
 		},
-		partner_contact_number: {
-      label: "Number of Contact Person",
+		is_hoa_noa: {
+      label: "HOA Status",
+			type: 'string',
+			required: false,
+			enum: ['HOA', 'NOA', 'N/A'],
+		},
+    location_coordinates: {label: "Location Coordinates", type: 'object', required: true },
+		location_link: { label: "Location Link", type: 'string', required: true, regex: /^https:\/\/.+\..+/ }, // data validation for link
+		household_address: { label: "Household Address", type: 'string', required: true, maxLength: 100 },
+		household_material: {
+      label: "Household Material",
 			type: 'string',
 			required: true,
-			minLength: 11,
-			maxLength: 11,
-			regex: /^09\d{9}$/
 		},
-    partner_email: { label: 'Email of Contact Person/Partner', type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
-		activity_name: { label: 'Activity Name', type: 'string', required: true },
-		activity_nature: { label: 'Nature of Activity', type: 'string', required: true, maxLength: 255 },
-		activity_date: { label: 'Date of Partnership', type: 'string', required: true, regex: /^\d{4}-\d{2}-\d{2}$/ },
-		additional_partnership: { label: 'Additional Partnership', type: 'string', maxLength: 255 },
-		organization_unit: { label: 'Organization Unit', type: 'string', maxLength: 127 },
-		ADMU_office: { label: 'Name of Office', type: 'string', required: true, maxLength: 127 },
-		ADMU_contact_name: { label: 'Name of Ateneo Contact Person', type: 'string', required: true, maxLength: 255 },
-		ADMU_email: {
-      label: "Email of Ateneo Contact Person",
-			type: 'string',
-			required: true,
-			// required: true					redundant declaration
-			maxLength: 127,
-			regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/
+	household_phase: { label: "Household Phase", type: 'string', required: false },
+		
+    landslide_risk: { label: 'Landslide Risk', type: 'string', required: true },
+		landslide_risk_description:{ label: 'Landslide Risk Description', type: 'string', required: false},
+		earthquake_risk: { label: 'Earthquake Risk', type: 'string', required: true },
+		earthquake_risk_description:{ label: 'Earthquake Risk Description', type: 'string', required: false},
+		fire_risk: { label: 'Fire Risk', type: 'string', required: true },
+		fire_risk_description:{ label: 'Fire Risk Description', type: 'string', required: false},
+		flood_risk: { label: 'Flood Risk', type: 'string', required: true },
+		flood_risk_description:{ label: 'Flood Risk Description', type: 'string', required: false},
+		storm_risk: { label: 'Storm Risk', type: 'string', required: true },
+		storm_risk_description: { label: 'Storm Risk Description', type: 'string', required: false},
+
+		nearest_evac: { label: 'Nearest Evacuation Area', type: 'string', required: true, maxLength: 255 },
+		house_number: { label: 'House Number', type: 'string', required: false },
+		street: { label: 'Street', type: 'string', required: false },
+		number_families: { label: 'Number of Families', type: 'number', minimum: 0 },
+		number_healthy: { label: 'Number of Healthy Residents', type: 'number', minimum: 0 },
+		exit_points: { label: 'Exit Points', type: 'number', minimum: 0 },
+		disaster_response_plan: { label: 'Disaster Response Plan', type: 'string', required: false },
+		before_disaster_actions: { label: 'Before Disaster Actions', type: 'string', required: false },
+		knowledge_readiness: { label: 'Disaster Knowledge Rating', type: 'number', minimum: 1 },
+		during_disaster_actions: { label: 'During Disaster Actions', type: 'string', required: false },
+		after_disaster_actions: { label: 'After Disaster Actions', type: 'string', required: false },
+		timestamp: { label: 'Timestamp', type: 'string', required: false },
+		source_dataset: { label: 'Source Dataset', type: 'string', required: false },
 		},
+		'js_cs': [
+			'/app_buklod-tao/js/index.js',
+			'/app_buklod-tao/js/firestore.js',
+			'/app_buklod-tao/css/form.css',
+			//   'buklod-tao-branch/css/login.css',
+			'/app_buklod-tao/css/main.css',
+		],
 	},
 	'seeds-official': {
+		'collection_name': 'seeds-official',	
+		'identifier': 'partner_name',
+		'fields': [
+			'activity_date',
+			'activity_name',
+			'activity_nature',
+			'additional_partnership',
+			'ADMU_contact_name',
+			'ADMU_email',
+			'ADMU_office',
+			'organization_unit',
+			'partner_address',
+			'partner_contact_name',
+			'partner_coordinates',
+			'partner_email',
+			'partner_name',
+			'partner_contact_number',
+		],
+		'schemas': {
+			
+		},
+		'validations': {
     partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
 		partner_address: { label: "Address of Host Partner", type: 'string', required: true, maxLength: 255 },
 		partner_coordinates: { label: "Partner Coordinates"},
@@ -417,25 +475,92 @@ const VALIDATION_RULES = {
 			maxLength: 127,
 			regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/
 		},
+		},
+		'js_cs': [
+			'/app_seeds/js/index.js',
+			'/app_seeds/js/firestore.js',
+			'/app_seeds/css/form.css',
+			'/app_seeds/css/modal.css',
+		],
+	},
+	'seeds-official-TEST': {
+		'collection_name': 'seeds-official-TEST',	
+		'identifier': 'partner_name',
+		'fields': [
+			'activity_date',
+			'activity_name',
+			'activity_nature',
+			'additional_partnership',
+			'ADMU_contact_name',
+			'ADMU_email',
+			'ADMU_office',
+			'organization_unit',
+			'partner_address',
+			'partner_contact_name',
+			'partner_coordinates',
+			'partner_email',
+			'partner_name',
+			'partner_contact_number',
+		],
+		'schemas': {
+			
+		},
+		'validations': {
+    partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
+		partner_address: { label: "Address of Host Partner", type: 'string', required: true, maxLength: 255 },
+		partner_coordinates: { label: "Partner Coordinates"},
+		partner_contact_name: {
+      label: "Name of Contact Person",
+			type: 'string',
+			required: true,
+			maxLength: 255,
+		},
+		partner_contact_number: {
+      label: "Number of Contact Person",
+			type: 'string',
+			required: true,
+			minLength: 11,
+			maxLength: 11,
+			regex: /^09\d{9}$/
+		},
+    partner_email: { label: 'Email of Contact Person/Partner', type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
+		activity_name: { label: 'Activity Name', type: 'string', required: true },
+		activity_nature: { label: 'Nature of Activity', type: 'string', required: true, maxLength: 255 },
+		activity_date: { label: 'Date of Partnership', type: 'string', required: true, regex: /^\d{4}-\d{2}-\d{2}$/ },
+		additional_partnership: { label: 'Additional Partnership', type: 'string', maxLength: 255 },
+		organization_unit: { label: 'Organization Unit', type: 'string', maxLength: 127 },
+		ADMU_office: { label: 'Name of Office', type: 'string', required: true, maxLength: 127 },
+		ADMU_contact_name: { label: 'Name of Ateneo Contact Person', type: 'string', required: true, maxLength: 255 },
+		ADMU_email: {
+      label: "Email of Ateneo Contact Person",
+			type: 'string',
+			required: true,
+			// required: true					redundant declaration
+			maxLength: 127,
+			regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/
+		},
+		},
+		'js_cs': [
+			'/app_seeds/js/index.js',
+			'/app_seeds/js/firestore.js',
+			'/app_seeds/css/form.css',
+			'/app_seeds/css/modal.css',
+		],
 	},
 };
 
-export const BUKLOD_RULES = DB_RULES_AND_DATA[0];
-export const BUKLOD_RULES_TEST = DB_RULES_AND_DATA[1];
-export const SEEDS_RULES = DB_RULES_AND_DATA[2];
-export const SEEDS_RULES_TEST = DB_RULES_AND_DATA[3];
+//validation here
+
+export const BUKLOD_RULES = DB_RULES_AND_DATA['buklod-official'];
+export const BUKLOD_RULES_TEST = DB_RULES_AND_DATA['buklod-official-TEST'];
+export const SEEDS_RULES = DB_RULES_AND_DATA['seeds-official'];
+export const SEEDS_RULES_TEST = DB_RULES_AND_DATA['seeds-official-TEST'];
 
 
 export async function setCollection(collection_name) {
-	for (let rule of DB_RULES_AND_DATA) {
-		if (rule[0] === collection_name) {
-			collection_reference = collection(DB, collection_name);
-      rule_reference = rule
-      pullCollection(collection_reference);
-      console.log(collection_name);
-      console.log(document_map);
-		}
-	}
+	collection_reference = collection(DB, collection_name);
+	rule_reference = DB_RULES_AND_DATA[collection_name];
+	pullCollection(collection_reference);
 }
 
 export async function pullCollection(collection_reference) {
@@ -464,8 +589,8 @@ export function getDocIdByPartnerName(partner_name) {
   return getDocs(
     query(
       collection_reference,
-      where(rule_reference[1], '>=', partner_name), // let's wait for Luigi's standardization. IF_ELSE nalang muna
-      where(rule_reference[1], '<=', partner_name + endName)
+      where(rule_reference['identifier'], '>=', partner_name), // let's wait for Luigi's standardization. IF_ELSE nalang muna
+      where(rule_reference['identifier'], '<=', partner_name + endName)
     )
   )
     .then((querySnapshot) => {
@@ -484,7 +609,7 @@ export function getDocIdByPartnerName(partner_name) {
 		}
 
 export function getDocByID(docId) {
-  const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
+  const DOC_REFERENCE = doc(DB, rule_reference['collection_name'], docId);
   return getDoc(DOC_REFERENCE).then((docSnap) => {
     if (docSnap.exists()) {
       return docSnap.data();
@@ -512,7 +637,7 @@ export function addEntry(inp_obj) {
 
 
 export function deleteEntry(docId) {
-	const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
+	const DOC_REFERENCE = doc(DB, rule_reference['collection_name'], docId);
 	return deleteDoc(DOC_REFERENCE)
 		.then(() => {
 			alert("Household deleted successfully.");
@@ -525,7 +650,7 @@ export function deleteEntry(docId) {
 }
 
 export function editEntry(inp_obj, docId) {
-	const DOC_REFERENCE = doc(DB, rule_reference[0], docId);
+	const DOC_REFERENCE = doc(DB, rule_reference['collection_name'], docId);
 	updateDoc(DOC_REFERENCE, inp_obj)
 		.then(() => {
 			alert("You may now reload the page for your edit to reflect on this page");
@@ -538,7 +663,7 @@ export function editEntry(inp_obj, docId) {
 }
 
 export function validateData(collectionName, data) {
-	const rules = VALIDATION_RULES[collectionName];
+	const rules = DB_RULES_AND_DATA[collectionName]['validations'];
 	var errors = [];
 
 	for (const field in rules) {

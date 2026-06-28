@@ -7,6 +7,8 @@
         <link href="https://fonts.googleapis.com/css?family=Hind" rel='stylesheet'>
 
         <script type="module">
+            const api = window.parent.api;
+
             const EVAC_TYPES = ['Evacuation Center', 'Temporary Shelter'];
 
             function setFieldError(fieldId, message) {
@@ -61,10 +63,7 @@
                 submitBtn.textContent = 'Saving...';
 
                 try {
-                    // FETCH DB HERE: Grab the database from the parent window right when saving
-                    const db = window.parent.db;
-                    
-                    if (!db) {
+                    if (!api?.hasDatabase?.()) {
                         alert("Local database is not ready yet. Please wait a moment and try again.");
                         submitBtn.disabled = false;
                         submitBtn.textContent = originalLabel;
@@ -84,11 +83,9 @@
                         updatedAt: Date.now()
                     };
 
-                    // INSERT locally
-                    await db.evacCenters.insert(formData);
+                    await api?.getEvacCentersCollection?.().insert(formData);
                     console.log("Evacuation center added locally!");
                     
-                    // Close modal. The subscription in index.js will update the map instantly!
                     closeModal(); 
                     
                 } catch (err) {

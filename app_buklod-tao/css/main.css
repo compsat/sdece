@@ -132,6 +132,10 @@ body {
 	background-color: #f9fafb;
 }
 
+.hidden {
+  display: none;
+}
+
 /* Risk Type Dropdown */
 .risk-dropdown-container {
   width: 100%;
