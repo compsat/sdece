@@ -11,6 +11,7 @@
 
     
     <script type="module">
+        const api = window.parent.api;
         document.getElementById("submit_form").addEventListener("click", async function(event) {
             event.preventDefault();
 
@@ -90,9 +91,7 @@
             };
 
             try {
-                const db = window.parent.db;
-
-                if (!db) {
+                if (api?.hasDatabase?.()) {
                     alert("Local database is not ready yet. Please wait a moment and try again.");
                     return;
                 }
@@ -102,7 +101,7 @@
                     return;
                 }
 
-                await db.buklod.incrementalUpsert(formData);
+                await api?.getHouseholdCollection?.().incrementalUpsert(formData);
                 console.log("Household updated locally!");
                 closeModal();
 

@@ -84,7 +84,7 @@ newButton.addEventListener('click', () => {
 	if (inputtedPartnerName == '' || inputtedPartnerAddress == '') {
 		alert('Partner Name and Partner Address cannot be blank.');
 	} else {
-		for (let field of SEEDS_RULES[2]) {
+		for (let field of SEEDS_RULES['fields']) {
 			if (field != 'partner_coordinates') {
 				if (field == 'partner_name' || field == 'partner_address') {
 					if (field == 'partner_name') {
@@ -126,7 +126,7 @@ function loadActivities(querySnapshot) {
 function groupActivities(activities) {
     let partners = {};
     Object.values(activities).forEach((activity) => {
-        let partner = activity[SEEDS_RULES[1]];
+        let partner = activity[SEEDS_RULES['identifier']];
         if (!partners[partner]) {
             partners[partner] = [];
         }
@@ -667,7 +667,7 @@ function showActivityDetailModal(activity, partnerName, coords) {
 // Used for add/ edit to collect form inputs
 function collectFormInputs(doc, geopointSource, mode) {
 	let result = {};
-	for (let field of SEEDS_RULES[2]) {
+	for (let field of SEEDS_RULES['fields']) {
 		if (field === 'partner_coordinates') {
 			if (mode === 'add') {
 				result[field] = geopointSource;
