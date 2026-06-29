@@ -647,7 +647,7 @@ export async function filterData(collectionName, queryArray) {
           const orQueries = value.map((queryValue) => where(fieldLabel, "==", queryValue));
           fullQueries.push(or(...orQueries));
         } else {
-          fullQueries.push(where(fieldLabel, "==", value[0]));
+          fullQueries.push(where(fieldLabel, "==", value));
         }
         break;
       case "number":

@@ -1,3 +1,5 @@
+import { filterData, getCollection } from "../../js/firestore_UNIV.js";
+
 import { loadActivities,
 		groupActivities,
 		getActivity,
@@ -35,8 +37,11 @@ var filterModalApply = filterModal.getElementById("applyFilters");
 filterModalApply.addEventListener("click", function(event){
 	console.log("Filter States:")
 	console.log(captureFilterState());
+	console.log(buildQueryArray(captureFilterState()));
+	console.log(applyFilterAndUpdate(buildQueryArray(captureFilterState())));
 	// captureFilterState();
 });
+
 var filterModalClear = filterModal.getElementById("clearFilters");
 
 function initializeFilterModal() {
@@ -82,11 +87,26 @@ function captureFilterState() {
   const checkboxes = {};
   filterModal.querySelectorAll('.filter-content input[type="checkbox"]').forEach(cb => {
 	// console.log(cb);
-    checkboxes[`${cb.getAttribute('data-filter')}::${cb.value}`] = cb.checked;
+    // checkboxes[`${cb.getAttribute('data-filter')}::${cb.value}`] = cb.checked;
+    checkboxes[`${cb.value}`] = cb.checked;
   });
   return checkboxes;
 }
 
-//
+function buildQueryArray(filterState) {	//temp hardcode
+	const queryArray = {};
+	for (let filter in filterState) {
+		if (filterState[filter] == true) {
+			queryArray["ADMU_office"] = filter;
+		}
+	}
+
+	return queryArray;
+}
+
+async function applyFilterAndUpdate(queryArray) {
+	return filterData('seeds-official', queryArray);	
+}
+
 // CODE LOGIC FOR SORTING
 // const sortBtn = document.getElementById

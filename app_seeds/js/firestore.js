@@ -114,10 +114,13 @@ export function loadActivities(querySnapshot) {
         let activity = doc.data();
         let { name } = activity;
         // Skip unwanted test entries
-        if (name !== 'Test 2' && name !== 'Test2') {
-            activity['identifier'] = doc.id;
-            activities[doc.id] = activity;
-        }
+        // if (name !== 'Test 2' && name !== 'Test2') {
+        //     activity['identifier'] = doc.id;
+        //     activities[doc.id] = activity;
+        // }
+
+		activity['identifier'] = doc.id;
+        activities[doc.id] = activity;
     });
     return activities;
 }

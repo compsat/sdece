@@ -78,5 +78,21 @@ export const FILTER_RULES = {
 		activity_name: { label: 'activity_name', type: 'string', required: true },
 		activity_nature: { label: 'activity_nature', type: 'string', required: true, maxLength: 255 },
 		ADMU_office: { label: 'ADMU_office', type: 'string', required: true, maxLength: 127 },
+  },
+  'seeds-official': {
+    partner_name: { label: "partner_name", type: 'string', required: true, maxLength: 255 },
+		partner_address: { label: "partner_address", type: 'string', required: true, maxLength: 255 },
+		partner_coordinates: { label: "partner_coordinates" },
+		partner_contact_name: { label: "partner_contact_name", type: 'string', required: true, maxLength: 255,},
+		partner_contact_number: { label: "partner_contact_number", type: 'string', required: true, minLength: 11, maxLength: 11, regex: /^09\d{9}$/, },
+    partner_email: { label: 'partner_email', type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
+		activity_name: { label: 'activity_name', type: 'string', required: true },
+		activity_nature: { label: 'activity_nature', type: 'string', required: true, maxLength: 255 },
+		activity_date: { label: 'activity_date', type: 'string', required: true, regex: /^\d{4}-\d{2}-\d{2}$/ },
+		additional_partnership: { label: 'additional_partnership', type: 'string', maxLength: 255 },
+		organization_unit: { label: 'organization_unit', type: 'string', maxLength: 127 },
+		ADMU_office: { label: 'ADMU_office', type: 'string', required: true, maxLength: 127 },
+		ADMU_contact_name: { label: 'admu_contact_name', type: 'string', required: true, maxLength: 255 },
+		ADMU_email: { label: "admu_email", type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ }
   }
 }
