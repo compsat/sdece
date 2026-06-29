@@ -1,10 +1,8 @@
 // CODE LOGIC FOR IMPORTING OF FUNCTIONS
 // ------------------------------------------
 import { populateEditForm } from './firestore.js';
-import { initDb, startFirestoreSync, deleteDoc } from '../../js/dexie_UNIV.js'; 
+import { deleteDoc } from '../../js/dexie_UNIV.js'; 
 import { 
-  setDatabase, 
-  getDatabase,
   parseData,
   importData,
   removeDatabase, 
@@ -16,6 +14,7 @@ import {
   getEvacCenters,
   setAsOffline,
   hasDatabase,
+  initDatabase
 } from '../js/dexie.js'; 
 import { addListeners, clearMarkers, map } from '../../js/index_UNIV.js';
 
@@ -48,9 +47,8 @@ onAuthStateChanged(AUTH, async (user) => {
 async function main(uid) {
   if (dbExists()) return;
 
-  setDatabase(await initDb(uid)); 
-
-  startFirestoreSync(getDatabase(), uid);
+  console.log('Initializing database...')
+  await initDatabase(uid); 
 
   createSubscriptions(window);
 

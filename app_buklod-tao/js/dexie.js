@@ -4,7 +4,12 @@ import {
   updateRiskIcons
 } from './index.js';
 
-import { buklodSchema } from '../../js/dexie_UNIV.js'
+import { addCollection, createDatabase } from '../../js/dexie_UNIV.js'
+import { BUKLOD_RULES } from '../../js/firestore_UNIV.js';
+import { startFirestoreSync } from './firestore.js';
+
+const BUKLOD_SCHEMA = BUKLOD_RULES['schemas']['buklod']
+const EVAC_SCHEMA = BUKLOD_RULES['schemas']['evacCenters']
 
 // These variables should never be used outside the file. Use the accessors instead.
 let db = null;
@@ -95,10 +100,24 @@ export function createSubscriptions(window) {
 export async function importData(docs) {
   if (!db) throw new Error('Database not initialized. Call setDatabase() first.')
   await db.buklodImport.remove(); 
-  await db.addCollections({
-    buklodImport: { schema: buklodSchema }
-  });
+  await addCollection(db, 'buklodImport', BUKLOD_SCHEMA.schema);
   await db.buklodImport.bulkUpsert(docs);
+}
+
+/**
+ * Initializes the database and associated collections. Used on app initialization.
+ * Also starts synchronization with the Firestore database. 
+ * 
+ * @param {string} uid - The ID of the user 
+ */
+export async function initDatabase(uid) {
+  let newDb = await createDatabase('buklod_app', uid, {
+    buklod: {schema: BUKLOD_SCHEMA},
+    buklodImport: {schema: BUKLOD_SCHEMA},
+    evacCenters: {schema: EVAC_SCHEMA},
+  })
+  setDatabase(newDb);
+  startFirestoreSync(newDb, uid);
 }
 
 /**
