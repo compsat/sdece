@@ -132,7 +132,6 @@ export const DB_RULES_AND_DATA = {
 		],
 		'schemas': {
 			'buklod': {
-				schema: {
 					version: 0,
 					type: 'object',
 					primaryKey: 'id',
@@ -145,11 +144,11 @@ export const DB_RULES_AND_DATA = {
 						number_minors: { type: 'number' },
 						number_seniors: { type: 'number' },
 						location_coordinates: { 
-						type: 'object',
-						properties: {
-							_lat: { type: 'number' },
-							_lng: { type: 'number' }
-						}
+							type: 'object',
+							properties: {
+								_lat: { type: 'number' },
+								_lng: { type: 'number' }
+							}
 						},
 						location_link: { type: 'string' },
 						residency_status: { type: 'string' },
@@ -164,7 +163,6 @@ export const DB_RULES_AND_DATA = {
 						updatedAt: { type: 'number', default: 0 }
 					},
 					required: ['id', 'household_name', 'updatedAt', '_deleted']
-				}
 			},
 			'evacCenters': {
 				version: 0,
@@ -299,39 +297,37 @@ export const DB_RULES_AND_DATA = {
 		],
 		'schemas': {
 			'buklod': {
-				schema: {
-					version: 0,
+				version: 0,
+				type: 'object',
+				primaryKey: 'id',
+				properties: {
+					id: { type: 'string', maxLength: 100 },
+					household_name: { type: 'string' },
+					household_address: { type: 'string' },
+					contact_number: { type: 'string' },
+					number_residents: { type: 'number' },
+					number_minors: { type: 'number' },
+					number_seniors: { type: 'number' },
+					location_coordinates: { 
 					type: 'object',
-					primaryKey: 'id',
 					properties: {
-						id: { type: 'string', maxLength: 100 },
-						household_name: { type: 'string' },
-						household_address: { type: 'string' },
-						contact_number: { type: 'string' },
-						number_residents: { type: 'number' },
-						number_minors: { type: 'number' },
-						number_seniors: { type: 'number' },
-						location_coordinates: { 
-						type: 'object',
-						properties: {
-							_lat: { type: 'number' },
-							_lng: { type: 'number' }
-						}
-						},
-						location_link: { type: 'string' },
-						residency_status: { type: 'string' },
-						is_hoa_noa: { type: 'string' },
-						household_material: { type: 'string' },
-						landslide_risk: { type: 'string' },
-						fire_risk: { type: 'string' },
-						flood_risk: { type: 'string' },
-						earthquake_risk: { type: 'string' },
-						storm_risk: { type: 'string' },
-						_deleted: { type: 'boolean', default: false },
-						updatedAt: { type: 'number', default: 0 }
+						_lat: { type: 'number' },
+						_lng: { type: 'number' }
+					}
 					},
-					required: ['id', 'household_name', 'updatedAt', '_deleted']
-				}
+					location_link: { type: 'string' },
+					residency_status: { type: 'string' },
+					is_hoa_noa: { type: 'string' },
+					household_material: { type: 'string' },
+					landslide_risk: { type: 'string' },
+					fire_risk: { type: 'string' },
+					flood_risk: { type: 'string' },
+					earthquake_risk: { type: 'string' },
+					storm_risk: { type: 'string' },
+					_deleted: { type: 'boolean', default: false },
+					updatedAt: { type: 'number', default: 0 }
+				},
+				required: ['id', 'household_name', 'updatedAt', '_deleted']
 			},
 			'evacCenters': {
 				version: 0,
@@ -440,31 +436,29 @@ export const DB_RULES_AND_DATA = {
 		],
 		'schemas': {
 			'seeds': {
-				schema: {
-					version: 0,
-					type: 'object',
-					primaryKey: 'id',
-					properties: {
-						id: { type: 'string', maxLength: 100 },
-						activity_date: { type: 'number' },
-						activity_name: { type: 'string' },
-						activity_nature: { type: 'string' },
-						additional_partnership: { type: 'string' },
-						ADMU_contact_name: { type: 'string' },
-						ADMU_email: { type: 'string' },
-						ADMU_office: { type: 'string' },
-						organization_unit: { type: 'string' },
-						partner_address: { type: 'string' },
-						partner_contact_name: { type: 'string' },
-						partner_coordinates: { type: 'string' },
-						partner_email: { type: 'string' },
-						partner_name: { type: 'string' },
-						partner_contact_number: { type: 'string' },
-						_deleted: { type: 'boolean', default: false },
-						updatedAt: { type: 'number', default: 0 }
-					},
-					required: ['id', 'partner_name', 'updatedAt', '_deleted']
-				}
+				version: 0,
+				type: 'object',
+				primaryKey: 'id',
+				properties: {
+					id: { type: 'string', maxLength: 100 },
+					activity_date: { type: 'number' },
+					activity_name: { type: 'string' },
+					activity_nature: { type: 'string' },
+					additional_partnership: { type: 'string' },
+					ADMU_contact_name: { type: 'string' },
+					ADMU_email: { type: 'string' },
+					ADMU_office: { type: 'string' },
+					organization_unit: { type: 'string' },
+					partner_address: { type: 'string' },
+					partner_contact_name: { type: 'string' },
+					partner_coordinates: { type: 'string' },
+					partner_email: { type: 'string' },
+					partner_name: { type: 'string' },
+					partner_contact_number: { type: 'string' },
+					_deleted: { type: 'boolean', default: false },
+					updatedAt: { type: 'number', default: 0 }
+				},
+				required: ['id', 'partner_name', 'updatedAt', '_deleted']
 			}
 		},
 		'validations': {
