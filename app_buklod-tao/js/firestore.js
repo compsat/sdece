@@ -7,6 +7,10 @@ import {
   doc,
   updateDoc,
   deleteField,
+  setDoc,
+  query,
+  where,
+  collection,
 } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import {
   getCollection,
