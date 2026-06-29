@@ -100,7 +100,7 @@ export function createSubscriptions(window) {
 export async function importData(docs) {
   if (!db) throw new Error('Database not initialized. Call setDatabase() first.')
   await db.buklodImport.remove(); 
-  await addCollection(db, 'buklodImport', BUKLOD_SCHEMA.schema);
+  await addCollection(db, 'buklodImport', BUKLOD_SCHEMA);
   await db.buklodImport.bulkUpsert(docs);
 }
 
