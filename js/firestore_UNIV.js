@@ -439,7 +439,33 @@ export const DB_RULES_AND_DATA = {
 			'partner_contact_number',
 		],
 		'schemas': {
-			
+			'seeds': {
+				schema: {
+					version: 0,
+					type: 'object',
+					primaryKey: 'id',
+					properties: {
+						id: { type: 'string', maxLength: 100 },
+						activity_date: { type: 'number' },
+						activity_name: { type: 'string' },
+						activity_nature: { type: 'string' },
+						additional_partnership: { type: 'string' },
+						ADMU_contact_name: { type: 'string' },
+						ADMU_email: { type: 'string' },
+						ADMU_office: { type: 'string' },
+						organization_unit: { type: 'string' },
+						partner_address: { type: 'string' },
+						partner_contact_name: { type: 'string' },
+						partner_coordinates: { type: 'string' },
+						partner_email: { type: 'string' },
+						partner_name: { type: 'string' },
+						partner_contact_number: { type: 'string' },
+						_deleted: { type: 'boolean', default: false },
+						updatedAt: { type: 'number', default: 0 }
+					},
+					required: ['id', 'partner_name', 'updatedAt', '_deleted']
+				}
+			}
 		},
 		'validations': {
     partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },

@@ -7,6 +7,8 @@ import { interval } from 'https://esm.sh/rxjs@7.8.1';
 import { getFirestore, collection, getDocs, setDoc, updateDoc, doc, query, where, Timestamp, GeoPoint } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import { getApps } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 
+import { BUKLOD_RULES } from './firestore_UNIV';
+
 const RxDBReplicationPlugin = ReplicationModule.RxDBReplicationPlugin 
                           || ReplicationModule.default?.RxDBReplicationPlugin 
                           || ReplicationModule.default;
@@ -21,72 +23,7 @@ if (RxDBReplicationPlugin) {
   console.warn("Failed to find RxDBReplicationPlugin in module:", ReplicationModule);
 }
 
-// don't forget to change this.
-// dont change it. it breaks everything.
-const IS_TESTING = false;
-
-// collections variable is used to easily switch from a staging database to the production one
-// dont use it. it breaks everything.
-const collections = {
-  "buklod-tao": {
-    households: IS_TESTING ? "buklod-official-TEST" : "buklod-official",
-    evacCenters: "buklod-evac-centers", // there is no staging collection for evacuation centers.
-  }
-}
-
-
-export const buklodSchema = {
-  version: 0,
-  type: 'object',
-  primaryKey: 'id',
-  properties: {
-    id: { type: 'string', maxLength: 100 },
-    household_name: { type: 'string' },
-    household_address: { type: 'string' },
-    contact_number: { type: 'string' },
-    number_residents: { type: 'number' },
-    number_minors: { type: 'number' },
-    number_seniors: { type: 'number' },
-    location_coordinates: { 
-      type: 'object',
-      properties: {
-        _lat: { type: 'number' },
-        _lng: { type: 'number' }
-      }
-    },
-    location_link: { type: 'string' },
-    residency_status: { type: 'string' },
-    is_hoa_noa: { type: 'string' },
-    household_material: { type: 'string' },
-    landslide_risk: { type: 'string' },
-    fire_risk: { type: 'string' },
-    flood_risk: { type: 'string' },
-    earthquake_risk: { type: 'string' },
-    storm_risk: { type: 'string' },
-    _deleted: { type: 'boolean', default: false },
-    updatedAt: { type: 'number', default: 0 }
-  },
-  required: ['id', 'household_name', 'updatedAt', '_deleted']
-};
-
-const evacCentersSchema = {
-  version: 0,
-  type: 'object',
-  primaryKey: 'id',
-  properties: {
-    id: { type: 'string', maxLength: 100 },
-    name: { type: 'string' },
-    latitude: { type: 'number' },
-    longitude: { type: 'number' },
-    type: { type: 'string' },
-    _deleted: { type: 'boolean', default: false },
-    updatedAt: { type: 'number', default: 0 }
-  },
-  required: ['id', 'name', 'updatedAt', '_deleted']
-};
-
-let dbPromise = null;
-let dbUid = null;
+let databases = []
 
 export async function initDb(uid) {
   if (dbPromise && dbUid === uid) return dbPromise;
@@ -102,12 +39,51 @@ export async function initDb(uid) {
   });
 
   await dbPromise.addCollections({
-    buklod: { schema: buklodSchema },
-    buklodImport: {schema: buklodSchema}, // Collection exclusively used for data imports
-    evacCenters: { schema: evacCentersSchema }
+    buklod: { schema: BUKLOD_RULES['schemas']['buklod']},
+    buklodImport: {schema: BUKLOD_RULES['schemas']['buklod']}, // Collection exclusively used for data imports
+    evacCenters: { schema: BUKLOD_RULES['schemas']['evacCenters']}
   });
 
   return dbPromise;
+}
+
+
+/**
+ * Initializes a database given a prefix and uid. 
+ * 
+ * @param {string} prefix - The prefix of the database. (e.g. buklod_app, seeds)
+ * @param {string} uid - The uid of the user. 
+ * @returns the instantiated database. Returns null if the database already exists.
+ */
+export function createDatabase(prefix, uid) {
+  const dbName = `${prefix}_${uid}`
+  let database;
+  try {
+    database = await createRxDatabase({
+      name: dbName,
+      storage: getRxStorageDexie(),
+      multiInstance: true,
+      eventReduce: true
+    })
+  } catch (e) {
+    console.error(`Database ${dbName} is already instantiated. Call resetDatabase() first.`)
+    database = null;
+  }
+  return database
+}
+
+/**
+ * Adds a collection to a given RxDatabase given a RxSchema.
+ * For more information about RxSchema, review the {@link https://rxdb.info/rx-schema.html|documentation}
+ * 
+ * @param {RxDatabase} database - The RxDB database to add a collection to 
+ * @param {string} collectionName - The name of the collection
+ * @param {RxSchema} schema - The schema of the collection
+ * @returns {RxCollection} - The collection that was instantiated
+ */
+export function addCollection(database, collectionName, schema) {
+  await database.addCollection({collectionName: schema})
+  return database[collectionName]
 }
 
 export function startFirestoreSync(db, uid) {
