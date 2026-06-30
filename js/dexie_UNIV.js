@@ -1,15 +1,5 @@
-import { createRxDatabase, addRxPlugin } from 'https://esm.sh/rxdb@15.18.0';
+import { createRxDatabase } from 'https://esm.sh/rxdb@15.18.0';
 import { getRxStorageDexie } from 'https://esm.sh/rxdb@15.18.0/plugins/storage-dexie';
-
-import * as ReplicationModule from 'https://esm.sh/rxdb@15.18.0/plugins/replication';
-
-import { interval } from 'https://esm.sh/rxjs@7.8.1';
-import { getFirestore, collection, getDocs, setDoc, updateDoc, doc, query, where, Timestamp, GeoPoint } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-import { getApps } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
-import { BUKLOD_RULES } from '/js/firestore_UNIV.js';
-
-const replicateRxCollection = ReplicationModule.replicateRxCollection 
-                          || ReplicationModule.default?.replicateRxCollection;
 
 let databases = new Map();
 
