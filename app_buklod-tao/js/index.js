@@ -18,7 +18,7 @@ import {
 } from '../js/dexie.js'; 
 import { addListeners, clearMarkers, map } from '../../js/index_UNIV.js';
 
-import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js';
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js';
 import { AUTH } from '../../js/auth.js';
 
 const partnersArray = () => { return getHouseholds() }; // Map of partner ID to partner data

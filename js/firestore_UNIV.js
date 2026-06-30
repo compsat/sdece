@@ -10,18 +10,18 @@ import {
 	where,
 	getDoc,
 	GeoPoint,
-} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+} from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
 
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
+import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js';
 
 import { FILTER_RULES } from '/js/ruleEngines.js'
 import {
 	getFirestore,
 	collection,
-} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+} from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
 
 function getUrlParameter(name) {
 	name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');

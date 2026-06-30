@@ -1,5 +1,5 @@
 // FIRESTORE DATABASE\
-import { getDocs, GeoPoint, Timestamp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+import { getDocs, GeoPoint, Timestamp } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
 import { getCollection, setCollection, SEEDS_RULES, validateData, editEntry, addEntry } from '/js/firestore_UNIV.js';
 import { map } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
