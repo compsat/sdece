@@ -62,16 +62,37 @@ async function main(uid) {
 }
 // ------------------------------------------
 
-
-// OPENING API TO MODALS (e.g. addevac.html, editloc.html, etc.)
-// ------------------------------------------
-
-window.api = {
-  hasDatabase,
-  getEvacCentersCollection,
-  getHouseholdCollection
+let apiPromise = null;
+/**
+ * Gets or initializes the API object for database and iframe communication.
+ * 
+ * Lazily initializes the database on first call and exposes API methods to the window object.
+ * Subsequent calls return the cached promise.
+ * 
+ * @returns {Promise<Object>} A promise that resolves to an API object containing:
+ *   - {@link hasDatabase}
+ *   - {@link getHouseholdCollection}
+ *   - {@link getEvacCentersCollection}
+ * 
+ * @example
+ * const api = await getApi();
+ * if (api.hasDatabase()) {
+ *   const households = await api.getHouseholdCollection().find().exec();
+ *   const centers = await api.getEvacCentersCollection().find().exec();
+ * }
+ */
+export async function getApi() {
+  if (!apiPromise) {
+    let api = {
+      hasDatabase,
+      getEvacCentersCollection,
+      getHouseholdCollection
+    }
+    apiPromise = api;
+  }
+  return apiPromise;
 }
-
+window.getApi = getApi;
 
 // CODE LOGIC FOR SET-UP
 // ------------------------------------------

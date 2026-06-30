@@ -7,10 +7,10 @@
         <link href="https://fonts.googleapis.com/css?family=Hind" rel='stylesheet'>
 
         <script type="module">
-            const api = window.parent.api;
-
             document.getElementById("submit_form").addEventListener("click", async function(event) {
                 event.preventDefault();
+                
+                const api = await window.parent.getApi();
 
                 // Keep your existing validation call here if you have one
                 // if (typeof validateRequiredFields === 'function' && !validateRequiredFields()) return;
@@ -407,7 +407,7 @@
             if (editId) {
                 // Set the hidden ID field
                 document.getElementById('edit_doc_id').value = editId;
-
+                const api = await window.parent.getApi();
                 if (api?.hasDatabase?.()) {
                     const doc = await api?.getEvacCentersCollection?.().findOne(editId).exec();
                     if (doc) {

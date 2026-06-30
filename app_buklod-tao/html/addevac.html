@@ -7,8 +7,6 @@
         <link href="https://fonts.googleapis.com/css?family=Hind" rel='stylesheet'>
 
         <script type="module">
-            const api = window.parent.api;
-
             const EVAC_TYPES = ['Evacuation Center', 'Temporary Shelter'];
 
             function setFieldError(fieldId, message) {
@@ -38,6 +36,8 @@
             }
 
             document.getElementById("submit_form").addEventListener("click", async function() {
+                const api = await window.parent.getApi();
+                
                 const submitBtn = this;
                 const name = document.getElementById('evaccenter_name').value.trim();
                 const type = document.getElementById('evaccenter_material').value;

@@ -11,9 +11,11 @@
 
     
     <script type="module">
-        const api = window.parent.api;
         document.getElementById("submit_form").addEventListener("click", async function(event) {
             event.preventDefault();
+            
+            // Get API lazily - only when submit is clicked
+            const api = await window.parent.getApi();
 
             if (typeof validateRequiredFields === 'function' && !validateRequiredFields()) return;
 
