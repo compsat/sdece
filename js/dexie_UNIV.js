@@ -1,5 +1,5 @@
-import { createRxDatabase } from 'https://esm.sh/rxdb@15.18.0';
-import { getRxStorageDexie } from 'https://esm.sh/rxdb@15.18.0/plugins/storage-dexie';
+import { createRxDatabase } from 'https://esm.sh/rxdb@17.3.0';
+import { getRxStorageDexie } from 'https://esm.sh/rxdb@17.3.0/plugins/storage-dexie';
 
 let databases = new Map();
 

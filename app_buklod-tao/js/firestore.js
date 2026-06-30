@@ -24,7 +24,7 @@ import {
 } from '/js/firestore_UNIV.js';
 import { DB } from '../../js/firestore_UNIV.js';
 
-import * as ReplicationModule from 'https://esm.sh/rxdb@15.18.0/plugins/replication';
+import * as ReplicationModule from 'https://esm.sh/rxdb@17.3.0/plugins/replication';
 
 const replicateRxCollection = ReplicationModule.replicateRxCollection 
                           || ReplicationModule.default?.replicateRxCollection;
