@@ -8,6 +8,8 @@ import {
   or,
   and,
 	where,
+	serverTimestamp,
+	writeBatch,
 	getDoc,
 	GeoPoint,
 } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
@@ -451,14 +453,19 @@ export const DB_RULES_AND_DATA = {
 					organization_unit: { type: 'string' },
 					partner_address: { type: 'string' },
 					partner_contact_name: { type: 'string' },
-					partner_coordinates: { type: 'string' },
+					partner_coordinates: { 
+						type: 'object',
+						properties: {
+							_lat: { type: 'number' },
+							_long: { type: 'number' }
+						}
+					},
 					partner_email: { type: 'string' },
 					partner_name: { type: 'string' },
 					partner_contact_number: { type: 'string' },
-					_deleted: { type: 'boolean', default: false },
-					updatedAt: { type: 'number', default: 0 }
+					_deleted: { type: 'boolean', default: false }
 				},
-				required: ['id', 'partner_name', 'updatedAt', '_deleted']
+				required: ['id', 'partner_name', '_deleted']
 			}
 		},
 		'validations': {
@@ -523,7 +530,36 @@ export const DB_RULES_AND_DATA = {
 			'partner_contact_number',
 		],
 		'schemas': {
-			
+			'seeds': {
+				version: 0,
+				type: 'object',
+				primaryKey: 'id',
+				properties: {
+					id: { type: 'string', maxLength: 100 },
+					activity_date: { type: 'number' },
+					activity_name: { type: 'string' },
+					activity_nature: { type: 'string' },
+					additional_partnership: { type: 'string' },
+					ADMU_contact_name: { type: 'string' },
+					ADMU_email: { type: 'string' },
+					ADMU_office: { type: 'string' },
+					organization_unit: { type: 'string' },
+					partner_address: { type: 'string' },
+					partner_contact_name: { type: 'string' },
+					partner_coordinates: { 
+						type: 'object',
+						properties: {
+							_lat: { type: 'number' },
+							_long: { type: 'number' }
+						}
+					},
+					partner_email: { type: 'string' },
+					partner_name: { type: 'string' },
+					partner_contact_number: { type: 'string' },
+					_deleted: { type: 'boolean', default: false }
+				},
+				required: ['id', 'partner_name', '_deleted']
+			}
 		},
 		'validations': {
     partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
@@ -770,6 +806,7 @@ export function validateData(collectionName, data) {
 	}
 	return errors;
 }
+window.db = DB;
 
 export async function filterData(collectionName, queryArray) {
   const rules = FILTER_RULES[collectionName];
@@ -814,3 +851,38 @@ export async function filterData(collectionName, queryArray) {
   return finalResults;
 }
 
+/**
+ * Adds _deleted and serverTimestamp fields to all documents in a Firestore collection.
+ * This allows the collection to be compatible with RxDB's {@link replicateFirestore} plugin.
+ * For more information, see {@link https://rxdb.info/replication-firestore.html|the RxDB Firestore replication documentation}.
+ * 
+ * @param {string} collectionName - The name of the Firestore collection to update.
+ * @param {firebase.firestore.FirebaseFirestore} database - The Firestore database instance.
+ */
+export async function addMissingFields(collectionName, database = DB) {
+	const allDocs = await getDocs(query(collection(database, collectionName)));
+
+	if (allDocs.empty) return;
+
+	const batch = writeBatch(database);
+	let batchCounter = 0;
+
+	for (const doc of allDocs.docs) {
+		await batch.update(
+			doc.ref, 
+			{
+				_deleted: false,
+				serverTimestamp: serverTimestamp()
+			}
+		);
+		
+		batchCounter++;
+		if (batchCounter === 500) {
+			await batch.commit();
+			batchCounter = 0;
+			batch = writeBatch(database);
+		}
+	}
+
+	if (batchCounter > 0) await batch.commit();
+} 
