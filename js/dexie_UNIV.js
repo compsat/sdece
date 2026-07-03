@@ -84,3 +84,29 @@ export async function deleteDoc(collection, id) {
   doc.remove();
   return true;
 }
+
+/**
+ * Debug function to retrieve all partner coordinates from a specified RxCollection.
+ * Primarily used to verify that the coordinates are being stored correctly in RxDB.
+ * If you're looking for the Firestore version of this function, check {@link getAllPartnerCoordinates| in firestore_UNIV.js}.
+ * 
+ * @param {RxCollection} rxCollection - The RxCollection to retrieve all partner coordinates from.
+ * @returns an array of objects containing id and their corresponding coordinates.
+ */
+export async function getAllPartnerCoordinatesInRxDB(rxCollection) {
+  if (!rxCollection) {
+    console.error("Missing parameters for getting partner coordinates.");
+    return [];
+  }
+  const allDocs = await rxCollection.find({
+    selector: { _deleted: { $eq: false } },
+  }).exec();
+  console.dir(allDocs);
+  if (allDocs.empty) { return []; }
+  return allDocs.map(doc => {
+    return {
+      id: doc.id,
+      partner_coordinates: doc.partner_coordinates
+    }
+  })
+}

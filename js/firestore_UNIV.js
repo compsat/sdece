@@ -883,7 +883,7 @@ export async function filterData(collectionName, queryArray) {
  * For more information, see {@link https://rxdb.info/replication-firestore.html|the RxDB Firestore replication documentation}.
  * 
  * @param {string} collectionName - The name of the Firestore collection to update.
- * @param {firebase.firestore.FirebaseFirestore} database - The Firestore database instance.
+ * @param {firebase.firestore.FirebaseFirestore} [database] - The Firestore database instance.
  */
 export async function addMissingFields(collectionName, database = DB) {
 	const allDocs = await getDocs(query(collection(database, collectionName)));
@@ -911,4 +911,29 @@ export async function addMissingFields(collectionName, database = DB) {
 	}
 
 	if (batchCounter > 0) await batch.commit();
-} 
+}
+
+/**
+ * Debug function to retrieve all partner coordinates from a specified Firestore collection.
+ * Primarily used to verify that the coordinates are being stored correctly in Firestore.
+ * 
+ * @param {string} collectionName - The name of the collection in Firestore to retrieve all partner coordinates from.
+ * @param {firebase.firestore.FirebaseFirestore} [database] - The Firestore database instance.
+ * @returns an array of objects containing id and their corresponding coordinates.
+ */
+export async function getAllPartnerCoordinates(collectionName, database = DB) {
+	if (!collectionName) {
+		console.error("Missing parameters for getting partner coordinates.");
+		return [];
+	}
+	const firestoreDb = database;
+	const allDocs = await getDocs(query(collection(database, collectionName)));
+
+	if (allDocs.empty) { return []; }
+	return allDocs.docs.map(doc => {
+		return {
+			id: doc.id,
+			partner_coordinates: doc.data().partner_coordinates
+		}
+	})
+}
