@@ -1,5 +1,5 @@
 import { addCollection, createDatabase } from '../../js/dexie_UNIV.js'
-import { SEEDS_TEST_RULES, SEEDS_RULES } from '../../js/firestore_UNIV.js';
+import { SEEDS_RULES_TEST, SEEDS_RULES } from '../../js/firestore_UNIV.js';
 import { startFirestoreSync } from './firestore.js';
 
 let db = null;
@@ -34,7 +34,7 @@ export function createSubscriptions(window) { setSeedsSubscription(activeSeedsCo
  * @param {boolean} inTestMode - Whether to initialize the database in test mode
  */
 export async function initDatabase(uid, inTestMode = true) {
-  schema = inTestMode ? SEEDS_TEST_RULES : SEEDS_RULES;
+  schema = inTestMode ? SEEDS_RULES_TEST['schemas']['seeds'] : SEEDS_RULES['schemas']['seeds'];
   let newDb = await createDatabase('seeds_app', uid);
   let collectionName = inTestMode ? 'seedsTest' : 'seeds';
   await addCollection(newDb, collectionName, schema);
