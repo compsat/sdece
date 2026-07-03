@@ -1,6 +1,12 @@
 // FIRESTORE DATABASE\
-import { getDocs, GeoPoint, Timestamp } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
-import { getCollection, setCollection, SEEDS_RULES, validateData, editEntry, addEntry } from '/js/firestore_UNIV.js';
+import { getDocs, GeoPoint, Timestamp, collection, query } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
+import { replicateFirestore } from 'https://esm.sh/rxdb@15.18.0/plugins/replication-firestore?external=firebase';
+import { 
+	DB, FIREBASE_CONFIG, SEEDS_RULES, 
+	getCollection, setCollection, 
+	validateData, editEntry, addEntry, addMissingFields, 
+	convertCoordinates, getAllPartnerCoordinates
+} from '../../js/firestore_UNIV.js';
 import { map } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
 
@@ -36,13 +42,6 @@ export function populateMainModalList() {
 		}
 	}
 }
-
-// Pans to the Philippines
-map.setView(new L.LatLng(14.651, 121.052), 14);
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
-}).addTo(map);
 
 let results = L.layerGroup().addTo(map);
 let popup = L.popup();
@@ -803,3 +802,58 @@ mainModalCloseButton.addEventListener('click', function (event) {
 		event.preventDefault();
 	}
 });
+
+/**
+ * 
+ * @param {RxDatabase} db - The database instance to sync with Firestore.
+ * @param {string} uid - The ID of the user.
+ * @param {boolean} inTestMode - Whether to initialize the database in test mode.
+ * @param {RxCollection} collection - The RxCollection to sync with the Firestore collection.
+ */
+export function startFirestoreSync(db, uid, inTestMode, rxCollection) {
+	if (!db || !uid || !inTestMode || !rxCollection) {
+		console.error("Missing parameters for Firestore sync.");
+		return;
+	}
+	let collectionFirestoreName = inTestMode ? 'sdece-official-TEST' : 'sdece-official';
+
+	console.log("Syncing seeds database with firestore...")
+	const firestore = DB;
+	const firestoreCollection = collection(firestore, collectionFirestoreName);
+
+	db.seedsSyncState = replicateFirestore({ 
+		autoStart: false,
+		replicationIdentifier: 'seeds_sync_' + rxCollection.name,
+		collection: rxCollection,
+		live: true, 
+		firestore: {
+			projectId: FIREBASE_CONFIG.projectId,
+			database: DB,
+			collection: firestoreCollection
+		},
+		
+		pull: {
+			batchSize: 500,
+			modifier: (doc) => {
+				console.log("Pulled document from Firestore:", doc);
+				if (doc.partner_coordinates instanceof GeoPoint) {
+					doc.partner_coordinates = {
+						_lat: doc.partner_coordinates.latitude,
+						_long: doc.partner_coordinates.longitude
+					}
+				}
+				return doc;
+			}
+		},
+		push: {
+			batchSize: 500,
+			modifier: (doc) => {
+				console.log("Pushed document to Firestore:", doc);
+				const coords = doc.partner_coordinates;
+				doc.partner_coordinates = convertCoordinates(coords);
+				return doc;
+			}
+		},
+		serverTimestampField: 'serverTimestamp'
+	});
+}

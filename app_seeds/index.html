@@ -39,9 +39,21 @@
 		></script>
 		<link href="css/main.css" rel="stylesheet" />
 		<script type="module" src="js/firestore.js"></script>
+		<script type="module" src="js/index.js"></script>
 		<link rel="stylesheet" href="css/modal.css">
 		<link rel="stylesheet" href="css/form.css">
 		<script type="module" src="/components/SearchBar.js"></script>
+
+		<!-- This is needed for RxDB's Firestore plugin -->
+		<script type="importmap">
+		{
+			"imports": {
+				"firebase/": "https://www.gstatic.com/firebasejs/12.15.0/",
+				"firebase/app": "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js",
+				"firebase/firestore": "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js"
+			}
+		}
+		</script>
   </head>
 
   <body>
@@ -249,25 +261,5 @@
           }
         });
     </script>
-
-	<!-- USER AUTHENTICATION -->
-	<script type="module">
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-    import { signOutUser, AUTH } from "/js/auth.js";
-
-    const loginURL = "/html/seeds-login.html";
-    const btn = document.getElementById("authBtn");
-
-    onAuthStateChanged(AUTH, (user) => {
-      if (user) {
-        document.body.style.visibility = 'visible'; 
-        btn.textContent = "Logout";
-        btn.onclick = () => signOutUser();
-      } else {
-        window.location.replace(loginURL); // redirect if not logged in
-      }
-    });
-  </script>
-
   </body>
 </html>
