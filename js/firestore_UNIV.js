@@ -69,6 +69,32 @@ export function getCoordinates(coordinates) {
 	return PARTNER_COORDINATES;
 }
 
+/**
+ * Handles documents with coordinates in different formats and converts them to a GeoPoint object.
+ * The function supports coordinates with the {_lat, _long} format and the {latitude, longitude} format.
+ * 
+ * @param {object} coords - The coordinates object which may have different formats. 
+ * @return {GeoPoint|null} - Returns a GeoPoint object if the coordinates are valid, otherwise returns null.
+ */
+export function convertCoordinates(coords) {
+	let gp = null;
+	if (coords 
+		&& coords._lat !== undefined
+		&& coords._long !== undefined
+	) {
+		gp = new GeoPoint(coords._lat, coords._long);
+	}
+	else if (
+		coords
+		&& coords.latitude !== undefined 
+		&& coords.longitude !== undefined
+	) {
+		gp = new GeoPoint(coords.latitude, coords.longitude);
+	}
+	else gp = null;
+	return gp;
+}
+
 const SECRETS_PATH = "/js/secrets.json";
 const SECRETS_REQ = new Request(SECRETS_PATH);
 const SECRETS_RES = await fetch(SECRETS_REQ);
