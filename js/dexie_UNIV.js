@@ -9,7 +9,7 @@ let databases = new Map();
  * @param {string} prefix - The prefix of the database. (e.g. buklod_app, seeds)
  * @param {string} uid - The ID of the user. 
  * @param {Object} [collections] - The collections that the database will be instantiated with. 
- * @returns {Promise<RxDatabase> | null} The instantiated database. Returns null if the database already exists.
+ * @returns {Promise<RxDatabase>} The instantiated database. Returns the database if the database already exists.
  */
 export async function createDatabase(prefix, uid, collections) {
   if (!prefix) throw new Error('A database prefix is required');
