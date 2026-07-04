@@ -1,10 +1,11 @@
 import { createRxDatabase } from 'https://esm.sh/rxdb@15.18.0';
 import { getRxStorageDexie } from 'https://esm.sh/rxdb@15.18.0/plugins/storage-dexie';
 
-let databases = new Map();
+let database = null;
 
 /**
- * Initializes a database given a prefix and uid. 
+ * Initializes a database given a prefix and uid. This also stores the database instance in an internal database variable.
+ * Assumes only one database can exist in a page.
  * 
  * @param {string} prefix - The prefix of the database. (e.g. buklod_app, seeds)
  * @param {string} uid - The ID of the user. 
@@ -17,12 +18,11 @@ export async function createDatabase(prefix, uid, collections) {
 
   let dbName = `${prefix}_${uid}`
   console.log(`Initializing ${dbName}...`)
-  let database;
 
-  if (databases.has(dbName)) {
-    console.log(`Database ${dbName} exists in cache. Returning its instance...`)
-    return databases.get(dbName);
-  } 
+  if (database) {
+    console.log(`Database ${dbName} is already initialized. Returning its instance...`)
+    return database;
+  }
 
   try {
     database = await createRxDatabase({
@@ -32,13 +32,33 @@ export async function createDatabase(prefix, uid, collections) {
       eventReduce: true
     })
     if (collections) await database.addCollections(collections);
-    databases.set(dbName, database); 
     console.log(`${dbName} initialized successfully.`)
   } catch (e) {
     console.error(e);
   }
   return database
 }
+
+/**
+ * Checks if a database instance exists. Returns true if it does, false otherwise.
+ * 
+ * @returns a boolean representation of the internal database instance
+ */
+export function hasDatabase() { return Boolean(database) }
+
+/**
+ * Used if you want to set the internal database instance to a specific RxDatabase outside of the one you created with createDatabase().
+ * 
+ * @param {RxDatabase} db - The RxDatabase instance to set as the internal database. 
+ */
+export function setDatabase(db) { database = db; }
+
+/**
+ * Returns the internal database instance. If no database has been initialized, returns null.
+ * 
+ * @returns the RxDatabase instance
+ */
+export function getDatabase() { return database; }
 
 /**
  * Adds a collection to a given RxDatabase given a RxSchema.

@@ -231,9 +231,9 @@ function createMarkersAndSidebar(partners) {
 
             // Bind popup to marker
             let popupContent = `
-				<div class="partner-popup" id="${partner}">
-				${partner}
-				</div>`;
+							<div class="partner-popup" id="${partner}">
+							${partner}
+							</div>`;
             marker.bindPopup(popupContent);
             results.addLayer(marker);
 

@@ -4,7 +4,13 @@ import {
   updateRiskIcons
 } from './index.js';
 
-import { addCollection, createDatabase } from '../../js/dexie_UNIV.js'
+import { 
+  addCollection, 
+  createDatabase,
+  hasDatabase,
+  setDatabase,
+  getDatabase
+} from '../../js/dexie_UNIV.js'
 import { BUKLOD_RULES } from '../../js/firestore_UNIV.js';
 import { startFirestoreSync } from './firestore.js';
 
@@ -12,25 +18,14 @@ const BUKLOD_SCHEMA = BUKLOD_RULES['schemas']['buklod']
 const EVAC_SCHEMA = BUKLOD_RULES['schemas']['evacCenters']
 
 // These variables should never be used outside the file. Use the accessors instead.
-let db = null;
 let activeHouseholdCollection = null;
 let activeHouseholdSubscription = null;
 let partnersArray = new Map();
 let evacCenters = [];
 
-export function hasDatabase() { return Boolean(db) }
-
-export function setDatabase(database) { 
-  db = database;
-  activeHouseholdCollection = activeHouseholdCollection ?? db.buklod; 
-}
-
-// Use sparingly.
-export function getDatabase() { return db; }
-
 export function getHouseholdCollection() { return activeHouseholdCollection; }
 
-export function getEvacCentersCollection() { return db?.evacCenters ?? null; }
+export function getEvacCentersCollection() { return getDatabase()?.evacCenters ?? null; }
 
 // For compatibility
 export function dbExists() { return hasDatabase() }
@@ -42,8 +37,8 @@ export function getHouseholds() { return partnersArray }
 export function getEvacCenters() { return evacCenters }
 
 export function setAsOffline() {
-  setHouseholdCollection(db.buklodImport);
-  setHouseholdSubscription(db.buklodImport);
+  setHouseholdCollection(getDatabase().buklodImport);
+  setHouseholdSubscription(getDatabase().buklodImport);
 }
 
 function setHouseholdCollection(collection) {
@@ -87,21 +82,21 @@ export async function parseData(file) {
 
 // Initializes subscriptions for the first time
 export function createSubscriptions(window) {
-  db.evacCenters
+  getEvacCentersCollection()
     .find({ selector: { _deleted: { $eq: false } } })
     .$.subscribe(centers => {
       evacCenters = centers.map(c => c.toJSON());
       updateRiskIcons();
   });
 
-  setHouseholdSubscription(db.buklod);
+  setHouseholdSubscription(getDatabase().buklod);
 }
 
 export async function importData(docs) {
-  if (!db) throw new Error('Database not initialized. Call setDatabase() first.')
-  await db.buklodImport.remove(); 
-  await addCollection(db, 'buklodImport', BUKLOD_SCHEMA);
-  await db.buklodImport.bulkUpsert(docs);
+  if (!getDatabase()) throw new Error('Database not initialized. Call setDatabase() first.')
+  await getDatabase().buklodImport.remove(); 
+  await addCollection(getDatabase(), 'buklodImport', BUKLOD_SCHEMA);
+  await getDatabase().buklodImport.bulkUpsert(docs);
 }
 
 /**
@@ -116,7 +111,7 @@ export async function initDatabase(uid) {
     buklodImport: {schema: BUKLOD_SCHEMA},
     evacCenters: {schema: EVAC_SCHEMA},
   })
-  setDatabase(newDb);
+  activeHouseholdCollection = activeHouseholdCollection ?? newDb.buklod; 
   startFirestoreSync(newDb, uid);
 }
 
@@ -129,7 +124,7 @@ export async function initDatabase(uid) {
  * }
  */
 export async function removeDatabase() {
-  if (!db) return;
+  if (!hasDatabase()) return;
 
   activeHouseholdCollection = null;
   activeHouseholdSubscription?.unsubscribe();
@@ -137,9 +132,9 @@ export async function removeDatabase() {
   evacCenters = [];
   
   try {
-    await db.remove();
+    await getDatabase().remove();
   } finally {
-    db = null;
+    setDatabase(null);
   }
 }
 

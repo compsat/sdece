@@ -13,7 +13,6 @@ import {
   getEvacCentersCollection,
   getEvacCenters,
   setAsOffline,
-  hasDatabase,
   initDatabase
 } from '../js/dexie.js'; 
 import { addListeners, clearMarkers, map } from '../../js/index_UNIV.js';

@@ -2,12 +2,11 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/f
 import { signOutUser, AUTH } from "/js/auth.js";
 import { 
   removeDatabase, 
-  hasDatabase,
   initDatabase,
 	createSubscriptions,
 	getSeedsCollection
 } from '../js/dexie.js';
-import { getAllPartnerCoordinatesInRxDB } from '../../js/dexie_UNIV.js';
+import { getAllPartnerCoordinatesInRxDB, hasDatabase } from '../../js/dexie_UNIV.js';
 import { map } from '../../js/index_UNIV.js';
 
 const loginURL = "/html/seeds-login.html";
