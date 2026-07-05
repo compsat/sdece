@@ -23,6 +23,10 @@ button {
 	cursor: pointer;
 }
 
+button:hover {
+	color: ;
+}
+
 iframe {
 	border: none;
 	overflow-y: scroll;
@@ -90,12 +94,12 @@ iframe {
 
 .action-btn {
 	width: 100%;
-	background-color: #ffffff;
+	background-color: #0F2781;
 	border: 1px solid #e0e0e0;
 	padding: 0.5rem 1rem;
 	border-radius: 0.5rem;
 	font-size: 0.875rem;
-	color: #374151;
+	color: white;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
@@ -104,7 +108,7 @@ iframe {
 }
 
 .action-btn:hover {
-	background-color: #f9fafb;
+	background-color: #142e8d;
 }
 
 .partners-header {
