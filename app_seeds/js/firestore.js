@@ -132,6 +132,7 @@ function groupActivities(activities) {
         }
         partners[partner].push(activity);
     });
+
     return partners;
 }
 
