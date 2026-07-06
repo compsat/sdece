@@ -287,47 +287,47 @@ activitiesSection.innerHTML = `
 	// Add click handler for the new activity button
 	const addActivityButton = activitiesSection.querySelector('#addActivityButton');
 	if (addActivityButton) {
-  		addActivityButton.addEventListener('click', () => {
-    		// Close current modal
-    		modal.style.display = 'none';
-    		modal.classList.remove('open');
-    
-    		// Show the add modal
-    		showAddModal();
-    
-    		// Pre-fill partner info after iframe loads
-    		const addFormIframe = document.getElementById('addModalHTML');
-    		const partnerName = partner[0]?.partner_name || '';
-    		const partnerAddress = partner[0]?.partner_address || '';
-    
-    		const fillFormFields = () => {
-      			try {
-        			const addFormDoc = addFormIframe.contentDocument || addFormIframe.contentWindow.document;
-        			const nameField = addFormDoc.getElementById('partner_name');
-        			const addressField = addFormDoc.getElementById('partner_address');
-        
-        		if (nameField) {
-          			nameField.value = partnerName;
-          			nameField.readOnly = true;
-          			nameField.style.backgroundColor = 'var(--custom-medium-gray)';
-        		}
-        		if (addressField) {
-          			addressField.value = partnerAddress;
-          			addressField.readOnly = true;
-          			addressField.style.backgroundColor = 'var(--custom-medium-gray)';
-        		}
-      			} catch (e) {
-        			console.log('Waiting for iframe to load...');
-        			setTimeout(fillFormFields, 100);
-      			}
-    		};
-    
-    		if (addFormIframe.contentDocument) {
-    		  fillFormFields();
-    		} else {
-    		  addFormIframe.onload = fillFormFields;
-    		}
-  		});
+		addActivityButton.addEventListener('click', () => {
+			// Close current modal
+			modal.style.display = 'none';
+			modal.classList.remove('open');
+	
+			// Show the add modal
+			showAddModal();
+	
+			// Pre-fill partner info after iframe loads
+			const addFormIframe = document.getElementById('addModalHTML');
+			const partnerName = partner[0]?.partner_name || '';
+			const partnerAddress = partner[0]?.partner_address || '';
+	
+			const fillFormFields = () => {
+				try {
+					const addFormDoc = addFormIframe.contentDocument || addFormIframe.contentWindow.document;
+					const nameField = addFormDoc.getElementById('partner_name');
+					const addressField = addFormDoc.getElementById('partner_address');
+		
+					if (nameField) {
+						nameField.value = partnerName;
+						nameField.readOnly = true;
+						nameField.style.backgroundColor = 'var(--custom-medium-gray)';
+					}
+					if (addressField) {
+						addressField.value = partnerAddress;
+						addressField.readOnly = true;
+						addressField.style.backgroundColor = 'var(--custom-medium-gray)';
+					}
+				} catch (e) {
+					console.log('Waiting for iframe to load...');
+					setTimeout(fillFormFields, 100);
+				}
+			};
+	
+			if (addFormIframe.contentDocument) {
+				fillFormFields();
+			} else {
+				addFormIframe.onload = fillFormFields;
+			}
+		});
 	}
 	// --- CLOSE BUTTON (top right) ---
 	const closeDiv = document.createElement('button');
