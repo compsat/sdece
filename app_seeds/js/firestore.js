@@ -3,9 +3,9 @@ import { GeoPoint, Timestamp, collection } from 'https://www.gstatic.com/firebas
 import { replicateFirestore } from 'https://esm.sh/rxdb@15.18.0/plugins/replication-firestore?external=firebase';
 import { 
 	DB, FIREBASE_CONFIG, SEEDS_RULES, 
-	getCollection, setCollection, 
-	validateData, editEntry, addEntry, addMissingFields, 
-	convertCoordinates, getAllPartnerCoordinates
+	setCollection, 
+	validateData, editEntry, addEntry, 
+	convertCoordinates,
 } from '../../js/firestore_UNIV.js';
 import { map } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
