@@ -1,4 +1,4 @@
-import { VALIDATION_RULES } from "/js/firestore_UNIV.js";
+import { SEEDS_RULES } from "../../js/firestore_UNIV.js";
 import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs";
 
 export function showMainModal() {
@@ -19,14 +19,14 @@ export function showAddModal() {
  * 
  * @global
  * @requires XLSX - SheetJS Library
- * @requires VALIDATION_RULES - Rule Engine for SEEDS documents
+ * @requires SEEDS_RULES - Rule Engine for SEEDS documents
  * @requires window.partners - JS Object mapping partner names to an array of activities
  */
 export function exportData() {
 	let partners = window.partners;
 
   const workbook = XLSX.utils.book_new();
-	const ruleset = VALIDATION_RULES['seeds-official']
+	const ruleset = SEEDS_RULES['validations'];
 	const fields = Object.keys(ruleset).sort();
 	const sheetData = [["Partner", ...fields.map(field => ruleset[field].label ?? field)]]
 	for (const [partnerName, activities] of Object.entries(partners).sort((a, b) => a[0].localeCompare(b[0]))) {
