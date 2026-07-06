@@ -768,10 +768,14 @@ export async function filterData(collectionName, queryArray) {
 
     switch (filterRule.type) {
       case "string":
-        if (value.constructor == Array && value.length > 1){
+		if (value.constructor == Array && value.length == 0) {
+			break;
+		}
+        else if (value.constructor == Array && value.length > 1){
           const orQueries = value.map((queryValue) => where(fieldLabel, "==", queryValue));
           fullQueries.push(or(...orQueries));
-        } else {
+        } 
+		else {
           fullQueries.push(where(fieldLabel, "==", value[0]));
         }
         break;

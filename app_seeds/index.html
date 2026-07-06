@@ -202,6 +202,14 @@
       </iframe>
     </div>
 
+	<!-- Filter Modal: Description -->
+	<div class="modal-screen" id="filterModal">
+		<iframe
+		 src="/app_seeds/html/filter_modal.html"
+		 class="filter-modal"
+		 id="filter-modal-id"></iframe>
+  	</div>
+
     <script>
         // This hides the Add Activity modal when the user submits the form
         window.addEventListener("message", function (event) {
@@ -266,6 +274,9 @@
           if (event.data === "closeMessageModal") {
             hideModalContainer("messageModal");
           }
+		  if (event.data === "closeFilterModal") {
+			hideModalContainer("filterModal");
+		  }
         });
     </script>
 
