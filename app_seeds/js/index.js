@@ -67,7 +67,7 @@ export function exportData() {
 document.getElementById('download-report').addEventListener("click", exportData);
 // CODE LOGIC FOR FILTERING
 var filterBtn = document.getElementById('filter-btn');
-filterBtn.addEventListener('click', () => showFilterModal())
+filterBtn.addEventListener('click', () => showFilterModal());
 
 const filterModalIframe = document.getElementById('filter-modal-id');
 const filterModal = filterModalIframe.contentDocument;
