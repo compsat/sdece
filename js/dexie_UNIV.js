@@ -101,7 +101,7 @@ export async function deleteDoc(collection, id) {
     console.warn(`Document not found: ${id}`);
     return false;
   }
-  doc.remove();
+  await doc.remove();
   return true;
 }
 
