@@ -9,7 +9,7 @@ import {
 } from '../../js/firestore_UNIV.js';
 import { map } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
-
+import { requireParameters } from '../../js/index_UNIV.js';
 // Set collection and associated rule config
 let collection_value = 'seeds-official'
 setCollection(collection_value);
@@ -43,7 +43,6 @@ export function populateMainModalList() {
 	}
 }
 
-let results = L.layerGroup().addTo(map);
 let popup = L.popup();
 let addForm_geopoint;
 
@@ -106,30 +105,6 @@ newButton.addEventListener('click', () => {
 
 // === SIDEBAR FUNCTIONS SECTION ===
 
-/**
- * Converts a Firestore query snapshot into an object of activities.
- * @param {*} querySnapshot - The Firestore query snapshot containing activity documents.
- * @returns An object with docId as keys and activity data as values.
- */
-function loadActivities(querySnapshot) {
-    let activities = {};
-    querySnapshot.forEach((doc) => {
-        let activity = doc.data();
-				activity['identifier'] = doc.id;
-				activities[doc.id] = activity;
-    });
-    return activities;
-}
-
-/**
- * Groups activities by their partner name.
- * @param {Object} activities - Object with docId as keys and activity data as values
- * @returns An object where each key is a partner name and the value is an array of activities associated with that partner.
- */
-function groupActivities(activities) {
-    return Object.groupBy(Object.values(activities), activity => activity[SEEDS_RULES['identifier']]);
-}
-
 // Uses activity nature if there's activity name is N/A	
 function getActivity(activity) {
 	const name = activity['activity_name'];
@@ -159,7 +134,7 @@ function clearAllHighlights() {
 }
 
 // Create sidebar list item for a partner
-function createSidebarItem(partner, activities, lat, long, marker) {
+export function createSidebarItem(partner, activities, lat, long, marker) {
     const containerDiv = document.createElement('div');
     const img = document.createElement('svg');
     const listItem = document.createElement('li');
@@ -193,7 +168,7 @@ function createSidebarItem(partner, activities, lat, long, marker) {
     anchor.append(nameDiv, addressDiv, activityDiv);
     listItem.appendChild(anchor);
     containerDiv.append(img, listItem);
-    locationList.appendChild(containerDiv);
+    document.getElementById('locationList').appendChild(containerDiv);
 }
 
 // Handle marker click: highlight sidebar and show modal
@@ -214,52 +189,7 @@ function handleMarkerClick(partner, partners) {
 }
 
 // Create map markers and sidebar entries for each partner
-function createMarkersAndSidebar(partners) {
-    Object.keys(partners).forEach((partner) => {
-        let firstActivity = partners[partner][0];
-        let partnerCoordinates = firstActivity['partner_coordinates'];
 
-        if (partnerCoordinates != null) {
-            let { latitude, longitude } = partnerCoordinates;
-            let lat = parseFloat(latitude);
-            let long = parseFloat(longitude);
-            let marker = L.marker([lat, long]);
-
-            // Bind popup to marker
-            let popupContent = `
-							<div class="partner-popup" id="${partner}">
-							${partner}
-							</div>`;
-            marker.bindPopup(popupContent);
-            results.addLayer(marker);
-
-            // Marker hover and click events
-            marker.on('mouseover', () => marker.openPopup());
-            marker.on('click', () => {
-                map.panTo(new L.LatLng(lat, long));
-                handleMarkerClick(partner, partners);
-            });
-
-            // Build sidebar item for this partner
-            createSidebarItem(partner, partners[partner], lat, long, marker);
-        }
-    });
-}
-
-// Main function for fetching all activities, grouping activities by partner
-// and creating the map markers and sidebar entries for each unique partner
-const collectionRef = getCollection();
-
-getDocs(collectionRef)
-    .then((querySnapshot) => {
-        const activities = loadActivities(querySnapshot);
-        const partners = groupActivities(activities);
-
-				window.activities = activities;
-        window.partners = partners;
-		
-        createMarkersAndSidebar(partners);
-    });
 
 // === MAIN MODAL SECTION ===
 
@@ -537,8 +467,8 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	const modalHeader = document.getElementById('modalHeader');
 	const modalContent = document.getElementById('modalContent');
 
-				modalHeader.innerHTML = '';
-				modalContent.innerHTML = '';
+	modalHeader.innerHTML = '';
+	modalContent.innerHTML = '';
 
 	// --- HEADER ---
 	const headerRow = document.createElement('div');
@@ -552,13 +482,13 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	backBtn.innerHTML = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 19L8.5 12L15.5 5" stroke="#222b45" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 	backBtn.onclick = function() {
 		// Always show the summary modal for this partner
-		let allPartners = window.partners || {};
+		let allPartners = partners || {};
 		let partnerArr = null;
 		if (allPartners && allPartners[partnerName]) {
 			partnerArr = allPartners[partnerName];
-		} else if (window.activities) {
+		} else if (activities) {
 			// fallback: search activities for matching partner name
-			partnerArr = Object.values(window.activities).filter(a => a.partner_name === partnerName);
+			partnerArr = Object.values(activities).filter(a => a.partner_name === partnerName);
 		}
 		if (partnerArr && partnerArr.length > 0) {
 			showModal(partnerArr);
@@ -808,10 +738,16 @@ mainModalCloseButton.addEventListener('click', function (event) {
  * @param {RxCollection} collection - The RxCollection to sync with the Firestore collection.
  */
 export function startFirestoreSync(db, uid, inTestMode, rxCollection) {
-	if (!db || !uid || !(inTestMode == null) || !rxCollection) {
-		console.error("Missing parameters for Firestore sync.");
+	const checks = [
+		[!db, "Database instance is required."],
+		[!uid, "User ID is required."],
+		[inTestMode == null, "Test mode boolean is required."],
+		[!rxCollection, "RxCollection is required."]
+	]
+	if (!requireParameters(checks)) {
 		return;
 	}
+
 	let collectionFirestoreName = inTestMode ? 'sdece-official-TEST' : 'sdece-official';
 
 	console.log("Syncing seeds database with firestore...")
@@ -828,7 +764,6 @@ export function startFirestoreSync(db, uid, inTestMode, rxCollection) {
 			database: DB,
 			collection: firestoreCollection
 		},
-		
 		pull: {
 			batchSize: 500,
 			modifier: (doc) => {
