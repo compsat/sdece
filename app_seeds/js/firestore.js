@@ -30,7 +30,7 @@ export function populateMainModalList() {
 			const activityName = document.createElement('div');
 			const arrow = document.createElement('div');
 
-			activityName.textContent = getActivity(activity) + '';
+			activityName.textContent = getActivityString(activity) + '';
 
 			arrow.innerHTML =
 				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
@@ -75,38 +75,44 @@ let has_existing_partner;
 
 newButton.addEventListener('click', () => {
 	// Get the Add Activity form and the needed input fields for autofill
-	let inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value;
-	let inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value;
+	let inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value.trim();
+	let inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value.trim();
 	has_existing_partner = false;
-
+	
+	const AUTOFILL_MAP = {
+		partner_name: inputtedPartnerName,
+		partner_address: inputtedPartnerAddress
+	}
+	const LOCKED_FIELDS = new Set(['partner_name', 'partner_address']);
+	
 	if (inputtedPartnerName == '' || inputtedPartnerAddress == '') {
 		alert('Partner Name and Partner Address cannot be blank.');
-	} else {
-		for (let field of SEEDS_RULES['fields']) {
-			if (field != 'partner_coordinates') {
-				if (field == 'partner_name' || field == 'partner_address') {
-					if (field == 'partner_name') {
-						addFormiframeDocument.getElementById(field).value = inputtedPartnerName;
-					} else {
-						addFormiframeDocument.getElementById(field).value = inputtedPartnerAddress;
-					}
-					addFormiframeDocument.getElementById(field).readOnly = true;
-					addFormiframeDocument.getElementById(field).style.backgroundColor = 'var(--custom-medium-gray)';
-					addFormiframeDocument.getElementById(field).style.color = 'var(--custom-dark-gray)';
-				} else {
-					addFormiframeDocument.getElementById(field).value = null;
-					addFormiframeDocument.getElementById(field).readOnly = false;
-				}
-			} 
+		return;
+	} 
+		
+	for (const field of SEEDS_RULES['fields']) {
+		if (field === 'partner_coordinates') continue;
+
+		const element = addFormiframeDocument.getElementById(field);
+		element.value = AUTOFILL_MAP[field] ?? null;
+		element.readOnly = LOCKED_FIELDS.has(field);
+
+		if (LOCKED_FIELDS.has(field)) {
+			element.style.backgroundColor = 'var(--custom-medium-gray)';
+			element.style.color = 'var(--custom-dark-gray)';
 		}
-		showAddModal();
 	}
+	showAddModal();
 });
 
 // === SIDEBAR FUNCTIONS SECTION ===
 
-// Uses activity nature if there's activity name is N/A	
-function getActivity(activity) {
+/**
+ * Gets the string representation of an activity. Uses the activity name by default, but falls back to the activity nature otherwise.
+ * @param {Object} activity - An activity object 
+ * @returns {string} A string
+ */
+function getActivityString(activity) {
 	const name = activity['activity_name'];
 	const nature = activity['activity_nature'];
 
@@ -120,7 +126,7 @@ function getActivity(activity) {
 function getActivitiesString(activities) {
     let activitiesString = '';
     for (const activity of activities) {
-        activitiesString += getActivity(activity) + '<br>';
+        activitiesString += getActivityString(activity) + '<br>';
     }
     return activitiesString;
 }
@@ -194,8 +200,6 @@ function handleMarkerClick(partner, partners) {
 // === MAIN MODAL SECTION ===
 
 // Display partner modal by clicking partner entry
-let current_viewed_activity = null; // docId of the currently viewed activity
-
 export function showModal(partner) {
 	// Hide external button (reset state)
 	const modalButton = document.querySelector('.modal-button'); 
@@ -266,7 +270,7 @@ activitiesSection.innerHTML = `
   		card.className = 'modal-card-activity modal-activity-summary-card';
   		card.style.cursor = 'pointer';
   		card.innerHTML = `
-    		<div class="modal-card-header-activity" style="font-size:1rem;font-weight:500;">${getActivity(activity) || 'Activity Name'}</div>
+    		<div class="modal-card-header-activity" style="font-size:1rem;font-weight:500;">${getActivityString(activity) || 'Activity Name'}</div>
     		<div class="modal-card-row" style="margin-top:-0.5rem;">
       			<span class="modal-office">${activity.ADMU_office || 'Department'}</span>
     		</div>
@@ -502,7 +506,7 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	const headerTitle = document.createElement('div');
 	headerTitle.className = 'modal-modern-title';
 	headerTitle.innerHTML = `
-	  <span class="modal-modern-activity">${getActivity(activity) || ''}</span><br>
+	  <span class="modal-modern-activity">${getActivityString(activity) || ''}</span><br>
 	  <span class="modal-location-label">${partnerName || ''}</span>
 	`;
 	headerRow.appendChild(headerTitle);
