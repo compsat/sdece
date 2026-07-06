@@ -21,25 +21,26 @@ export function populateMainModalList() {
 
 	if (Object.keys(temp_activities).length == 0) {
 		mainModalActivityList.innerHTML = '<p class="main-modal-no-activities-message">No activities to show</p>';
-	} else {
-		for (let i = 0; i < Object.keys(temp_activities).length; i++) {
-			var activity = temp_activities[Object.keys(temp_activities)[i]];
+		return;
+	}
 
-			// View activity details button
-			const activityButton = document.createElement('li');
-			const activityName = document.createElement('div');
-			const arrow = document.createElement('div');
+	for (let i = 0; i < Object.keys(temp_activities).length; i++) {
+		var activity = temp_activities[Object.keys(temp_activities)[i]];
 
-			activityName.textContent = getActivityString(activity) + '';
+		// View activity details button
+		const activityButton = document.createElement('li');
+		const activityName = document.createElement('div');
+		const arrow = document.createElement('div');
 
-			arrow.innerHTML =
-				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
-			arrow.classList.add('arrow');
+		activityName.textContent = getActivityString(activity) + '';
 
-			activityButton.appendChild(activityName);
-			activityButton.classList.add('main-modal-temporary-activity');
-			mainModalActivityList.appendChild(activityButton);
-		}
+		arrow.innerHTML =
+			'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
+		arrow.classList.add('arrow');
+
+		activityButton.appendChild(activityName);
+		activityButton.classList.add('main-modal-temporary-activity');
+		mainModalActivityList.appendChild(activityButton);
 	}
 }
 
@@ -122,13 +123,14 @@ function getActivityString(activity) {
 	return name;
 }
 
-// Generate string of activities
+/**
+ * Gets a string representation of an array of activities.
+ * Each activity is separated by a <br>.
+ * @param {*} activities 
+ * @returns A string
+ */
 function getActivitiesString(activities) {
-    let activitiesString = '';
-    for (const activity of activities) {
-        activitiesString += getActivityString(activity) + '<br>';
-    }
-    return activitiesString;
+    return activities.map(activity => getActivityString(activity)).join('<br>');
 }
 
 // Clears Highlight on the Side Bar when transitioning
@@ -178,7 +180,7 @@ export function createSidebarItem(partner, activities, lat, long, marker) {
 }
 
 // Handle marker click: highlight sidebar and show modal
-function handleMarkerClick(partner, partners) {
+export function handleMarkerClick(partner, partners) {
     clearAllHighlights();
 
     // Highlight sidebar item
