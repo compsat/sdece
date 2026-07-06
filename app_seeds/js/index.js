@@ -1,4 +1,5 @@
 import { filterData, getCollection } from "../../js/firestore_UNIV.js";
+import { FILTER_RULES } from "../../js/ruleEngines.js";
 
 import { loadActivities,
 		groupActivities,
@@ -35,18 +36,21 @@ filterModalClose.addEventListener("click", function(event) {
 
 var filterModalApply = filterModal.getElementById("applyFilters");
 filterModalApply.addEventListener("click", function(event){
-	console.log("Filter States:")
+	console.log("Filter Fields:");
+	console.log(getFilterFields(window.partners));
+
+	console.log("captured filters:");
 	console.log(captureFilterState());
+
+	console.log("query array:");
 	console.log(buildQueryArray(captureFilterState()));
+
+	console.log("applied filters:");
 	console.log(applyFilterAndUpdate(buildQueryArray(captureFilterState())));
-	// captureFilterState();
+
 });
 
 var filterModalClear = filterModal.getElementById("clearFilters");
-
-function initializeFilterModal() {
-	
-}
 
 function showFilterModal() {
 	var filterModal = document.getElementById('filterModal');
@@ -55,15 +59,18 @@ function showFilterModal() {
 	console.log("showing filter modal");
 }
 
-function setUpFilterModal() {
-	var offices = getOffices(window.partners);
-	var filterSection = filterModal.getElementById('admu-offices');
-	if (filterSection) {
-		offices.forEach((office) => {
-		const filterOptions = `<label><input type="checkbox" value="${office}" data-filter="office"> ${office} </label>`;
-		filterSection.innerHTML += filterOptions;
+function setUpFilterModal() { 
+	const filters = getFilterFields(window.partners);
+	const filterSection = filterModal.getElementById('filter-section');
+	Object.keys(filters).forEach((field) => {
+		const filterHeader = `<h3>${field}</h3>`
+		filterSection.innerHTML += filterHeader;
+
+		filters[field].forEach((filter) => {
+			const filterOptions = `<label><input type="checkbox" value="${filter}" data-filter="${field}"> ${filter} </label>`;
+			filterSection.innerHTML += filterOptions;
+		})
 	});
-	}	
 }
 
 function clearFilterModal() {
@@ -71,34 +78,50 @@ function clearFilterModal() {
 	officeSection.innerHTML = "";
 }
 
-function getOffices(partners) {
-	const offices = []
-	Object.keys(partners).forEach((partner) => {
-			const office = partners[partner][0]["ADMU_office"];
-			if (!offices.includes(office)) {offices.push(office);}
-	});
 
-	offices.sort();
-	console.log(offices);
-	return offices;
+function getFilterFields(partners) {
+	const filterFields = {};
+	const ruleEngineFields = FILTER_RULES["seeds-official"]
+	for (const key in ruleEngineFields) {
+		filterFields[key] = [];
+
+		Object.keys(partners).forEach((partner) => {
+			const entry = partners[partner][0][key];
+			if (!filterFields[key].includes(entry)) {
+				filterFields[key].push(entry);
+			}
+		});
+	};
+
+	return filterFields;
 }
 
 function captureFilterState() {
   const checkboxes = {};
-  filterModal.querySelectorAll('.filter-content input[type="checkbox"]').forEach(cb => {
-	// console.log(cb);
-    // checkboxes[`${cb.getAttribute('data-filter')}::${cb.value}`] = cb.checked;
-    checkboxes[`${cb.value}`] = cb.checked;
-  });
+  const ruleEngineFields = FILTER_RULES["seeds-official"];
+  for (const key in ruleEngineFields) {
+	checkboxes[key] = {};
+
+	//this no longer checks specifically for checkboxes
+	filterModal.querySelectorAll(`.filter-content [data-filter="${key}"]`).forEach(cb => {
+		checkboxes[key][`${cb.value}`] = cb.checked;
+	});
+  }
   return checkboxes;
 }
 
 function buildQueryArray(filterState) {	//temp hardcode
 	const queryArray = {};
-	for (let filter in filterState) {
-		if (filterState[filter] == true) {
-			queryArray["ADMU_office"] = filter;
-		}
+	for (let field in FILTER_RULES["seeds-official"]) {
+		queryArray[`${field}`] = [];
+	}
+
+	for (let field in filterState) {
+		Object.keys(filterState[field]).forEach((filter) => {
+			if ( filterState[field][filter] == true ) {
+				queryArray[field].push(`${filter}`);
+			}
+		});
 	}
 
 	return queryArray;
