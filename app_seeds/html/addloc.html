@@ -54,10 +54,8 @@
 			function handleFormSubmit_v2() {
 				var collatedInput = {};
 
-				for (let i = 0; i < SEEDS_RULES_TEST[2].length; i++) {
-					//SEEDS_RULES_TEST[2] are just the field names of each document
-
-					let fieldName = SEEDS_RULES_TEST[2][i];
+				for (let i = 0; i < SEEDS_RULES_TEST['fields'].length; i++) {
+					let fieldName = SEEDS_RULES_TEST['fields'][i];
 					let inputValue =
 						document.getElementById(fieldName).value;
 

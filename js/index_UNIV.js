@@ -1,5 +1,5 @@
 import {
-	DB_RULES_AND_DATA,
+	rule_reference,
 	getDocByID,
 	getDocIdByPartnerName,
 	getCollection,
@@ -9,22 +9,20 @@ import {
 export var map = L.map('map').setView([14.5995, 120.9842], 10);
 
 function panLocation(doc, map) {
-	for (let rule of DB_RULES_AND_DATA) {
-		if (getCollection().id === rule[0]) {
-			var coordinates;
-			for (let i = 0; i < rule[2].length; i++) {
-				if (rule[2][i].includes('location_coordinates')) {
-					coordinates = doc[rule[2][i]];
-					if(coordinates != null) {
-						map.panTo(
-							new L.LatLng(
-								coordinates.latitude,
-								coordinates.longitude
-							)
-						);
-					}
-					break;
+	if (getCollection().id === rule_reference['collection_name']) {
+		var coordinates;
+		for (let i = 0; i < rule_reference['fields'].length; i++) {
+			if (rule_reference['fields'][i].includes('location_coordinates')) {
+				coordinates = doc[rule_reference['fields'][i]];
+				if(coordinates != null) {
+					map.panTo(
+						new L.LatLng(
+							coordinates.latitude,
+							coordinates.longitude
+						)
+					);
 				}
+				break;
 			}
 		}
 	}
@@ -98,50 +96,6 @@ export function clearLocationList() {
 	locationList.innerHTML = '';
 }
 
-// code for the switching of maps
-export const JS_CS_ENGINE = [
-	[
-		'buklod-official',
-		[
-			'/app_buklod-tao/js/index.js',
-			'/app_buklod-tao/js/firestore.js',
-			'/app_buklod-tao/css/form.css',
-			//   'buklod-tao-branch/css/login.css',
-			'/app_buklod-tao/css/main.css',
-		],
-	],
-	[
-		'buklod-official-TEST',
-		[
-			'/app_buklod-tao/js/index.js',
-			'/app_buklod-tao/js/firestore.js',
-			'/app_buklod-tao/css/form.css',
-			//   'buklod-tao-branch/css/login.css',
-			'/app_buklod-tao/css/main.css',
-		],
-	],
-	[
-		// TO BE RENAMED TO 'seeds-official'
-		'seeds-official',
-		[
-			'/app_seeds/js/index.js',
-			'/app_seeds/js/firestore.js',
-			'/app_seeds/css/form.css',
-			'/app_seeds/css/modal.css',
-		],
-	],
-	[
-		// TO BE RENAMED TO 'seeds-official-TEST'
-		'seeds-official-TEST',
-		[
-			'/app_seeds/js/index.js',
-			'/app_seeds/js/firestore.js',
-			'/app_seeds/css/form.css',
-			'/app_seeds/css/modal.css',
-		],
-	],
-
-];
 
 // creates the JS CSS Files
 export function createJsCssFiles(file_path) {
@@ -164,15 +118,13 @@ export function createJsCssFiles(file_path) {
 // Loads the JS CSS Files
 export function loadJsCssFiles() {
 	// script if javascript, css if link or none;
-	for (let rule of JS_CS_ENGINE) {
-		if (rule[0] == getCollection().id) {
-			for (let i = 0; i < rule[1].length; i++) {
-				var new_element = createJsCssFiles(rule[1][i]);
-				new_element.setAttribute('id', 'jscss' + i);
-				document
-					.getElementsByTagName('head')[0]
-					.appendChild(new_element);
-			}
+	if (rule_reference['collection_name'] == getCollection().id) {
+		for (let i = 0; i < rule_reference['identifier'].length; i++) {
+			var new_element = createJsCssFiles(rule_reference['identifier'][i]);
+			new_element.setAttribute('id', 'jscss' + i);
+			document
+				.getElementsByTagName('head')[0]
+				.appendChild(new_element);
 		}
 	}
 }
