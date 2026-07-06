@@ -459,7 +459,7 @@ export const DB_RULES_AND_DATA = {
 			maxLength: 11,
 			regex: /^09\d{9}$/,
 		},
-    partner_email: { label: 'Email of Contact Person/Partner', type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
+		partner_email: { label: 'Email of Contact Person/Partner', type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
 		activity_name: { label: 'Activity Name', type: 'string', required: true },
 		activity_nature: { label: 'Nature of Activity', type: 'string', required: true, maxLength: 255 },
 		activity_date: { label: 'Date of Partnership', type: 'string', required: true, regex: /^\d{4}-\d{2}-\d{2}$/ },
@@ -468,7 +468,7 @@ export const DB_RULES_AND_DATA = {
 		ADMU_office: { label: 'Name of Office', type: 'string', required: true, maxLength: 127 },
 		ADMU_contact_name: { label: 'Name of Ateneo Contact Person', type: 'string', required: true, maxLength: 255 },
 		ADMU_email: {
-      label: "Email of Ateneo Contact Person",
+			label: "Email of Ateneo Contact Person",
 			type: 'string',
 			required: true,
 			// required: true					redundant declaration
