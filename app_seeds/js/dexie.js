@@ -18,6 +18,44 @@ let schema = null; // Initialized in initDatabase() based on whether the app is 
 
 export function getSeedsCollection() { return activeSeedsCollection; }
 
+/**
+ * Gets all activities from the seeds collection.
+ * @throws {Error} Seeds collection must be initialized.
+ * @returns An object with docId as keys and activity data as values.
+ */
+export async function getActivities() {
+  if (!activeSeedsCollection) {
+    throw new Error("Seeds collection is not initialized.");
+  }
+
+  let activitiesSet = await activeSeedsCollection.find({ selector: { _deleted: { $eq: false } } }).exec();
+  let activities = {};
+  for (const activity of activitiesSet) {
+    activity['identifier'] = activity.id;
+    activities[activity.id] = activity;
+  }
+  return activities;
+}
+
+/**
+ * Groups activities by their partner name.
+ * @param {Object} activities - Object with docId as keys and activity data as values
+ * @returns An object where each key is a partner name and the value is an array of activities associated with that partner.
+ */
+function groupActivities(activities) {
+    const grouping = SEEDS_RULES['identifier'];
+    return Object.groupBy(Object.values(activities), activity => activity[grouping]);
+}
+
+/**
+ * Gets all unique partners and their associated activities in a (partnerName, activity[]) object.
+ * @returns An object where each key is a partner name and the value is an array of activities associated with that partner.
+ */
+export async function getPartners() {
+  return groupActivities(await getActivities());
+}
+
+
 function setSeedsSubscription(collection) {
   activeSeedsSubscription?.unsubscribe();
 
