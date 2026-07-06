@@ -346,7 +346,6 @@ activitiesSection.innerHTML = `
 }
 
 function showEditActivityForm(activity, partnerName, coords) {
-	const modal = document.getElementById('partnerModal');
 	const modalHeader = document.getElementById('modalHeader');
 	const modalContent = document.getElementById('modalContent');
 	modalHeader.innerHTML = '';
@@ -520,7 +519,7 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	generalSection.innerHTML = `
 	  <div class="modal-section-header">
 		<span class="modal-section-icon" style="display:inline-flex;align-items:center;">
-		  <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"rgba(126,138,152,1)\"><path d=\"M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 7H13V9H11V7ZM11 11H13V17H11V11Z\"></path></svg>
+		  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(126,138,152,1)"><path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 7H13V9H11V7ZM11 11H13V17H11V11Z"></path></svg>
 		</span>
 		<span>General Information</span>
 	  </div>
@@ -529,8 +528,16 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	const contactCard = document.createElement('div');
 	contactCard.className = 'modal-card-information';
 	contactCard.innerHTML = `
-	  <div class=\"modal-card-header-information\"><span style=\"display:inline-flex;align-items:center;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"rgba(126,138,152,1)\" width=\"1.2em\" height=\"1.2em\" style=\"vertical-align:middle;margin-right:0.5rem;\"><path d=\"M20 22H6C4.34315 22 3 20.6569 3 19V5C3 3.34315 4.34315 2 6 2H20C20.5523 2 21 2.44772 21 3V21C21 21.5523 20.5523 22 20 22ZM19 20V18H6C5.44772 18 5 18.4477 5 19C5 19.5523 5.44772 20 6 20H19ZM5 16.1707C5.31278 16.0602 5.64936 16 6 16H19V4H6C5.44772 4 5 4.44772 5 5V16.1707ZM12 10C10.8954 10 10 9.10457 10 8C10 6.89543 10.8954 6 12 6C13.1046 6 14 6.89543 14 8C14 9.10457 13.1046 10 12 10ZM9 14C9 12.3431 10.3431 11 12 11C13.6569 11 15 12.3431 15 14H9Z\"></path></svg>Contact Information</span></div>
-	  <div class=\"modal-card-row\">\n        <span class=\"modal-label\">Contact person</span>\n        <span class=\"modal-value\">${activity.partner_contact_name || '—'}</span>\n      </div>\n      <div class=\"modal-card-row\">\n        <span class=\"modal-label\">Email address</span>\n        <span class=\"modal-value\">${activity.partner_email || '—'}</span>\n      </div>\n    `;
+	  <div class="modal-card-header-information"><span style="display:inline-flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(126,138,152,1)" width="1.2em" height="1.2em" style="vertical-align:middle;margin-right:0.5rem;"><path d="M20 22H6C4.34315 22 3 20.6569 3 19V5C3 3.34315 4.34315 2 6 2H20C20.5523 2 21 2.44772 21 3V21C21 21.5523 20.5523 22 20 22ZM19 20V18H6C5.44772 18 5 18.4477 5 19C5 19.5523 5.44772 20 6 20H19ZM5 16.1707C5.31278 16.0602 5.64936 16 6 16H19V4H6C5.44772 4 5 4.44772 5 5V16.1707ZM12 10C10.8954 10 10 9.10457 10 8C10 6.89543 10.8954 6 12 6C13.1046 6 14 6.89543 14 8C14 9.10457 13.1046 10 12 10ZM9 14C9 12.3431 10.3431 11 12 11C13.6569 11 15 12.3431 15 14H9Z"></path></svg>Contact Information</span></div>
+	  <div class="modal-card-row">
+        <span class="modal-label">Contact person</span>
+        <span class="modal-value">${activity.partner_contact_name || '—'}</span>
+      </div>
+      <div class="modal-card-row">
+        <span class="modal-label">Email address</span>
+        <span class="modal-value">${activity.partner_email || '—'}</span>
+      </div>
+    `;
 	// Partnership Information Card
 	const partnershipCard = document.createElement('div');
 	partnershipCard.className = 'modal-card-information';
@@ -547,7 +554,7 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	officeSection.innerHTML = `
 	  <div class="modal-section-header">
 		<span class="modal-section-icon" style="display:inline-flex;align-items:center;">
-		  <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"rgba(126,138,152,1)\"><path d=\"M12 0.585693L18 6.58569V9H22V19H23V21H1V19H2V9H6V6.58569L12 0.585693ZM18 19H20V11H18V19ZM6 11H4V19H6V11ZM8 7.41412V18.9999H11V12H13V18.9999H16V7.41412L12 3.41412L8 7.41412Z\"></path></svg>
+		  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(126,138,152,1)"><path d="M12 0.585693L18 6.58569V9H22V19H23V21H1V19H2V9H6V6.58569L12 0.585693ZM18 19H20V11H18V19ZM6 11H4V19H6V11ZM8 7.41412V18.9999H11V12H13V18.9999H16V7.41412L12 3.41412L8 7.41412Z"></path></svg>
 		</span>
 		<span>Ateneo Office Oversight</span>
 	  </div>
