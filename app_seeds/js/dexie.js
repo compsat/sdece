@@ -28,7 +28,10 @@ function setSeedsSubscription(collection) {
   });
 }
 
-// Initializes subscriptions for the first time
+/**
+ * Creates subscriptions for the seeds collection. Intended to be called on app initialization.
+ * @param {*} window - The window with the map
+ */
 export function createSubscriptions(window) { setSeedsSubscription(activeSeedsCollection); }
 
 /**
