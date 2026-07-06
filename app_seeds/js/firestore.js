@@ -1,5 +1,5 @@
 // FIRESTORE DATABASE\
-import { getDocs, GeoPoint, Timestamp, collection, query } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
+import { GeoPoint, Timestamp, collection } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
 import { replicateFirestore } from 'https://esm.sh/rxdb@15.18.0/plugins/replication-firestore?external=firebase';
 import { 
 	DB, FIREBASE_CONFIG, SEEDS_RULES, 
