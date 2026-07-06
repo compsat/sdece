@@ -3,5 +3,8 @@
     "firebase": "^12.15.0",
     "rxdb": "^17.3.0",
     "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "eslint": "^10.6.0"
   }
 }
