@@ -45,6 +45,20 @@ function searchLocation(name, map) {
   });
 }
 
+/**
+ * Checks if all required parameters are defined.
+ * @param {Array<[boolean, string]>} checks An array where each element is a tuple [isInvalid, errorString] where isInvalid is a boolean indicating if the parameter is invalid and errorString is the error message to display.
+ * @returns {boolean} True if all parameters are defined, false otherwise.
+ */
+export function requireParameters(checks) {
+	for (const [isInvalid, errorString] of checks) {
+		if (isInvalid) {
+				console.error(errorString);
+				return false;
+		}
+	}
+	return true;
+}
 
 // Utility Function for Front-end (remove underscores from a string)
 export function removeUnderscoresFromField(field) {
