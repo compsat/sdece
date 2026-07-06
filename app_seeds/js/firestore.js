@@ -106,32 +106,28 @@ newButton.addEventListener('click', () => {
 
 // === SIDEBAR FUNCTIONS SECTION ===
 
-// Load and filter activities
+/**
+ * Converts a Firestore query snapshot into an object of activities.
+ * @param {*} querySnapshot - The Firestore query snapshot containing activity documents.
+ * @returns An object with docId as keys and activity data as values.
+ */
 function loadActivities(querySnapshot) {
     let activities = {};
     querySnapshot.forEach((doc) => {
         let activity = doc.data();
-        let { name } = activity;
-        // Skip unwanted test entries
-        if (name !== 'Test 2' && name !== 'Test2') {
-            activity['identifier'] = doc.id;
-            activities[doc.id] = activity;
-        }
+				activity['identifier'] = doc.id;
+				activities[doc.id] = activity;
     });
     return activities;
 }
 
-// Group activities by partner
+/**
+ * Groups activities by their partner name.
+ * @param {Object} activities - Object with docId as keys and activity data as values
+ * @returns An object where each key is a partner name and the value is an array of activities associated with that partner.
+ */
 function groupActivities(activities) {
-    let partners = {};
-    Object.values(activities).forEach((activity) => {
-        let partner = activity[SEEDS_RULES['identifier']];
-        if (!partners[partner]) {
-            partners[partner] = [];
-        }
-        partners[partner].push(activity);
-    });
-    return partners;
+    return Object.groupBy(Object.values(activities), activity => activity[SEEDS_RULES['identifier']]);
 }
 
 // Uses activity nature if there's activity name is N/A	
@@ -259,7 +255,7 @@ getDocs(collectionRef)
         const activities = loadActivities(querySnapshot);
         const partners = groupActivities(activities);
 
-		window.activities = activities;
+				window.activities = activities;
         window.partners = partners;
 		
         createMarkersAndSidebar(partners);
@@ -804,14 +800,15 @@ mainModalCloseButton.addEventListener('click', function (event) {
 });
 
 /**
- * 
+ * Initializes Firestore synchronization for the given RxCollection.
+ * If the database is in test mode, it will sync with the 'sdece-official-TEST' collection; otherwise, it will sync with the 'sdece-official' collection.
  * @param {RxDatabase} db - The database instance to sync with Firestore.
  * @param {string} uid - The ID of the user.
  * @param {boolean} inTestMode - Whether to initialize the database in test mode.
  * @param {RxCollection} collection - The RxCollection to sync with the Firestore collection.
  */
 export function startFirestoreSync(db, uid, inTestMode, rxCollection) {
-	if (!db || !uid || !inTestMode || !rxCollection) {
+	if (!db || !uid || !(inTestMode == null) || !rxCollection) {
 		console.error("Missing parameters for Firestore sync.");
 		return;
 	}
