@@ -119,8 +119,8 @@ export function loadActivities(querySnapshot) {
         //     activities[doc.id] = activity;
         // }
 
-		activity['identifier'] = doc.id;
-        activities[doc.id] = activity;
+			activity['identifier'] = doc.id;
+      activities[doc.id] = activity;
     });
     return activities;
 }
@@ -203,6 +203,7 @@ export function createSidebarItem(partner, activities, lat, long, marker) {
     listItem.appendChild(anchor);
     containerDiv.append(img, listItem);
     locationList.appendChild(containerDiv);
+
 }
 
 // Handle marker click: highlight sidebar and show modal
@@ -261,11 +262,14 @@ const collectionRef = getCollection();
 
 getDocs(collectionRef)
     .then((querySnapshot) => {
-        const activities = loadActivities(querySnapshot);
-        const partners = groupActivities(activities);
+			console.log("query snapshot:");
+			console.log(querySnapshot);
+      const activities = loadActivities(querySnapshot);
+      const partners = groupActivities(activities);
+	
 
-		window.activities = activities;
-        window.partners = partners;
+			window.activities = activities;
+      window.partners = partners;
 		
         createMarkersAndSidebar(partners);
     });

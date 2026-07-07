@@ -12,14 +12,15 @@ import { loadActivities,
 		handleMarkerClick,
 		createMarkersAndSidebar
  } from "./firestore.js";
+import { clearLocationList, clearMarkers } from '../../js/index_UNIV.js';
 
 export function showMainModal() {
-	var mainModal = document.getElementById('mainModal');
+	const mainModal = document.getElementById('mainModal');
 	mainModal.style.display = 'flex';
 }
 
 export function showAddModal() {
-	var addModal = document.getElementById('addModal');
+	const addModal = document.getElementById('addModal');
 	addModal.style.display = 'flex';
 }
 
@@ -66,38 +67,39 @@ export function exportData() {
 
 document.getElementById('download-report').addEventListener("click", exportData);
 // CODE LOGIC FOR FILTERING
-var filterBtn = document.getElementById('filter-btn');
+const filterBtn = document.getElementById('filter-btn');
 filterBtn.addEventListener('click', () => showFilterModal());
 
 const filterModalIframe = document.getElementById('filter-modal-id');
 const filterModal = filterModalIframe.contentDocument;
 
-var filterModalClose = filterModal.getElementById("filterClose");
+const filterModalClose = filterModal.getElementById("filterClose");
 filterModalClose.addEventListener("click", function(event) {
               window.parent.postMessage('closeFilterModal', '*');
 			  clearFilterModal();  
             });
 
-var filterModalApply = filterModal.getElementById("applyFilters");
+const filterModalApply = filterModal.getElementById("applyFilters");
 filterModalApply.addEventListener("click", function(event){
-	console.log("Filter Fields:");
-	console.log(getFilterFields(window.partners));
+	// console.log("Filter Fields:");
+	// console.log(getFilterFields(window.partners));
 
-	console.log("captured filters:");
-	console.log(captureFilterState());
+	// console.log("captured filters:");
+	// console.log(captureFilterState());
 
-	console.log("query array:");
-	console.log(buildQueryArray(captureFilterState()));
+	// console.log("query array:");
+	// console.log(buildQueryArray(captureFilterState()));
 
-	console.log("applied filters:");
-	console.log(applyFilterAndUpdate(buildQueryArray(captureFilterState())));
+	// console.log("applied filters:");
+	// console.log(applyFilterAndUpdate(buildQueryArray(captureFilterState())));
+	applyFilterAndUpdate(buildQueryArray(captureFilterState()));
 
 });
 
-var filterModalClear = filterModal.getElementById("clearFilters");
+const filterModalClear = filterModal.getElementById("clearFilters");
 
 function showFilterModal() {
-	var filterModal = document.getElementById('filterModal');
+	const filterModal = document.getElementById('filterModal');
 	filterModal.style.display = 'flex';
 	setUpFilterModal();
 	console.log("showing filter modal");
@@ -118,7 +120,7 @@ function setUpFilterModal() {
 }
 
 function clearFilterModal() {
-	var officeSection = filterModal.getElementById('admu-offices');
+	const officeSection = filterModal.getElementById('admu-offices');
 	officeSection.innerHTML = "";
 }
 
@@ -154,7 +156,7 @@ function captureFilterState() {
   return checkboxes;
 }
 
-function buildQueryArray(filterState) {	//temp hardcode
+function buildQueryArray(filterState) {	
 	const queryArray = {};
 	for (let field in FILTER_RULES["seeds-official"]) {
 		queryArray[`${field}`] = [];
@@ -172,8 +174,15 @@ function buildQueryArray(filterState) {	//temp hardcode
 }
 
 async function applyFilterAndUpdate(queryArray) {
-	return filterData('seeds-official', queryArray);	
-}
+	const filteredData = await filterData('seeds-official', queryArray);
+	
+	const activities = loadActivities(filteredData);
+	const partners = groupActivities(activities);
 
-// CODE LOGIC FOR SORTING
-// const sortBtn = document.getElementById
+	window.activities = activities;
+	window.partners = partners;
+
+	clearLocationList();
+	clearMarkers();
+	createMarkersAndSidebar(partners);
+}
