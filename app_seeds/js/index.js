@@ -1,8 +1,10 @@
 import { SEEDS_RULES } from '/js/firestore_UNIV.js';
 import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs";
-import { filterData, getCollection } from "../../js/firestore_UNIV.js";
+import { filterData, getCollection, getDocByID } from "../../js/firestore_UNIV.js";
 import { FILTER_RULES } from "../../js/ruleEngines.js";
 
+
+import { getDocs } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import { loadActivities,
 		groupActivities,
 		getActivity,
@@ -75,28 +77,21 @@ const filterModal = filterModalIframe.contentDocument;
 
 const filterModalClose = filterModal.getElementById("filterClose");
 filterModalClose.addEventListener("click", function(event) {
-              window.parent.postMessage('closeFilterModal', '*');
-			  clearFilterModal();  
+              closeFilterModal();  
             });
 
 const filterModalApply = filterModal.getElementById("applyFilters");
 filterModalApply.addEventListener("click", function(event){
-	// console.log("Filter Fields:");
-	// console.log(getFilterFields(window.partners));
-
-	// console.log("captured filters:");
-	// console.log(captureFilterState());
-
-	// console.log("query array:");
-	// console.log(buildQueryArray(captureFilterState()));
-
-	// console.log("applied filters:");
-	// console.log(applyFilterAndUpdate(buildQueryArray(captureFilterState())));
-	applyFilterAndUpdate(buildQueryArray(captureFilterState()));
+	const filterState = captureFilterState();
+	const queryArray = buildQueryArray(filterState);
+	applyFilterAndUpdate(queryArray);
 
 });
 
 const filterModalClear = filterModal.getElementById("clearFilters");
+filterModalClear.addEventListener("click", function(event) {
+	clearCheckboxes();
+})
 
 function showFilterModal() {
 	const filterModal = document.getElementById('filterModal');
@@ -105,9 +100,11 @@ function showFilterModal() {
 	console.log("showing filter modal");
 }
 
-function setUpFilterModal() { 
+function setUpFilterModal() {
+
 	const filters = getFilterFields(window.partners);
 	const filterSection = filterModal.getElementById('filter-section');
+
 	Object.keys(filters).forEach((field) => {
 		const filterHeader = `<h3 class="filter-header">${field}</h3>`
 		filterSection.innerHTML += filterHeader;
@@ -120,10 +117,19 @@ function setUpFilterModal() {
 }
 
 function clearFilterModal() {
-	const officeSection = filterModal.getElementById('admu-offices');
-	officeSection.innerHTML = "";
+	const filterSection = filterModal.getElementById('filter-section');
+	filterSection.innerHTML = "";
 }
 
+function clearCheckboxes() {
+	filterModal.querySelectorAll('input[type="checkbox"]').forEach(cb => 
+		cb.checked = false);
+}
+
+function closeFilterModal() {
+	window.parent.postMessage('closeFilterModal', '*');
+	clearFilterModal();
+}
 
 function getFilterFields(partners) {
 	const filterFields = {};
@@ -175,14 +181,12 @@ function buildQueryArray(filterState) {
 
 async function applyFilterAndUpdate(queryArray) {
 	const filteredData = await filterData('seeds-official', queryArray);
-	
+
 	const activities = loadActivities(filteredData);
 	const partners = groupActivities(activities);
-
-	window.activities = activities;
-	window.partners = partners;
 
 	clearLocationList();
 	clearMarkers();
 	createMarkersAndSidebar(partners);
+	closeFilterModal();
 }
