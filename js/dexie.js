@@ -21,7 +21,21 @@ if (RxDBReplicationPlugin) {
   console.warn("Failed to find RxDBReplicationPlugin in module:", ReplicationModule);
 }
 
-const buklodSchema = {
+// don't forget to change this.
+// dont change it. it breaks everything.
+const IS_TESTING = false;
+
+// collections variable is used to easily switch from a staging database to the production one
+// dont use it. it breaks everything.
+const collections = {
+  "buklod-tao": {
+    households: IS_TESTING ? "buklod-official-TEST" : "buklod-official",
+    evacCenters: "buklod-evac-centers", // there is no staging collection for evacuation centers.
+  }
+}
+
+
+export const buklodSchema = {
   version: 0,
   type: 'object',
   primaryKey: 'id',
@@ -72,9 +86,13 @@ const evacCentersSchema = {
 };
 
 let dbPromise = null;
+let dbUid = null;
 
 export async function initDb(uid) {
-  if (dbPromise) return dbPromise;
+  if (dbPromise && dbUid === uid) return dbPromise;
+  if (dbPromise) {
+    throw new Error(`initDb already initialized for uid=${dbUid}. Call resetDatabase() first.`)
+  }
 
   dbPromise = await createRxDatabase({
     name: `buklod_app_${uid}`,
@@ -85,6 +103,7 @@ export async function initDb(uid) {
 
   await dbPromise.addCollections({
     buklod: { schema: buklodSchema },
+    buklodImport: {schema: buklodSchema}, // Collection exclusively used for data imports
     evacCenters: { schema: evacCentersSchema }
   });
 
@@ -92,12 +111,13 @@ export async function initDb(uid) {
 }
 
 export function startFirestoreSync(db, uid) {
+  console.log("Syncing local database with firestore...")
   const firestore = getFirestore(getApps()[0]);
-
   // --- 1. SYNC BUKLOD (Households) TO TEST COLLECTION ---
+  console.log(`Syncing ${collections["buklod-tao"].households} with firestore...`)
   db.buklodSyncState = replicateRxCollection({ 
     collection: db.buklod,
-    replicationIdentifier: 'buklod-test-sync-v3',
+    replicationIdentifier: 'buklod-test-sync-v9',
     live: true, 
     retryTime: 5 * 1000, 
     
@@ -108,12 +128,12 @@ export function startFirestoreSync(db, uid) {
           // INCREMENTAL PULL: Uses automatic single-field index on 'updatedAt'
           const lastPulledTime = Timestamp.fromMillis(lastPulledDocument.updatedAt);
           q = query(
-            collection(firestore, 'buklod-official'),
+            collection(firestore, collections["buklod-tao"].households),
             where('updatedAt', '>', lastPulledTime)
           );
         } else {
           // FIRST SYNC: Grabs everything (No index required, catches legacy data)
-          q = query(collection(firestore, 'buklod-official'));
+          q = query(collection(firestore, collections["buklod-tao"].households));
         }
         const snapshot = await getDocs(q);
         
@@ -135,8 +155,9 @@ export function startFirestoreSync(db, uid) {
             id: d.id,
             ...data,
             location_coordinates: localCoordinates, 
+            _deleted: data._deleted ?? false,
             // Ensure every doc has an updatedAt for the checkpoint
-            updatedAt: data.updatedAt?.toMillis ? data.updatedAt.toMillis() : Date.now()
+            updatedAt: data.updatedAt?.toMillis ? data.updatedAt.toMillis() : 0
           };
         });
 
@@ -160,7 +181,7 @@ export function startFirestoreSync(db, uid) {
             geoPoint = new GeoPoint(location_coordinates._lat, location_coordinates._lng);
           }
 
-          const ref = doc(firestore, 'buklod-official', id);
+          const ref = doc(firestore, collections["buklod-tao"].households, id);
           
           await setDoc(ref, {
             ...cleanRest,
@@ -177,7 +198,7 @@ export function startFirestoreSync(db, uid) {
     }
   });
 
-  // --- 2. SYNC EVAC CENTERS TO TEST COLLECTION ---
+  console.log(`Syncing ${collections["buklod-tao"].evacCenters} with firestore...`)
   db.evacSyncState = replicateRxCollection({
     collection: db.evacCenters,
     replicationIdentifier: 'evac-test-sync-v3',
@@ -190,11 +211,11 @@ export function startFirestoreSync(db, uid) {
         if (lastPulledDocument?.updatedAt) {
           const lastPulledTime = Timestamp.fromMillis(lastPulledDocument.updatedAt);
           q = query(
-            collection(firestore, 'buklod-evac-centers'),
+            collection(firestore, collections["buklod-tao"].evacCenters),
             where('updatedAt', '>', lastPulledTime)
           );
         } else {
-          q = query(collection(firestore, 'buklod-evac-centers'));
+          q = query(collection(firestore, collections["buklod-tao"].evacCenters));
         }
         const snapshot = await getDocs(q);
         
@@ -222,7 +243,7 @@ export function startFirestoreSync(db, uid) {
           // Deep clone to strip RxDB proxies
           const cleanRest = JSON.parse(JSON.stringify(rest));
 
-          const ref = doc(firestore, 'buklod-evac-centers', id); 
+          const ref = doc(firestore, collections["buklod-tao"].evacCenters, id); 
           await setDoc(ref, {
             ...cleanRest, // Use cleanRest
             _deleted: docData._deleted,
@@ -244,4 +265,25 @@ export function startFirestoreSync(db, uid) {
   db.evacSyncState.error$.subscribe(err => {
     console.error("Evac Centers Sync Error:", err);
   });
+}
+
+/**
+ * Generic function that deletes a document from an RxDB collection by its primary key.
+ *
+ * @param {RxCollection} collection - The RxDB collection to delete from.
+ * @param {string} id - The primary key of the document to delete.
+ * @returns {Promise<boolean>} `true` if deleted, `false` if not found.
+ * @throws {Error} If `collection` is null or `id` is empty.
+ *
+ * @example
+ * await deleteDoc(getEvacCentersCollection(), 'evac_123');
+ */
+export async function deleteDoc(collection, id) {
+  const doc = await collection.findOne(id).exec();
+  if (!doc) {
+    console.warn(`Document not found: ${id}`);
+    return false;
+  }
+  doc.remove();
+  return true;
 }

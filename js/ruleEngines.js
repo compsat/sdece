@@ -78,5 +78,11 @@ export const FILTER_RULES = {
 		activity_name: { label: 'activity_name', type: 'string', required: true },
 		activity_nature: { label: 'activity_nature', type: 'string', required: true, maxLength: 255 },
 		ADMU_office: { label: 'ADMU_office', type: 'string', required: true, maxLength: 127 },
-  }
+  },
+  'seeds-official': {
+    // partner_name: { label: "partner_name", type: 'string', required: true, maxLength: 255 },
+		activity_nature: { label: 'activity_nature', type: 'string', required: true, maxLength: 255 },
+		organization_unit: { label: 'organization_unit', type: 'string', maxLength: 127 },
+		ADMU_office: { label: 'ADMU_office', type: 'string', required: true, maxLength: 127 }
+		}
 }

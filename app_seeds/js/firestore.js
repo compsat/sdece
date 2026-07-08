@@ -1,5 +1,5 @@
 // FIRESTORE DATABASE\
-import { getDocs, GeoPoint, Timestamp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+import { query, getDocs, GeoPoint, Timestamp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 import { getCollection, setCollection, SEEDS_RULES, validateData, editEntry, addEntry } from '/js/firestore_UNIV.js';
 import { map } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
@@ -84,7 +84,7 @@ newButton.addEventListener('click', () => {
 	if (inputtedPartnerName == '' || inputtedPartnerAddress == '') {
 		alert('Partner Name and Partner Address cannot be blank.');
 	} else {
-		for (let field of SEEDS_RULES[2]) {
+		for (let field of SEEDS_RULES['fields']) {
 			if (field != 'partner_coordinates') {
 				if (field == 'partner_name' || field == 'partner_address') {
 					if (field == 'partner_name') {
@@ -108,35 +108,39 @@ newButton.addEventListener('click', () => {
 // === SIDEBAR FUNCTIONS SECTION ===
 
 // Load and filter activities
-function loadActivities(querySnapshot) {
+export function loadActivities(querySnapshot) {
     let activities = {};
     querySnapshot.forEach((doc) => {
         let activity = doc.data();
         let { name } = activity;
         // Skip unwanted test entries
-        if (name !== 'Test 2' && name !== 'Test2') {
-            activity['identifier'] = doc.id;
-            activities[doc.id] = activity;
-        }
+        // if (name !== 'Test 2' && name !== 'Test2') {
+        //     activity['identifier'] = doc.id;
+        //     activities[doc.id] = activity;
+        // }
+
+			activity['identifier'] = doc.id;
+      activities[doc.id] = activity;
     });
     return activities;
 }
 
 // Group activities by partner
-function groupActivities(activities) {
+export function groupActivities(activities) {
     let partners = {};
     Object.values(activities).forEach((activity) => {
-        let partner = activity[SEEDS_RULES[1]];
+        let partner = activity[SEEDS_RULES['identifier']];
         if (!partners[partner]) {
             partners[partner] = [];
         }
         partners[partner].push(activity);
     });
+
     return partners;
 }
 
 // Uses activity nature if there's activity name is N/A	
-function getActivity(activity) {
+export function getActivity(activity) {
 	const name = activity['activity_name'];
 	const nature = activity['activity_nature'];
 
@@ -147,7 +151,7 @@ function getActivity(activity) {
 }
 
 // Generate string of activities
-function getActivitiesString(activities) {
+export function getActivitiesString(activities) {
     let activitiesString = '';
     for (const activity of activities) {
         activitiesString += getActivity(activity) + '<br>';
@@ -156,7 +160,7 @@ function getActivitiesString(activities) {
 }
 
 // Clears Highlight on the Side Bar when transitioning
-function clearAllHighlights() {
+export function clearAllHighlights() {
 	const sidebarItems = document.querySelectorAll('.partnerDiv');
 	sidebarItems.forEach((item) => {
 		item.classList.remove('highlight');
@@ -164,7 +168,7 @@ function clearAllHighlights() {
 }
 
 // Create sidebar list item for a partner
-function createSidebarItem(partner, activities, lat, long, marker) {
+export function createSidebarItem(partner, activities, lat, long, marker) {
     const containerDiv = document.createElement('div');
     const img = document.createElement('svg');
     const listItem = document.createElement('li');
@@ -199,10 +203,11 @@ function createSidebarItem(partner, activities, lat, long, marker) {
     listItem.appendChild(anchor);
     containerDiv.append(img, listItem);
     locationList.appendChild(containerDiv);
+
 }
 
 // Handle marker click: highlight sidebar and show modal
-function handleMarkerClick(partner, partners) {
+export function handleMarkerClick(partner, partners) {
     clearAllHighlights();
 
     // Highlight sidebar item
@@ -219,7 +224,7 @@ function handleMarkerClick(partner, partners) {
 }
 
 // Create map markers and sidebar entries for each partner
-function createMarkersAndSidebar(partners) {
+export function createMarkersAndSidebar(partners) {
     Object.keys(partners).forEach((partner) => {
         let firstActivity = partners[partner][0];
         let partnerCoordinates = firstActivity['partner_coordinates'];
@@ -257,11 +262,14 @@ const collectionRef = getCollection();
 
 getDocs(collectionRef)
     .then((querySnapshot) => {
-        const activities = loadActivities(querySnapshot);
-        const partners = groupActivities(activities);
+			console.log("query snapshot:");
+			console.log(querySnapshot);
+      const activities = loadActivities(querySnapshot);
+      const partners = groupActivities(activities);
+	
 
-		window.activities = activities;
-        window.partners = partners;
+			window.activities = activities;
+      window.partners = partners;
 		
         createMarkersAndSidebar(partners);
     });
@@ -667,7 +675,7 @@ function showActivityDetailModal(activity, partnerName, coords) {
 // Used for add/ edit to collect form inputs
 function collectFormInputs(doc, geopointSource, mode) {
 	let result = {};
-	for (let field of SEEDS_RULES[2]) {
+	for (let field of SEEDS_RULES['fields']) {
 		if (field === 'partner_coordinates') {
 			if (mode === 'add') {
 				result[field] = geopointSource;
