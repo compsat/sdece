@@ -1,43 +1,54 @@
+@import url('globals.css');
+
 body {
   margin: 0;
   font-family: 'Geist', sans-serif;
   font-size: 0.85rem;
-  background-color: white;
+  background-color: var(--custom-white);
+  height: 100%;
 }
 
 .filter-header {
-  background-color: #0F2781;
-  color: white;
+  background-color: var(--darkbg);
+  color: var(--custom-white);
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-weight: bolder;
+  flex-shrink: 0;
 }
 
 .filter-content {
-  padding: 0rem 2rem;
+  padding: 1rem 2rem 2rem 2rem;
   font-size: 0.9rem;
+  flex: 1;
 }
 
-.filter-options label {
-  display: inline-block;
-  margin: 0.25rem;
-  padding: 0.5rem 0.5rem;
-  border: 1px solid #ccc;
+#filter-section label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.25rem ;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--custom-light-gray);
   border-radius: 20px;
   cursor: pointer;
 }
 
-.filter-options:hover {
-  background-color: #f3f4f6;
+#filter-section label:hover {
+  background-color: var(--custom-light-gray);
 }
 
 .filter-footer {
+  position: sticky;
+  bottom: 0;
   padding: 1rem;
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--custom-medium-gray);
+  flex-shrink: 0;
+  background-color: var(--custom-white);
 }
 
 .filter-btn {
@@ -49,22 +60,14 @@ body {
 }
 
 .filter-apply {
-  background-color: #0F2781;
-  color: white;
+  background-color: var(--darkbg);
+  color: var(--custom-white);
 }
 
 .filter-close {
-  background-color: #0F2781;
-  color: white;
+  background-color: var(--darkbg);
+  color: var(--custom-white);
   border: none;
   outline: none;
   font-size: 17px;
 }
-
-/* TO DO:
-- fix filter modal (search bar, variables based on sheets)
-- fix figma designs
-- add design to overall app (general theme) - follow figma design
-- finish figma filter modal proposed design and add to documentation
-- make code variable-based and consistent
- */
