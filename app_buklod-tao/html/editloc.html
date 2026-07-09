@@ -93,7 +93,7 @@
             };
 
             try {
-                if (api?.hasDatabase?.()) {
+                if (!api?.hasDatabase?.()) {
                     alert("Local database is not ready yet. Please wait a moment and try again.");
                     return;
                 }
