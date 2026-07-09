@@ -12,6 +12,7 @@ import {
 	writeBatch,
 	getDoc,
 	GeoPoint,
+	deleteField
 } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
 
 
@@ -20,6 +21,7 @@ import {
 import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js';
 
 import { FILTER_RULES } from '/js/ruleEngines.js'
+import { normalizeActivityDate } from '../js/dexie_UNIV.js'
 import {
 	getFirestore,
 	collection,
@@ -70,29 +72,21 @@ export function getCoordinates(coordinates) {
 }
 
 /**
- * Handles documents with coordinates in different formats and converts them to a GeoPoint object.
- * The function supports coordinates with the {_lat, _long} format and the {latitude, longitude} format.
- * 
- * @param {object} coords - The coordinates object which may have different formats. 
- * @return {GeoPoint|null} - Returns a GeoPoint object if the coordinates are valid, otherwise returns null.
+ * Converts coordinates from either {_lat, _long} or {latitude, longitude} format
+ * into a Firestore GeoPoint.
+ *
+ * @param {object} coords - The coordinates object to convert.
+ * @returns {GeoPoint|null} A GeoPoint if coords is valid, otherwise null.
  */
 export function convertCoordinates(coords) {
-	let gp = null;
-	if (coords 
-		&& coords._lat !== undefined
-		&& coords._long !== undefined
-	) {
-		gp = new GeoPoint(coords._lat, coords._long);
-	}
-	else if (
-		coords
-		&& coords.latitude !== undefined 
-		&& coords.longitude !== undefined
-	) {
-		gp = new GeoPoint(coords.latitude, coords.longitude);
-	}
-	else gp = null;
-	return gp;
+	if (!coords) return null;
+
+	const lat = coords._lat ?? coords.latitude;
+	const lng = coords._long ?? coords.longitude;
+
+	return (lat === undefined || lng === undefined)
+		? null
+		: new GeoPoint(lat, lng);
 }
 
 const SECRETS_PATH = "/js/secrets.json";
@@ -890,7 +884,7 @@ export async function addMissingFields(collectionName, database = DB) {
 
 	if (allDocs.empty) return;
 
-	const batch = writeBatch(database);
+	let batch = writeBatch(database);
 	let batchCounter = 0;
 
 	for (const doc of allDocs.docs) {
@@ -926,7 +920,6 @@ export async function getAllPartnerCoordinates(collectionName, database = DB) {
 		console.error("Missing parameters for getting partner coordinates.");
 		return [];
 	}
-	const firestoreDb = database;
 	const allDocs = await getDocs(query(collection(database, collectionName)));
 
 	if (allDocs.empty) { return []; }
@@ -936,4 +929,39 @@ export async function getAllPartnerCoordinates(collectionName, database = DB) {
 			partner_coordinates: doc.data().partner_coordinates
 		}
 	})
+}
+
+/**
+ * Normalizes the datatypes of activity_date in Firestore to int.
+ * 
+ * @param {string} collectionName - The name of the Firestore collection to update.
+ * @param {firebase.firestore.FirebaseFirestore} [database] - The Firestore database instance.
+ */
+export async function migrateDates(collectionName, database = DB) {
+	const allDocs = await getDocs(query(collection(database, collectionName)));
+
+	if (allDocs.empty) return;
+
+	let batch = writeBatch(database);
+	let batchCounter = 0;
+
+	for (const doc of allDocs.docs) {
+		batch.update(
+			doc.ref, 
+			{
+				activity_date: normalizeActivityDate(doc.get('activity_date')),
+				partner_date: deleteField(),
+				serverTimestamp: serverTimestamp()
+			}
+		);
+		
+		batchCounter++;
+		if (batchCounter === 500) {
+			await batch.commit();
+			batchCounter = 0;
+			batch = writeBatch(database);
+		}
+	}
+
+	if (batchCounter > 0) await batch.commit();
 }
