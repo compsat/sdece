@@ -1,7 +1,7 @@
 // CODE LOGIC FOR IMPORTING OF FUNCTIONS
 // ------------------------------------------
 import { populateEditForm } from './firestore.js';
-import { deleteDoc } from '../../js/dexie_UNIV.js'; 
+import { deleteDoc, hasDatabase } from '../../js/dexie_UNIV.js'; 
 import { 
   parseData,
   importData,
