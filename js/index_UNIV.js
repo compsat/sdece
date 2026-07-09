@@ -142,3 +142,20 @@ export function loadJsCssFiles() {
 		}
 	}
 }
+
+/**
+ * Helper function for standardizing a date into a format that works for prefilling HTML inputs.
+ * Used for partner_date since it is stored as a number locally.
+ * @param {Timestamp, number} date 
+ * @returns {string} A string in the YYYY-MM-DD format. If the date is invalid, return '' instead.
+ */
+export function toDateString(date) {
+	console.dir(date);
+	let val;
+  if (!date || date === 0) val = '';
+  else if (typeof date === 'number') val = new Date(date * 1000).toLocaleDateString('en-CA');
+  else if (typeof date === 'string') val = date;
+  else if (date.toDate) val = date.toDate().toLocaleDateString('en-CA');
+	console.dir(val);
+  return val ?? '';
+}
