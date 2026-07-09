@@ -52,7 +52,7 @@ async function main(uid) {
   createSubscriptions(window);
 
   map.setView([14.674043754743689, 121.11081361770631], 18);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map);
 
@@ -355,7 +355,7 @@ async function onPinClick(doc) {
       case 'number_sick': ul.textContent = doc.number_sick || 0; break;
       case 'number_pregnant': ul.textContent = doc.number_pregnant || 0; break;
       case 'sickness_present': ul.textContent = doc.sickness_present || 'None'; break;
-      case 'risk-section': ul.innerHTML = generateRiskSection(doc); break;
+      case 'risk-section': ul.innerHTML = generateRiskSection(doc); break; 
       default: ul.textContent = doc[key] || '';
     }
   });
@@ -393,7 +393,7 @@ function onMapClick(e) {
     <button class="addButton" data-target="household" data-lat="${lat}" data-lng="${lng}">Add Household</button>
     <button class="addButton" data-target="evac" data-lat="${lat}" data-lng="${lng}">Add Evacuation Center</button>
   `;
-  L.popup({ className: 'add-household-popup-compact' })
+  window.L.popup({ className: 'add-household-popup-compact' })
     .setLatLng(e.latlng)
     .setContent(popupContent)
     .openOn(map);
@@ -444,7 +444,7 @@ document.getElementById('download-report').addEventListener('click', async () =>
         return 3;
     };
 
-    const workbook = XLSX.utils.book_new();
+    const workbook = window.XLSX.utils.book_new();
     const riskTypes = ['earthquake_risk', 'fire_risk', 'flood_risk', 'landslide_risk', 'storm_risk'];
     const riskLabels = { earthquake_risk: 'Earthquake', fire_risk: 'Fire', flood_risk: 'Flood', landslide_risk: 'Landslide', storm_risk: 'Storm' };
 
@@ -457,7 +457,7 @@ document.getElementById('download-report').addEventListener('click', async () =>
         sortedHouseholds.forEach(h => {
             sheetData.push([h.household_name || '', h.household_address || '', h.contact_number || '', h.number_residents || 0, h.residency_status || '', h[riskType] || '', h[riskType + '_description'] || '', h.household_material || '', h.important_notes || '']);
         });
-        XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(sheetData), riskLabels[riskType]);
+        window.XLSX.utils.book_append_sheet(workbook, window.XLSX.utils.aoa_to_sheet(sheetData), riskLabels[riskType]);
     }
 
     // Residency Demographics Sheet
@@ -480,7 +480,7 @@ document.getElementById('download-report').addEventListener('click', async () =>
             h.after_disaster_actions || '', h.knowledge_readiness || '', h.exit_points || '',
         ]);
     });
-    XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(residencyData), 'Residency Demographics');
+    window.XLSX.utils.book_append_sheet(workbook, window.XLSX.utils.aoa_to_sheet(residencyData), 'Residency Demographics');
 
     // Master Sheet
     const masterHeaders = [
@@ -516,9 +516,9 @@ document.getElementById('download-report').addEventListener('click', async () =>
             h.household_material || '', h.important_notes || '', h.notes || ''
         ]);
     });
-    XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(masterData), 'Master Sheet');
+    window.XLSX.utils.book_append_sheet(workbook, window.XLSX.utils.aoa_to_sheet(masterData), 'Master Sheet');
 
-    XLSX.writeFile(workbook, 'Buklod_Tao_Household_Report.xlsx');
+    window.XLSX.writeFile(workbook, 'Buklod_Tao_Household_Report.xlsx');
 });
 // ------------------------------------------
 
@@ -553,8 +553,8 @@ function attachMarkers(partners) {
     if (!coord) return;
 
     const riskLevel = partner[`${riskType}_risk`] || 'LOW RISK';
-    const icon = L.icon({ iconUrl: getRiskIcon(riskLevel), iconSize: [39, 39], popupAnchor: [0.5, -15] });
-    const marker = L.marker([coord._lat, coord._lng], { icon }); 
+    const icon = window.L.icon({ iconUrl: getRiskIcon(riskLevel), iconSize: [39, 39], popupAnchor: [0.5, -15] });
+    const marker = window.L.marker([coord._lat, coord._lng], { icon }); 
 
     onPinClick(partner).then(popupContent => marker.bindPopup(popupContent));
     partner.marker = marker;
@@ -617,8 +617,8 @@ export function updateRiskIcons() {
     if (!coord) return;
 
     const riskLevel = partner[`${riskType}_risk`];
-    const icon = L.icon({ iconUrl: getRiskIcon(riskLevel || 'LOW RISK'), iconSize: [39, 39], popupAnchor: [0.5, -15] });
-    const marker = L.marker([coord._lat, coord._lng], { icon });
+    const icon = window.L.icon({ iconUrl: getRiskIcon(riskLevel || 'LOW RISK'), iconSize: [39, 39], popupAnchor: [0.5, -15] });
+    const marker = window.L.marker([coord._lat, coord._lng], { icon });
 
     onPinClick(partner).then(popupContent => marker.bindPopup(popupContent, { className: 'household-popup' }));
 
@@ -673,8 +673,8 @@ export function addEvacCenters() {
       center.marker = null;
       return;
     }
-    const marker_icon = L.icon({ iconUrl: "/app_buklod-tao/hardcode/evac_center_v2.svg", iconSize: [39,39], popupAnchor: [0.5, -15] });
-    const marker = L.marker([center.latitude, center.longitude], { icon: marker_icon });
+    const marker_icon = window.L.icon({ iconUrl: "/app_buklod-tao/hardcode/evac_center_v2.svg", iconSize: [39,39], popupAnchor: [0.5, -15] });
+    const marker = window.L.marker([center.latitude, center.longitude], { icon: marker_icon });
     
     const popupHtml = `
       <div class="evac-marker-header">${center.type}</div>
