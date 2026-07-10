@@ -6,6 +6,7 @@ import {
   createDatabase,
   getDatabase,
   hasDatabase,
+  setDatabase
 } from '../../js/dexie_UNIV.js'
 import { SEEDS_RULES_TEST, SEEDS_RULES } from '../../js/firestore_UNIV.js';
 import { startFirestoreSync } from './firestore.js';
@@ -62,15 +63,14 @@ function setSeedsSubscription(collection) {
   activeSeedsSubscription = collection
     .find({ selector: { _deleted: { $eq: false } } })
     .$.subscribe(docs => {
-      // TODO: Implement logic to handle updates to the seeds collection, such as updating the UI or storing the data in a local variable.
+      // createMarkersAndSidebar(groupActivities(docs));
   });
 }
 
 /**
  * Creates subscriptions for the seeds collection. Intended to be called on app initialization.
- * @param {*} window - The window with the map
  */
-export function createSubscriptions(window) { setSeedsSubscription(activeSeedsCollection); }
+export function createSubscriptions() { setSeedsSubscription(activeSeedsCollection); }
 
 /**
  * Initializes the database and associated collections. Used on app initialization.

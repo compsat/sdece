@@ -746,7 +746,6 @@ export function validateData(collectionName, data) {
 		const rule = rules[field];
 		const value = data[field];
 		const fieldLabel = rule.label || field;
-		console.log(fieldLabel);
 
 		// Required Test
 		const IS_EMPTY = value == undefined || value == null || value == ''
