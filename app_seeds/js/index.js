@@ -11,7 +11,7 @@ import {
 import { showModal, getTempActivities } from "./firestore.js";
 import { getAllPartnerCoordinatesInRxDB, hasDatabase, getFieldInRxDB, migrateActivityDates } from '../../js/dexie_UNIV.js';
 import { map, requireParameters } from '../../js/index_UNIV.js';
-import { migrateDates } from "../../js/firestore_UNIV.js";
+import { deleteNumericIds, migrateDates } from "../../js/firestore_UNIV.js";
 
 const L = window.L;
 const loginURL = "/html/seeds-login.html";
@@ -73,6 +73,7 @@ function attachFunctions(window) {
 	window.getSeedsCollection = getSeedsCollection;
 	window.getActivities = getActivities;
 	window.getPartners = getPartners;
+	window.deleteNumericIds = deleteNumericIds;
 }
 
 export function showMainModal() {

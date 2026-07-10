@@ -964,3 +964,62 @@ export async function migrateDates(collectionName, database = DB) {
 
 	if (batchCounter > 0) await batch.commit();
 }
+
+/**
+ * Deletes or previews deletion of Firestore documents whose IDs are purely numeric.
+ * Debug function primarily to remove all leaked documents.
+ *
+ * @param {string} collectionName - Name of the Firestore collection.
+ * @param {boolean} [preview=false] - If true, logs affected documents without deleting.
+ * @param {import('firebase/firestore').Firestore} [db=DB] - Firestore database reference.
+ * @returns {Promise<{deleted: number, total: number, affected: string[]}>} Result summary.
+ */
+export async function deleteNumericIds(collectionName, preview = true, db = DB) {
+    const snapshot = await getDocs(collection(db, collectionName));
+
+    const affected = [];
+    const unaffected = [];
+
+    for (const snap of snapshot.docs) {
+        if (/^-?\d+$/.test(snap.id)) {
+            affected.push(snap.id);
+        } else {
+            unaffected.push(snap.id);
+        }
+    }
+
+    if (!preview && affected.length) {
+        let batch = writeBatch(db);
+        let count = 0;
+
+        for (const id of affected) {
+            batch.delete(doc(db, collectionName, id));
+            count++;
+            if (count === 500) {
+                await batch.commit();
+                console.log(`Committed ${count} deletes`);
+                batch = writeBatch(db);
+                count = 0;
+            }
+        }
+        if (count) await batch.commit();
+    }
+
+    console.table([
+        { Category: 'Affected (numeric IDs)', Count: affected.length },
+        { Category: 'Unaffected', Count: unaffected.length },
+        { Category: 'Total', Count: snapshot.size }
+    ]);
+
+    if (preview) {
+        console.log(`[PREVIEW] Would delete ${affected.length} document(s):`, affected);
+    } else {
+        console.log(`Deleted ${affected.length} document(s).`);
+    }
+
+    return {
+        deleted: preview ? 0 : affected.length,
+        total: snapshot.size,
+        affected
+    };
+}
