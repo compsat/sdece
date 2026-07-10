@@ -1,6 +1,7 @@
 import { addRxPlugin } from 'https://esm.sh/rxdb@17.3.0';
 import { RxDBLeaderElectionPlugin } from 'https://esm.sh/rxdb@17.3.0/plugins/leader-election';
 
+import { createMarkersAndSidebar } from '../js/index.js'
 import { 
   addCollection, 
   createDatabase,
@@ -8,6 +9,7 @@ import {
   hasDatabase,
   setDatabase
 } from '../../js/dexie_UNIV.js'
+import { clearMarkers } from '../../js/index_UNIV.js'
 import { SEEDS_RULES_TEST, SEEDS_RULES } from '../../js/firestore_UNIV.js';
 import { startFirestoreSync } from './firestore.js';
 
@@ -63,7 +65,9 @@ function setSeedsSubscription(collection) {
   activeSeedsSubscription = collection
     .find({ selector: { _deleted: { $eq: false } } })
     .$.subscribe(docs => {
-      // createMarkersAndSidebar(groupActivities(docs));
+      document.getElementById('locationList').innerHTML = '';
+      clearMarkers();
+      createMarkersAndSidebar(groupActivities(docs));
   });
 }
 
