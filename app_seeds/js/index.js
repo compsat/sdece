@@ -186,3 +186,24 @@ export function clearAllHighlights() {
 		item.classList.remove('highlight');
 	});
 }
+
+/**
+ * Gets the string representation of an activity. 
+ * Uses the activity name by default, but falls back to the activity nature otherwise.
+ * If there is no activity name and activity nature, it returns "Unnamed Activity".
+ * @param {Object} activity - An activity object 
+ * @returns {string} A string
+ */
+export function getActivityString(activity) {
+	return activity?.activity_name?.trim() || activity?.activity_nature?.trim() || "Unnamed Activity";
+}
+
+/**
+ * Gets a string representation of an array of activities.
+ * Each activity is separated by a <br>.
+ * @param {*} activities 
+ * @returns A string
+ */
+function getActivitiesString(activities) {
+    return activities.map(activity => getActivityString(activity)).join('<br>');
+}
