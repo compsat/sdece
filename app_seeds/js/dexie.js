@@ -1,5 +1,5 @@
-import { addRxPlugin } from 'https://esm.sh/rxdb@15.18.0';
-import { RxDBLeaderElectionPlugin } from 'https://esm.sh/rxdb@15.18.0/plugins/leader-election';
+import { addRxPlugin } from 'https://esm.sh/rxdb@17.3.0';
+import { RxDBLeaderElectionPlugin } from 'https://esm.sh/rxdb@17.3.0/plugins/leader-election';
 
 import { 
   addCollection, 
