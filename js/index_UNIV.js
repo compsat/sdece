@@ -150,12 +150,12 @@ export function loadJsCssFiles() {
  * @returns {string} A string in the YYYY-MM-DD format. If the date is invalid, return '' instead.
  */
 export function toDateString(date) {
-	console.dir(date);
+	let old = date;
 	let val;
   if (!date || date === 0) val = '';
   else if (typeof date === 'number') val = new Date(date * 1000).toLocaleDateString('en-CA');
   else if (typeof date === 'string') val = date;
   else if (date.toDate) val = date.toDate().toLocaleDateString('en-CA');
-	console.dir(val);
+	console.log(`[toDateString] ${old} -> ${val}`);
   return val ?? '';
 }
