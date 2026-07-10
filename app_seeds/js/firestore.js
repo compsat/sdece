@@ -359,10 +359,8 @@ function showEditActivityForm(activity, partnerName, coords) {
 					return;
 				}
 				updated.activity_date = dateToTimestamp(updated.activity_date).seconds;
-				console.dir(updated);
-				await activity.patch(updated);
-				showActivityDetailModal({...activity, ...updated}, partnerName, coords);
-				alert("Please reload the page for your changes to reflect.");
+				activity = await activity.incrementalPatch(updated);
+				showActivityDetailModal(activity, partnerName, coords);
 			};
 			// Cancel/Back logic
 			const cancelBtn = form.querySelector('#cancel-btn');
@@ -448,7 +446,7 @@ function showActivityDetailModal(activity, partnerName, coords) {
       </div>
       <div class="modal-card-row">
         <span class="modal-label">Partnership date</span>
-        <span class="modal-value">${toDateString(activity.activity_date)}</span>
+        <span class="modal-value">${toDateString(activity.activity_date) || '—'} </span>
       </div>
     `;
 	generalSection.appendChild(contactCard);

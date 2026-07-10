@@ -696,6 +696,11 @@ export function getDocByID(docId) {
   });
 }
 
+/**
+ * @deprecated Use RxDB's add functions instead, see existing code for examples.
+ * @param {*} docId 
+ * @returns 
+ */
 export function addEntry(inp_obj) {
   addDoc(collection_reference, inp_obj)
     .then((docRef) => {
@@ -711,7 +716,11 @@ export function addEntry(inp_obj) {
 	return Promise.reject(new Error('Collection not found'));
 }
 
-
+/**
+ * @deprecated Use RxDB's delete functions instead.
+ * @param {*} docId 
+ * @returns 
+ */
 export function deleteEntry(docId) {
 	const DOC_REFERENCE = doc(DB, rule_reference['collection_name'], docId);
 	return deleteDoc(DOC_REFERENCE)
