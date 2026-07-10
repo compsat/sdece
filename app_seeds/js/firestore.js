@@ -1,18 +1,21 @@
 // FIRESTORE DATABASE\
-import { GeoPoint, Timestamp, collection } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
-import { replicateFirestore } from 'https://esm.sh/rxdb@15.18.0/plugins/replication-firestore?external=firebase';
+import { GeoPoint, Timestamp, collection, doc } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
+import { replicateFirestore } from 'https://esm.sh/rxdb@17.3.0/plugins/replication-firestore?external=firebase';
 import { 
 	DB, FIREBASE_CONFIG, SEEDS_RULES, 
 	setCollection, 
-	validateData, editEntry, addEntry, 
-	convertCoordinates,
+	validateData,
 } from '../../js/firestore_UNIV.js';
 import { map } from '/js/index_UNIV.js';
-import { showMainModal, showAddModal } from './index.js';
-import { requireParameters } from '../../js/index_UNIV.js';
+import { showMainModal, showAddModal, clearAllHighlights, getActivityString } from './index.js';
+import { requireParameters, toDateString } from '../../js/index_UNIV.js';
+import { getPartners, getSeedsCollection } from './dexie.js';
+
 // Set collection and associated rule config
 let collection_value = 'seeds-official'
 setCollection(collection_value);
+let firestoreCollectionRef; // Autofilled in startFirestoreSync()
+
 
 export function populateMainModalList() {
 	// Display temporarily saved activities to main modal
@@ -44,6 +47,7 @@ export function populateMainModalList() {
 	}
 }
 
+const L = window.L;
 let popup = L.popup();
 let addForm_geopoint;
 
@@ -76,9 +80,10 @@ let has_existing_partner;
 
 newButton.addEventListener('click', () => {
 	// Get the Add Activity form and the needed input fields for autofill
+	console.log("This is run in newButton event listener")
 	let inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value.trim();
 	let inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value.trim();
-	has_existing_partner = false;
+	has_existing_partner = false;	
 	
 	const AUTOFILL_MAP = {
 		partner_name: inputtedPartnerName,
@@ -105,99 +110,6 @@ newButton.addEventListener('click', () => {
 	}
 	showAddModal();
 });
-
-// === SIDEBAR FUNCTIONS SECTION ===
-
-/**
- * Gets the string representation of an activity. Uses the activity name by default, but falls back to the activity nature otherwise.
- * @param {Object} activity - An activity object 
- * @returns {string} A string
- */
-function getActivityString(activity) {
-	const name = activity['activity_name'];
-	const nature = activity['activity_nature'];
-
-	if (!name || name.trim() === '') {
-		return nature;
-	}
-	return name;
-}
-
-/**
- * Gets a string representation of an array of activities.
- * Each activity is separated by a <br>.
- * @param {*} activities 
- * @returns A string
- */
-function getActivitiesString(activities) {
-    return activities.map(activity => getActivityString(activity)).join('<br>');
-}
-
-// Clears Highlight on the Side Bar when transitioning
-function clearAllHighlights() {
-	const sidebarItems = document.querySelectorAll('.partnerDiv');
-	sidebarItems.forEach((item) => {
-		item.classList.remove('highlight');
-	});
-}
-
-// Create sidebar list item for a partner
-export function createSidebarItem(partner, activities, lat, long, marker) {
-    const containerDiv = document.createElement('div');
-    const img = document.createElement('svg');
-    const listItem = document.createElement('li');
-    const anchor = document.createElement('a');
-    const nameDiv = document.createElement('div');
-    const addressDiv = document.createElement('div');
-    const activityDiv = document.createElement('div');
-
-    containerDiv.classList.add('partnerDiv');
-    listItem.classList.add('accordion');
-    nameDiv.classList.add('name');
-    addressDiv.classList.add('address');
-    activityDiv.classList.add('activity');
-
-    nameDiv.textContent = partner;
-    addressDiv.textContent = activities[0]['partner_address'];
-
-    // Append activity names
-    activityDiv.innerHTML = getActivitiesString(activities);
-
-    // Add click behavior for sidebar item
-    containerDiv.addEventListener('click', () => {
-        marker.openPopup();
-        map.panTo(new L.LatLng(lat, long));
-        clearAllHighlights();
-        containerDiv.classList.add('highlight');
-        showModal(activities);
-    });
-
-    // Assemble DOM elements
-    anchor.append(nameDiv, addressDiv, activityDiv);
-    listItem.appendChild(anchor);
-    containerDiv.append(img, listItem);
-    document.getElementById('locationList').appendChild(containerDiv);
-}
-
-// Handle marker click: highlight sidebar and show modal
-export function handleMarkerClick(partner, partners) {
-    clearAllHighlights();
-
-    // Highlight sidebar item
-    const sidebarItems = document.querySelectorAll('.partnerDiv');
-    sidebarItems.forEach((item) => {
-        const nameDiv = item.querySelector('.name');
-        if (nameDiv && nameDiv.textContent === partner) {
-            item.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            item.classList.add('highlight');
-        }
-    });
-
-    showModal(partners[partner]);
-}
-
-// Create map markers and sidebar entries for each partner
-
 
 // === MAIN MODAL SECTION ===
 
@@ -291,7 +203,7 @@ export function showModal(partner) {
 			// Close current modal
 			modal.style.display = 'none';
 			modal.classList.remove('open');
-	
+			console.log("This is run in firestore.js")
 			// Show the add modal
 			showAddModal();
 	
@@ -404,7 +316,7 @@ function showEditActivityForm(activity, partnerName, coords) {
 			const fieldMap = {
 				activity_name: activity.activity_name || '',
 				activity_nature: activity.activity_nature || '',
-				activity_date: activity.activity_date ? (typeof activity.activity_date === 'string' ? activity.activity_date : (activity.activity_date.toDate ? activity.activity_date.toDate().toLocaleDateString('en-CA') : '')) : '',
+				activity_date: toDateString(activity.activity_date),
 				additional_partnership: activity.additional_partnership || '',
 				organization_unit: activity.organization_unit || '',
 				partner_name: activity.partner_name || '',
@@ -421,14 +333,13 @@ function showEditActivityForm(activity, partnerName, coords) {
 				if (input) input.value = fieldMap[key];
 			});
 			// Save/cancel logic
-			form.onsubmit = function(e) {
+			form.onsubmit = async function(e) {
 				e.preventDefault();
 				const updated = {};
 				Object.keys(fieldMap).forEach(key => {
 					const input = form.querySelector(`[name="${key}"]`);
 					updated[key] = input ? input.value : '';
 				});
-				updated['partner_coordinates'] = activity.partner_coordinates;
 				let errors = validateData('seeds-official-TEST', updated);
 				const errorDiv = form.querySelector('#error_messages');
 				if (errorDiv) errorDiv.innerHTML = '';
@@ -447,8 +358,9 @@ function showEditActivityForm(activity, partnerName, coords) {
 
 					return;
 				}
-				updated.activity_date = dateToTimestamp(updated.activity_date);
-				editEntry(updated, activity.identifier);
+				updated.activity_date = dateToTimestamp(updated.activity_date).seconds;
+				console.dir(updated);
+				await activity.patch(updated);
 				showActivityDetailModal({...activity, ...updated}, partnerName, coords);
 				alert("Please reload the page for your changes to reflect.");
 			};
@@ -485,22 +397,9 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	const backBtn = document.createElement('button');
 	backBtn.className = 'modal-back-btn';
 	backBtn.innerHTML = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 19L8.5 12L15.5 5" stroke="#222b45" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-	backBtn.onclick = function() {
-		// Always show the summary modal for this partner
-		let allPartners = partners || {};
-		let partnerArr = null;
-		if (allPartners && allPartners[partnerName]) {
-			partnerArr = allPartners[partnerName];
-		} else if (activities) {
-			// fallback: search activities for matching partner name
-			partnerArr = Object.values(activities).filter(a => a.partner_name === partnerName);
-		}
-		if (partnerArr && partnerArr.length > 0) {
-			showModal(partnerArr);
-		} else {
-			// fallback: showModal with just this activity
-			showModal([activity]);
-		}
+	backBtn.onclick = () => {
+		const activities = getPartners()?.[partnerName];
+		showModal(activities?.length ? activities : [activity]);
 	};
 	headerRow.appendChild(backBtn);
 
@@ -542,8 +441,16 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	const partnershipCard = document.createElement('div');
 	partnershipCard.className = 'modal-card-information';
 	partnershipCard.innerHTML = `
-	  <div class=\"modal-card-header-information\"><span style=\"display:inline-flex;align-items:center;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"rgba(126,138,152,1)\" width=\"1.2em\" height=\"1.2em\" style=\"vertical-align:middle;margin-right:0.5rem;\"><path d=\"M2 22C2 17.5817 5.58172 14 10 14C14.4183 14 18 17.5817 18 22H16C16 18.6863 13.3137 16 10 16C6.68629 16 4 18.6863 4 22H2ZM10 13C6.685 13 4 10.315 4 7C4 3.685 6.685 1 10 1C13.315 1 16 3.685 16 7C16 10.315 13.315 13 10 13ZM10 11C12.21 11 14 9.21 14 7C14 4.79 12.21 3 10 3C7.79 3 6 4.79 6 7C6 9.21 7.79 11 10 11ZM18.2837 14.7028C21.0644 15.9561 23 18.752 23 22H21C21 19.564 19.5483 17.4671 17.4628 16.5271L18.2837 14.7028ZM17.5962 3.41321C19.5944 4.23703 21 6.20361 21 8.5C21 11.3702 18.8042 13.7252 16 13.9776V11.9646C17.6967 11.7222 19 10.264 19 8.5C19 7.11935 18.2016 5.92603 17.041 5.35635L17.5962 3.41321Z\"></path></svg>Partnership Information</span></div>
-	  <div class=\"modal-card-row\">\n        <span class=\"modal-label\">Organization/Unit</span>\n        <span class=\"modal-value\">${activity.organization_unit || '—'}</span>\n      </div>\n      <div class=\"modal-card-row\">\n        <span class=\"modal-label\">Partnership date</span>\n        <span class="modal-value">${activity.activity_date && activity.activity_date.toDate ? activity.activity_date.toDate().toLocaleDateString('en-PH', {year: 'numeric', month: 'long', day: 'numeric'}): activity.activity_date || '—'}</span>\n      </div>\n    `;
+	  <div class="modal-card-header-information"><span style="display:inline-flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(126,138,152,1)" width="1.2em" height="1.2em" style="vertical-align:middle;margin-right:0.5rem;"><path d="M2 22C2 17.5817 5.58172 14 10 14C14.4183 14 18 17.5817 18 22H16C16 18.6863 13.3137 16 10 16C6.68629 16 4 18.6863 4 22H2ZM10 13C6.685 13 4 10.315 4 7C4 3.685 6.685 1 10 1C13.315 1 16 3.685 16 7C16 10.315 13.315 13 10 13ZM10 11C12.21 11 14 9.21 14 7C14 4.79 12.21 3 10 3C7.79 3 6 4.79 6 7C6 9.21 7.79 11 10 11ZM18.2837 14.7028C21.0644 15.9561 23 18.752 23 22H21C21 19.564 19.5483 17.4671 17.4628 16.5271L18.2837 14.7028ZM17.5962 3.41321C19.5944 4.23703 21 6.20361 21 8.5C21 11.3702 18.8042 13.7252 16 13.9776V11.9646C17.6967 11.7222 19 10.264 19 8.5C19 7.11935 18.2016 5.92603 17.041 5.35635L17.5962 3.41321Z"></path></svg>Partnership Information</span></div>
+	  <div class="modal-card-row">
+        <span class="modal-label">Organization/Unit</span>
+        <span class="modal-value">${activity.organization_unit || '—'}</span>
+      </div>
+      <div class="modal-card-row">
+        <span class="modal-label">Partnership date</span>
+        <span class="modal-value">${toDateString(activity.activity_date)}</span>
+      </div>
+    `;
 	generalSection.appendChild(contactCard);
 	generalSection.appendChild(partnershipCard);
 	modalContent.appendChild(generalSection);
@@ -608,7 +515,7 @@ function collectFormInputs(doc, geopointSource, mode) {
 	for (let field of SEEDS_RULES['fields']) {
 		if (field === 'partner_coordinates') {
 			if (mode === 'add') {
-				result[field] = geopointSource;
+				result[field] = {_lat: geopointSource.latitude, _long: geopointSource.longitude};
 			}
 			// edit mode 
 		} else {
@@ -657,7 +564,7 @@ let addFormiframe = document.getElementById('addModalHTML');
 let addFormiframeDocument = addFormiframe.contentWindow.document;
 let addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
 
-addFormSubmitButton.addEventListener('click', function (event) {
+addFormSubmitButton.addEventListener('click', async function (event) {
 	//Get data from addloc.html
 	let form_data = collectFormInputs(addFormiframeDocument, addForm_geopoint, 'add');
 
@@ -671,8 +578,11 @@ addFormSubmitButton.addEventListener('click', function (event) {
 	} 
 	if (has_existing_partner) {
 		// Uploads straight to firebase DB
-		form_data.activity_date = dateToTimestamp(form_data.activity_date);
-		addEntry(form_data);
+		form_data.activity_date = dateToTimestamp(form_data.activity_date).seconds;
+		form_data.id = doc(firestoreCollectionRef).id;
+		console.log("I am processing the form data.")
+		console.log(form_data)
+		await getSeedsCollection().insert(form_data);
 	} else {
 		// Locally store it
 		temp_activities[temp_activities_id] = form_data;
@@ -685,7 +595,7 @@ addFormSubmitButton.addEventListener('click', function (event) {
 // Mainmodal save button for batch uploading
 const MAIN_MODAL_SAVE_BUTTON = mainModalDocument.getElementsByClassName('main-modal-save')[0];
 
-MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
+MAIN_MODAL_SAVE_BUTTON.addEventListener('click', async function () {
 	event.preventDefault();
 
 	const temp_keys = Object.keys(temp_activities).length;
@@ -695,18 +605,19 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 		return;
 	}
 
-	Object.keys(temp_activities).forEach((temp_id) => {
-		let current_temp_activity = temp_activities[temp_id];
+	const new_partner_name = mainModalDocument.getElementsByClassName('main-modal-partner-name')[0].value;
+	const new_partner_address = mainModalDocument.getElementById('address-input').value;
+	console.dir(temp_activities)
+	for (const temp_activity of Object.values(temp_activities)) {
+		temp_activity['partner_name'] = new_partner_name;
+		temp_activity['partner_address'] = new_partner_address;
+		temp_activity.activity_date = dateToTimestamp(temp_activity.activity_date).seconds;
 
-		let new_partner_name = mainModalDocument.getElementsByClassName('main-modal-partner-name')[0].value;
-		let new_partner_address = mainModalDocument.getElementById('address-input').value;
-
-		current_temp_activity['partner_name'] = new_partner_name;
-		current_temp_activity['partner_address'] = new_partner_address;
-
-		current_temp_activity.activity_date = dateToTimestamp(current_temp_activity.activity_date);
-		addEntry(current_temp_activity)
-	});
+		temp_activity.id = doc(firestoreCollectionRef).id;
+		console.log("This is inside temp activities processing.")
+		console.log(temp_activity);
+		await getSeedsCollection().insert(temp_activity);
+	};
 
 	// Notify parent window (where the iframe is embedded)
 	window.parent.postMessage({ type: 'mainModalFormSuccess' }, '*');
@@ -742,6 +653,10 @@ mainModalCloseButton.addEventListener('click', function (event) {
 	}
 });
 
+export function getTempActivities() {
+	return temp_activities;
+}
+
 /**
  * Initializes Firestore synchronization for the given RxCollection.
  * If the database is in test mode, it will sync with the 'sdece-official-TEST' collection; otherwise, it will sync with the 'sdece-official' collection.
@@ -762,13 +677,14 @@ export function startFirestoreSync(db, uid, inTestMode, rxCollection) {
 	}
 
 	let collectionFirestoreName = inTestMode ? 'sdece-official-TEST' : 'sdece-official';
-
+	
 	console.log("Syncing seeds database with firestore...")
 	const firestore = DB;
 	const firestoreCollection = collection(firestore, collectionFirestoreName);
+	firestoreCollectionRef = firestoreCollection;
 
 	db.seedsSyncState = replicateFirestore({ 
-		autoStart: false,
+		autoStart: true,
 		replicationIdentifier: 'seeds_sync_' + rxCollection.name,
 		collection: rxCollection,
 		live: true, 
@@ -794,11 +710,14 @@ export function startFirestoreSync(db, uid, inTestMode, rxCollection) {
 			batchSize: 500,
 			modifier: (doc) => {
 				console.log("Pushed document to Firestore:", doc);
-				const coords = doc.partner_coordinates;
-				doc.partner_coordinates = convertCoordinates(coords);
-				return doc;
+				return doc;	
 			}
 		},
 		serverTimestampField: 'serverTimestamp'
 	});
+
+	db.seedsSyncState.error$.subscribe(err => {
+  	console.error('Replication error:', err);
+	});
+
 }
