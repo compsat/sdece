@@ -69,6 +69,7 @@ export function getDatabase() { return database; }
  * @param {RxDatabase} database - The RxDB database to add a collection to
  * @param {string} collectionName - The name of the collection
  * @param {RxSchema} schema - The schema of the collection
+ * @param {*} [conflictHandler] - The conflict handler that the replication will use
  * @returns {Promise<RxCollection>} The collection that was instantiated
  * @throws {Error} If any argument is missing or invalid
  *
@@ -86,7 +87,7 @@ export async function addCollection(database, collectionName, schema, conflictHa
     return null;
   }
 
-  await database.addCollections({ [collectionName]: { schema } });
+  await database.addCollections({ [collectionName]: { schema, conflictHandler } });
   return database[collectionName];
 }
 
@@ -135,3 +136,130 @@ export async function getAllPartnerCoordinatesInRxDB(rxCollection) {
     }
   })
 }
+
+/**
+ * Debug function to retrieve all values of a field from a specified RxCollection.
+ * Primarily used to verify that a specific field is being stored correctly in RxDB.
+ * 
+ * @param {RxCollection} rxCollection - The RxCollection to retrieve all partner coordinates from.
+ * @param {string} keyName - The key of the field that is collected.
+ * @returns {Array} an array of objects containing id and the field requested.
+ */
+export async function getFieldInRxDB(rxCollection, keyName) {
+  const checks = [
+    [!rxCollection, "rxCollection is null or undefined."],
+    [!keyName, "keyName is undefined."]
+  ]
+  if (!requireParameters(checks)) {
+    return [];
+  }
+
+  const allDocs = await rxCollection.find({
+    selector: { _deleted: { $eq: false } },
+  }).exec();
+
+  return allDocs.map(doc => {
+    return {
+      id: doc.id,
+      [keyName]: doc[keyName]
+    }
+  })
+}
+
+/**
+ * Extracts the raw seconds value from any date format, including nested Timestamps, because for some horrendous reason there are nested Timestamps.
+ * @param {any} date
+ * @returns {number}
+ */
+function extractSeconds(date) {
+  if (date?.seconds !== undefined) {
+    return extractSeconds(date.seconds); // handles nested Timestamps
+  }
+  return date;
+}
+
+/**
+ * Normalizes an activity date from various formats into a Unix timestamp in seconds.
+ *
+ * @param {number|string|Object|null|undefined} date
+ * @returns {number}
+ */
+export function normalizeActivityDate(date) {
+  const original = date;
+  let result = 0;
+
+  if (date && date !== '') {
+    if (typeof date === 'number') {
+      result = date;
+    } else if (date?.seconds !== undefined) {
+      result = extractSeconds(date);
+    } else if (typeof date === 'string') {
+      const parsed = Date.parse(date);
+      if (!isNaN(parsed)) result = Math.floor(parsed / 1000);
+    }
+  }
+
+  if (result !== original) {
+    console.log(`[normalizeActivityDate] "${original}" → ${result}`);
+  }
+
+  return result > 0 ? result : 0;
+}
+
+/**
+ * One-time migration that normalizes all existing `activity_date` values in the
+ * local RxDB collection to Unix timestamps in seconds.
+ *
+ * Iterates over all documents (including soft-deleted), compares each
+ * `activity_date` against its normalized value, and bulk-upserts any that differ.
+ *
+ * @param {RxCollection} rxCollection - The RxCollection to migrate.
+ * @returns {Promise<void>}
+ *
+ * @example
+ * await migrateActivityDates(db.seeds);
+ * // "Migrated 42 activity_date values"
+ */
+export async function migrateActivityDates(rxCollection) {
+  const allDocs = await rxCollection.find().exec();
+  let modifiedDocs = 0;
+  for (const doc of allDocs) {
+    await doc.modify((oldData) => {
+      const normalized = normalizeActivityDate(oldData.activity_date)
+      if (normalized !== oldData.activity_date) {
+        oldData.activity_date = normalized;
+        modifiedDocs += 1;
+      }
+      return oldData;
+    })
+    console.dir(doc);
+  }
+  if (modifiedDocs) {
+    console.log(`Migrated ${modifiedDocs} activity_date values`);
+  }
+}
+
+/**
+ * A custom conflict handler to make sure that the local coordinates are compatible against GeoPoints
+ * @constant
+ */
+export const coordinateConflictHandler = {
+    isEqual(a, b) {
+        // This is needed because the local coordinate object against GeoPoint will always output false.
+        const norm = (doc) => {
+            const copy = { ...doc };
+            if (copy.partner_coordinates) {
+                const c = copy.partner_coordinates;
+                copy.partner_coordinates = {
+                    _lat: c._lat ?? c.latitude,
+                    _long: c._long ?? c.longitude
+                };
+            }
+            return copy;
+        };
+        return JSON.stringify(norm(a)) === JSON.stringify(norm(b));
+    },
+    resolve(i) {
+        return i.newDocumentState;
+    }
+};

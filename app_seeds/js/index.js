@@ -66,6 +66,10 @@ function attachFunctions(window) {
 		return;
 	}
 	window.getAllPartnerCoordinatesInRxDB = getAllPartnerCoordinatesInRxDB;
+	window.migrateDates = migrateDates;
+	window.getTempActivities = getTempActivities;
+	window.getFieldInRxDB = getFieldInRxDB;
+	window.migrateActivityDates = migrateActivityDates;
 	window.getSeedsCollection = getSeedsCollection;
 	window.getActivities = getActivities;
 	window.getPartners = getPartners;
