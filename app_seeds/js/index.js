@@ -8,16 +8,16 @@ import {
 	getActivities,
 	getPartners
 } from '../js/dexie.js';
-import {
-	createSidebarItem
-} from '../js/firestore.js'
-import { getAllPartnerCoordinatesInRxDB, hasDatabase } from '../../js/dexie_UNIV.js';
+import { showModal, getTempActivities } from "./firestore.js";
+import { getAllPartnerCoordinatesInRxDB, hasDatabase, getFieldInRxDB, migrateActivityDates } from '../../js/dexie_UNIV.js';
 import { map, requireParameters } from '../../js/index_UNIV.js';
+import { migrateDates } from "../../js/firestore_UNIV.js";
 
+const L = window.L;
 const loginURL = "/html/seeds-login.html";
 const btn = document.getElementById("authBtn");
 
-let results = L.layerGroup().addTo(map);
+let markers = L.layerGroup().addTo(map);
 
 
 onAuthStateChanged(AUTH, async (user) => {
@@ -45,7 +45,7 @@ async function startApp(uid) {
 	console.log('Initializing database...')
 	await initDatabase(uid); 
 	attachFunctions(window);
-	createSubscriptions(window);
+	createSubscriptions();
 	createMarkersAndSidebar(await getPartners());
 
 	map.setView(new L.LatLng(14.651, 121.052), 14);
@@ -54,6 +54,10 @@ async function startApp(uid) {
 	}).addTo(map);
 }
 
+/**
+ * Attaches functions to the window for debug purposes.
+ * @param {*} window 
+ */
 function attachFunctions(window) {
 	const checks = [
 		[!window, "window is null or undefined."]
@@ -81,35 +85,104 @@ export function showAddModal() {
  * Creates map markers and sidebar entries for each partner.
  * @param {Object} partners - An object where each key is a partner name and the value is an array of activities associated with that partner. 
  */
-function createMarkersAndSidebar(partners) {
-	Object.keys(partners).forEach((partner) => {
-		let firstActivity = partners[partner][0];
+export function createMarkersAndSidebar(partners) {
+	for (const [partnerName, activities] of Object.entries(partners)) {
+		let firstActivity = activities[0];
 		let partnerCoordinates = firstActivity['partner_coordinates'];
-
 		if (partnerCoordinates == null) {
-			return;
+			continue;
 		}
-		let { _lat, _long} = partnerCoordinates;
-		let lat = parseFloat(_lat);
-		let long = parseFloat(_long);
-		let marker = L.marker([lat, long]);
+
+		let lat = parseFloat(partnerCoordinates._lat ?? partnerCoordinates.latitude);
+		let long = parseFloat(partnerCoordinates._long ?? partnerCoordinates.longitude);
+		let marker;
+		try {
+			marker = L.marker([lat, long]);
+		} catch (e) {
+			console.log(firstActivity)
+			console.log(partnerCoordinates);
+			console.error(e);
+		}
 
 		// Bind popup to marker
 		let popupContent = `
-			<div class="partner-popup" id="${partner}">
-			${partner}
+			<div class="partner-popup" id="${partnerName}">
+			${partnerName}
 			</div>`;
 		marker.bindPopup(popupContent);
-		results.addLayer(marker);
+		markers.addLayer(marker);
 
 		// Marker hover and click events
 		marker.on('mouseover', () => marker.openPopup());
 		marker.on('click', () => {
 				map.panTo(new L.LatLng(lat, long));
-				handleMarkerClick(partner, partners);
+				handleMarkerClick(partnerName, activities);
 		});
 
 		// Build sidebar item for this partner
-		createSidebarItem(partner, partners[partner], lat, long, marker);
+		createSidebarItem(partnerName, activities, lat, long, marker);
+	};
+}
+
+// Handle marker click: highlight sidebar and show modal
+function handleMarkerClick(partnerName, activities) {
+    clearAllHighlights();
+
+    // Highlight sidebar item
+    const sidebarItems = document.querySelectorAll('.partnerDiv');
+    sidebarItems.forEach((item) => {
+        const nameDiv = item.querySelector('.name');
+        if (nameDiv?.textContent === partnerName) {
+            item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            item.classList.add('highlight');
+        }
+    });
+
+    showModal(activities);
+}
+
+// Create sidebar list item for a partner
+export function createSidebarItem(partner, activities, lat, long, marker) {
+    const containerDiv = document.createElement('div');
+    const img = document.createElement('svg');
+    const listItem = document.createElement('li');
+    const anchor = document.createElement('a');
+    const nameDiv = document.createElement('div');
+    const addressDiv = document.createElement('div');
+    const activityDiv = document.createElement('div');
+
+    containerDiv.classList.add('partnerDiv');
+    listItem.classList.add('accordion');
+    nameDiv.classList.add('name');
+    addressDiv.classList.add('address');
+    activityDiv.classList.add('activity');
+
+    nameDiv.textContent = partner;
+    addressDiv.textContent = activities[0]['partner_address'];
+
+    // Append activity names
+    activityDiv.innerHTML = getActivitiesString(activities);
+
+    // Add click behavior for sidebar item
+    containerDiv.addEventListener('click', () => {
+        marker.openPopup();
+        map.panTo(new L.LatLng(lat, long));
+        clearAllHighlights();
+        containerDiv.classList.add('highlight');
+        showModal(activities);
+    });
+
+    // Assemble DOM elements
+    anchor.append(nameDiv, addressDiv, activityDiv);
+    listItem.appendChild(anchor);
+    containerDiv.append(img, listItem);
+    document.getElementById('locationList').appendChild(containerDiv);
+}
+
+// Clears Highlight on the Side Bar when transitioning
+export function clearAllHighlights() {
+	const sidebarItems = document.querySelectorAll('.partnerDiv');
+	sidebarItems.forEach((item) => {
+		item.classList.remove('highlight');
 	});
 }

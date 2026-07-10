@@ -76,10 +76,15 @@ export function getDatabase() { return database; }
  * const buklod = await addCollection(db, 'buklod', buklodSchema);
  * await buklod.insert({ id: '1', household_name: 'Reyes' });
  */
-export async function addCollection(database, collectionName, schema) {
-  if (!database) throw new Error('Database is required');
-  if (!collectionName) throw new Error('Collection name is required');
-  if (!schema) throw new Error('Schema is required');
+export async function addCollection(database, collectionName, schema, conflictHandler = coordinateConflictHandler) {
+  const checks = [
+    [!database, 'Database is null or undefined'],
+    [!collectionName, 'Collection Name is null or undefined'],
+    [!schema, 'Schema is null or undefined']
+  ]
+  if (!requireParameters(checks)) {
+    return null;
+  }
 
   await database.addCollections({ [collectionName]: { schema } });
   return database[collectionName];
@@ -122,8 +127,7 @@ export async function getAllPartnerCoordinatesInRxDB(rxCollection) {
   const allDocs = await rxCollection.find({
     selector: { _deleted: { $eq: false } },
   }).exec();
-  console.dir(allDocs);
-  if (allDocs.empty) { return []; }
+
   return allDocs.map(doc => {
     return {
       id: doc.id,
