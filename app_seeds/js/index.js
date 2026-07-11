@@ -12,6 +12,8 @@ import { showModal, getTempActivities } from "./firestore.js";
 import { getAllPartnerCoordinatesInRxDB, hasDatabase, getFieldInRxDB, migrateActivityDates } from '../../js/dexie_UNIV.js';
 import { map, requireParameters } from '../../js/index_UNIV.js';
 import { addMissingFields, deleteNumericIds, migrateDates } from "../../js/firestore_UNIV.js";
+import { SEEDS_RULES } from '/js/firestore_UNIV.js';
+import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs";
 
 const L = window.L;
 const loginURL = "/html/seeds-login.html";
@@ -77,8 +79,7 @@ function attachFunctions(window) {
 	window.deleteNumericIds = deleteNumericIds;
 }
 
-import { SEEDS_RULES } from '/js/firestore_UNIV.js';
-import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs";
+
 
 export function showMainModal() {
 	var mainModal = document.getElementById('mainModal');
@@ -228,14 +229,12 @@ function getActivitiesString(activities) {
  * @requires SEEDS_RULES - Ruleset for SEEDS documents
  * @requires window.partners - JS Object mapping partner names to an array of activities
  */
-export function exportData() {
-	let partners = window.partners;
-
+export async function exportData() {
   const workbook = XLSX.utils.book_new();
 	const ruleset = SEEDS_RULES['validations']
 	const fields = Object.keys(ruleset).sort();
 	const sheetData = [["Partner", ...fields.map(field => ruleset[field].label ?? field)]]
-	for (const [partnerName, activities] of Object.entries(partners).sort((a, b) => a[0].localeCompare(b[0]))) {
+	for (const [partnerName, activities] of Object.entries(await getPartners()).sort((a, b) => a[0].localeCompare(b[0]))) {
 		activities.forEach(activity => {
 			sheetData.push([
 				partnerName,
@@ -246,7 +245,7 @@ export function exportData() {
 						val = `${activity[field]._lat}, ${activity[field]._long}`;
 					else if (field === "activity_date"
 						&& activity[field])
-						val = new Date(activity[field].seconds * 1000).toLocaleString();
+						val = new Date(activity[field] * 1000).toLocaleString();
 					else val = activity[field] ?? "";
 					return val;
 				})
