@@ -183,7 +183,7 @@ export async function parseData(file) {
  * Parses a row of Excel JSON data into a document that matches a typical activity document
  *
  * @param {object} row - A JSON object that represents a row of exported activity data. Must have keys that map to their designated fields
- * @returns {object} An object that matches the fields present in a household document
+ * @returns {object} An object that matches the fields present in an activity schema
  *
  * @example
  * const jsonData = XLSX.utils.sheet_to_json(masterSheet);
