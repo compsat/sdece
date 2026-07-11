@@ -43,7 +43,7 @@ async function startApp(uid) {
 	if (hasDatabase()) return;
 
 	console.log('Initializing database...')
-	await initDatabase(uid, false); 
+	await initDatabase(uid); 
 	attachFunctions(window);
 	createSubscriptions();
 	createMarkersAndSidebar(await getPartners());
