@@ -11,7 +11,7 @@ import {
 import { showModal, getTempActivities } from "./firestore.js";
 import { getAllPartnerCoordinatesInRxDB, hasDatabase, getFieldInRxDB, migrateActivityDates } from '../../js/dexie_UNIV.js';
 import { map, requireParameters } from '../../js/index_UNIV.js';
-import { deleteNumericIds, migrateDates } from "../../js/firestore_UNIV.js";
+import { addMissingFields, deleteNumericIds, migrateDates } from "../../js/firestore_UNIV.js";
 
 const L = window.L;
 const loginURL = "/html/seeds-login.html";
@@ -43,7 +43,7 @@ async function startApp(uid) {
 	if (hasDatabase()) return;
 
 	console.log('Initializing database...')
-	await initDatabase(uid); 
+	await initDatabase(uid, false); 
 	attachFunctions(window);
 	createSubscriptions();
 	createMarkersAndSidebar(await getPartners());
@@ -66,6 +66,7 @@ function attachFunctions(window) {
 		return;
 	}
 	window.getAllPartnerCoordinatesInRxDB = getAllPartnerCoordinatesInRxDB;
+	window.addMissingFields = addMissingFields;
 	window.migrateDates = migrateDates;
 	window.getTempActivities = getTempActivities;
 	window.getFieldInRxDB = getFieldInRxDB;

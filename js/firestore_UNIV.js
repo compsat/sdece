@@ -978,8 +978,8 @@ export async function migrateDates(collectionName, database = DB) {
 }
 
 /**
- * Deletes or previews deletion of Firestore documents whose IDs are purely numeric.
  * Debug function primarily to remove all leaked documents.
+ * Deletes or previews deletion of Firestore documents whose IDs are purely numeric.
  *
  * @param {string} collectionName - Name of the Firestore collection.
  * @param {boolean} [preview=false] - If true, logs affected documents without deleting.
