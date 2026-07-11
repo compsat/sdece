@@ -45,7 +45,7 @@ async function startApp(uid) {
 	if (hasDatabase()) return;
 
 	console.log('Initializing database...')
-	await initDatabase(uid); 
+	await initDatabase(uid, true); 
 	attachFunctions(window);
 	createSubscriptions();
 	createMarkersAndSidebar(await getPartners());
@@ -246,7 +246,7 @@ export async function exportData() {
 					else if (field === "activity_date"
 						&& activity[field])
 						val = new Date(activity[field] * 1000).toLocaleString();
-					else val = activity[field] ?? "";
+					else val = activity[field] || "";
 					return val;
 				})
 			])
