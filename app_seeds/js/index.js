@@ -6,7 +6,10 @@ import {
 	createSubscriptions,
 	getSeedsCollection,
 	getActivities,
-	getPartners
+	getPartners,
+	parseData,
+	importData,
+	setAsOffline
 } from '../js/dexie.js';
 import { showModal, getTempActivities } from "./firestore.js";
 import { getAllPartnerCoordinatesInRxDB, hasDatabase, getFieldInRxDB, migrateActivityDates } from '../../js/dexie_UNIV.js';
@@ -253,8 +256,30 @@ export async function exportData() {
 		})
 	}
 	XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(sheetData), 'Master Sheet');
-	const now = new Date()
-    XLSX.writeFile(workbook, `Seeds_Report-${now.toLocaleDateString().replaceAll('/','-')}.xlsx`);
+	const now = new Date();
+  XLSX.writeFile(workbook, `Seeds_Report-${now.toLocaleDateString().replaceAll('/','-')}.xlsx`);
 }
 
 document.getElementById('download-report').addEventListener("click", exportData);
+
+document.getElementById('import-report').addEventListener('click', async () => {
+	document.getElementById('import-report-input').click()
+});
+
+document.getElementById('import-report-input').addEventListener('change', async function(e) {
+	console.log('You selected ' + e.target.files?.[0].name);
+	try {
+		const docs = await parseData(e.target.files?.[0])
+		if (docs.length === 0) {
+			alert("No valid rows found.")
+			return;
+		};
+		console.dir(docs)
+		await importData(docs);
+		setAsOffline();
+		alert(`Imported ${docs.length} households. Refresh to return to online mode.`)
+	} catch (err) {
+		console.error("Import failed:", err);
+		alert("Import failed.")
+	}
+});

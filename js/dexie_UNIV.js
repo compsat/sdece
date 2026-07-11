@@ -184,7 +184,7 @@ function extractSeconds(date) {
  * @param {number|string|Object|null|undefined} date
  * @returns {number}
  */
-export function normalizeActivityDate(date) {
+export function normalizeActivityDate(date, log = true) {
   const original = date;
   let result = 0;
 
@@ -199,7 +199,7 @@ export function normalizeActivityDate(date) {
     }
   }
 
-  if (result !== original) {
+  if (result !== original && log) {
     console.log(`[normalizeActivityDate] "${original}" → ${result}`);
   }
 
