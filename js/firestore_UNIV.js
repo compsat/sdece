@@ -79,14 +79,17 @@ export function getCoordinates(coordinates) {
  * @returns {GeoPoint|null} A GeoPoint if coords is valid, otherwise null.
  */
 export function convertCoordinates(coords) {
+	let old = coords;
 	if (!coords) return null;
-
+	
 	const lat = coords._lat ?? coords.latitude;
 	const lng = coords._long ?? coords.longitude;
-
-	return (lat === undefined || lng === undefined)
+	
+	let newCoords = (lat === undefined || lng === undefined)
 		? null
-		: new GeoPoint(lat, lng);
+		: new GeoPoint(lat, lng)
+	console.log("[convertCoordinates]: ", {old, newCoords});
+	return newCoords;
 }
 
 const SECRETS_PATH = "/js/secrets.json";

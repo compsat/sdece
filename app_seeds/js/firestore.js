@@ -2,6 +2,7 @@
 import { GeoPoint, Timestamp, collection, doc } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
 import { replicateFirestore } from 'https://esm.sh/rxdb@17.3.0/plugins/replication-firestore?external=firebase';
 import { 
+	convertCoordinates,
 	DB, FIREBASE_CONFIG, SEEDS_RULES, 
 	setCollection, 
 	validateData,
@@ -708,6 +709,8 @@ export function startFirestoreSync(db, uid, inTestMode, rxCollection) {
 			batchSize: 500,
 			modifier: (doc) => {
 				console.log("Pushed document to Firestore:", doc);
+				if (!(doc.partner_coordinates instanceof GeoPoint))
+					doc.partner_coordinates = convertCoordinates(doc.partner_coordinates);
 				return doc;	
 			}
 		},
