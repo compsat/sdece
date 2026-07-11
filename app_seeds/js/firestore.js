@@ -4,7 +4,6 @@ import { replicateFirestore } from 'https://esm.sh/rxdb@17.3.0/plugins/replicati
 import { 
 	convertCoordinates,
 	DB, FIREBASE_CONFIG, SEEDS_RULES, 
-	setCollection, 
 	validateData,
 } from '../../js/firestore_UNIV.js';
 import { map } from '/js/index_UNIV.js';
@@ -12,11 +11,7 @@ import { showMainModal, showAddModal, clearAllHighlights, getActivityString } fr
 import { requireParameters, toDateString } from '../../js/index_UNIV.js';
 import { getPartners, getSeedsCollection } from './dexie.js';
 
-// Set collection and associated rule config
-let collection_value = 'seeds-official'
-setCollection(collection_value);
 let firestoreCollectionRef; // Autofilled in startFirestoreSync()
-
 
 export function populateMainModalList() {
 	// Display temporarily saved activities to main modal
