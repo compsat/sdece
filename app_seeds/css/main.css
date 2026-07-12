@@ -97,6 +97,7 @@ iframe {
 	align-items: center;
 	justify-content: center;
 	white-space: nowrap;
+	font-family: 'Geist', sans-serif;font-weight: 500;
 }
 
 .action-btn:hover {
