@@ -105,6 +105,7 @@ addModalButton.addEventListener('click', () => {
 			}
 		}
 		showAddModal();
+		console.log("showing add modal");
 	}
 });
 

@@ -23,6 +23,8 @@ export function showMainModal() {
 
 export function showAddModal() {
 	const addModal = document.getElementById('addModal');
+	const addFormIFrame = document.getElementById('addModalHTML');
+	addFormIFrame.style.display = 'flex';
 	addModal.style.display = 'flex';
 }
 
