@@ -72,14 +72,15 @@ map.on('click', onMapClick);
 
 // Handles Add Activity from the main modal
 const mainModalDocument = document.getElementById('mainModalIframe').contentDocument;
-const newButton = mainModalDocument.getElementById('addModalButton');
-let has_existing_partner;
+const addModalButton = mainModalDocument.getElementById('addModalButton');
+let hasExistingPartner;
 
-newButton.addEventListener('click', () => {
+addModalButton.addEventListener('click', () => {
 	// Get the Add Activity form and the needed input fields for autofill
 	let inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value;
 	let inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value;
-	has_existing_partner = false;
+	console.log("flagged hasExistingPartner as FALSE");
+	hasExistingPartner = false;
 
 	if (inputtedPartnerName == '' || inputtedPartnerAddress == '') {
 		alert('Partner Name and Partner Address cannot be blank.');
@@ -99,7 +100,9 @@ newButton.addEventListener('click', () => {
 					addFormiframeDocument.getElementById(field).value = null;
 					addFormiframeDocument.getElementById(field).readOnly = false;
 				}
-			} 
+			} else {
+
+			}
 		}
 		showAddModal();
 	}
@@ -365,6 +368,9 @@ activitiesSection.innerHTML = `
 	const addActivityButton = activitiesSection.querySelector('#addActivityButton');
 	if (addActivityButton) {
   		addActivityButton.addEventListener('click', () => {
+
+				console.log("flagged hasExistingPartner as TRUE");
+				hasExistingPartner = true;
     		// Close current modal
     		modal.style.display = 'none';
     		modal.classList.remove('open');
@@ -376,12 +382,14 @@ activitiesSection.innerHTML = `
     		const addFormIframe = document.getElementById('addModalHTML');
     		const partnerName = partner[0]?.partner_name || '';
     		const partnerAddress = partner[0]?.partner_address || '';
+				const partnerCoordinates = partner[0]?.partner_coordinates || '';
     
     		const fillFormFields = () => {
       			try {
         			const addFormDoc = addFormIframe.contentDocument || addFormIframe.contentWindow.document;
         			const nameField = addFormDoc.getElementById('partner_name');
         			const addressField = addFormDoc.getElementById('partner_address');
+							const coordinatesField = addFormDoc.getElementById('partner_coordinates');
         
         		if (nameField) {
           			nameField.value = partnerName;
@@ -392,6 +400,12 @@ activitiesSection.innerHTML = `
           			addressField.value = partnerAddress;
           			addressField.readOnly = true;
           			addressField.style.backgroundColor = 'var(--custom-medium-gray)';
+        		}
+						if (coordinatesField) {
+							coordinatesField.value = partnerCoordinates;
+							coordinatesField.readOnly = true;
+							coordinatesField.style.backgroundColor = 'var(--custom-medium-gray)';
+							console.log(partnerCoordinates);
         		}
       			} catch (e) {
         			console.log('Waiting for iframe to load...');
@@ -678,7 +692,13 @@ function collectFormInputs(doc, geopointSource, mode) {
 	for (let field of SEEDS_RULES['fields']) {
 		if (field === 'partner_coordinates') {
 			if (mode === 'add') {
-				result[field] = geopointSource;
+					if (!geopointSource) {
+						let input = doc.getElementById(field);
+						result[field] = input?.value || null;
+					} else {
+						result[field] = geopointSource;
+					}
+				
 			}
 			// edit mode 
 		} else {
@@ -728,8 +748,16 @@ let addFormiframeDocument = addFormiframe.contentWindow.document;
 let addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
 
 addFormSubmitButton.addEventListener('click', function (event) {
+	let geoPoint;
+
+	if (addForm_geopoint) {
+		geoPoint = addForm_geopoint;
+	}
+	
 	//Get data from addloc.html
-	let form_data = collectFormInputs(addFormiframeDocument, addForm_geopoint, 'add');
+	let form_data = collectFormInputs(addFormiframeDocument, geoPoint, 'add');
+
+	//Check if partner exists
 
 	//Validate the collated input here
 	let errors = validateData('seeds-official-TEST', form_data);
@@ -739,8 +767,10 @@ addFormSubmitButton.addEventListener('click', function (event) {
 		event.preventDefault();
 		return;
 	} 
-	if (has_existing_partner) {
+	if (hasExistingPartner) {	//FIXME: this boolean is only defined on map click
 		// Uploads straight to firebase DB
+		console.log("form data:")
+		console.log(form_data); 	
 		form_data.activity_date = dateToTimestamp(form_data.activity_date);
 		addEntry(form_data);
 	} else {
