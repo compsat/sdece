@@ -90,6 +90,7 @@ h3.filter-header {
   border: none;
   outline: none;
   font-size: 1.25rem;
+  padding: 1rem;
 }
 
 .filter-clear {
