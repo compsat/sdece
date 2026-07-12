@@ -79,10 +79,10 @@ iframe {
 }
 
 .actions-container {
-	display: flex;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
 	gap: 0.5rem;
 	margin-bottom: 1.5rem;
-	flex-wrap: wrap;
 }
 
 .action-btn {
@@ -100,8 +100,8 @@ iframe {
 }
 
 .action-btn:hover {
-		color: var(--custom-black);
-		background-color: var(--custom-light-gray);
+		color: var(--custom-white);
+		background-color: var(--darkbg);
 }
 
 .partners-header {
