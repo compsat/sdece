@@ -610,7 +610,6 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', async function () {
 	for (const temp_activity of Object.values(temp_activities)) {
 		temp_activity['partner_name'] = new_partner_name;
 		temp_activity['partner_address'] = new_partner_address;
-		temp_activity.activity_date = dateToTimestamp(temp_activity.activity_date).seconds;
 
 		temp_activity.id = doc(firestoreCollectionRef).id;
 		console.log("This is inside temp activities processing.")
