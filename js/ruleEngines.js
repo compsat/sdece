@@ -81,8 +81,8 @@ export const FILTER_RULES = {
   },
   'seeds-official': {
     // partner_name: { label: "partner_name", type: 'string', required: true, maxLength: 255 },
-		activity_nature: { label: 'activity_nature', type: 'string', required: true, maxLength: 255 },
-		organization_unit: { label: 'organization_unit', type: 'string', maxLength: 127 },
-		ADMU_office: { label: 'ADMU_office', type: 'string', required: true, maxLength: 127 }
+		activity_nature: { desc: "Nature of the activity", label: 'activity_nature', type: 'string', required: true, maxLength: 255 },
+		organization_unit: { desc: "Organization/Unit", label: 'organization_unit', type: 'string', maxLength: 127 },
+		ADMU_office: { desc: "ADMU Office", label: 'ADMU_office', type: 'string', required: true, maxLength: 127 }
 		}
 }

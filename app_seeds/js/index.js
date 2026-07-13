@@ -104,9 +104,8 @@ function setUpFilterModal() {
 
 	const filters = getFilterFields(window.partners);
 	const filterSection = filterModal.getElementById('filter-section');
-
 	Object.keys(filters).forEach((field) => {
-		const filterHeader = `<h3 class="filter-header">${field}</h3>`
+		const filterHeader = `<h3 class="filter-header">${FILTER_RULES["seeds-official"][field]['desc']}</h3>`
 		filterSection.innerHTML += filterHeader;
 
 		filters[field].forEach((filter) => {
