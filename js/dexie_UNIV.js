@@ -86,7 +86,10 @@ export async function addCollection(database, collectionName, schema, conflictHa
   if (!requireParameters(checks)) {
     return null;
   }
-
+  if (database[collectionName]) {
+    console.warn(`Collection ${collectionName} already exists in database.`);
+    return database[collectionName]
+  }
   await database.addCollections({ [collectionName]: { schema, conflictHandler } });
   return database[collectionName];
 }
