@@ -275,9 +275,9 @@ document.getElementById('import-report-input').addEventListener('change', async 
 			return;
 		};
 		console.dir(docs)
-		await importData(docs);
+		await importData(docs.validRows);
 		setAsOffline();
-		alert(`Imported ${docs.length} households. Refresh to return to online mode.`)
+		alert(`Imported ${docs.validRows.length} activities. Failed to import ${docs.invalidRows.length} activities. Refresh to return to online mode.`)
 	} catch (err) {
 		console.error("Import failed:", err);
 		alert("Import failed.")

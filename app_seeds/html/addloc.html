@@ -40,6 +40,7 @@
 				validateData,
 				getCoordinates,
 			} from '/js/firestore_UNIV.js';
+			import { normalizeActivityDate } from '/js/dexie_UNIV.js'
 
 			setCollection('seeds-official-TEST');
 
@@ -61,6 +62,8 @@
 
 					if (fieldName == 'partner_coordinates') {
 						collatedInput[fieldName] = getCoordinates();
+					} else if (fieldName == 'activity_date') {
+						collatedInput[fieldName] = normalizeActivityDate(inputValue)
 					} else {
 						collatedInput[fieldName] = inputValue;
 					}

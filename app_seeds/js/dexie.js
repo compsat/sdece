@@ -12,7 +12,7 @@ import {
   setDatabase
 } from '../../js/dexie_UNIV.js'
 import { clearMarkers } from '../../js/index_UNIV.js'
-import { SEEDS_RULES_TEST, SEEDS_RULES } from '../../js/firestore_UNIV.js';
+import { SEEDS_RULES_TEST, SEEDS_RULES, validateData } from '../../js/firestore_UNIV.js';
 import { startFirestoreSync } from './firestore.js';
 
 addRxPlugin(RxDBLeaderElectionPlugin);
@@ -157,7 +157,7 @@ export async function importData(docs) {
  * Reads the "Master Sheet" tab and maps each row through {@link parseRow}.
  *
  * @param {File} file - The Excel file to parse (.xlsx, .xls).
- * @returns {Promise<object[]>} Array of parsed document objects.
+ * @returns {{validRows: Object[], invalidRows: Object[]}} An object of parsed document objects.
  * @throws {Error} If the file cannot be parsed or the "Master Sheet" tab is missing.
  */
 export async function parseData(file) {
@@ -169,10 +169,24 @@ export async function parseData(file) {
       throw new Error("Spreadsheet is missing a 'Master Sheet' tab.");
     }
     const jsonData = XLSX.utils.sheet_to_json(masterSheet);
+    const result = {
+      validRows: [],
+      invalidRows: []
+    }
+    console.dir(jsonData)
+    for (const raw of jsonData) {
+      if (String(raw["Partner"] ?? "").trim() === "")  continue;
 
-    return jsonData
-      .filter((r) => String(r["Partner"] ?? "").trim() !== "")
-      .map(parseRow);
+      const row = parseRow(raw);
+      const errors = validateData('seeds-official-TEST', row);
+      console.log(errors);
+      if (errors.length === 0) {
+        result.validRows.push(row);
+      } else {
+        result.invalidRows.push(row);
+      }
+    }
+    return result;
   } catch (err) {
     console.error("Import failed:", err);
     throw new Error(`Could not parse file: ${err.message}`, {cause: err});

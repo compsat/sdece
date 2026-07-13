@@ -10,6 +10,7 @@ import { map } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal, clearAllHighlights, getActivityString } from './index.js';
 import { requireParameters, toDateString } from '../../js/index_UNIV.js';
 import { getPartners, getSeedsCollection } from './dexie.js';
+import { normalizeActivityDate } from '../../js/dexie_UNIV.js';
 
 let firestoreCollectionRef; // Autofilled in startFirestoreSync()
 
@@ -336,6 +337,7 @@ function showEditActivityForm(activity, partnerName, coords) {
 					const input = form.querySelector(`[name="${key}"]`);
 					updated[key] = input ? input.value : '';
 				});
+				updated.activity_date = normalizeActivityDate(updated.activity_date);
 				let errors = validateData('seeds-official-TEST', updated);
 				const errorDiv = form.querySelector('#error_messages');
 				if (errorDiv) errorDiv.innerHTML = '';
@@ -354,7 +356,6 @@ function showEditActivityForm(activity, partnerName, coords) {
 
 					return;
 				}
-				updated.activity_date = dateToTimestamp(updated.activity_date).seconds;
 				activity = await activity.incrementalPatch(updated);
 				showActivityDetailModal(activity, partnerName, coords);
 			};
@@ -511,6 +512,11 @@ function collectFormInputs(doc, geopointSource, mode) {
 			if (mode === 'add') {
 				result[field] = {_lat: geopointSource.latitude, _long: geopointSource.longitude};
 			}
+		} else if (field === 'activity_date') {
+			if (mode === 'add') {
+				let input = doc.getElementById(field)
+				result[field] = normalizeActivityDate(input?.value || 0)
+			}
 			// edit mode 
 		} else {
 			let input = doc.getElementById(field);
@@ -571,8 +577,7 @@ addFormSubmitButton.addEventListener('click', async function (event) {
 		return;
 	} 
 	if (has_existing_partner) {
-		// Uploads straight to firebase DB
-		form_data.activity_date = dateToTimestamp(form_data.activity_date).seconds;
+		form_data.activity_date = normalizeActivityDate(form_data.activity_date);
 		form_data.id = doc(firestoreCollectionRef).id;
 		console.log("I am processing the form data.")
 		console.log(form_data)
