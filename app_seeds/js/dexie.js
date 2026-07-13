@@ -211,10 +211,10 @@ function parseRow(row) {
     return normalizeActivityDate(get(header), false)
   }
   const coord = (header) => {
-    const [lat, long] = get(header).split(",").map(Number); 
-    if (lat === 0 && long === 0) { return null; }
-    else { return {_lat: lat, _long: long}; }
-  }
+      const parts = get(header).split(",").map(Number);
+      if (parts.length !== 2 || Number.isNaN(parts[0]) || Number.isNaN(parts[1])) return null;
+      return { _lat: parts[0], _long: parts[1] };
+  };
 	const ruleset = SEEDS_RULES['validations']
   let ret = {id: `local_${generateHash(20)}`}
   for (const [field, { label }] of Object.entries(ruleset)) {
