@@ -20,21 +20,23 @@ addRxPlugin(RxDBLeaderElectionPlugin);
 let activeSeedsCollection = null;
 let activeSeedsSubscription = null;
 let schema = null; // Initialized in initDatabase() based on whether the app is in test mode
+let filterSelector = null;
 
 export function getSeedsCollection() { return activeSeedsCollection; }
 function setSeedsCollection(collection) { activeSeedsCollection = collection; }
 
 /**
  * Gets all activities from the seeds collection.
+ * @param {boolean} ignoreFilter - Decides whether or not to return documents using the currently set filters.
  * @throws {Error} Seeds collection must be initialized.
  * @returns An object with docId as keys and activity data as values.
  */
-export async function getActivities() {
+export async function getActivities(ignoreFilter = false) {
   if (!activeSeedsCollection) {
     throw new Error("Seeds collection is not initialized.");
   }
-
-  let activitiesSet = await activeSeedsCollection.find({ selector: { _deleted: { $eq: false } } }).exec();
+  let selector = (!ignoreFilter && filterSelector) ?? { _deleted: { $eq: false }};
+  let activitiesSet = await activeSeedsCollection.find({ selector }).exec();
   let activities = {};
   for (const activity of activitiesSet) {
     activity['identifier'] = activity.id;
@@ -55,12 +57,18 @@ function groupActivities(activities) {
 
 /**
  * Gets all unique partners and their associated activities in a (partnerName, activity[]) object.
+ * @param {boolean} ignoreFilter - Decides whether or not to return documents using the currently set filters.
  * @returns An object where each key is a partner name and the value is an array of activities associated with that partner.
  */
-export async function getPartners() {
-  return groupActivities(await getActivities());
+export async function getPartners(ignoreFilter = false) {
+  return groupActivities(await getActivities(ignoreFilter));
 }
 
+/**
+ * Sets a filter on the getActivities() function. Pass in null if you want to return all documents.
+ * @param {*} filter 
+ */
+export async function setFilter(filter) { filterSelector = filter }
 /**
  * Unsubscribes from the previous collection and subscribes to the new collection.
  * This allows the app to update immediately as soon as something changes in the subscribed collection.

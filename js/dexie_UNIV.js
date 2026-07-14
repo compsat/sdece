@@ -1,6 +1,9 @@
 import { createRxDatabase } from 'https://esm.sh/rxdb@17.3.0';
 import { getRxStorageDexie } from 'https://esm.sh/rxdb@17.3.0/plugins/storage-dexie';
 import { requireParameters } from '../../js/index_UNIV.js';
+import { FILTER_RULES } from './ruleEngines.js';
+import { buildQueryArray } from '../app_seeds/js/index.js';
+import { setFilter } from '../app_seeds/js/dexie.js';
 
 let database = null;
 
@@ -266,3 +269,61 @@ export const coordinateConflictHandler = {
         return i.newDocumentState;
     }
 };
+
+/**
+ * 
+ * @param {*} collectionRef - The RxCollection that will be filtered. 
+ * @param {*} filterRules - The set of rules that will dictate filtering. See {@link FILTER_RULES}.
+ * @param {*} queryArray - The object that maps field names to an array of active filters. An output of {@link buildQueryArray}.
+ * @returns {RxDocument[]} the filtered data on the given collection.
+ */
+export async function filterData(collectionRef, filterRules, queryArray) {
+  const selector = buildSelector(filterRules, queryArray);
+  const finalQuery = await collectionRef.find({ selector }).exec();
+  return finalQuery;
+}
+
+/**
+ * Builds an RxDB selector object from filter rules and active query values.
+ *
+ * @param {Object<string, {type: string, label?: string}>} filterRules - Rule engine's field properties of a given collection.
+ * @param {Object<string, string[]>} queryArray - Maps field names to arrays of active filter values. Output of {@link buildQueryArray}.
+ * @returns {Object} An RxDB-compatible selector object for use with {@link setFilter}.
+ *
+ * @example
+ * const selector = buildSelector(FILTER_RULES["seeds-official"], queryArray);
+ * // => { partner_name: { $in: ["Partner A", "Partner B"] }, activity_date: { $gte: 1710000000 } }
+ */
+export function buildSelector(filterRules, queryArray, log=true) {
+  const selector = {};
+  for (const [fieldName, filterProps] of Object.entries(filterRules)) {
+    const filters = queryArray[fieldName]; 
+
+    const IS_EMPTY = (
+      filters == null
+      || filters == '' 
+      || (Array.isArray(filters) && filters.length === 0));
+
+    if (IS_EMPTY) {
+      console.log("[buildSelector] Filter is empty, skipping...", filters);
+      continue;
+    } 
+
+    switch (filterProps.type) {
+      case "string":
+        selector[fieldName] = Array.isArray(filters) ? {$in: filters} : {$eq: filters}
+        break;
+      case "number":
+        selector[fieldName] = {$gte: Number(filters)};
+        break;
+      default:
+        break;
+    }
+    if (log) {
+      console.log(`[buildSelector] Building filter for ${fieldName} with props:`, filterProps);
+      console.log(`[buildSelector] Current status of selector: `, selector);
+    }
+  }
+  if (log) console.log("[buildSelector] Query selector:", selector);
+  return selector;
+}

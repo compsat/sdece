@@ -229,7 +229,6 @@
 
     searchBar.addEventListener('search', (event) => {
       const query = event.detail;
-      console.log('Searching for:', query);
       searchEntries(query);
     });
 
@@ -284,7 +283,6 @@
           : nameB.localeCompare(nameA);
       });
 
-      console.log(`Sorted ${sortState === 'asc' ? 'ascending' : 'descending'}`);
 
       // Clear and re-append sorted items
       locationList.innerHTML = '';
@@ -319,7 +317,6 @@
       }
 
       sortBtn.addEventListener('click', () => {
-        console.log("SORT CLICKED");
         let items = Array.from(locationList.querySelectorAll('.container-entry'));
 
         // Cycle through three states: none -> asc -> desc -> none
