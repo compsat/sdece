@@ -5,7 +5,7 @@ import { map } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal } from './index.js';
 
 // Set collection and associated rule config
-let collection_value = 'seeds-official'
+let collection_value = 'sdece-official-TEST'
 setCollection(collection_value);
 
 export function populateMainModalList() {
@@ -791,6 +791,12 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 
 	const temp_keys = Object.keys(temp_activities).length;
 
+	let inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value;
+	let inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value;
+	if (inputtedPartnerName == '' || inputtedPartnerAddress == '') {
+		alert('Partner Name and Partner Address cannot be blank.');
+		return;
+	}
 	if (temp_keys === 0) {
 		alert("Can't submit a partner with an empty list of activities.");
 		return;
