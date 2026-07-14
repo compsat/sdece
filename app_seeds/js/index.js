@@ -13,7 +13,7 @@ import {
 	setAsOffline
 } from '../js/dexie.js';
 import { showModal, getTempActivities } from "./firestore.js";
-import { getAllPartnerCoordinatesInRxDB, hasDatabase, getFieldInRxDB, migrateActivityDates, buildSelector, filterData } from '../../js/dexie_UNIV.js';
+import { getAllPartnerCoordinatesInRxDB, hasDatabase, getFieldInRxDB, migrateActivityDates, buildSelector } from '../../js/dexie_UNIV.js';
 import { map, requireParameters, toDateString } from '../../js/index_UNIV.js';
 import { addMissingFields, deleteNumericIds, migrateDates, SEEDS_RULES } from "../../js/firestore_UNIV.js";
 import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs";
