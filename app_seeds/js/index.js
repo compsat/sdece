@@ -192,3 +192,34 @@ async function applyFilterAndUpdate(queryArray) {
 	createMarkersAndSidebar(partners);
 	closeFilterModal();
 }
+
+//SORTING
+const sortBtn = document.getElementById('sort-btn')
+let sortState = 'asc';
+
+sortBtn.addEventListener("click", function(event) {
+	changeSortState();
+});
+
+function changeSortState() {
+	const locationList = document.getElementById('locationList');
+	const partners = Array.from(locationList.querySelectorAll('.partnerDiv'));
+	partners.sort((a, b) => {
+		const nameA = a.querySelector('.name').textContent.trim().toUpperCase();
+    const nameB = b.querySelector('.name').textContent.trim().toUpperCase();
+
+		return sortState === 'asc'
+          ? nameA.localeCompare(nameB)
+          : nameB.localeCompare(nameA);
+	});
+
+	clearLocationList();
+	partners.forEach(partner => locationList.appendChild(partner));
+
+	// Toggle between ascending and descending sort
+	if (sortState === 'asc') {
+    sortState = 'desc';
+  } else if (sortState === 'desc') {
+    sortState = 'asc';
+  }
+}
