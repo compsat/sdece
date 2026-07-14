@@ -542,7 +542,11 @@ function displayErrors(errors, docContext) {
 	} 
 }
 
-// Used for add/edit to normalize date to timestamp
+/** Used for add/edit to normalize date to timestamp
+ * @deprecated No longer used since dates are stored as integers locally
+ * @param {date} - The date string in YYYY-MM-DD format
+ * @return {Timestamp} A Firestore Timestamp that reflects the input date
+*/
 function dateToTimestamp(date) {
 	if (typeof date === 'string' && !isNaN(Date.parse(date))) {
 		const parsedDate = new Date(date);
