@@ -12,7 +12,9 @@ import {
 	writeBatch,
 	getDoc,
 	GeoPoint,
-	deleteField
+	deleteField,
+	getFirestore,
+	collection,
 } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
 
 
@@ -22,10 +24,6 @@ import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/12.15
 
 import { FILTER_RULES } from '/js/ruleEngines.js'
 import { normalizeActivityDate } from '../js/dexie_UNIV.js'
-import {
-	getFirestore,
-	collection,
-} from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
 
 function getUrlParameter(name) {
 	name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -842,7 +840,6 @@ window.db = DB;
 export async function filterData(collectionName, queryArray) {
   const rules = FILTER_RULES[collectionName];
   const fullQueries = [];
-  const finalResults = new Map();
 
 
   for (const field in rules) {
@@ -872,14 +869,7 @@ export async function filterData(collectionName, queryArray) {
   }
 
   const finalQuery = await getDocs(query(collection_reference, and(...fullQueries)));
-
-  finalQuery.forEach((doc) => {
-      let docData = doc.data();
-      let docID = doc.id;
-      finalResults.set(docID, docData);
-  });
-
-  return finalResults;
+	return finalQuery;
 }
 
 /**
@@ -983,7 +973,7 @@ export async function migrateDates(collectionName, database = DB) {
  *
  * @param {string} collectionName - Name of the Firestore collection.
  * @param {boolean} [preview=false] - If true, logs affected documents without deleting.
- * @param {import('firebase/firestore').Firestore} [db=DB] - Firestore database reference.
+ * @param {Firestore} [db=DB] - Firestore database reference.
  * @returns {Promise<{deleted: number, total: number, affected: string[]}>} Result summary.
  */
 export async function deleteNumericIds(collectionName, preview = true, db = DB) {

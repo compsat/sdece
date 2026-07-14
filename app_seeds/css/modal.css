@@ -46,6 +46,16 @@ button {
 	overflow: hidden;
 }
 
+.filter-modal {
+	width: 90%;
+	max-width: 440px;
+	height: 80vh;
+	border-radius: 1rem;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
 /* Main Modal */
 .main-modal {
 	border-radius: 0.5rem;

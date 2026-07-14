@@ -6,14 +6,18 @@ import {
 	createSubscriptions,
 	getSeedsCollection,
 	getActivities,
-	getPartners
+	getPartners,
+	setFilter
 } from '../js/dexie.js';
 import { showModal, getTempActivities } from "./firestore.js";
-import { getAllPartnerCoordinatesInRxDB, hasDatabase, getFieldInRxDB, migrateActivityDates } from '../../js/dexie_UNIV.js';
+import { getAllPartnerCoordinatesInRxDB, hasDatabase, getFieldInRxDB, migrateActivityDates, buildSelector, filterData } from '../../js/dexie_UNIV.js';
 import { map, requireParameters } from '../../js/index_UNIV.js';
 import { addMissingFields, deleteNumericIds, migrateDates } from "../../js/firestore_UNIV.js";
 import { SEEDS_RULES } from '/js/firestore_UNIV.js';
 import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs";
+import { FILTER_RULES } from "../../js/ruleEngines.js";
+
+import { clearLocationList, clearMarkers } from '../../js/index_UNIV.js';
 
 const L = window.L;
 const loginURL = "/html/seeds-login.html";
@@ -82,12 +86,12 @@ function attachFunctions(window) {
 
 
 export function showMainModal() {
-	var mainModal = document.getElementById('mainModal');
+	const mainModal = document.getElementById('mainModal');
 	mainModal.style.display = 'flex';
 }
 
 export function showAddModal() {
-	var addModal = document.getElementById('addModal');
+	const addModal = document.getElementById('addModal');
 	addModal.style.display = 'flex';
 }
 
@@ -258,3 +262,151 @@ export async function exportData() {
 }
 
 document.getElementById('download-report').addEventListener("click", exportData);
+// CODE LOGIC FOR FILTERING
+const filterBtn = document.getElementById('filter-btn');
+filterBtn.addEventListener('click', () => showFilterModal());
+
+const filterModalIframe = document.getElementById('filter-modal-id');
+const filterModal = filterModalIframe.contentDocument;
+
+const filterModalClose = filterModal.getElementById("filterClose");
+filterModalClose.addEventListener("click", function(event) {
+	closeFilterModal();  
+});
+
+const filterModalApply = filterModal.getElementById("applyFilters");
+filterModalApply.addEventListener("click", function(event){
+	const filterState = captureFilterState();
+	const queryArray = buildQueryArray(filterState);
+	applyFilterAndUpdate(queryArray);
+
+});
+
+const filterModalClear = filterModal.getElementById("clearFilters");
+filterModalClear.addEventListener("click", function(event) {
+	clearCheckboxes();
+})
+
+function showFilterModal() {
+	const filterModal = document.getElementById('filterModal');
+	filterModal.style.display = 'flex';
+	setUpFilterModal();
+	console.log("showing filter modal");
+}
+
+async function setUpFilterModal() {
+	const filters = getFilterFields(await getPartners(true));
+	const filterSection = filterModal.getElementById('filter-section');
+	Object.keys(filters).forEach((field) => {
+		const filterHeader = `<h3 class="filter-header">${FILTER_RULES["seeds-official"][field]['desc']}</h3>`
+		filterSection.innerHTML += filterHeader;
+
+		filters[field].forEach((filter) => {
+			const filterOptions = `<label><input type="checkbox" value="${filter}" data-filter="${field}"> ${filter} </label>`;
+			filterSection.innerHTML += filterOptions;
+		})
+	});
+}
+
+function clearFilterModal() {
+	const filterSection = filterModal.getElementById('filter-section');
+	filterSection.innerHTML = "";
+}
+
+function clearCheckboxes() {
+	filterModal.querySelectorAll('input[type="checkbox"]').forEach(cb => 
+		cb.checked = false);
+}
+
+function closeFilterModal() {
+	window.parent.postMessage('closeFilterModal', '*');
+	clearFilterModal();
+}
+
+function getFilterFields(partners) {
+	const filterFields = {};
+	const ruleEngineFields = FILTER_RULES["seeds-official"]
+	for (const key in ruleEngineFields) {
+		filterFields[key] = [];
+
+		Object.keys(partners).forEach((partner) => {
+			const entry = partners[partner][0][key];
+			if (!filterFields[key].includes(entry)) {
+				filterFields[key].push(entry);
+			}
+		});
+	};
+	console.log("[getFilterFields] Filters: ", filterFields)
+	return filterFields;
+}
+
+/**
+ * Captures the current filter state from the filter modal.
+ *
+ * @returns {Object<string, Object<string, boolean>>} An object keyed by field name,
+ *   where each value is an object mapping filter values to their checked state.
+ *
+ * @example
+ * const filterState = captureFilterState();
+ * const queryArray = buildQueryArray(filterState);
+ * // Returns:
+ * // {
+ * //   partner_name: { "Partner A": true, "Partner B": false },
+ * //   activity_type: { "Training": true, "Meeting": true }
+ * // }
+ */
+function captureFilterState() {
+  const checkboxes = {};
+  const ruleEngineFields = FILTER_RULES["seeds-official"];
+  for (const key in ruleEngineFields) {
+		checkboxes[key] = {};
+
+		//this no longer checks specifically for checkboxes
+		filterModal.querySelectorAll(`.filter-content [data-filter="${key}"]`).forEach(cb => {
+			checkboxes[key][cb.value] = cb.checked;	
+		});
+  }
+  return checkboxes;
+}
+
+/**
+ * Transforms the result of {@link captureFilterState} into a better structure.
+ * Strips out inactive filters, keeping only active filter as arrays.
+ *
+ * @param {Object} filterState - Output of {@link captureFilterState}.
+ * @returns {Object<string, string[]>} An object keyed by field name,
+ *   where each value is an array of active filter strings.
+ *
+ * @example
+ * // Input:  { partner_name: { "A": true, "B": false }, activity_type: {} }
+ * // Output: { partner_name: ["A"], activity_type: [] }
+ */
+export function buildQueryArray(filterState) {	
+	const queryArray = {};
+
+	for (const field in FILTER_RULES["seeds-official"]) {
+		queryArray[field] = [];
+	}
+
+	for (const [field, filters] of Object.entries(filterState)) {
+		Object.keys(filters).forEach((filter) => {
+			if ( filters[filter] === true ) {
+				queryArray[field].push(filter);
+			}
+		});
+	}
+
+	return queryArray;
+}
+
+async function applyFilterAndUpdate(queryArray) {
+	const selector = buildSelector(FILTER_RULES['seeds-official'], queryArray, false)
+	// console.log(await filterData(getSeedsCollection(), FILTER_RULES['seeds-official'], queryArray))
+	// console.log(selector);
+	setFilter(selector);
+
+	clearLocationList();
+	clearMarkers();
+	createMarkersAndSidebar(await getPartners());
+	closeFilterModal();
+}

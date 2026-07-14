@@ -23,6 +23,10 @@ button {
 	cursor: pointer;
 }
 
+button:hover {
+	color: var(--custom-medium-gray);
+}
+
 iframe {
 	border: none;
 	overflow-y: scroll;
@@ -37,34 +41,21 @@ iframe {
 	position: relative;
 }
 
-/* Color Definition */
-:root {
-	--darkbg: #387181;
-	--lightbg: #3d97af;
-	--custom-black: #2f2f2f;
-	--custom-dark-gray: #979797;
-	--custom-gray: #c6c6c6;
-	--custom-medium-gray: #f6f6f6;
-	--custom-light-gray: #fcfcfc;
-	--custom-red: #d64747;
-	--custom-translucent-teal: #3d97af10;
-}
-
 /* Main page styles */
 .side-nav {
-	background-color: #ffffff;
+	background-color: var(--custom-white);
 	width: 400px;
 	overflow-y: scroll;
 	overflow-x: hidden;
 	position: relative;
-	border-right: 1px solid #e0e0e0;
+	border-right: 1px solid var(--custom-light-gray);
 }
 
 .side-nav-header {
 	position: sticky;
 	top: 0;
 	width: 100%;
-	background-color: #ffffff;
+	background-color: var(--custom-white);
 	padding: 1rem;
 }
 
@@ -73,7 +64,7 @@ iframe {
 	align-items: center;
 	margin-bottom: 1.5rem;
 	padding: 0 0 0.75rem;
-	border-bottom: 1px solid #eeeeee;
+	border-bottom: 1px solid var(--custom-medium-gray);
 	
 }
 
@@ -88,33 +79,35 @@ iframe {
 }
 
 .actions-container {
-	display: flex;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
 	gap: 0.5rem;
 	margin-bottom: 1.5rem;
-	flex-wrap: wrap;
 }
 
 .action-btn {
-	background-color: #ffffff;
-	border: 1px solid #e0e0e0;
+	background-color: var(--custom-white);
+	border: 1px solid var(--custom-light-gray);
 	padding: 0.5rem 0.575rem;
 	border-radius: 1rem;
 	font-size: 0.8rem;
-	color: #374151;
+	color: var(--custom-black);
 	cursor: pointer;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	white-space: nowrap;
+	font-family: 'Geist', sans-serif;font-weight: 500;
 }
 
 .action-btn:hover {
-	background-color: #f9fafb;
+		color: var(--custom-white);
+		background-color: var(--darkbg);
 }
 
 .partners-header {
 	padding: 0 1.5rem 0.75rem;
-	border-bottom: 1px solid #eeeeee;
+	border-bottom: 1px solid var(--custom-light-gray);
 }
 
 #partners-count {
