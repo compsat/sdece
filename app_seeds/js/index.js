@@ -291,7 +291,6 @@ function showFilterModal() {
 	const filterModal = document.getElementById('filterModal');
 	filterModal.style.display = 'flex';
 	setUpFilterModal();
-	console.log("showing filter modal");
 }
 
 async function setUpFilterModal() {
@@ -336,7 +335,6 @@ function getFilterFields(partners) {
 			}
 		});
 	};
-	console.log("[getFilterFields] Filters: ", filterFields)
 	return filterFields;
 }
 

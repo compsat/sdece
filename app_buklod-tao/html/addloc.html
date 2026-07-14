@@ -10,8 +10,6 @@
         document.getElementById("submit_form").addEventListener("click", async function(event) {
             event.preventDefault();
             
-            console.log("The user has clicked on save")
-            
             const api = await window.parent.getApi();
 
             // 1. Validation gate (Uses the functions already built into the HTML)
@@ -613,7 +611,6 @@
 
             document.getElementById('close-btn').addEventListener('click', function (event) {
                 event.preventDefault();
-                console.log('The user has closed the Add Household modal.');
                 closeModal();
             });
 

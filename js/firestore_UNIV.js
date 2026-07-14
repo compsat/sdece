@@ -63,8 +63,6 @@ export function getCoordinates(coordinates) {
 
 	// Create the coordinates string
 	var PARTNER_COORDINATES = GEOPOINT;
-	console.log(typeof GEOPOINT)
-	console.log( GEOPOINT)
 
 	return PARTNER_COORDINATES;
 }
@@ -86,7 +84,6 @@ export function convertCoordinates(coords) {
 	let newCoords = (lat === undefined || lng === undefined)
 		? null
 		: new GeoPoint(lat, lng)
-	console.log("[convertCoordinates]: ", {old, newCoords});
 	return newCoords;
 }
 
@@ -705,7 +702,6 @@ export function getDocByID(docId) {
 export function addEntry(inp_obj) {
   addDoc(collection_reference, inp_obj)
     .then((docRef) => {
-      console.log(docRef);
       alert("You may now reload the page for your addition to reflect on this page");
       window.parent.location.reload();
     })

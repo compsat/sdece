@@ -76,7 +76,6 @@ let has_existing_partner;
 
 newButton.addEventListener('click', () => {
 	// Get the Add Activity form and the needed input fields for autofill
-	console.log("This is run in newButton event listener")
 	let inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value.trim();
 	let inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value.trim();
 	has_existing_partner = false;	
@@ -199,7 +198,6 @@ export function showModal(partner) {
 			// Close current modal
 			modal.style.display = 'none';
 			modal.classList.remove('open');
-			console.log("This is run in firestore.js")
 			// Show the add modal
 			showAddModal();
 	
@@ -225,7 +223,6 @@ export function showModal(partner) {
 						addressField.style.backgroundColor = 'var(--custom-medium-gray)';
 					}
 				} catch (e) {
-					console.log('Waiting for iframe to load...');
 					setTimeout(fillFormFields, 100);
 				}
 			};
@@ -574,8 +571,6 @@ addFormSubmitButton.addEventListener('click', async function (event) {
 		// Uploads straight to firebase DB
 		form_data.activity_date = dateToTimestamp(form_data.activity_date).seconds;
 		form_data.id = doc(firestoreCollectionRef).id;
-		console.log("I am processing the form data.")
-		console.log(form_data)
 		await getSeedsCollection().insert(form_data);
 	} else {
 		// Locally store it
@@ -608,8 +603,6 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', async function () {
 		temp_activity.activity_date = dateToTimestamp(temp_activity.activity_date).seconds;
 
 		temp_activity.id = doc(firestoreCollectionRef).id;
-		console.log("This is inside temp activities processing.")
-		console.log(temp_activity);
 		await getSeedsCollection().insert(temp_activity);
 	};
 
@@ -672,7 +665,6 @@ export function startFirestoreSync(db, uid, inTestMode, rxCollection) {
 
 	let collectionFirestoreName = inTestMode ? 'sdece-official-TEST' : 'sdece-official';
 	
-	console.log("Syncing seeds database with firestore...")
 	const firestore = DB;
 	const firestoreCollection = collection(firestore, collectionFirestoreName);
 	firestoreCollectionRef = firestoreCollection;
@@ -690,7 +682,6 @@ export function startFirestoreSync(db, uid, inTestMode, rxCollection) {
 		pull: {
 			batchSize: 500,
 			modifier: (doc) => {
-				console.log("Pulled document from Firestore:", doc);
 				if (doc.partner_coordinates instanceof GeoPoint) {
 					doc.partner_coordinates = {
 						_lat: doc.partner_coordinates.latitude,
