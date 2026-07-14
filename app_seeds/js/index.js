@@ -401,8 +401,6 @@ export function buildQueryArray(filterState) {
 
 async function applyFilterAndUpdate(queryArray) {
 	const selector = buildSelector(FILTER_RULES['seeds-official'], queryArray, false)
-	// console.log(await filterData(getSeedsCollection(), FILTER_RULES['seeds-official'], queryArray))
-	// console.log(selector);
 	setFilter(selector);
 
 	clearLocationList();
