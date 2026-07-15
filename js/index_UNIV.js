@@ -159,3 +159,40 @@ export function toDateString(date) {
 	console.log(`[toDateString] ${old} -> ${val}`);
   return val ?? '';
 }
+
+/**
+ * Turns a sequence of integers into a more readable format. Used for printing out invalid rows from parseData().
+ * @param {Array} rows - An array of integers
+ * @returns An array of strings.
+ * @example
+ * let range = [1,2,3,4,6,8,9,10]
+ * let out = getRanges(range));
+ * // out = ["1-4","6","8-10"]
+ */
+export function getRanges(rows) {
+  if (!rows.length) return [];
+  const sorted = [...rows].sort((a, b) => a - b);
+  const ranges = [];
+  let start = sorted[0];
+
+  for (let i = 1; i <= sorted.length; i++) {
+    const current = sorted[i];
+    const prev = sorted[i - 1];
+    if (current !== prev + 1 || i === sorted.length) {
+      ranges.push(start === prev ? `${start}` : `${start}-${prev}`);
+      start = current;
+    }
+  }
+
+  return ranges;
+}
+
+/**
+ * Pluralizes a word given a number. This does not work for complex plural nouns.
+ * @param {*} count - The amount of the given noun
+ * @param {*} noun - The noun to be pluralized
+ * @param {*} [suffix] - The suffix that will be added to the base noun when it is plural
+ * @returns {string} The singular or plural version of the word
+ */
+export const pluralize = (count, noun, suffix = 's') => 
+  `${noun}${count !== 1 ? suffix : ''}`;
