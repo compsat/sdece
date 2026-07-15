@@ -161,6 +161,20 @@ export async function importData(docs) {
 }
 
 /**
+ * Imports the data to the cloud-synced local collection instead of the local-only collection instead. Importing documents will reflect for all other users.
+ * Documents with IDs that match the Firestore's copy will have its data updated.
+ * If a document has an ID that does not match any document, it will be inserted instead.
+ * 
+ * @param {Array} - An array of documents that adhere to the schema. 
+ */
+export async function importDataSynced(docs) {
+  if (!getDatabase()) throw new Error('Database not initialized. Call setDatabase() first.')
+  console.dir(docs);
+  await getSeedsCollection().bulkUpsert(docs);
+  console.dir(await getActivities());
+}
+
+/**
  * Parses an Excel file and converts each row into a document object.
  * Reads the "Master Sheet" tab and maps each row through {@link parseRow}.
  *
@@ -181,16 +195,15 @@ export async function parseData(file) {
       validRows: [],
       invalidRows: []
     }
-    console.dir(jsonData)
-    for (const raw of jsonData) {
+    for (const [index, raw] of jsonData.entries()) {
       if (String(raw["Partner"] ?? "").trim() === "")  continue;
 
       const row = parseRow(raw);
       const errors = validateData('seeds-official-TEST', row);
-      console.log(errors);
       if (errors.length === 0) {
         result.validRows.push(row);
       } else {
+        row._row = index + 2;
         result.invalidRows.push(row);
       }
     }
@@ -224,7 +237,8 @@ function parseRow(row) {
       return { _lat: parts[0], _long: parts[1] };
   };
 	const ruleset = SEEDS_RULES['validations']
-  let ret = {id: `local_${generateHash(20)}`}
+  ruleset.id = {label: "ID"}
+  let ret = {}
   for (const [field, { label }] of Object.entries(ruleset)) {
     let fieldVal;
     switch(field) {
@@ -233,6 +247,9 @@ function parseRow(row) {
         break;
       case "activity_date":
         fieldVal = date(label);
+        break;
+      case "id":
+        fieldVal = get(label, `local_${generateHash(20)}`)
         break;
       default:
         fieldVal = get(label);

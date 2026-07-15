@@ -10,11 +10,12 @@ import {
 	setFilter,
 	parseData,
 	importData,
-	setAsOffline
+	setAsOffline,
+	importDataSynced
 } from '../js/dexie.js';
 import { showModal, getTempActivities } from "./firestore.js";
 import { getAllPartnerCoordinatesInRxDB, hasDatabase, getFieldInRxDB, migrateActivityDates, buildSelector } from '../../js/dexie_UNIV.js';
-import { map, requireParameters, toDateString } from '../../js/index_UNIV.js';
+import { map, requireParameters, toDateString, getRanges, pluralize } from '../../js/index_UNIV.js';
 import { addMissingFields, deleteNumericIds, migrateDates, SEEDS_RULES } from "../../js/firestore_UNIV.js";
 import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs";
 import { FILTER_RULES } from "../../js/ruleEngines.js";
@@ -419,14 +420,18 @@ document.getElementById('import-report-input').addEventListener('change', async 
 	console.log('You selected ' + e.target.files?.[0].name);
 	try {
 		const docs = await parseData(e.target.files?.[0])
-		if (docs.length === 0) {
+		if (docs.validRows.length === 0) {
 			alert("No valid rows found.")
 			return;
 		};
-		console.dir(docs)
-		await importData(docs.validRows);
-		setAsOffline();
-		alert(`Imported ${docs.validRows.length} activities. Failed to import ${docs.invalidRows.length} activities. Refresh to return to online mode.`)
+		if (docs.invalidRows.length > 0) {
+			let ranges = getRanges(docs.invalidRows.map(r => r._row));
+			alert(`${pluralize(docs.invalidRows.length, "Row")} ${ranges.join(", ")} ${docs.invalidRows.length === 1 ? "is" : "are"} invalid. Cancelling import.`);
+			return;
+		}
+		await importDataSynced(docs.validRows);
+		// setAsOffline();
+		alert(`Imported ${docs.validRows.length} activities. Refresh to return to online mode.`)
 	} catch (err) {
 		console.error("Import failed:", err);
 		alert("Import failed.")
