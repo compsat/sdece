@@ -169,7 +169,9 @@ export async function importData(docs) {
  */
 export async function importDataSynced(docs) {
   if (!getDatabase()) throw new Error('Database not initialized. Call setDatabase() first.')
+  docs.forEach(doc => doc._deleted = false);
   console.dir(docs);
+  await getSeedsCollection().find().remove();
   await getSeedsCollection().bulkUpsert(docs);
   console.dir(await getActivities());
 }

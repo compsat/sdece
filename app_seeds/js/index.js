@@ -14,9 +14,9 @@ import {
 	importDataSynced
 } from '../js/dexie.js';
 import { showModal, getTempActivities } from "./firestore.js";
-import { getAllPartnerCoordinatesInRxDB, hasDatabase, getFieldInRxDB, migrateActivityDates, buildSelector } from '../../js/dexie_UNIV.js';
+import { getAllPartnerCoordinatesInRxDB, hasDatabase, getFieldInRxDB, migrateActivityDates, buildSelector, migrateRxDBCoordinates } from '../../js/dexie_UNIV.js';
 import { map, requireParameters, toDateString, getRanges, pluralize } from '../../js/index_UNIV.js';
-import { addMissingFields, deleteNumericIds, migrateDates, SEEDS_RULES } from "../../js/firestore_UNIV.js";
+import { addMissingFields, deleteNumericIds, migrateDates, SEEDS_RULES, migrateCoordinates} from "../../js/firestore_UNIV.js";
 import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs";
 import { FILTER_RULES } from "../../js/ruleEngines.js";
 
@@ -77,6 +77,8 @@ function attachFunctions(window) {
 	window.getAllPartnerCoordinatesInRxDB = getAllPartnerCoordinatesInRxDB;
 	window.addMissingFields = addMissingFields;
 	window.migrateDates = migrateDates;
+	window.migrateCoordinates = migrateCoordinates;
+	window.migrateRxDBCoordinates = migrateRxDBCoordinates;
 	window.getTempActivities = getTempActivities;
 	window.getFieldInRxDB = getFieldInRxDB;
 	window.migrateActivityDates = migrateActivityDates;
