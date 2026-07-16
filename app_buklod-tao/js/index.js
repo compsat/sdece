@@ -44,6 +44,7 @@ onAuthStateChanged(AUTH, async (user) => {
 });
 
 async function main(uid) {
+  console.log("Calling main...")
   if (dbExists()) return;
 
   console.log('Initializing database...')

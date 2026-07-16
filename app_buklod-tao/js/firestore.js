@@ -21,8 +21,8 @@ import {
   addEntry,
   getCoordinates,
   getDocIdByPartnerName,
-} from '/js/firestore_UNIV.js';
-import { DB } from '../../js/firestore_UNIV.js';
+  DB
+} from "../../js/firestore_UNIV.js";
 
 import * as ReplicationModule from 'https://esm.sh/rxdb@17.3.0/plugins/replication';
 

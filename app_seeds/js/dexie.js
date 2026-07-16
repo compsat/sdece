@@ -11,7 +11,7 @@ import {
   normalizeActivityDate,
   setDatabase
 } from '../../js/dexie_UNIV.js'
-import { clearMarkers } from '../../js/index_UNIV.js'
+import { clearLocationList, clearMarkers } from '../../js/index_UNIV.js'
 import { SEEDS_RULES_TEST, SEEDS_RULES, validateData } from '../../js/firestore_UNIV.js';
 import { startFirestoreSync } from './firestore.js';
 
@@ -80,7 +80,7 @@ function setSeedsSubscription(collection) {
   activeSeedsSubscription = collection
     .find({ selector: { _deleted: { $eq: false } } })
     .$.subscribe(docs => {
-      document.getElementById('locationList').innerHTML = '';
+      clearLocationList();
       clearMarkers();
       createMarkersAndSidebar(groupActivities(docs));
   });

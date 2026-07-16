@@ -106,6 +106,7 @@ export function clearMarkers() {
 }
 
 export function clearLocationList() {
+	console.log("[clearLocationList] Called.");
 	var locationList = document.getElementById(`locationList`);
 	locationList.innerHTML = '';
 }

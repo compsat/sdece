@@ -105,6 +105,7 @@ export function showAddModal() {
  * @param {Object} partners - An object where each key is a partner name and the value is an array of activities associated with that partner. 
  */
 export function createMarkersAndSidebar(partners) {
+	console.log("[createMarkersAndSidebar] Called with partners:", partners);
 	for (const [partnerName, activities] of Object.entries(partners)) {
 		let firstActivity = activities[0];
 		let partnerCoordinates = firstActivity['partner_coordinates'];
@@ -406,7 +407,7 @@ export function buildQueryArray(filterState) {
 async function applyFilterAndUpdate(queryArray) {
 	const selector = buildSelector(FILTER_RULES['seeds-official'], queryArray, false)
 	setFilter(selector);
-
+	
 	clearLocationList();
 	clearMarkers();
 	createMarkersAndSidebar(await getPartners());
