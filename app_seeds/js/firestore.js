@@ -118,7 +118,6 @@ export function showModal(partner) {
 		partner_name: {$eq: partnerName},
 		partner_address: {$eq: partnerAddress}
 	}
-	console.log("Selector:", partnerSelector);
 	const partnerQuery = getSeedsCollection().find({selector: partnerSelector});
 
 
@@ -330,30 +329,17 @@ export function showModal(partner) {
 						const input = form.querySelector(`[name="${key}"]`);
 						updated[key] = input ? input.value : '';
 					});
+
 					let errors = validateData('seeds-official-TEST', updated);
 					const errorDiv = form.querySelector('#error_messages');
 					if (errorDiv) errorDiv.innerHTML = '';
-					// if (errors.length > 0) {
-					// 	if (errorDiv) {
-					// 		errors.forEach(err => {
-					// 			const p = document.createElement('p');
-					// 			p.textContent = err;
-					// 			p.style.color = '#b91c1c';
-					// 			p.style.fontSize = '0.95rem';
-					// 			errorDiv.appendChild(p);
-					// 		});
-					// 	}
-					// 	const modalContent = window.parent.document.getElementById('modalContent');		
-					// 	if (modalContent) modalContent.scrollTop = 0;
-
-					// 	return;
-					// }
-					console.log("Query:", partnerQuery);
-					console.log("Patch:", updated);
-					console.log("Docs found", await partnerQuery.exec());
+					console.log(updated['partner_name']);
+					if (updated['partner_name'] == '' || updated['partner_address'] == '') {			
+						alert('Partner Name and Partner Address cannot be blank.');
+						return; 
+					}
 					await partnerQuery.incrementalPatch(updated);
-					// activity = await activity.incrementalPatch(updated);
-					showModal(partner);
+					document.getElementById('partnerModal').style.display = 'none';
 				};
 				// Cancel/Back logic
 				const cancelBtn = form.querySelector('#cancel-btn');
