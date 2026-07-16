@@ -88,6 +88,7 @@ function setSeedsSubscription(collection) {
 
 /**
  * Creates subscriptions for the seeds collection. Intended to be called on app initialization.
+ * The first creation of the subscription already calls createMarkersAndSidebar(), so there is no need to call it after calling createSubscriptions().
  */
 export function createSubscriptions() { setSeedsSubscription(activeSeedsCollection); }
 

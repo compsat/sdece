@@ -53,7 +53,6 @@ async function startApp(uid) {
 	await initDatabase(uid, true); 
 	attachFunctions(window);
 	createSubscriptions();
-	createMarkersAndSidebar(await getPartners());
 
 	map.setView(new L.LatLng(14.651, 121.052), 14);
 	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -103,8 +102,6 @@ export function showAddModal() {
  * @param {Object} partners - An object where each key is a partner name and the value is an array of activities associated with that partner. 
  */
 export function createMarkersAndSidebar(partners) {
-	console.log("[createMarkersAndSidebar] Called with partners:", partners);
-	console.trace();
 	for (const [partnerName, activities] of Object.entries(partners)) {
 		let firstActivity = activities[0];
 		let partnerCoordinates = firstActivity['partner_coordinates'];
