@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Edit Partner</title>
+
+		<!-- Import Tailwind CSS output file -->
+		<link href="../css/form.css" rel="stylesheet" />
+
+	</head>
+	<body>
+		<div class="form-container">
+			<form id="editPartnerForm">
+				<div class="form-body">
+					<div id="error_messages"></div>
+					<div class="form-section">
+						<div class="form-field">
+							<label class="form-label" for="partner_name">Partner Name</label>
+							<input class="form-input" type="text" name="partner_name" id="partner_name" />
+						</div>
+						<div class="form-field">
+							<label class="form-label" for="partner_address">Partner Address</label>
+							<input class="form-input" type="text" name="partner_address" id="partner_address" />
+						</div>
+					<div class="form-buttons-container">
+						<button type="submit" class="form-button positive" data-id="Save Button">Save</button>
+						<button type="button" class="form-button negative" id="cancel-btn">Cancel</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</body>
+</html>
