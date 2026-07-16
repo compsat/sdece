@@ -489,7 +489,7 @@ export const DB_RULES_AND_DATA = {
 		'validations': {
     partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
 		partner_address: { label: "Address of Host Partner", type: 'string', required: true, maxLength: 255 },
-		partner_coordinates: { label: "Partner Coordinates"},
+		partner_coordinates: { label: "Partner Coordinates", type: 'object', required: true},
 		partner_contact_name: {
       label: "Name of Contact Person",
 			type: 'string',
@@ -582,7 +582,7 @@ export const DB_RULES_AND_DATA = {
 		'validations': {
     partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
 		partner_address: { label: "Address of Host Partner", type: 'string', required: true, maxLength: 255 },
-		partner_coordinates: { label: "Partner Coordinates"},
+		partner_coordinates: { label: "Partner Coordinates", type: 'object', required: true},
 		partner_contact_name: {
       label: "Name of Contact Person",
 			type: 'string',
@@ -755,10 +755,7 @@ export function validateData(collectionName, data) {
 
 		// Required Test
 		const IS_EMPTY = value == undefined || value == null || value == ''
-		if (
-			(rule.required && IS_EMPTY) ||
-			(!rule.required && IS_EMPTY)
-		) {
+		if (IS_EMPTY) {
 			if (rule.required) {
 				errors.push(`${fieldLabel} is required.`);
 			}
