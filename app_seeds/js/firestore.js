@@ -8,7 +8,7 @@ import {
 } from '../../js/firestore_UNIV.js';
 import { map } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal, clearAllHighlights, getActivityString } from './index.js';
-import { requireParameters, toDateString } from '../../js/index_UNIV.js';
+import { requireParameters, toDateString, parseCoordinates } from '../../js/index_UNIV.js';
 import { getPartners, getSeedsCollection } from './dexie.js';
 import { normalizeActivityDate } from '../../js/dexie_UNIV.js';
 
@@ -520,8 +520,7 @@ function collectFormInputs(doc, geopointSource, mode) {
 			if (mode === 'add') {
 					if (!geopointSource) {
 						let input = doc.getElementById(field);
-						// TODO: Parse it into usable form
-						// result[field] = input?.value || null;
+						result[field] = parseCoordinates(input?.value);
 					} else {
 						result[field] = {_lat: geopointSource.latitude, _long: geopointSource.longitude};
 			}
