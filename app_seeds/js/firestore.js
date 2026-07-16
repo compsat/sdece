@@ -71,21 +71,11 @@ function onMapClick(e) {
 map.on('click', onMapClick);
 
 // Handles Add Activity from the main modal
-let mainModalDocument = null;
-let newButton = null;
-const mainModalIframe = document.getElementById('mainModalIframe')
-if (mainModalIframe?.contentDocument) {
-	mainModalDocument = mainModalIframe.contentDocument;
-	newButton = mainModalDocument.getElementById('addModalButton')
-} else if (mainModalIframe) {
-	mainModalIframe.addEventListener('load', () => {
-	mainModalDocument = mainModalIframe.contentDocument
-	newButton = mainModalDocument.getElementById('addModalButton')
-	newButton.addEventListener('click', autofillModal)
-})};
+const mainModalDocument = document.getElementById('mainModalIframe').contentDocument;
+const newButton = mainModalDocument.getElementById('addModalButton');
 let has_existing_partner;
 
-const autofillModal = () => {
+newButton.addEventListener('click', () => {
 	// Get the Add Activity form and the needed input fields for autofill
 	let inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value.trim();
 	let inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value.trim();
@@ -115,7 +105,7 @@ const autofillModal = () => {
 		}
 	}
 	showAddModal();
-};
+});
 
 // === MAIN MODAL SECTION ===
 
