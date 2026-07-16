@@ -170,11 +170,15 @@ export async function importData(docs) {
  */
 export async function importDataSynced(docs) {
   if (!getDatabase()) throw new Error('Database not initialized. Call setDatabase() first.')
+  
   docs.forEach(doc => doc._deleted = false);
-  console.dir(docs);
-  await getSeedsCollection().find().remove();
+  const selector = {id: {$nin: docs.map(doc => doc.id)}}
+
+  const replicator = getDatabase().seedsSyncState;
+  await replicator?.pause();
+  await getSeedsCollection().find({ selector }).remove();
   await getSeedsCollection().bulkUpsert(docs);
-  console.dir(await getActivities());
+  await replicator?.start();
 }
 
 /**
