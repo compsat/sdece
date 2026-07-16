@@ -30,7 +30,16 @@
 			href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&display=swap"
 			rel="stylesheet"
 		/>
-
+		<script type="importmap">
+		{
+			"imports": {
+				"firebase/": "https://www.gstatic.com/firebasejs/12.15.0/",
+				"firebase/app": "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js",
+				"firebase/auth": "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js",
+				"firebase/firestore": "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js"
+			}
+		}
+		</script>
 		<script type="module">
 			//import { addLocation } from "./js/firestore.js";
 			import {
@@ -39,9 +48,8 @@
 				setCollection,
 				validateData,
 				getCoordinates,
-			} from '/js/firestore_UNIV.js';
-
-			setCollection('seeds-official-TEST');
+			} from '../../js/firestore_UNIV.js';
+			import { normalizeActivityDate } from '/js/dexie_UNIV.js'
 
 			// Commenting this out first as new_activity_form is not defined and is causing errors
 			// document.addEventListener('DOMContentLoaded', function () {
@@ -61,6 +69,8 @@
 
 					if (fieldName == 'partner_coordinates') {
 						collatedInput[fieldName] = getCoordinates();
+					} else if (fieldName == 'activity_date') {
+						collatedInput[fieldName] = normalizeActivityDate(inputValue)
 					} else {
 						collatedInput[fieldName] = inputValue;
 					}
@@ -76,7 +86,7 @@
 					event.preventDefault();
 
 				} else {
-					addEntry(collatedInput);
+					// addEntry(collatedInput);
 
 				}
 

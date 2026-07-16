@@ -8,20 +8,22 @@ import {
   or,
   and,
 	where,
+	serverTimestamp,
+	writeBatch,
 	getDoc,
 	GeoPoint,
-} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+	deleteField,
+	getFirestore,
+	collection,
+} from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
 
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
+import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js';
 
 import { FILTER_RULES } from '/js/ruleEngines.js'
-import {
-	getFirestore,
-	collection,
-} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+import { normalizeActivityDate } from '../js/dexie_UNIV.js'
 
 function getUrlParameter(name) {
 	name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -61,10 +63,28 @@ export function getCoordinates(coordinates) {
 
 	// Create the coordinates string
 	var PARTNER_COORDINATES = GEOPOINT;
-	console.log(typeof GEOPOINT)
-	console.log( GEOPOINT)
 
 	return PARTNER_COORDINATES;
+}
+
+/**
+ * Converts coordinates from either {_lat, _long} or {latitude, longitude} format
+ * into a Firestore GeoPoint.
+ *
+ * @param {object} coords - The coordinates object to convert.
+ * @returns {GeoPoint|null} A GeoPoint if coords is valid, otherwise null.
+ */
+export function convertCoordinates(coords) {
+	let old = coords;
+	if (!coords) return null;
+	
+	const lat = coords._lat ?? coords.latitude;
+	const lng = coords._long ?? coords.longitude;
+	
+	let newCoords = (lat === undefined || lng === undefined)
+		? null
+		: new GeoPoint(lat, lng)
+	return newCoords;
 }
 
 const SECRETS_PATH = "/js/secrets.json";
@@ -132,7 +152,6 @@ export const DB_RULES_AND_DATA = {
 		],
 		'schemas': {
 			'buklod': {
-				schema: {
 					version: 0,
 					type: 'object',
 					primaryKey: 'id',
@@ -145,11 +164,11 @@ export const DB_RULES_AND_DATA = {
 						number_minors: { type: 'number' },
 						number_seniors: { type: 'number' },
 						location_coordinates: { 
-						type: 'object',
-						properties: {
-							_lat: { type: 'number' },
-							_lng: { type: 'number' }
-						}
+							type: 'object',
+							properties: {
+								_lat: { type: 'number' },
+								_lng: { type: 'number' }
+							}
 						},
 						location_link: { type: 'string' },
 						residency_status: { type: 'string' },
@@ -164,7 +183,6 @@ export const DB_RULES_AND_DATA = {
 						updatedAt: { type: 'number', default: 0 }
 					},
 					required: ['id', 'household_name', 'updatedAt', '_deleted']
-				}
 			},
 			'evacCenters': {
 				version: 0,
@@ -299,39 +317,37 @@ export const DB_RULES_AND_DATA = {
 		],
 		'schemas': {
 			'buklod': {
-				schema: {
-					version: 0,
+				version: 0,
+				type: 'object',
+				primaryKey: 'id',
+				properties: {
+					id: { type: 'string', maxLength: 100 },
+					household_name: { type: 'string' },
+					household_address: { type: 'string' },
+					contact_number: { type: 'string' },
+					number_residents: { type: 'number' },
+					number_minors: { type: 'number' },
+					number_seniors: { type: 'number' },
+					location_coordinates: { 
 					type: 'object',
-					primaryKey: 'id',
 					properties: {
-						id: { type: 'string', maxLength: 100 },
-						household_name: { type: 'string' },
-						household_address: { type: 'string' },
-						contact_number: { type: 'string' },
-						number_residents: { type: 'number' },
-						number_minors: { type: 'number' },
-						number_seniors: { type: 'number' },
-						location_coordinates: { 
-						type: 'object',
-						properties: {
-							_lat: { type: 'number' },
-							_lng: { type: 'number' }
-						}
-						},
-						location_link: { type: 'string' },
-						residency_status: { type: 'string' },
-						is_hoa_noa: { type: 'string' },
-						household_material: { type: 'string' },
-						landslide_risk: { type: 'string' },
-						fire_risk: { type: 'string' },
-						flood_risk: { type: 'string' },
-						earthquake_risk: { type: 'string' },
-						storm_risk: { type: 'string' },
-						_deleted: { type: 'boolean', default: false },
-						updatedAt: { type: 'number', default: 0 }
+						_lat: { type: 'number' },
+						_lng: { type: 'number' }
+					}
 					},
-					required: ['id', 'household_name', 'updatedAt', '_deleted']
-				}
+					location_link: { type: 'string' },
+					residency_status: { type: 'string' },
+					is_hoa_noa: { type: 'string' },
+					household_material: { type: 'string' },
+					landslide_risk: { type: 'string' },
+					fire_risk: { type: 'string' },
+					flood_risk: { type: 'string' },
+					earthquake_risk: { type: 'string' },
+					storm_risk: { type: 'string' },
+					_deleted: { type: 'boolean', default: false },
+					updatedAt: { type: 'number', default: 0 }
+				},
+				required: ['id', 'household_name', 'updatedAt', '_deleted']
 			},
 			'evacCenters': {
 				version: 0,
@@ -439,7 +455,36 @@ export const DB_RULES_AND_DATA = {
 			'partner_contact_number',
 		],
 		'schemas': {
-			
+			'seeds': {
+				version: 0,
+				type: 'object',
+				primaryKey: 'id',
+				properties: {
+					id: { type: 'string', maxLength: 100 },
+					activity_date: { type: 'number' },
+					activity_name: { type: 'string' },
+					activity_nature: { type: 'string' },
+					additional_partnership: { type: 'string' },
+					ADMU_contact_name: { type: 'string' },
+					ADMU_email: { type: 'string' },
+					ADMU_office: { type: 'string' },
+					organization_unit: { type: 'string' },
+					partner_address: { type: 'string' },
+					partner_contact_name: { type: 'string' },
+					partner_coordinates: { 
+						type: 'object',
+						properties: {
+							_lat: { type: 'number' },
+							_long: { type: 'number' }
+						}
+					},
+					partner_email: { type: 'string' },
+					partner_name: { type: 'string' },
+					partner_contact_number: { type: 'string' },
+					_deleted: { type: 'boolean', default: false }
+				},
+				required: ['id', 'partner_name', '_deleted']
+			}
 		},
 		'validations': {
     partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
@@ -462,7 +507,7 @@ export const DB_RULES_AND_DATA = {
 		partner_email: { label: 'Email of Contact Person/Partner', type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
 		activity_name: { label: 'Activity Name', type: 'string', required: true },
 		activity_nature: { label: 'Nature of Activity', type: 'string', required: true, maxLength: 255 },
-		activity_date: { label: 'Date of Partnership', type: 'string', required: true, regex: /^\d{4}-\d{2}-\d{2}$/ },
+		activity_date: { label: 'Date of Partnership', type: 'number', required: true },
 		additional_partnership: { label: 'Additional Partnership', type: 'string', maxLength: 255 },
 		organization_unit: { label: 'Organization Unit', type: 'string', maxLength: 127 },
 		ADMU_office: { label: 'Name of Office', type: 'string', required: true, maxLength: 127 },
@@ -503,7 +548,36 @@ export const DB_RULES_AND_DATA = {
 			'partner_contact_number',
 		],
 		'schemas': {
-			
+			'seeds': {
+				version: 0,
+				type: 'object',
+				primaryKey: 'id',
+				properties: {
+					id: { type: 'string', maxLength: 100 },
+					activity_date: { type: 'number' },
+					activity_name: { type: 'string' },
+					activity_nature: { type: 'string' },
+					additional_partnership: { type: 'string' },
+					ADMU_contact_name: { type: 'string' },
+					ADMU_email: { type: 'string' },
+					ADMU_office: { type: 'string' },
+					organization_unit: { type: 'string' },
+					partner_address: { type: 'string' },
+					partner_contact_name: { type: 'string' },
+					partner_coordinates: { 
+						type: 'object',
+						properties: {
+							_lat: { type: 'number' },
+							_long: { type: 'number' }
+						}
+					},
+					partner_email: { type: 'string' },
+					partner_name: { type: 'string' },
+					partner_contact_number: { type: 'string' },
+					_deleted: { type: 'boolean', default: false }
+				},
+				required: ['id', 'partner_name', '_deleted']
+			}
 		},
 		'validations': {
     partner_name: { label: "Name of Host Partner", type: 'string', required: true, maxLength: 255 },
@@ -526,7 +600,7 @@ export const DB_RULES_AND_DATA = {
     partner_email: { label: 'Email of Contact Person/Partner', type: 'string', required: true, maxLength: 127, regex: /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/ },
 		activity_name: { label: 'Activity Name', type: 'string', required: true },
 		activity_nature: { label: 'Nature of Activity', type: 'string', required: true, maxLength: 255 },
-		activity_date: { label: 'Date of Partnership', type: 'string', required: true, regex: /^\d{4}-\d{2}-\d{2}$/ },
+		activity_date: { label: 'Date of Partnership', type: 'number', required: true },
 		additional_partnership: { label: 'Additional Partnership', type: 'string', maxLength: 255 },
 		organization_unit: { label: 'Organization Unit', type: 'string', maxLength: 127 },
 		ADMU_office: { label: 'Name of Office', type: 'string', required: true, maxLength: 127 },
@@ -620,10 +694,14 @@ export function getDocByID(docId) {
   });
 }
 
+/**
+ * @deprecated Use RxDB's add functions instead, see existing code for examples.
+ * @param {*} docId 
+ * @returns 
+ */
 export function addEntry(inp_obj) {
   addDoc(collection_reference, inp_obj)
     .then((docRef) => {
-      console.log(docRef);
       alert("You may now reload the page for your addition to reflect on this page");
       window.parent.location.reload();
     })
@@ -635,7 +713,11 @@ export function addEntry(inp_obj) {
 	return Promise.reject(new Error('Collection not found'));
 }
 
-
+/**
+ * @deprecated Use RxDB's delete functions instead.
+ * @param {*} docId 
+ * @returns 
+ */
 export function deleteEntry(docId) {
 	const DOC_REFERENCE = doc(DB, rule_reference['collection_name'], docId);
 	return deleteDoc(DOC_REFERENCE)
@@ -670,7 +752,6 @@ export function validateData(collectionName, data) {
 		const rule = rules[field];
 		const value = data[field];
 		const fieldLabel = rule.label || field;
-		console.log(fieldLabel);
 
 		// Required Test
 		const IS_EMPTY = value == undefined || value == null || value == ''
@@ -750,11 +831,11 @@ export function validateData(collectionName, data) {
 	}
 	return errors;
 }
+window.db = DB;
 
 export async function filterData(collectionName, queryArray) {
   const rules = FILTER_RULES[collectionName];
   const fullQueries = [];
-  const finalResults = new Map();
 
 
   for (const field in rules) {
@@ -785,13 +866,194 @@ export async function filterData(collectionName, queryArray) {
 
   const finalQuery = await getDocs(query(collection_reference, and(...fullQueries)));
 	return finalQuery;
-
-  // finalQuery.forEach((doc) => {
-  //     let docData = doc.data();
-  //     let docID = doc.id;
-  //     finalResults.set(docID, docData);
-  // });
-
-  // return finalResults;
 }
 
+/**
+ * Adds _deleted and serverTimestamp fields to all documents in a Firestore collection.
+ * This allows the collection to be compatible with RxDB's {@link replicateFirestore} plugin.
+ * For more information, see {@link https://rxdb.info/replication-firestore.html|the RxDB Firestore replication documentation}.
+ * 
+ * @param {string} collectionName - The name of the Firestore collection to update.
+ * @param {firebase.firestore.FirebaseFirestore} [database] - The Firestore database instance.
+ */
+export async function addMissingFields(collectionName, database = DB) {
+	const allDocs = await getDocs(query(collection(database, collectionName)));
+
+	if (allDocs.empty) return;
+
+	let batch = writeBatch(database);
+	let batchCounter = 0;
+
+	for (const doc of allDocs.docs) {
+		await batch.update(
+			doc.ref, 
+			{
+				_deleted: false,
+				serverTimestamp: serverTimestamp()
+			}
+		);
+		
+		batchCounter++;
+		if (batchCounter === 500) {
+			await batch.commit();
+			batchCounter = 0;
+			batch = writeBatch(database);
+		}
+	}
+
+	if (batchCounter > 0) await batch.commit();
+}
+
+/**
+ * Debug function to retrieve all partner coordinates from a specified Firestore collection.
+ * Primarily used to verify that the coordinates are being stored correctly in Firestore.
+ * 
+ * @param {string} collectionName - The name of the collection in Firestore to retrieve all partner coordinates from.
+ * @param {firebase.firestore.FirebaseFirestore} [database] - The Firestore database instance.
+ * @returns an array of objects containing id and their corresponding coordinates.
+ */
+export async function getAllPartnerCoordinates(collectionName, database = DB) {
+	if (!collectionName) {
+		console.error("Missing parameters for getting partner coordinates.");
+		return [];
+	}
+	const allDocs = await getDocs(query(collection(database, collectionName)));
+
+	if (allDocs.empty) { return []; }
+	return allDocs.docs.map(doc => {
+		return {
+			id: doc.id,
+			partner_coordinates: doc.data().partner_coordinates
+		}
+	})
+}
+
+/**
+ * Normalizes the datatypes of activity_date in Firestore to int.
+ * 
+ * @param {string} collectionName - The name of the Firestore collection to update.
+ * @param {firebase.firestore.FirebaseFirestore} [database] - The Firestore database instance.
+ */
+export async function migrateDates(collectionName, database = DB) {
+	const allDocs = await getDocs(query(collection(database, collectionName)));
+
+	if (allDocs.empty) return;
+
+	let batch = writeBatch(database);
+	let batchCounter = 0;
+
+	for (const doc of allDocs.docs) {
+		batch.update(
+			doc.ref, 
+			{
+				activity_date: normalizeActivityDate(doc.get('activity_date')),
+				partner_date: deleteField(),
+				serverTimestamp: serverTimestamp()
+			}
+		);
+		
+		batchCounter++;
+		if (batchCounter === 500) {
+			await batch.commit();
+			batchCounter = 0;
+			batch = writeBatch(database);
+		}
+	}
+
+	if (batchCounter > 0) await batch.commit();
+}
+
+/**
+ * Normalizes the datatypes of partner_coordinates in Firestore to GeoPoint.
+ * If the field is a string, it is converted to null instead.
+ * 
+ * @param {string} collectionName - The name of the Firestore collection to update.
+ * @param {firebase.firestore.FirebaseFirestore} [database] - The Firestore database instance.
+ */
+export async function migrateCoordinates(collectionName, database = DB) {
+	const allDocs = await getDocs(query(collection(database, collectionName)));
+	console.dir(allDocs);
+	if (allDocs.empty) return;
+
+	let batch = writeBatch(database);
+	let batchCounter = 0;
+
+	for (const doc of allDocs.docs) {
+		let original_coord = doc.get('partner_coordinates');
+		batch.update(
+			doc.ref, 
+			{
+				partner_coordinates: typeof original_coord === 'string' ? null : original_coord,
+				serverTimestamp: serverTimestamp()
+			}
+		);
+		
+		batchCounter++;
+		if (batchCounter === 500) {
+			await batch.commit();
+			batchCounter = 0;
+			batch = writeBatch(database);
+		}
+	}
+
+	if (batchCounter > 0) await batch.commit();
+}
+
+/**
+ * Debug function primarily to remove all leaked documents.
+ * Deletes or previews deletion of Firestore documents whose IDs are purely numeric.
+ *
+ * @param {string} collectionName - Name of the Firestore collection.
+ * @param {boolean} [preview=false] - If true, logs affected documents without deleting.
+ * @param {Firestore} [db=DB] - Firestore database reference.
+ * @returns {Promise<{deleted: number, total: number, affected: string[]}>} Result summary.
+ */
+export async function deleteNumericIds(collectionName, preview = true, db = DB) {
+    const snapshot = await getDocs(collection(db, collectionName));
+
+    const affected = [];
+    const unaffected = [];
+
+    for (const snap of snapshot.docs) {
+        if (/^-?\d+$/.test(snap.id)) {
+            affected.push(snap.id);
+        } else {
+            unaffected.push(snap.id);
+        }
+    }
+
+    if (!preview && affected.length) {
+        let batch = writeBatch(db);
+        let count = 0;
+
+        for (const id of affected) {
+            batch.delete(doc(db, collectionName, id));
+            count++;
+            if (count === 500) {
+                await batch.commit();
+                console.log(`Committed ${count} deletes`);
+                batch = writeBatch(db);
+                count = 0;
+            }
+        }
+        if (count) await batch.commit();
+    }
+
+    console.table([
+        { Category: 'Affected (numeric IDs)', Count: affected.length },
+        { Category: 'Unaffected', Count: unaffected.length },
+        { Category: 'Total', Count: snapshot.size }
+    ]);
+
+    if (preview) {
+        console.log(`[PREVIEW] Would delete ${affected.length} document(s):`, affected);
+    } else {
+        console.log(`Deleted ${affected.length} document(s).`);
+    }
+
+    return {
+        deleted: preview ? 0 : affected.length,
+        total: snapshot.size,
+        affected
+    };
+}

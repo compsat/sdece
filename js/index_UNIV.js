@@ -3,10 +3,10 @@ import {
 	getDocByID,
 	getDocIdByPartnerName,
 	getCollection,
-} from '/js/firestore_UNIV.js';
+} from '../js/firestore_UNIV.js';
 
 // Global Map Variable (the map shown)
-export var map = L.map('map').setView([14.5995, 120.9842], 10);
+export var map = window.L.map('map').setView([14.5995, 120.9842], 10);
 
 function panLocation(doc, map) {
 	if (getCollection().id === rule_reference['collection_name']) {
@@ -45,6 +45,20 @@ function searchLocation(name, map) {
   });
 }
 
+/**
+ * Checks if all required parameters are defined.
+ * @param {Array<[boolean, string]>} checks An array where each element is a tuple [isInvalid, errorString] where isInvalid is a boolean indicating if the parameter is invalid and errorString is the error message to display.
+ * @returns {boolean} True if all parameters are defined, false otherwise.
+ */
+export function requireParameters(checks) {
+	for (const [isInvalid, errorString] of checks) {
+		if (isInvalid) {
+				console.error(errorString);
+				return false;
+		}
+	}
+	return true;
+}
 
 // Utility Function for Front-end (remove underscores from a string)
 export function removeUnderscoresFromField(field) {
@@ -128,3 +142,57 @@ export function loadJsCssFiles() {
 		}
 	}
 }
+
+/**
+ * Helper function for standardizing a date into a format that works for prefilling HTML inputs.
+ * Used for partner_date since it is stored as a number locally.
+ * @param {Timestamp, number} date 
+ * @returns {string} A string in the YYYY-MM-DD format. If the date is invalid, return '' instead.
+ */
+export function toDateString(date) {
+	let old = date;
+	let val;
+  if (!date || date === 0) val = '';
+  else if (typeof date === 'number') val = new Date(date * 1000).toLocaleDateString('en-CA');
+  else if (typeof date === 'string') val = date;
+  else if (date.toDate) val = date.toDate().toLocaleDateString('en-CA');
+	console.log(`[toDateString] ${old} -> ${val}`);
+  return val ?? '';
+}
+
+/**
+ * Turns a sequence of integers into a more readable format. Used for printing out invalid rows from parseData().
+ * @param {Array} rows - An array of integers
+ * @returns An array of strings.
+ * @example
+ * let range = [1,2,3,4,6,8,9,10]
+ * let out = getRanges(range));
+ * // out = ["1-4","6","8-10"]
+ */
+export function getRanges(rows) {
+  if (!rows.length) return [];
+  const sorted = [...rows].sort((a, b) => a - b);
+  const ranges = [];
+  let start = sorted[0];
+
+  for (let i = 1; i <= sorted.length; i++) {
+    const current = sorted[i];
+    const prev = sorted[i - 1];
+    if (current !== prev + 1 || i === sorted.length) {
+      ranges.push(start === prev ? `${start}` : `${start}-${prev}`);
+      start = current;
+    }
+  }
+
+  return ranges;
+}
+
+/**
+ * Pluralizes a word given a number. This does not work for complex plural nouns.
+ * @param {*} count - The amount of the given noun
+ * @param {*} noun - The noun to be pluralized
+ * @param {*} [suffix] - The suffix that will be added to the base noun when it is plural
+ * @returns {string} The singular or plural version of the word
+ */
+export const pluralize = (count, noun, suffix = 's') => 
+  `${noun}${count !== 1 ? suffix : ''}`;

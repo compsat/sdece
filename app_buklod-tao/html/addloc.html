@@ -5,13 +5,24 @@
         <link rel="stylesheet" href="../css/form.css">
         <link rel="stylesheet" href="../css/main.css">
         <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
+
+        <script type="importmap">
+        {
+          "imports": {
+            "firebase/": "https://www.gstatic.com/firebasejs/12.15.0/",
+            "firebase/app": "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js",
+            "firebase/auth": "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js",
+            "firebase/firestore": "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js"
+          }
+        }
+        </script>
             
         <script type="module">
-        const api = window.parent.api;
         document.getElementById("submit_form").addEventListener("click", async function(event) {
             event.preventDefault();
             
-            console.log("The user has clicked on save")
+            const api = await window.parent.getApi();
+
             // 1. Validation gate (Uses the functions already built into the HTML)
             if (!validateRequiredFields()) {
                 return;
@@ -112,7 +123,7 @@
     </script>
 
         <script type="module">
-            import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
+            import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
             import { AUTH } from "/js/auth.js";
 
             const loginURL = "/html/login.html";
@@ -611,7 +622,6 @@
 
             document.getElementById('close-btn').addEventListener('click', function (event) {
                 event.preventDefault();
-                console.log('The user has closed the Add Household modal.');
                 closeModal();
             });
 

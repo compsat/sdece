@@ -1,31 +1,30 @@
 import { 
   populateNavBar, 
-  addEvacCenters,
   updateRiskIcons
 } from './index.js';
 
-import { buklodSchema } from '../../js/dexie.js'
+import { 
+  addCollection, 
+  createDatabase,
+  hasDatabase,
+  setDatabase,
+  getDatabase
+} from '../../js/dexie_UNIV.js'
+import { BUKLOD_RULES } from '../../js/firestore_UNIV.js';
+import { startFirestoreSync } from './firestore.js';
+
+const BUKLOD_SCHEMA = BUKLOD_RULES['schemas']['buklod']
+const EVAC_SCHEMA = BUKLOD_RULES['schemas']['evacCenters']
 
 // These variables should never be used outside the file. Use the accessors instead.
-let db = null;
 let activeHouseholdCollection = null;
 let activeHouseholdSubscription = null;
 let partnersArray = new Map();
 let evacCenters = [];
 
-export function hasDatabase() { return Boolean(db) }
-
-export function setDatabase(database) { 
-  db = database;
-  activeHouseholdCollection = activeHouseholdCollection ?? db.buklod; 
-}
-
-// Use sparingly.
-export function getDatabase() { return db; }
-
 export function getHouseholdCollection() { return activeHouseholdCollection; }
 
-export function getEvacCentersCollection() { return db?.evacCenters ?? null; }
+export function getEvacCentersCollection() { return getDatabase()?.evacCenters ?? null; }
 
 // For compatibility
 export function dbExists() { return hasDatabase() }
@@ -37,8 +36,8 @@ export function getHouseholds() { return partnersArray }
 export function getEvacCenters() { return evacCenters }
 
 export function setAsOffline() {
-  setHouseholdCollection(db.buklodImport);
-  setHouseholdSubscription(db.buklodImport);
+  setHouseholdCollection(getDatabase().buklodImport);
+  setHouseholdSubscription(getDatabase().buklodImport);
 }
 
 function setHouseholdCollection(collection) {
@@ -64,41 +63,55 @@ function setHouseholdSubscription(collection) {
 export async function parseData(file) {
   try {
     const data = await file.arrayBuffer();
-    const workbook = XLSX.read(data);
+    const workbook = window.XLSX.read(data);
     const masterSheet = workbook.Sheets["Master Sheet"];
     if (!masterSheet) {
       throw new Error("Spreadsheet is missing a 'Master Sheet' tab.");
     }
-    const jsonData = XLSX.utils.sheet_to_json(masterSheet);
+    const jsonData = window.XLSX.utils.sheet_to_json(masterSheet);
 
     return jsonData
       .filter((r) => String(r["Household Name"] ?? "").trim() !== "")
       .map(parseRow);
   } catch (err) {
     console.error("Import failed:", err);
-    throw new Error(`Could not parse file: ${err.message}`);
+    throw new Error(`Could not parse file: ${err.message}`, {cause: err});
   }
 }
 
 // Initializes subscriptions for the first time
-export function createSubscriptions(window) {
-  db.evacCenters
+export function createSubscriptions() {
+  getEvacCentersCollection()
     .find({ selector: { _deleted: { $eq: false } } })
     .$.subscribe(centers => {
       evacCenters = centers.map(c => c.toJSON());
       updateRiskIcons();
   });
 
-  setHouseholdSubscription(db.buklod);
+  setHouseholdSubscription(getDatabase().buklod);
 }
 
 export async function importData(docs) {
-  if (!db) throw new Error('Database not initialized. Call setDatabase() first.')
-  await db.buklodImport.remove(); 
-  await db.addCollections({
-    buklodImport: { schema: buklodSchema }
-  });
-  await db.buklodImport.bulkUpsert(docs);
+  if (!getDatabase()) throw new Error('Database not initialized. Call setDatabase() first.')
+  await getDatabase().buklodImport.remove(); 
+  await addCollection(getDatabase(), 'buklodImport', BUKLOD_SCHEMA);
+  await getDatabase().buklodImport.bulkUpsert(docs);
+}
+
+/**
+ * Initializes the database and associated collections. Used on app initialization.
+ * Also starts synchronization with the Firestore database. 
+ * 
+ * @param {string} uid - The ID of the user 
+ */
+export async function initDatabase(uid) {
+  let newDb = await createDatabase('buklod_app', uid, {
+    buklod: {schema: BUKLOD_SCHEMA},
+    buklodImport: {schema: BUKLOD_SCHEMA},
+    evacCenters: {schema: EVAC_SCHEMA},
+  })
+  activeHouseholdCollection = activeHouseholdCollection ?? newDb.buklod; 
+  startFirestoreSync(newDb, uid);
 }
 
 /**
@@ -110,7 +123,7 @@ export async function importData(docs) {
  * }
  */
 export async function removeDatabase() {
-  if (!db) return;
+  if (!hasDatabase()) return;
 
   activeHouseholdCollection = null;
   activeHouseholdSubscription?.unsubscribe();
@@ -118,9 +131,9 @@ export async function removeDatabase() {
   evacCenters = [];
   
   try {
-    await db.remove();
+    await getDatabase().remove();
   } finally {
-    db = null;
+    setDatabase(null);
   }
 }
 

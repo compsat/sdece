@@ -1,12 +1,18 @@
 // FIRESTORE DATABASE\
-import { query, getDocs, GeoPoint, Timestamp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-import { getCollection, setCollection, SEEDS_RULES, validateData, editEntry, addEntry } from '/js/firestore_UNIV.js';
+import { GeoPoint, collection, doc } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
+import { replicateFirestore } from 'https://esm.sh/rxdb@17.3.0/plugins/replication-firestore?external=firebase';
+import { 
+	convertCoordinates,
+	DB, FIREBASE_CONFIG, SEEDS_RULES, 
+	validateData,
+} from '../../js/firestore_UNIV.js';
 import { map } from '/js/index_UNIV.js';
-import { showMainModal, showAddModal } from './index.js';
+import { showMainModal, showAddModal, clearAllHighlights, getActivityString } from './index.js';
+import { requireParameters, toDateString } from '../../js/index_UNIV.js';
+import { getPartners, getSeedsCollection } from './dexie.js';
+import { normalizeActivityDate } from '../../js/dexie_UNIV.js';
 
-// Set collection and associated rule config
-let collection_value = 'sdece-official-TEST'
-setCollection(collection_value);
+let firestoreCollectionRef; // Autofilled in startFirestoreSync()
 
 export function populateMainModalList() {
 	// Display temporarily saved activities to main modal
@@ -15,36 +21,30 @@ export function populateMainModalList() {
 
 	if (Object.keys(temp_activities).length == 0) {
 		mainModalActivityList.innerHTML = '<p class="main-modal-no-activities-message">No activities to show</p>';
-	} else {
-		for (let i = 0; i < Object.keys(temp_activities).length; i++) {
-			var activity = temp_activities[Object.keys(temp_activities)[i]];
+		return;
+	}
 
-			// View activity details button
-			const activityButton = document.createElement('li');
-			const activityName = document.createElement('div');
-			const arrow = document.createElement('div');
+	for (let i = 0; i < Object.keys(temp_activities).length; i++) {
+		var activity = temp_activities[Object.keys(temp_activities)[i]];
 
-			activityName.textContent = getActivity(activity) + '';
+		// View activity details button
+		const activityButton = document.createElement('li');
+		const activityName = document.createElement('div');
+		const arrow = document.createElement('div');
 
-			arrow.innerHTML =
-				'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
-			arrow.classList.add('arrow');
+		activityName.textContent = getActivityString(activity) + '';
 
-			activityButton.appendChild(activityName);
-			activityButton.classList.add('main-modal-temporary-activity');
-			mainModalActivityList.appendChild(activityButton);
-		}
+		arrow.innerHTML =
+			'<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#currentColor"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="currentColor"></path></g></svg>';
+		arrow.classList.add('arrow');
+
+		activityButton.appendChild(activityName);
+		activityButton.classList.add('main-modal-temporary-activity');
+		mainModalActivityList.appendChild(activityButton);
 	}
 }
 
-// Pans to the Philippines
-map.setView(new L.LatLng(14.651, 121.052), 14);
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
-}).addTo(map);
-
-let results = L.layerGroup().addTo(map);
+const L = window.L;
 let popup = L.popup();
 let addForm_geopoint;
 
@@ -77,212 +77,39 @@ let hasExistingPartner;
 
 addModalButton.addEventListener('click', () => {
 	// Get the Add Activity form and the needed input fields for autofill
-	let inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value;
-	let inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value;
-	console.log("flagged hasExistingPartner as FALSE");
-	hasExistingPartner = false;
-
+	let inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value.trim();
+	let inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value.trim();
+	has_existing_partner = false;	
+	
+	const AUTOFILL_MAP = {
+		partner_name: inputtedPartnerName,
+		partner_address: inputtedPartnerAddress
+	}
+	const LOCKED_FIELDS = new Set(['partner_name', 'partner_address']);
+	
 	if (inputtedPartnerName == '' || inputtedPartnerAddress == '') {
 		alert('Partner Name and Partner Address cannot be blank.');
-	} else {
-		for (let field of SEEDS_RULES['fields']) {
-			if (field != 'partner_coordinates') {
-				if (field == 'partner_name' || field == 'partner_address') {
-					if (field == 'partner_name') {
-						addFormiframeDocument.getElementById(field).value = inputtedPartnerName;
-					} else {
-						addFormiframeDocument.getElementById(field).value = inputtedPartnerAddress;
-					}
-					addFormiframeDocument.getElementById(field).readOnly = true;
-					addFormiframeDocument.getElementById(field).style.backgroundColor = 'var(--custom-medium-gray)';
-					addFormiframeDocument.getElementById(field).style.color = 'var(--custom-dark-gray)';
-				} else {
-					addFormiframeDocument.getElementById(field).value = null;
-					addFormiframeDocument.getElementById(field).readOnly = false;
-				}
-			} else {
-
-			}
-		}
-		showAddModal();
-		console.log("showing add modal");
-	}
-});
-
-// === SIDEBAR FUNCTIONS SECTION ===
-
-// Load and filter activities
-export function loadActivities(querySnapshot) {
-    let activities = {};
-    querySnapshot.forEach((doc) => {
-        let activity = doc.data();
-        let { name } = activity;
-        // Skip unwanted test entries
-        // if (name !== 'Test 2' && name !== 'Test2') {
-        //     activity['identifier'] = doc.id;
-        //     activities[doc.id] = activity;
-        // }
-
-			activity['identifier'] = doc.id;
-      activities[doc.id] = activity;
-    });
-    return activities;
-}
-
-// Group activities by partner
-export function groupActivities(activities) {
-    let partners = {};
-    Object.values(activities).forEach((activity) => {
-        let partner = activity[SEEDS_RULES['identifier']];
-        if (!partners[partner]) {
-            partners[partner] = [];
-        }
-        partners[partner].push(activity);
-    });
-
-    return partners;
-}
-
-// Uses activity nature if there's activity name is N/A	
-export function getActivity(activity) {
-	const name = activity['activity_name'];
-	const nature = activity['activity_nature'];
-
-	if (!name || name.trim() === '') {
-		return nature;
-	}
-	return name;
-}
-
-// Generate string of activities
-export function getActivitiesString(activities) {
-    let activitiesString = '';
-    for (const activity of activities) {
-        activitiesString += getActivity(activity) + '<br>';
-    }
-    return activitiesString;
-}
-
-// Clears Highlight on the Side Bar when transitioning
-export function clearAllHighlights() {
-	const sidebarItems = document.querySelectorAll('.partnerDiv');
-	sidebarItems.forEach((item) => {
-		item.classList.remove('highlight');
-	});
-}
-
-// Create sidebar list item for a partner
-export function createSidebarItem(partner, activities, lat, long, marker) {
-    const containerDiv = document.createElement('div');
-    const img = document.createElement('svg');
-    const listItem = document.createElement('li');
-    const anchor = document.createElement('a');
-    const nameDiv = document.createElement('div');
-    const addressDiv = document.createElement('div');
-    const activityDiv = document.createElement('div');
-
-    containerDiv.classList.add('partnerDiv');
-    listItem.classList.add('accordion');
-    nameDiv.classList.add('name');
-    addressDiv.classList.add('address');
-    activityDiv.classList.add('activity');
-
-    nameDiv.textContent = partner;
-    addressDiv.textContent = activities[0]['partner_address'];
-
-    // Append activity names
-    activityDiv.innerHTML = getActivitiesString(activities);
-
-    // Add click behavior for sidebar item
-    containerDiv.addEventListener('click', () => {
-        marker.openPopup();
-        map.panTo(new L.LatLng(lat, long));
-        clearAllHighlights();
-        containerDiv.classList.add('highlight');
-        showModal(activities);
-    });
-
-    // Assemble DOM elements
-    anchor.append(nameDiv, addressDiv, activityDiv);
-    listItem.appendChild(anchor);
-    containerDiv.append(img, listItem);
-    locationList.appendChild(containerDiv);
-
-}
-
-// Handle marker click: highlight sidebar and show modal
-export function handleMarkerClick(partner, partners) {
-    clearAllHighlights();
-
-    // Highlight sidebar item
-    const sidebarItems = document.querySelectorAll('.partnerDiv');
-    sidebarItems.forEach((item) => {
-        const nameDiv = item.querySelector('.name');
-        if (nameDiv && nameDiv.textContent === partner) {
-            item.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            item.classList.add('highlight');
-        }
-    });
-
-    showModal(partners[partner]);
-}
-
-// Create map markers and sidebar entries for each partner
-export function createMarkersAndSidebar(partners) {
-    Object.keys(partners).forEach((partner) => {
-        let firstActivity = partners[partner][0];
-        let partnerCoordinates = firstActivity['partner_coordinates'];
-
-        if (partnerCoordinates != null) {
-            let { latitude, longitude } = partnerCoordinates;
-            let lat = parseFloat(latitude);
-            let long = parseFloat(longitude);
-            let marker = L.marker([lat, long]);
-
-            // Bind popup to marker
-            let popupContent = `
-				<div class="partner-popup" id="${partner}">
-				${partner}
-				</div>`;
-            marker.bindPopup(popupContent);
-            results.addLayer(marker);
-
-            // Marker hover and click events
-            marker.on('mouseover', () => marker.openPopup());
-            marker.on('click', () => {
-                map.panTo(new L.LatLng(lat, long));
-                handleMarkerClick(partner, partners);
-            });
-
-            // Build sidebar item for this partner
-            createSidebarItem(partner, partners[partner], lat, long, marker);
-        }
-    });
-}
-
-// Main function for fetching all activities, grouping activities by partner
-// and creating the map markers and sidebar entries for each unique partner
-const collectionRef = getCollection();
-
-getDocs(collectionRef)
-    .then((querySnapshot) => {
-			console.log("query snapshot:");
-			console.log(querySnapshot);
-      const activities = loadActivities(querySnapshot);
-      const partners = groupActivities(activities);
-	
-
-			window.activities = activities;
-      window.partners = partners;
+		return;
+	} 
 		
-        createMarkersAndSidebar(partners);
-    });
+	for (const field of SEEDS_RULES['fields']) {
+		if (field === 'partner_coordinates') continue;
+
+		const element = addFormiframeDocument.getElementById(field);
+		element.value = AUTOFILL_MAP[field] ?? null;
+		element.readOnly = LOCKED_FIELDS.has(field);
+
+		if (LOCKED_FIELDS.has(field)) {
+			element.style.backgroundColor = 'var(--custom-medium-gray)';
+			element.style.color = 'var(--custom-dark-gray)';
+		}
+	}
+	showAddModal();
+});
 
 // === MAIN MODAL SECTION ===
 
 // Display partner modal by clicking partner entry
-let current_viewed_activity = null; // docId of the currently viewed activity
-
 export function showModal(partner) {
 	// Hide external button (reset state)
 	const modalButton = document.querySelector('.modal-button'); 
@@ -330,22 +157,22 @@ export function showModal(partner) {
 	}
 
 	// --- LIST OF ACTIVITIES SECTION ---
-const activitiesSection = document.createElement('div');
-activitiesSection.className = 'modal-section';
-activitiesSection.innerHTML = `
-  <div class="modal-section-header">
-    <span class="modal-section-icon" style="display:flex;align-items:center;">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#7b8a99" width="1.1em" height="1.1em"><path d="M20.0833 15.1999L21.2854 15.9212C21.5221 16.0633 21.5989 16.3704 21.4569 16.6072C21.4146 16.6776 21.3557 16.7365 21.2854 16.7787L12.5144 22.0412C12.1977 22.2313 11.8021 22.2313 11.4854 22.0412L2.71451 16.7787C2.47772 16.6366 2.40093 16.3295 2.54301 16.0927C2.58523 16.0223 2.64413 15.9634 2.71451 15.9212L3.9166 15.1999L11.9999 20.0499L20.0833 15.1999ZM20.0833 10.4999L21.2854 11.2212C21.5221 11.3633 21.5989 11.6704 21.4569 11.9072C21.4146 11.9776 21.3557 12.0365 21.2854 12.0787L11.9999 17.6499L2.71451 12.0787C2.47772 11.9366 2.40093 11.6295 2.54301 11.3927C2.58523 11.3223 2.64413 11.2634 2.71451 11.2212L3.9166 10.4999L11.9999 15.3499L20.0833 10.4999ZM12.5144 1.30864L21.2854 6.5712C21.5221 6.71327 21.5989 7.0204 21.4569 7.25719C21.4146 7.32757 21.3557 7.38647 21.2854 7.42869L11.9999 12.9999L2.71451 7.42869C2.47772 7.28662 2.40093 6.97949 2.54301 6.7427C2.58523 6.67232 2.64413 6.61343 2.71451 6.5712L11.4854 1.30864C11.8021 1.11864 12.1977 1.11864 12.5144 1.30864ZM11.9999 3.33233L5.88723 6.99995L11.9999 10.6676L18.1126 6.99995L11.9999 3.33233Z"></path></svg>
-    </span>
-    <span>List of activities</span>
-    <button type="button" id="addActivityButton" class="main-modal-modern-activities-add" aria-label="Add Activity">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-      </svg>
-    </button>
-  </div>
-  <div class='modal-section-divider'></div>
-`;
+	const activitiesSection = document.createElement('div');
+	activitiesSection.className = 'modal-section';
+	activitiesSection.innerHTML = `
+		<div class="modal-section-header">
+			<span class="modal-section-icon" style="display:flex;align-items:center;">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#7b8a99" width="1.1em" height="1.1em"><path d="M20.0833 15.1999L21.2854 15.9212C21.5221 16.0633 21.5989 16.3704 21.4569 16.6072C21.4146 16.6776 21.3557 16.7365 21.2854 16.7787L12.5144 22.0412C12.1977 22.2313 11.8021 22.2313 11.4854 22.0412L2.71451 16.7787C2.47772 16.6366 2.40093 16.3295 2.54301 16.0927C2.58523 16.0223 2.64413 15.9634 2.71451 15.9212L3.9166 15.1999L11.9999 20.0499L20.0833 15.1999ZM20.0833 10.4999L21.2854 11.2212C21.5221 11.3633 21.5989 11.6704 21.4569 11.9072C21.4146 11.9776 21.3557 12.0365 21.2854 12.0787L11.9999 17.6499L2.71451 12.0787C2.47772 11.9366 2.40093 11.6295 2.54301 11.3927C2.58523 11.3223 2.64413 11.2634 2.71451 11.2212L3.9166 10.4999L11.9999 15.3499L20.0833 10.4999ZM12.5144 1.30864L21.2854 6.5712C21.5221 6.71327 21.5989 7.0204 21.4569 7.25719C21.4146 7.32757 21.3557 7.38647 21.2854 7.42869L11.9999 12.9999L2.71451 7.42869C2.47772 7.28662 2.40093 6.97949 2.54301 6.7427C2.58523 6.67232 2.64413 6.61343 2.71451 6.5712L11.4854 1.30864C11.8021 1.11864 12.1977 1.11864 12.5144 1.30864ZM11.9999 3.33233L5.88723 6.99995L11.9999 10.6676L18.1126 6.99995L11.9999 3.33233Z"></path></svg>
+			</span>
+			<span>List of activities</span>
+			<button type="button" id="addActivityButton" class="main-modal-modern-activities-add" aria-label="Add Activity">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="24" height="24">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+				</svg>
+			</button>
+		</div>
+		<div class='modal-section-divider'></div>
+	`;
 
 	// List of activity cards
 	partner.forEach((activity) => {
@@ -353,7 +180,7 @@ activitiesSection.innerHTML = `
   		card.className = 'modal-card-activity modal-activity-summary-card';
   		card.style.cursor = 'pointer';
   		card.innerHTML = `
-    		<div class="modal-card-header-activity" style="font-size:1rem;font-weight:500;">${getActivity(activity) || 'Activity Name'}</div>
+    		<div class="modal-card-header-activity" style="font-size:1rem;font-weight:500;">${getActivityString(activity) || 'Activity Name'}</div>
     		<div class="modal-card-row" style="margin-top:-0.5rem;">
       			<span class="modal-office">${activity.ADMU_office || 'Department'}</span>
     		</div>
@@ -368,58 +195,56 @@ activitiesSection.innerHTML = `
 	// Add click handler for the new activity button
 	const addActivityButton = activitiesSection.querySelector('#addActivityButton');
 	if (addActivityButton) {
-  		addActivityButton.addEventListener('click', () => {
+		addActivityButton.addEventListener('click', () => {
 
 				console.log("flagged hasExistingPartner as TRUE");
 				hasExistingPartner = true;
-    		// Close current modal
-    		modal.style.display = 'none';
-    		modal.classList.remove('open');
-    
-    		// Show the add modal
-    		showAddModal();
-    
-    		// Pre-fill partner info after iframe loads
-    		const addFormIframe = document.getElementById('addModalHTML');
-    		const partnerName = partner[0]?.partner_name || '';
-    		const partnerAddress = partner[0]?.partner_address || '';
+			// Close current modal
+			modal.style.display = 'none';
+			modal.classList.remove('open');
+			// Show the add modal
+			showAddModal();
+	
+			// Pre-fill partner info after iframe loads
+			const addFormIframe = document.getElementById('addModalHTML');
+			const partnerName = partner[0]?.partner_name || '';
+			const partnerAddress = partner[0]?.partner_address || '';
 				const partnerCoordinates = partner[0]?.partner_coordinates || '';
-    
-    		const fillFormFields = () => {
-      			try {
-        			const addFormDoc = addFormIframe.contentDocument || addFormIframe.contentWindow.document;
-        			const nameField = addFormDoc.getElementById('partner_name');
-        			const addressField = addFormDoc.getElementById('partner_address');
-							const coordinatesField = addFormDoc.getElementById('partner_coordinates');
-        
-        		if (nameField) {
-          			nameField.value = partnerName;
-          			nameField.readOnly = true;
-          			nameField.style.backgroundColor = 'var(--custom-medium-gray)';
-        		}
-        		if (addressField) {
-          			addressField.value = partnerAddress;
-          			addressField.readOnly = true;
-          			addressField.style.backgroundColor = 'var(--custom-medium-gray)';
-        		}
-						if (coordinatesField) {
-							coordinatesField.value = partnerCoordinates;
-							coordinatesField.readOnly = true;
-							coordinatesField.style.backgroundColor = 'var(--custom-medium-gray)';
-							console.log(partnerCoordinates);
-        		}
-      			} catch (e) {
-        			console.log('Waiting for iframe to load...');
-        			setTimeout(fillFormFields, 100);
-      			}
-    		};
-    
-    		if (addFormIframe.contentDocument) {
-    		  fillFormFields();
-    		} else {
-    		  addFormIframe.onload = fillFormFields;
-    		}
-  		});
+	
+			const fillFormFields = () => {
+				try {
+					const addFormDoc = addFormIframe.contentDocument || addFormIframe.contentWindow.document;
+					const nameField = addFormDoc.getElementById('partner_name');
+					const addressField = addFormDoc.getElementById('partner_address');
+					const coordinatesField = addFormDoc.getElementById('partner_coordinates');
+		
+					if (nameField) {
+						nameField.value = partnerName;
+						nameField.readOnly = true;
+						nameField.style.backgroundColor = 'var(--custom-medium-gray)';
+					}
+					if (addressField) {
+						addressField.value = partnerAddress;
+						addressField.readOnly = true;
+						addressField.style.backgroundColor = 'var(--custom-medium-gray)';
+					}
+					if (coordinatesField) {
+						coordinatesField.value = `${partnerCoordinates._lat}, ${partnerCoordinates._long}`;
+						coordinatesField.readOnly = true;
+						coordinatesField.style.backgroundColor = 'var(--custom-medium-gray)';
+						console.log(partnerCoordinates);
+					}
+				} catch (e) {
+					setTimeout(fillFormFields, 100);
+				}
+			};
+	
+			if (addFormIframe.contentDocument) {
+				fillFormFields();
+			} else {
+				addFormIframe.onload = fillFormFields;
+			}
+		});
 	}
 	// --- CLOSE BUTTON (top right) ---
 	const closeDiv = document.createElement('button');
@@ -438,7 +263,6 @@ activitiesSection.innerHTML = `
 }
 
 function showEditActivityForm(activity, partnerName, coords) {
-	const modal = document.getElementById('partnerModal');
 	const modalHeader = document.getElementById('modalHeader');
 	const modalContent = document.getElementById('modalContent');
 	modalHeader.innerHTML = '';
@@ -497,7 +321,7 @@ function showEditActivityForm(activity, partnerName, coords) {
 			const fieldMap = {
 				activity_name: activity.activity_name || '',
 				activity_nature: activity.activity_nature || '',
-				activity_date: activity.activity_date ? (typeof activity.activity_date === 'string' ? activity.activity_date : (activity.activity_date.toDate ? activity.activity_date.toDate().toLocaleDateString('en-CA') : '')) : '',
+				activity_date: toDateString(activity.activity_date),
 				additional_partnership: activity.additional_partnership || '',
 				organization_unit: activity.organization_unit || '',
 				partner_name: activity.partner_name || '',
@@ -514,14 +338,14 @@ function showEditActivityForm(activity, partnerName, coords) {
 				if (input) input.value = fieldMap[key];
 			});
 			// Save/cancel logic
-			form.onsubmit = function(e) {
+			form.onsubmit = async function(e) {
 				e.preventDefault();
 				const updated = {};
 				Object.keys(fieldMap).forEach(key => {
 					const input = form.querySelector(`[name="${key}"]`);
 					updated[key] = input ? input.value : '';
 				});
-				updated['partner_coordinates'] = activity.partner_coordinates;
+				updated.activity_date = normalizeActivityDate(updated.activity_date);
 				let errors = validateData('seeds-official-TEST', updated);
 				const errorDiv = form.querySelector('#error_messages');
 				if (errorDiv) errorDiv.innerHTML = '';
@@ -540,10 +364,8 @@ function showEditActivityForm(activity, partnerName, coords) {
 
 					return;
 				}
-				updated.activity_date = dateToTimestamp(updated.activity_date);
-				editEntry(updated, activity.identifier);
-				showActivityDetailModal({...activity, ...updated}, partnerName, coords);
-				alert("Please reload the page for your changes to reflect.");
+				activity = await activity.incrementalPatch(updated);
+				showActivityDetailModal(activity, partnerName, coords);
 			};
 			// Cancel/Back logic
 			const cancelBtn = form.querySelector('#cancel-btn');
@@ -565,8 +387,8 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	const modalHeader = document.getElementById('modalHeader');
 	const modalContent = document.getElementById('modalContent');
 
-				modalHeader.innerHTML = '';
-				modalContent.innerHTML = '';
+	modalHeader.innerHTML = '';
+	modalContent.innerHTML = '';
 
 	// --- HEADER ---
 	const headerRow = document.createElement('div');
@@ -578,29 +400,16 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	const backBtn = document.createElement('button');
 	backBtn.className = 'modal-back-btn';
 	backBtn.innerHTML = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 19L8.5 12L15.5 5" stroke="#222b45" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-	backBtn.onclick = function() {
-		// Always show the summary modal for this partner
-		let allPartners = window.partners || {};
-		let partnerArr = null;
-		if (allPartners && allPartners[partnerName]) {
-			partnerArr = allPartners[partnerName];
-		} else if (window.activities) {
-			// fallback: search activities for matching partner name
-			partnerArr = Object.values(window.activities).filter(a => a.partner_name === partnerName);
-		}
-		if (partnerArr && partnerArr.length > 0) {
-			showModal(partnerArr);
-		} else {
-			// fallback: showModal with just this activity
-			showModal([activity]);
-		}
+	backBtn.onclick = async () => {
+		const activities = (await getPartners())[partnerName]
+		showModal(activities);
 	};
 	headerRow.appendChild(backBtn);
 
 	const headerTitle = document.createElement('div');
 	headerTitle.className = 'modal-modern-title';
 	headerTitle.innerHTML = `
-	  <span class="modal-modern-activity">${getActivity(activity) || ''}</span><br>
+	  <span class="modal-modern-activity">${getActivityString(activity) || ''}</span><br>
 	  <span class="modal-location-label">${partnerName || ''}</span>
 	`;
 	headerRow.appendChild(headerTitle);
@@ -612,7 +421,7 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	generalSection.innerHTML = `
 	  <div class="modal-section-header">
 		<span class="modal-section-icon" style="display:inline-flex;align-items:center;">
-		  <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"rgba(126,138,152,1)\"><path d=\"M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 7H13V9H11V7ZM11 11H13V17H11V11Z\"></path></svg>
+		  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(126,138,152,1)"><path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 7H13V9H11V7ZM11 11H13V17H11V11Z"></path></svg>
 		</span>
 		<span>General Information</span>
 	  </div>
@@ -621,14 +430,30 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	const contactCard = document.createElement('div');
 	contactCard.className = 'modal-card-information';
 	contactCard.innerHTML = `
-	  <div class=\"modal-card-header-information\"><span style=\"display:inline-flex;align-items:center;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"rgba(126,138,152,1)\" width=\"1.2em\" height=\"1.2em\" style=\"vertical-align:middle;margin-right:0.5rem;\"><path d=\"M20 22H6C4.34315 22 3 20.6569 3 19V5C3 3.34315 4.34315 2 6 2H20C20.5523 2 21 2.44772 21 3V21C21 21.5523 20.5523 22 20 22ZM19 20V18H6C5.44772 18 5 18.4477 5 19C5 19.5523 5.44772 20 6 20H19ZM5 16.1707C5.31278 16.0602 5.64936 16 6 16H19V4H6C5.44772 4 5 4.44772 5 5V16.1707ZM12 10C10.8954 10 10 9.10457 10 8C10 6.89543 10.8954 6 12 6C13.1046 6 14 6.89543 14 8C14 9.10457 13.1046 10 12 10ZM9 14C9 12.3431 10.3431 11 12 11C13.6569 11 15 12.3431 15 14H9Z\"></path></svg>Contact Information</span></div>
-	  <div class=\"modal-card-row\">\n        <span class=\"modal-label\">Contact person</span>\n        <span class=\"modal-value\">${activity.partner_contact_name || '—'}</span>\n      </div>\n      <div class=\"modal-card-row\">\n        <span class=\"modal-label\">Email address</span>\n        <span class=\"modal-value\">${activity.partner_email || '—'}</span>\n      </div>\n    `;
+	  <div class="modal-card-header-information"><span style="display:inline-flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(126,138,152,1)" width="1.2em" height="1.2em" style="vertical-align:middle;margin-right:0.5rem;"><path d="M20 22H6C4.34315 22 3 20.6569 3 19V5C3 3.34315 4.34315 2 6 2H20C20.5523 2 21 2.44772 21 3V21C21 21.5523 20.5523 22 20 22ZM19 20V18H6C5.44772 18 5 18.4477 5 19C5 19.5523 5.44772 20 6 20H19ZM5 16.1707C5.31278 16.0602 5.64936 16 6 16H19V4H6C5.44772 4 5 4.44772 5 5V16.1707ZM12 10C10.8954 10 10 9.10457 10 8C10 6.89543 10.8954 6 12 6C13.1046 6 14 6.89543 14 8C14 9.10457 13.1046 10 12 10ZM9 14C9 12.3431 10.3431 11 12 11C13.6569 11 15 12.3431 15 14H9Z"></path></svg>Contact Information</span></div>
+	  <div class="modal-card-row">
+        <span class="modal-label">Contact person</span>
+        <span class="modal-value">${activity.partner_contact_name || '—'}</span>
+      </div>
+      <div class="modal-card-row">
+        <span class="modal-label">Email address</span>
+        <span class="modal-value">${activity.partner_email || '—'}</span>
+      </div>
+    `;
 	// Partnership Information Card
 	const partnershipCard = document.createElement('div');
 	partnershipCard.className = 'modal-card-information';
 	partnershipCard.innerHTML = `
-	  <div class=\"modal-card-header-information\"><span style=\"display:inline-flex;align-items:center;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"rgba(126,138,152,1)\" width=\"1.2em\" height=\"1.2em\" style=\"vertical-align:middle;margin-right:0.5rem;\"><path d=\"M2 22C2 17.5817 5.58172 14 10 14C14.4183 14 18 17.5817 18 22H16C16 18.6863 13.3137 16 10 16C6.68629 16 4 18.6863 4 22H2ZM10 13C6.685 13 4 10.315 4 7C4 3.685 6.685 1 10 1C13.315 1 16 3.685 16 7C16 10.315 13.315 13 10 13ZM10 11C12.21 11 14 9.21 14 7C14 4.79 12.21 3 10 3C7.79 3 6 4.79 6 7C6 9.21 7.79 11 10 11ZM18.2837 14.7028C21.0644 15.9561 23 18.752 23 22H21C21 19.564 19.5483 17.4671 17.4628 16.5271L18.2837 14.7028ZM17.5962 3.41321C19.5944 4.23703 21 6.20361 21 8.5C21 11.3702 18.8042 13.7252 16 13.9776V11.9646C17.6967 11.7222 19 10.264 19 8.5C19 7.11935 18.2016 5.92603 17.041 5.35635L17.5962 3.41321Z\"></path></svg>Partnership Information</span></div>
-	  <div class=\"modal-card-row\">\n        <span class=\"modal-label\">Organization/Unit</span>\n        <span class=\"modal-value\">${activity.organization_unit || '—'}</span>\n      </div>\n      <div class=\"modal-card-row\">\n        <span class=\"modal-label\">Partnership date</span>\n        <span class="modal-value">${activity.activity_date && activity.activity_date.toDate ? activity.activity_date.toDate().toLocaleDateString('en-PH', {year: 'numeric', month: 'long', day: 'numeric'}): activity.activity_date || '—'}</span>\n      </div>\n    `;
+	  <div class="modal-card-header-information"><span style="display:inline-flex;align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(126,138,152,1)" width="1.2em" height="1.2em" style="vertical-align:middle;margin-right:0.5rem;"><path d="M2 22C2 17.5817 5.58172 14 10 14C14.4183 14 18 17.5817 18 22H16C16 18.6863 13.3137 16 10 16C6.68629 16 4 18.6863 4 22H2ZM10 13C6.685 13 4 10.315 4 7C4 3.685 6.685 1 10 1C13.315 1 16 3.685 16 7C16 10.315 13.315 13 10 13ZM10 11C12.21 11 14 9.21 14 7C14 4.79 12.21 3 10 3C7.79 3 6 4.79 6 7C6 9.21 7.79 11 10 11ZM18.2837 14.7028C21.0644 15.9561 23 18.752 23 22H21C21 19.564 19.5483 17.4671 17.4628 16.5271L18.2837 14.7028ZM17.5962 3.41321C19.5944 4.23703 21 6.20361 21 8.5C21 11.3702 18.8042 13.7252 16 13.9776V11.9646C17.6967 11.7222 19 10.264 19 8.5C19 7.11935 18.2016 5.92603 17.041 5.35635L17.5962 3.41321Z"></path></svg>Partnership Information</span></div>
+	  <div class="modal-card-row">
+        <span class="modal-label">Organization/Unit</span>
+        <span class="modal-value">${activity.organization_unit || '—'}</span>
+      </div>
+      <div class="modal-card-row">
+        <span class="modal-label">Partnership date</span>
+        <span class="modal-value">${toDateString(activity.activity_date) || '—'} </span>
+      </div>
+    `;
 	generalSection.appendChild(contactCard);
 	generalSection.appendChild(partnershipCard);
 	modalContent.appendChild(generalSection);
@@ -639,7 +464,7 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	officeSection.innerHTML = `
 	  <div class="modal-section-header">
 		<span class="modal-section-icon" style="display:inline-flex;align-items:center;">
-		  <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"rgba(126,138,152,1)\"><path d=\"M12 0.585693L18 6.58569V9H22V19H23V21H1V19H2V9H6V6.58569L12 0.585693ZM18 19H20V11H18V19ZM6 11H4V19H6V11ZM8 7.41412V18.9999H11V12H13V18.9999H16V7.41412L12 3.41412L8 7.41412Z\"></path></svg>
+		  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(126,138,152,1)"><path d="M12 0.585693L18 6.58569V9H22V19H23V21H1V19H2V9H6V6.58569L12 0.585693ZM18 19H20V11H18V19ZM6 11H4V19H6V11ZM8 7.41412V18.9999H11V12H13V18.9999H16V7.41412L12 3.41412L8 7.41412Z"></path></svg>
 		</span>
 		<span>Ateneo Office Oversight</span>
 	  </div>
@@ -695,9 +520,15 @@ function collectFormInputs(doc, geopointSource, mode) {
 			if (mode === 'add') {
 					if (!geopointSource) {
 						let input = doc.getElementById(field);
-						result[field] = input?.value || null;
+						// TODO: Parse it into usable form
+						// result[field] = input?.value || null;
 					} else {
-						result[field] = geopointSource;
+						result[field] = {_lat: geopointSource.latitude, _long: geopointSource.longitude};
+			}
+		} else if (field === 'activity_date') {
+			if (mode === 'add') {
+				let input = doc.getElementById(field)
+				result[field] = normalizeActivityDate(input?.value || 0)
 					}
 				
 			}
@@ -729,16 +560,6 @@ function displayErrors(errors, docContext) {
 	} 
 }
 
-// Used for add/edit to normalize date to timestamp
-function dateToTimestamp(date) {
-	if (typeof date === 'string' && !isNaN(Date.parse(date))) {
-		const parsedDate = new Date(date);
-		parsedDate.setHours(0, 0, 0, 0);
-		return Timestamp.fromDate(parsedDate);
-	}
-	return date;
-}
-
 // Local values stored before batch uploading
 let temp_activities = {};
 let temp_activities_id = 0;
@@ -748,7 +569,7 @@ let addFormiframe = document.getElementById('addModalHTML');
 let addFormiframeDocument = addFormiframe.contentWindow.document;
 let addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
 
-addFormSubmitButton.addEventListener('click', function (event) {
+addFormSubmitButton.addEventListener('click', async function (event) {
 	let geoPoint;
 
 	if (addForm_geopoint) {
@@ -768,12 +589,10 @@ addFormSubmitButton.addEventListener('click', function (event) {
 		event.preventDefault();
 		return;
 	} 
-	if (hasExistingPartner) {	//FIXME: this boolean is only defined on map click
-		// Uploads straight to firebase DB
-		console.log("form data:")
-		console.log(form_data); 	
-		form_data.activity_date = dateToTimestamp(form_data.activity_date);
-		addEntry(form_data);
+	if (has_existing_partner) {
+		form_data.activity_date = normalizeActivityDate(form_data.activity_date);
+		form_data.id = doc(firestoreCollectionRef).id;
+		await getSeedsCollection().insert(form_data);
 	} else {
 		// Locally store it
 		temp_activities[temp_activities_id] = form_data;
@@ -786,7 +605,7 @@ addFormSubmitButton.addEventListener('click', function (event) {
 // Mainmodal save button for batch uploading
 const MAIN_MODAL_SAVE_BUTTON = mainModalDocument.getElementsByClassName('main-modal-save')[0];
 
-MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
+MAIN_MODAL_SAVE_BUTTON.addEventListener('click', async function () {
 	event.preventDefault();
 
 	const temp_keys = Object.keys(temp_activities).length;
@@ -802,18 +621,16 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', function () {
 		return;
 	}
 
-	Object.keys(temp_activities).forEach((temp_id) => {
-		let current_temp_activity = temp_activities[temp_id];
+	const new_partner_name = mainModalDocument.getElementsByClassName('main-modal-partner-name')[0].value;
+	const new_partner_address = mainModalDocument.getElementById('address-input').value;
+	console.dir(temp_activities)
+	for (const temp_activity of Object.values(temp_activities)) {
+		temp_activity['partner_name'] = new_partner_name;
+		temp_activity['partner_address'] = new_partner_address;
 
-		let new_partner_name = mainModalDocument.getElementsByClassName('main-modal-partner-name')[0].value;
-		let new_partner_address = mainModalDocument.getElementById('address-input').value;
-
-		current_temp_activity['partner_name'] = new_partner_name;
-		current_temp_activity['partner_address'] = new_partner_address;
-
-		current_temp_activity.activity_date = dateToTimestamp(current_temp_activity.activity_date);
-		addEntry(current_temp_activity)
-	});
+		temp_activity.id = doc(firestoreCollectionRef).id;
+		await getSeedsCollection().insert(temp_activity);
+	};
 
 	// Notify parent window (where the iframe is embedded)
 	window.parent.postMessage({ type: 'mainModalFormSuccess' }, '*');
@@ -848,3 +665,72 @@ mainModalCloseButton.addEventListener('click', function (event) {
 		event.preventDefault();
 	}
 });
+
+export function getTempActivities() {
+	return temp_activities;
+}
+
+/**
+ * Initializes Firestore synchronization for the given RxCollection.
+ * If the database is in test mode, it will sync with the 'sdece-official-TEST' collection; otherwise, it will sync with the 'sdece-official' collection.
+ * @param {RxDatabase} db - The database instance to sync with Firestore.
+ * @param {string} uid - The ID of the user.
+ * @param {boolean} inTestMode - Whether to initialize the database in test mode.
+ * @param {RxCollection} collection - The RxCollection to sync with the Firestore collection.
+ */
+export function startFirestoreSync(db, uid, inTestMode, rxCollection) {
+	const checks = [
+		[!db, "Database instance is required."],
+		[!uid, "User ID is required."],
+		[inTestMode == null, "Test mode boolean is required."],
+		[!rxCollection, "RxCollection is required."]
+	]
+	if (!requireParameters(checks)) {
+		return;
+	}
+
+	let collectionFirestoreName = inTestMode ? 'sdece-official-TEST' : 'sdece-official';
+	
+	const firestore = DB;
+	const firestoreCollection = collection(firestore, collectionFirestoreName);
+	firestoreCollectionRef = firestoreCollection;
+
+	db.seedsSyncState = replicateFirestore({ 
+		autoStart: true,
+		replicationIdentifier: 'seeds_sync_' + rxCollection.name,
+		collection: rxCollection,
+		live: true, 
+		firestore: {
+			projectId: FIREBASE_CONFIG.projectId,
+			database: DB,
+			collection: firestoreCollection
+		},
+		pull: {
+			batchSize: 500,
+			modifier: (doc) => {
+				if (doc.partner_coordinates instanceof GeoPoint) {
+					doc.partner_coordinates = {
+						_lat: doc.partner_coordinates.latitude,
+						_long: doc.partner_coordinates.longitude
+					}
+				}
+				return doc;
+			}
+		},
+		push: {
+			batchSize: 500,
+			modifier: (doc) => {
+				if (!(doc.partner_coordinates instanceof GeoPoint))
+					doc.partner_coordinates = convertCoordinates(doc.partner_coordinates);
+				return doc;	
+			}
+		},
+		serverTimestampField: 'serverTimestamp'
+	});
+
+	db.seedsSyncState.error$.subscribe(err => {
+  	console.error('Replication error:', err);
+	});
+	db.seedsSyncState.received$.subscribe(doc => console.log("Firestore received doc:", doc))
+	db.seedsSyncState.sent$.subscribe(doc => console.log("Firestore pushed doc:", doc))
+}

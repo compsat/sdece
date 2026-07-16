@@ -12,4 +12,4 @@ if %errorlevel% == 0 (
 
 timeout /t 2 /nobreak >nul
 
-start "" "http://127.0.0.1:1001/app_buklod-tao/index.html"
+start "" "http://127.0.0.1:1001/app_seeds/index.html"

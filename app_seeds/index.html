@@ -14,40 +14,46 @@
 		<!-- Load Leaflet from CDN -->
 		<link
 			rel="stylesheet"
-			href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-			integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+			href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+			integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
 			crossorigin=""
 		/>
 		<script
-			src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
-			integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+			src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+			integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
 			crossorigin=""
 		></script>
 
 		<!-- Load Esri Leaflet from CDN -->
 		<script
-			src="https://unpkg.com/esri-leaflet@2.4.1/dist/esri-leaflet.js"
-			integrity="sha512-xY2smLIHKirD03vHKDJ2u4pqeHA7OQZZ27EjtqmuhDguxiUvdsOuXMwkg16PQrm9cgTmXtoxA6kwr8KBy3cdcw=="
-			crossorigin=""
+			src="https://unpkg.com/esri-leaflet@3.0.12/dist/esri-leaflet.js"
 		></script>
 
 		<!-- Load Esri Leaflet Geocoder from CDN -->
 		<link
 			rel="stylesheet"
-			href="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.css"
-			integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
-			crossorigin=""
+			href="https://unpkg.com/esri-leaflet-geocoder@3.1.3/dist/esri-leaflet-geocoder.css"
 		/>
 		<script
-			src="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.js"
-			integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
-			crossorigin=""
+			src="https://unpkg.com/esri-leaflet-geocoder@3.1.3/dist/esri-leaflet-geocoder.js"
 		></script>
 		<link href="css/main.css" rel="stylesheet" />
 		<script type="module" src="js/firestore.js"></script>
+		<script type="module" src="js/index.js"></script>
 		<link rel="stylesheet" href="css/modal.css">
 		<link rel="stylesheet" href="css/form.css">
 		<script type="module" src="/components/SearchBar.js"></script>
+
+		<!-- This is needed for RxDB's Firestore plugin -->
+		<script type="importmap">
+		{
+			"imports": {
+				"firebase/": "https://www.gstatic.com/firebasejs/12.15.0/",
+				"firebase/app": "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js",
+				"firebase/firestore": "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js"
+			}
+		}
+		</script>
   </head>
 
   <body>
@@ -63,18 +69,24 @@
 			</div>
         	<search-bar id="search-bar-component"></search-bar>
 			<div class="actions-container">
-			<button class="action-btn" id="filter-btn">
-            	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"><path d="M5 7C5 6.17157 5.67157 5.5 6.5 5.5C7.32843 5.5 8 6.17157 8 7C8 7.82843 7.32843 8.5 6.5 8.5C5.67157 8.5 5 7.82843 5 7ZM6.5 3.5C4.567 3.5 3 5.067 3 7C3 8.933 4.567 10.5 6.5 10.5C8.433 10.5 10 8.933 10 7C10 5.067 8.433 3.5 6.5 3.5ZM12 8H20V6H12V8ZM16 17C16 16.1716 16.6716 15.5 17.5 15.5C18.3284 15.5 19 16.1716 19 17C19 17.8284 18.3284 18.5 17.5 18.5C16.6716 18.5 16 17.8284 16 17ZM17.5 13.5C15.567 13.5 14 15.067 14 17C14 18.933 15.567 20.5 17.5 20.5C19.433 20.5 21 18.933 21 17C21 15.067 19.433 13.5 17.5 13.5ZM4 16V18H12V16H4Z"></path></svg>
-              			Filter
-            	</button>
-				<button class="action-btn" id="">
-              		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"><path d="M18.2072 9.0428 12.0001 2.83569 5.793 9.0428 7.20721 10.457 12.0001 5.66412 16.793 10.457 18.2072 9.0428ZM5.79285 14.9572 12 21.1643 18.2071 14.9572 16.7928 13.543 12 18.3359 7.20706 13.543 5.79285 14.9572Z"></path></svg>
-              			Sort
-            	</button>
+				<button class="action-btn" id="filter-btn">
+        	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"><path d="M5 7C5 6.17157 5.67157 5.5 6.5 5.5C7.32843 5.5 8 6.17157 8 7C8 7.82843 7.32843 8.5 6.5 8.5C5.67157 8.5 5 7.82843 5 7ZM6.5 3.5C4.567 3.5 3 5.067 3 7C3 8.933 4.567 10.5 6.5 10.5C8.433 10.5 10 8.933 10 7C10 5.067 8.433 3.5 6.5 3.5ZM12 8H20V6H12V8ZM16 17C16 16.1716 16.6716 15.5 17.5 15.5C18.3284 15.5 19 16.1716 19 17C19 17.8284 18.3284 18.5 17.5 18.5C16.6716 18.5 16 17.8284 16 17ZM17.5 13.5C15.567 13.5 14 15.067 14 17C14 18.933 15.567 20.5 17.5 20.5C19.433 20.5 21 18.933 21 17C21 15.067 19.433 13.5 17.5 13.5ZM4 16V18H12V16H4Z"></path></svg>
+          	Filter
+      	</button>
+				<button class="action-btn" id="sort-btn">
+        	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"><path d="M18.2072 9.0428 12.0001 2.83569 5.793 9.0428 7.20721 10.457 12.0001 5.66412 16.793 10.457 18.2072 9.0428ZM5.79285 14.9572 12 21.1643 18.2071 14.9572 16.7928 13.543 12 18.3359 7.20706 13.543 5.79285 14.9572Z"></path></svg>
+            Sort
+        </button>
+				<button class="action-btn" id="import-report">
+        	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"><path d="M3 19H21V21H3V19ZM13 5.82843V17H11V5.82843L4.92893 11.8995L3.51472 10.4853L12 2L20.4853 10.4853L19.0711 11.8995L13 5.82843Z"></path></svg>
+        		Import
+    		</button>
+				<input class="hidden" id="import-report-input" type="file">
+				<input>
 				<button class="action-btn" id="download-report">
-              		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"><path d="M3 19H21V21H3V19ZM13 13.1716L19.0711 7.1005L20.4853 8.51472L12 17L3.51472 8.51472L4.92893 7.1005L11 13.1716V2H13V13.1716Z"></path></svg>
-              			Export data
-            	</button>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(157,163,174,1)" width="16" height="16" style="margin-right: 6px;"><path d="M3 19H21V21H3V19ZM13 13.1716L19.0711 7.1005L20.4853 8.51472L12 17L3.51472 8.51472L4.92893 7.1005L11 13.1716V2H13V13.1716Z"></path></svg>
+            Export
+        </button>
 			</div>
         </div>
         <div class="partners-header">
@@ -223,11 +235,9 @@
             // Handle successful form submission event here
             const messageModal = document.getElementById("messageModal");
             messageModal.style.display = "flex"; //display success message
-			setTimeout(() => {
-				messageModal.style.display = "none";
-				alert("You may now reload the page for your newly added location to reflect on this page.");
-				location.reload()
-			}, 3000);
+						setTimeout(() => {
+							messageModal.style.display = "none";
+						}, 3000);
           }
         });
 
@@ -274,9 +284,9 @@
           if (event.data === "closeMessageModal") {
             hideModalContainer("messageModal");
           }
-		  if (event.data === "closeFilterModal") {
-			hideModalContainer("filterModal");
-		  }
+					if (event.data === "closeFilterModal") {
+					hideModalContainer("filterModal");
+					}
         });
     </script>
 
@@ -291,6 +301,7 @@
     onAuthStateChanged(AUTH, (user) => {
       if (user) {
         document.body.style.visibility = 'visible'; 
+        btn.textContent = "Logout";
         btn.onclick = () => signOutUser();
       } else {
         window.location.replace(loginURL); // redirect if not logged in
