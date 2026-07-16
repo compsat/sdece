@@ -5,7 +5,16 @@
 
 		<!-- Import CSS file -->
 		<link href="../css/modal.css" rel="stylesheet" />
-
+		  <script type="importmap">
+			{
+				"imports": {
+					"firebase/": "https://www.gstatic.com/firebasejs/12.15.0/",
+					"firebase/app": "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js",
+					"firebase/auth": "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js",
+					"firebase/firestore": "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js"
+				}
+			}
+			</script>
 	</head>
 	<body style="width: 100%; height: 100%; display: flex; flex-direction: column;">
 		<div class="main-modal-outer">
