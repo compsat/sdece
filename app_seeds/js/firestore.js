@@ -698,7 +698,6 @@ export function startFirestoreSync(db, uid, inTestMode, rxCollection) {
 		push: {
 			batchSize: 500,
 			modifier: (doc) => {
-				console.log("Pushed document to Firestore:", doc);
 				if (!(doc.partner_coordinates instanceof GeoPoint))
 					doc.partner_coordinates = convertCoordinates(doc.partner_coordinates);
 				return doc;	
@@ -710,5 +709,6 @@ export function startFirestoreSync(db, uid, inTestMode, rxCollection) {
 	db.seedsSyncState.error$.subscribe(err => {
   	console.error('Replication error:', err);
 	});
-
+	db.seedsSyncState.received$.subscribe(doc => console.log("Firestore received doc:", doc))
+	db.seedsSyncState.sent$.subscribe(doc => console.log("Firestore pushed doc:", doc))
 }
