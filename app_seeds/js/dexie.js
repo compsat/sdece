@@ -202,15 +202,15 @@ export async function parseData(file) {
       validRows: [],
       invalidRows: []
     }
+    console.log(jsonData);
     for (const [index, raw] of jsonData.entries()) {
-      if (String(raw["Partner"] ?? "").trim() === "")  continue;
-
       const row = parseRow(raw);
       const errors = validateData('seeds-official-TEST', row);
       if (errors.length === 0) {
         result.validRows.push(row);
       } else {
-        row._row = index + 2;
+        
+        row._row = raw.__rowNum__ + 1;
         result.invalidRows.push(row);
       }
     }
