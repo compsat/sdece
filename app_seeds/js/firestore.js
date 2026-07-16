@@ -119,7 +119,7 @@ export function showModal(partner) {
 		partner_address: {$eq: partnerAddress}
 	}
 	console.log("Selector:", partnerSelector);
-	const partnerQuery = getSeedsCollection().find({partnerSelector});
+	const partnerQuery = getSeedsCollection().find({selector: partnerSelector});
 
 
 	// Hide external button (reset state)
@@ -350,7 +350,8 @@ export function showModal(partner) {
 					// }
 					console.log("Query:", partnerQuery);
 					console.log("Patch:", updated);
-					// partnerQuery = await partnerQuery.incrementalPatch(updated);
+					console.log("Docs found", await partnerQuery.exec());
+					await partnerQuery.incrementalPatch(updated);
 					// activity = await activity.incrementalPatch(updated);
 					showModal(partner);
 				};
