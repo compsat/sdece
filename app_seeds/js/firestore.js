@@ -518,21 +518,19 @@ function collectFormInputs(doc, geopointSource, mode) {
 	for (let field of SEEDS_RULES['fields']) {
 		if (field === 'partner_coordinates') {
 			if (mode === 'add') {
-					if (!geopointSource) {
-						let input = doc.getElementById(field);
-						result[field] = parseCoordinates(input?.value);
-					} else {
-						result[field] = {_lat: geopointSource.latitude, _long: geopointSource.longitude};
-			}
+				if (!geopointSource) {
+					let input = doc.getElementById(field);
+					result[field] = parseCoordinates(input?.value);
+				} else {
+					result[field] = {_lat: geopointSource.latitude, _long: geopointSource.longitude};
+				}
+			} 
 		} else if (field === 'activity_date') {
 			if (mode === 'add') {
 				let input = doc.getElementById(field)
 				result[field] = normalizeActivityDate(input?.value || 0)
-					}
-				
 			}
-			// edit mode 
-		} else {
+		} else { // edit mode
 			let input = doc.getElementById(field);
 			result[field] = input?.value || null;
 		}
