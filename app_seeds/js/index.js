@@ -430,7 +430,7 @@ document.getElementById('import-report-input').addEventListener('change', async 
 		}
 		await importDataSynced(docs.validRows);
 		// setAsOffline();
-		alert(`Imported ${docs.validRows.length} activities. Refresh to return to online mode.`)
+		alert(`Imported ${docs.validRows.length} activities.`)
 	} catch (err) {
 		console.error("Import failed:", err);
 		alert("Import failed.")
