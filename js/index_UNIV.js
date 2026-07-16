@@ -6,7 +6,7 @@ import {
 } from '/js/firestore_UNIV.js';
 
 // Global Map Variable (the map shown)
-export var map = L.map('map').setView([14.5995, 120.9842], 10);
+export var map = window.L.map('map').setView([14.5995, 120.9842], 10);
 
 function panLocation(doc, map) {
 	if (getCollection().id === rule_reference['collection_name']) {

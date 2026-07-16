@@ -255,7 +255,7 @@ export function populateEditForm(partner, editFormModal) {
 
   // Check if the iframe is already loaded, if so, run immediately. 
   // Otherwise, wait for it to load.
-  if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+  if (iframe?.contentDocument && iframe.contentDocument.readyState === 'complete') {
     populateLogic();
   } else {
     iframe.onload = populateLogic;
