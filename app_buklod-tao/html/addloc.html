@@ -5,6 +5,17 @@
         <link rel="stylesheet" href="../css/form.css">
         <link rel="stylesheet" href="../css/main.css">
         <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
+
+        <script type="importmap">
+        {
+          "imports": {
+            "firebase/": "https://www.gstatic.com/firebasejs/12.15.0/",
+            "firebase/app": "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js",
+            "firebase/auth": "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js",
+            "firebase/firestore": "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js"
+          }
+        }
+        </script>
             
         <script type="module">
         document.getElementById("submit_form").addEventListener("click", async function(event) {
