@@ -2,8 +2,6 @@ import { createRxDatabase } from 'https://esm.sh/rxdb@17.3.0';
 import { getRxStorageDexie } from 'https://esm.sh/rxdb@17.3.0/plugins/storage-dexie';
 import { requireParameters } from '../js/index_UNIV.js';
 import { FILTER_RULES } from './ruleEngines.js';
-import { buildQueryArray } from '../app_seeds/js/index.js';
-import { setFilter } from '../app_seeds/js/dexie.js';
 
 let database = null;
 

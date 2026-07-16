@@ -1,6 +1,5 @@
 import { 
   populateNavBar, 
-  addEvacCenters,
   updateRiskIcons
 } from './index.js';
 
@@ -64,24 +63,24 @@ function setHouseholdSubscription(collection) {
 export async function parseData(file) {
   try {
     const data = await file.arrayBuffer();
-    const workbook = XLSX.read(data);
+    const workbook = window.XLSX.read(data);
     const masterSheet = workbook.Sheets["Master Sheet"];
     if (!masterSheet) {
       throw new Error("Spreadsheet is missing a 'Master Sheet' tab.");
     }
-    const jsonData = XLSX.utils.sheet_to_json(masterSheet);
+    const jsonData = window.XLSX.utils.sheet_to_json(masterSheet);
 
     return jsonData
       .filter((r) => String(r["Household Name"] ?? "").trim() !== "")
       .map(parseRow);
   } catch (err) {
     console.error("Import failed:", err);
-    throw new Error(`Could not parse file: ${err.message}`);
+    throw new Error(`Could not parse file: ${err.message}`, {cause: err});
   }
 }
 
 // Initializes subscriptions for the first time
-export function createSubscriptions(window) {
+export function createSubscriptions() {
   getEvacCentersCollection()
     .find({ selector: { _deleted: { $eq: false } } })
     .$.subscribe(centers => {

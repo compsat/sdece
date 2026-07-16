@@ -50,7 +50,7 @@ async function main(uid) {
   console.log('Initializing database...')
   await initDatabase(uid); 
 
-  createSubscriptions(window);
+  createSubscriptions();
 
   map.setView([14.674043754743689, 121.11081361770631], 18);
   window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
