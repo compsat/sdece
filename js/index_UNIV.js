@@ -3,7 +3,7 @@ import {
 	getDocByID,
 	getDocIdByPartnerName,
 	getCollection,
-} from '/js/firestore_UNIV.js';
+} from '../js/firestore_UNIV.js';
 
 // Global Map Variable (the map shown)
 export var map = window.L.map('map').setView([14.5995, 120.9842], 10);
