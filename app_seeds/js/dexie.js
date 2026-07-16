@@ -243,8 +243,7 @@ function parseRow(row) {
       if (parts.length !== 2 || Number.isNaN(parts[0]) || Number.isNaN(parts[1])) return null;
       return { _lat: parts[0], _long: parts[1] };
   };
-	const ruleset = SEEDS_RULES['validations']
-  ruleset.id = {label: "ID"}
+	const ruleset = {id: {label: "ID"}, ...SEEDS_RULES['validations']}
   let ret = {}
   for (const [field, { label }] of Object.entries(ruleset)) {
     let fieldVal;
