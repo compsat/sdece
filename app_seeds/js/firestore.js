@@ -79,7 +79,7 @@ addModalButton.addEventListener('click', () => {
 	// Get the Add Activity form and the needed input fields for autofill
 	let inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value.trim();
 	let inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value.trim();
-	has_existing_partner = false;	
+	hasExistingPartner = false;	
 	
 	const AUTOFILL_MAP = {
 		partner_name: inputtedPartnerName,
@@ -586,7 +586,7 @@ addFormSubmitButton.addEventListener('click', async function (event) {
 		event.preventDefault();
 		return;
 	} 
-	if (has_existing_partner) {
+	if (hasExistingPartner) {
 		form_data.activity_date = normalizeActivityDate(form_data.activity_date);
 		form_data.id = doc(firestoreCollectionRef).id;
 		await getSeedsCollection().insert(form_data);
