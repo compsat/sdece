@@ -9,8 +9,6 @@ import {
 	getPartners,
 	setFilter,
 	parseData,
-	importData,
-	setAsOffline,
 	importDataSynced
 } from '../js/dexie.js';
 import { showModal, getTempActivities } from "./firestore.js";
@@ -106,6 +104,7 @@ export function showAddModal() {
  */
 export function createMarkersAndSidebar(partners) {
 	console.log("[createMarkersAndSidebar] Called with partners:", partners);
+	console.trace();
 	for (const [partnerName, activities] of Object.entries(partners)) {
 		let firstActivity = activities[0];
 		let partnerCoordinates = firstActivity['partner_coordinates'];

@@ -1,5 +1,5 @@
 // FIRESTORE DATABASE\
-import { GeoPoint, Timestamp, collection, doc } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
+import { GeoPoint, collection, doc } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
 import { replicateFirestore } from 'https://esm.sh/rxdb@17.3.0/plugins/replication-firestore?external=firebase';
 import { 
 	convertCoordinates,
@@ -550,20 +550,6 @@ function displayErrors(errors, docContext) {
 		}
 		docContext.defaultView.scrollTo(0, 0); // scroll to top of iframe
 	} 
-}
-
-/** Used for add/edit to normalize date to timestamp
- * @deprecated No longer used since dates are stored as integers locally
- * @param {date} - The date string in YYYY-MM-DD format
- * @return {Timestamp} A Firestore Timestamp that reflects the input date
-*/
-function dateToTimestamp(date) {
-	if (typeof date === 'string' && !isNaN(Date.parse(date))) {
-		const parsedDate = new Date(date);
-		parsedDate.setHours(0, 0, 0, 0);
-		return Timestamp.fromDate(parsedDate);
-	}
-	return date;
 }
 
 // Local values stored before batch uploading
