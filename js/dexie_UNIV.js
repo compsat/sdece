@@ -246,6 +246,40 @@ export async function migrateActivityDates(rxCollection) {
 }
 
 /**
+ * One-time migration that normalizes all existing `partner_coordinates` values in the
+ * local RxDB collection to null or Object. 
+ * 
+ * Some documents have "object Object" strings in partner_coordinates so yes.
+ *
+ * Iterates over all documents (including soft-deleted), compares each
+ * `partner_coordinates` against its normalized value, and bulk-upserts any that differ.
+ *
+ * @param {RxCollection} rxCollection - The RxCollection to migrate.
+ * @returns {Promise<void>}
+ *
+ * @example
+ * await migrateRxDBCoordinates(db.seeds);
+ * // "Migrated 42 partner_coordinates values"
+ */
+export async function migrateRxDBCoordinates(rxCollection) {
+  const replicator = rxCollection.database.seedsSyncState;
+  await replicator?.pause();
+  const allDocs = await rxCollection.find().exec();
+  let modifiedDocs = 0;
+  for (const doc of allDocs) {
+    if (typeof doc.partner_coordinates === 'string') {
+      doc.patch({partner_coordinates: null});
+      modifiedDocs++;
+    }
+    console.dir(doc);
+  }
+  await replicator?.start();
+  if (modifiedDocs) {
+    console.log(`Migrated ${modifiedDocs} partner_coordinate values`);
+  }
+}
+
+/**
  * A custom conflict handler to make sure that the local coordinates are compatible against GeoPoints
  * @constant
  */

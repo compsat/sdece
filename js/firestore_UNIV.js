@@ -964,6 +964,42 @@ export async function migrateDates(collectionName, database = DB) {
 }
 
 /**
+ * Normalizes the datatypes of partner_coordinates in Firestore to GeoPoint.
+ * If the field is a string, it is converted to null instead.
+ * 
+ * @param {string} collectionName - The name of the Firestore collection to update.
+ * @param {firebase.firestore.FirebaseFirestore} [database] - The Firestore database instance.
+ */
+export async function migrateCoordinates(collectionName, database = DB) {
+	const allDocs = await getDocs(query(collection(database, collectionName)));
+	console.dir(allDocs);
+	if (allDocs.empty) return;
+
+	let batch = writeBatch(database);
+	let batchCounter = 0;
+
+	for (const doc of allDocs.docs) {
+		let original_coord = doc.get('partner_coordinates');
+		batch.update(
+			doc.ref, 
+			{
+				partner_coordinates: typeof original_coord === 'string' ? null : original_coord,
+				serverTimestamp: serverTimestamp()
+			}
+		);
+		
+		batchCounter++;
+		if (batchCounter === 500) {
+			await batch.commit();
+			batchCounter = 0;
+			batch = writeBatch(database);
+		}
+	}
+
+	if (batchCounter > 0) await batch.commit();
+}
+
+/**
  * Debug function primarily to remove all leaked documents.
  * Deletes or previews deletion of Firestore documents whose IDs are purely numeric.
  *
