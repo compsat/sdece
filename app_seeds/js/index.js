@@ -46,12 +46,12 @@ onAuthStateChanged(AUTH, async (user) => {
 	}
 });
 
-async function startApp(uid) {
+async function startApp(uid, log=true) {
 	if (hasDatabase()) return;
 
-	console.log('Initializing database...')
+	if (log) console.log('[startApp] Initializing database...')
 	await initDatabase(uid, true); 
-	attachFunctions(window);
+	attachFunctions(window, false);
 	createSubscriptions();
 
 	map.setView(new L.LatLng(14.651, 121.052), 14);
@@ -64,13 +64,14 @@ async function startApp(uid) {
  * Attaches functions to the window for debug purposes.
  * @param {*} window 
  */
-function attachFunctions(window) {
+function attachFunctions(window, log=true) {
 	const checks = [
 		[!window, "window is null or undefined."]
 	]
 	if (!requireParameters(checks)) {
 		return;
 	}
+	if (log) console.log('[attachFunctions] attaching functions...');
 	window.getAllPartnerCoordinatesInRxDB = getAllPartnerCoordinatesInRxDB;
 	window.addMissingFields = addMissingFields;
 	window.migrateDates = migrateDates;

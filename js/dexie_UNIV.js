@@ -14,15 +14,15 @@ let database = null;
  * @param {Object} [collections] - The collections that the database will be instantiated with. 
  * @returns {Promise<RxDatabase>} The instantiated database. Returns the database if the database already exists.
  */
-export async function createDatabase(prefix, uid, collections) {
+export async function createDatabase(prefix, uid, collections, log=true) {
   if (!prefix) throw new Error('A database prefix is required');
   if (!uid) throw new Error('A user ID is required');
 
   let dbName = `${prefix}_${uid}`
-  console.log(`Initializing ${dbName}...`)
+  if (log) console.log(`[createDatabase] Initializing ${dbName}...`)
 
   if (database) {
-    console.log(`Database ${dbName} is already initialized. Returning its instance...`)
+    if (log) console.log(`[createDatabase] Database ${dbName} is already initialized. Returning its instance...`)
     return database;
   }
 
@@ -34,7 +34,7 @@ export async function createDatabase(prefix, uid, collections) {
       eventReduce: true
     })
     if (collections) await database.addCollections(collections);
-    console.log(`${dbName} initialized successfully.`)
+    if (log) console.log(`[createDatabase] ${dbName} initialized successfully.`)
   } catch (e) {
     console.error(e);
   }
