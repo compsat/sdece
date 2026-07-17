@@ -412,7 +412,6 @@ async function applyFilterAndUpdate(queryArray) {
 	closeFilterModal();
 }
 
-<<<<<<< HEAD
 
 document.getElementById('import-report').addEventListener('click', async () => {
 	document.getElementById('import-report-input').click()
@@ -439,7 +438,6 @@ document.getElementById('import-report-input').addEventListener('change', async 
 		alert("Import failed.")
 	}
 });
-=======
 //SORTING
 const sortBtn = document.getElementById('sort-btn')
 let sortState = 'asc';
@@ -470,4 +468,3 @@ function changeSortState() {
     sortState = 'asc';
   }
 }
->>>>>>> sprint-2026-05/dxo-297/sort-partners
