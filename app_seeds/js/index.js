@@ -269,7 +269,14 @@ export async function exportData() {
 }
 
 document.getElementById('download-report').addEventListener("click", exportData);
+
 // CODE LOGIC FOR FILTERING
+let preservedFilterState = null;
+
+function updatePreservedFilterState(filterState) {
+	preservedFilterState = filterState;
+}
+
 const filterBtn = document.getElementById('filter-btn');
 filterBtn.addEventListener('click', () => showFilterModal());
 
@@ -286,7 +293,7 @@ filterModalApply.addEventListener("click", function(event){
 	const filterState = captureFilterState();
 	const queryArray = buildQueryArray(filterState);
 	applyFilterAndUpdate(queryArray);
-
+	updatePreservedFilterState(filterState);
 });
 
 const filterModalClear = filterModal.getElementById("clearFilters");
@@ -308,8 +315,19 @@ async function setUpFilterModal() {
 		filterSection.innerHTML += filterHeader;
 
 		filters[field].forEach((filter) => {
-			const filterOptions = `<label><input type="checkbox" value="${filter}" data-filter="${field}"> ${filter} </label>`;
-			filterSection.innerHTML += filterOptions;
+			if (!preservedFilterState) {	// If no filter state has been preserved yet, dynamically load the modal normally
+				const filterOptions = `<label><input type="checkbox" value="${filter}" data-filter="${field}"> ${filter} </label>`;
+				filterSection.innerHTML += filterOptions;
+			} else {	// If a filter state has been preserved, dynamically load the modal and then match the checkbox states
+				if (preservedFilterState[field][filter] == false) {
+					const filterOptions = `<label><input type="checkbox" value="${filter}" data-filter="${field}"> ${filter} </label>`;
+					filterSection.innerHTML += filterOptions;
+				} else {
+					const filterOptions = `<label><input type="checkbox" value="${filter}" data-filter="${field}" checked> ${filter} </label>`;
+					filterSection.innerHTML += filterOptions;
+				}
+			}
+	
 		})
 	});
 }
