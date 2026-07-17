@@ -243,7 +243,7 @@ export async function exportData() {
 		if (b === "partner_name") return 1;
 	});
 	const sheetData = [["ID", ...fields.map(field => ruleset[field].label ?? field)]]
-	for (const activity of (await getActivities()).sort((a, b) => a.partner_name.localeCompare(b.partner_name))) {
+	for (const activity of Object.values(await getActivities()).sort((a, b) => a.partner_name.localeCompare(b.partner_name))) {
 		sheetData.push([
 			activity.id,
 			...fields.map(field => {

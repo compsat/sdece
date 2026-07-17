@@ -203,7 +203,7 @@ export async function parseData(file) {
       invalidRows: []
     }
     console.log(jsonData);
-    for (const [index, raw] of jsonData.entries()) {
+    for (const raw of jsonData) {
       const row = parseRow(raw);
       const errors = validateData('seeds-official-TEST', row);
       if (errors.length === 0) {
