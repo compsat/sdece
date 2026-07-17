@@ -295,7 +295,7 @@ export function showModal(partner) {
 		headerTitle.style.fontSize = '1.2rem';
 		headerTitle.style.lineHeight = '1.5rem';
 		headerTitle.style.color = '#181c26';
-		headerTitle.textContent = 'Edit Activity Details';
+		headerTitle.textContent = 'Edit Partner Details';
 		headerRow.appendChild(headerTitle);
 		modalHeader.appendChild(headerRow);
 
