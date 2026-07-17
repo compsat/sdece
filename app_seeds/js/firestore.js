@@ -467,6 +467,11 @@ function showEditActivityForm(activity, partnerName, coords) {
 					updated[key] = input ? input.value : '';
 				});
 				updated.activity_date = normalizeActivityDate(updated.activity_date);
+
+				// You need to clone activity.partner_coordinates since it returns a proxy
+				// Proxy objects are non-serializable
+				updated.partner_coordinates = { ...activity.partner_coordinates }; 
+
 				let errors = validateData('seeds-official-TEST', updated);
 				const errorDiv = form.querySelector('#error_messages');
 				if (errorDiv) errorDiv.innerHTML = '';
