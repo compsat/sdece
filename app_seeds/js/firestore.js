@@ -657,7 +657,7 @@ export function startFirestoreSync(db, uid, inTestMode, rxCollection) {
 		return;
 	}
 
-	let collectionFirestoreName = inTestMode ? 'sdece-official-TEST' : 'sdece-official';
+	let collectionFirestoreName = inTestMode ? 'seeds-official-TEST' : 'seeds-official';
 	
 	const firestore = DB;
 	const firestoreCollection = collection(firestore, collectionFirestoreName);
