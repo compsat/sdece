@@ -10,7 +10,6 @@ import { map } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal, clearAllHighlights, getActivityString } from './index.js';
 import { requireParameters, toDateString } from '../../js/index_UNIV.js';
 import { getPartners, getSeedsCollection } from './dexie.js';
-import { buildSelector } from '../../js/dexie_UNIV.js';
 
 let firestoreCollectionRef; // Autofilled in startFirestoreSync()
 
