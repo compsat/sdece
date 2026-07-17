@@ -238,27 +238,28 @@ function getActivitiesString(activities) {
 export async function exportData() {
   const workbook = XLSX.utils.book_new();
 	const ruleset = SEEDS_RULES['validations']
-	const fields = Object.keys(ruleset).sort();
-	const sheetData = [["ID", "Partner", ...fields.map(field => ruleset[field].label ?? field)]]
-	for (const [partnerName, activities] of Object.entries(await getPartners()).sort((a, b) => a[0].localeCompare(b[0]))) {
-		activities.forEach(activity => {
-			sheetData.push([
-				activity.id,
-				partnerName,
-				...fields.map(field => {
-					let val;
-					if (field === "partner_coordinates" 
-						&& activity[field])
-						val = `${activity[field]._lat}, ${activity[field]._long}`;
-					else if (field === "activity_date"
-						&& activity[field])
-						val = toDateString(activity[field]);
-					else val = activity[field] || "";
-					return val;
-				})
-			])
-		})
+	const fields = Object.keys(ruleset).sort((a,b) => {
+		if (a === "partner_name") return -1;
+		if (b === "partner_name") return 1;
+	});
+	const sheetData = [["ID", ...fields.map(field => ruleset[field].label ?? field)]]
+	for (const activity of (await getActivities()).sort((a, b) => a.partner_name.localeCompare(b.partner_name))) {
+		sheetData.push([
+			activity.id,
+			...fields.map(field => {
+				let val;
+				if (field === "partner_coordinates" 
+					&& activity[field])
+					val = `${activity[field]._lat}, ${activity[field]._long}`;
+				else if (field === "activity_date"
+					&& activity[field])
+					val = toDateString(activity[field]);
+				else val = activity[field] || "";
+				return val;
+			})
+		])
 	}
+
 	XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(sheetData), 'Master Sheet');
 	const now = new Date();
   XLSX.writeFile(workbook, `Seeds_Report-${now.toLocaleDateString().replaceAll('/','-')}.xlsx`);
