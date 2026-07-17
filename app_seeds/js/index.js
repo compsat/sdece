@@ -412,6 +412,7 @@ async function applyFilterAndUpdate(queryArray) {
 	closeFilterModal();
 }
 
+<<<<<<< HEAD
 
 document.getElementById('import-report').addEventListener('click', async () => {
 	document.getElementById('import-report-input').click()
@@ -438,3 +439,35 @@ document.getElementById('import-report-input').addEventListener('change', async 
 		alert("Import failed.")
 	}
 });
+=======
+//SORTING
+const sortBtn = document.getElementById('sort-btn')
+let sortState = 'asc';
+
+sortBtn.addEventListener("click", function(event) {
+	changeSortState();
+});
+
+function changeSortState() {
+	const locationList = document.getElementById('locationList');
+	const partners = Array.from(locationList.querySelectorAll('.partnerDiv'));
+	partners.sort((a, b) => {
+		const nameA = a.querySelector('.name').textContent.trim().toUpperCase();
+    const nameB = b.querySelector('.name').textContent.trim().toUpperCase();
+
+		return sortState === 'asc'
+          ? nameA.localeCompare(nameB)
+          : nameB.localeCompare(nameA);
+	});
+
+	clearLocationList();
+	partners.forEach(partner => locationList.appendChild(partner));
+
+	// Toggle between ascending and descending sort
+	if (sortState === 'asc') {
+    sortState = 'desc';
+  } else if (sortState === 'desc') {
+    sortState = 'asc';
+  }
+}
+>>>>>>> sprint-2026-05/dxo-297/sort-partners
