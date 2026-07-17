@@ -8,7 +8,7 @@ import {
 } from '../../js/firestore_UNIV.js';
 import { map } from '/js/index_UNIV.js';
 import { showMainModal, showAddModal, clearAllHighlights, getActivityString } from './index.js';
-import { requireParameters, toDateString } from '../../js/index_UNIV.js';
+import { requireParameters, toDateString, parseCoordinates } from '../../js/index_UNIV.js';
 import { getPartners, getSeedsCollection } from './dexie.js';
 import { normalizeActivityDate } from '../../js/dexie_UNIV.js';
 
@@ -72,14 +72,14 @@ map.on('click', onMapClick);
 
 // Handles Add Activity from the main modal
 const mainModalDocument = document.getElementById('mainModalIframe').contentDocument;
-const newButton = mainModalDocument.getElementById('addModalButton');
-let has_existing_partner;
+const addModalButton = mainModalDocument.getElementById('addModalButton');
+let hasExistingPartner;
 
-newButton.addEventListener('click', () => {
+addModalButton.addEventListener('click', () => {
 	// Get the Add Activity form and the needed input fields for autofill
 	let inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value.trim();
 	let inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value.trim();
-	has_existing_partner = false;	
+	hasExistingPartner = false;	
 	
 	const AUTOFILL_MAP = {
 		partner_name: inputtedPartnerName,
@@ -196,6 +196,9 @@ export function showModal(partner) {
 	const addActivityButton = activitiesSection.querySelector('#addActivityButton');
 	if (addActivityButton) {
 		addActivityButton.addEventListener('click', () => {
+
+				console.log("flagged hasExistingPartner as TRUE");
+				hasExistingPartner = true;
 			// Close current modal
 			modal.style.display = 'none';
 			modal.classList.remove('open');
@@ -206,12 +209,14 @@ export function showModal(partner) {
 			const addFormIframe = document.getElementById('addModalHTML');
 			const partnerName = partner[0]?.partner_name || '';
 			const partnerAddress = partner[0]?.partner_address || '';
+				const partnerCoordinates = partner[0]?.partner_coordinates || '';
 	
 			const fillFormFields = () => {
 				try {
 					const addFormDoc = addFormIframe.contentDocument || addFormIframe.contentWindow.document;
 					const nameField = addFormDoc.getElementById('partner_name');
 					const addressField = addFormDoc.getElementById('partner_address');
+					const coordinatesField = addFormDoc.getElementById('partner_coordinates');
 		
 					if (nameField) {
 						nameField.value = partnerName;
@@ -222,6 +227,12 @@ export function showModal(partner) {
 						addressField.value = partnerAddress;
 						addressField.readOnly = true;
 						addressField.style.backgroundColor = 'var(--custom-medium-gray)';
+					}
+					if (coordinatesField) {
+						coordinatesField.value = `${partnerCoordinates._lat}, ${partnerCoordinates._long}`;
+						coordinatesField.readOnly = true;
+						coordinatesField.style.backgroundColor = 'var(--custom-medium-gray)';
+						console.log(partnerCoordinates);
 					}
 				} catch (e) {
 					setTimeout(fillFormFields, 100);
@@ -507,15 +518,19 @@ function collectFormInputs(doc, geopointSource, mode) {
 	for (let field of SEEDS_RULES['fields']) {
 		if (field === 'partner_coordinates') {
 			if (mode === 'add') {
-				result[field] = {_lat: geopointSource.latitude, _long: geopointSource.longitude};
-			}
+				if (!geopointSource) {
+					let input = doc.getElementById(field);
+					result[field] = parseCoordinates(input?.value);
+				} else {
+					result[field] = {_lat: geopointSource.latitude, _long: geopointSource.longitude};
+				}
+			} 
 		} else if (field === 'activity_date') {
 			if (mode === 'add') {
 				let input = doc.getElementById(field)
 				result[field] = normalizeActivityDate(input?.value || 0)
 			}
-			// edit mode 
-		} else {
+		} else { // edit mode
 			let input = doc.getElementById(field);
 			result[field] = input?.value || null;
 		}
@@ -552,8 +567,16 @@ let addFormiframeDocument = addFormiframe.contentWindow.document;
 let addFormSubmitButton = addFormiframeDocument.getElementById('submit_form');
 
 addFormSubmitButton.addEventListener('click', async function (event) {
+	let geoPoint;
+
+	if (addForm_geopoint) {
+		geoPoint = addForm_geopoint;
+	}
+	
 	//Get data from addloc.html
-	let form_data = collectFormInputs(addFormiframeDocument, addForm_geopoint, 'add');
+	let form_data = collectFormInputs(addFormiframeDocument, geoPoint, 'add');
+
+	//Check if partner exists
 
 	//Validate the collated input here
 	let errors = validateData('seeds-official-TEST', form_data);
@@ -563,7 +586,7 @@ addFormSubmitButton.addEventListener('click', async function (event) {
 		event.preventDefault();
 		return;
 	} 
-	if (has_existing_partner) {
+	if (hasExistingPartner) {
 		form_data.activity_date = normalizeActivityDate(form_data.activity_date);
 		form_data.id = doc(firestoreCollectionRef).id;
 		await getSeedsCollection().insert(form_data);
@@ -584,6 +607,12 @@ MAIN_MODAL_SAVE_BUTTON.addEventListener('click', async function () {
 
 	const temp_keys = Object.keys(temp_activities).length;
 
+	let inputtedPartnerName = mainModalDocument.getElementById('inputted_partner_name').value;
+	let inputtedPartnerAddress = mainModalDocument.getElementById('address-input').value;
+	if (inputtedPartnerName == '' || inputtedPartnerAddress == '') {
+		alert('Partner Name and Partner Address cannot be blank.');
+		return;
+	}
 	if (temp_keys === 0) {
 		alert("Can't submit a partner with an empty list of activities.");
 		return;

@@ -196,3 +196,18 @@ export function getRanges(rows) {
  */
 export const pluralize = (count, noun, suffix = 's') => 
   `${noun}${count !== 1 ? suffix : ''}`;
+
+/**
+ * Parses a string into an object acceptable by the database 
+ * @param {string} coordString - A string in a "float, float" format 
+ * @returns An object in a {_lat, _long} structure or null if invalid
+ * @example
+ * const obj = parseCoordinates("14.00, 13.00");
+ * console.log(obj);
+ * // Outputs {_lat: 14.00, _long: 13.00};
+ */
+export function parseCoordinates(coordString) {
+		const parts = coordString.split(",").map(Number);
+		if (parts.length !== 2 || Number.isNaN(parts[0]) || Number.isNaN(parts[1])) return null;
+		return { _lat: parts[0], _long: parts[1] };
+}
