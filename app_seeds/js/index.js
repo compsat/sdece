@@ -430,6 +430,7 @@ document.getElementById('import-report-input').addEventListener('change', async 
 			alert(`${pluralize(docs.invalidRows.length, "Row")} ${ranges.join(", ")} ${docs.invalidRows.length === 1 ? "is" : "are"} invalid. Cancelling import.`);
 			return;
 		}
+		console.log(docs.validRows)
 		await importDataSynced(docs.validRows);
 		// setAsOffline();
 		alert(`Imported ${docs.validRows.length} activities.`)

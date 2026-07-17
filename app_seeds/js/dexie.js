@@ -202,9 +202,18 @@ export async function parseData(file) {
       validRows: [],
       invalidRows: []
     }
+    const uniqueIds = new Set();
+
     for (const raw of jsonData) {
       const row = parseRow(raw);
       const errors = validateData('seeds-official-TEST', row);
+      const docId = row.id;
+      if (uniqueIds.has(docId)) {
+        errors.push(`${docId} on row ${raw.__rowNum__ + 1} is a duplicate record.`)
+      } else {
+        uniqueIds.add(docId);
+      }
+      
       if (errors.length === 0) {
         result.validRows.push(row);
       } else {
