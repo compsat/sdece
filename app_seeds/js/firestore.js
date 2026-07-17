@@ -111,6 +111,16 @@ addModalButton.addEventListener('click', () => {
 
 // Display partner modal by clicking partner entry
 export function showModal(partner) {
+	// Query containing the partner name and address
+	const partnerName = partner[0]._data.partner_name;
+	const partnerAddress = partner[0]._data.partner_address;
+	const partnerSelector = {
+		partner_name: {$eq: partnerName},
+		partner_address: {$eq: partnerAddress}
+	}
+	const partnerQuery = getSeedsCollection().find({selector: partnerSelector});
+
+
 	// Hide external button (reset state)
 	const modalButton = document.querySelector('.modal-button'); 
 	modalButton.style.display = 'none';
@@ -246,6 +256,117 @@ export function showModal(partner) {
 			}
 		});
 	}
+	
+	// --- EDIT PARTNER BUTTON ---
+	const editPartnerBtn = document.createElement('button');
+	editPartnerBtn.className = 'modal-edit-btn';
+	editPartnerBtn.textContent = 'Edit Partner Details';
+	editPartnerBtn.onclick = function() {
+		showEditPartnerForm(partnerQuery);
+	};
+	modalContent.appendChild(editPartnerBtn);
+
+	// --- EDIT PARTNER FORM ---
+	function showEditPartnerForm(partnerQuery) {
+		const modalHeader = document.getElementById('modalHeader');
+		const modalContent = document.getElementById('modalContent');
+		modalHeader.innerHTML = '';
+		modalContent.innerHTML = '';
+
+		// --- HEADER ---
+		const headerRow = document.createElement('div');
+		headerRow.style.display = 'flex';
+		headerRow.style.alignItems = 'center';
+		headerRow.style.gap = '1rem';
+
+		// Back button
+		const backBtn = document.createElement('button');
+		backBtn.className = 'modal-back-btn';
+		backBtn.innerHTML = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 19L8.5 12L15.5 5" stroke="#222b45" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+		backBtn.onclick = function() {
+			alert("Any changes would not be saved. Proceed?");
+			showModal(partner);
+		};
+		headerRow.appendChild(backBtn);
+
+		const headerTitle = document.createElement('div');
+		headerTitle.style.fontFamily = 'Geist', 'Montserrat', 'sans-serif';
+		headerTitle.style.fontWeight = '700';
+		headerTitle.style.fontSize = '1.2rem';
+		headerTitle.style.lineHeight = '1.5rem';
+		headerTitle.style.color = '#181c26';
+		headerTitle.textContent = 'Edit Activity Details';
+		headerRow.appendChild(headerTitle);
+		modalHeader.appendChild(headerRow);
+
+		// --- LOAD FORM HTML ---
+		fetch('html/editpartner.html')
+			.then(response => response.text())
+			.then(html => {
+				// Extract only the <form>...</form> part
+				const tempDiv = document.createElement('div');
+				tempDiv.innerHTML = html;
+				const form = tempDiv.querySelector('form');
+				if (!form) {
+					modalContent.innerHTML = '<div style="color:#b91c1c;">Error loading form.</div>';
+					return;
+				}
+				form.id = 'editPartnerForm';
+				// Remove any old event listeners
+				form.onsubmit = null;
+				// Remove close button if present
+				const closeBtn = form.querySelector('#close-btn');
+				if (closeBtn) closeBtn.remove();
+				// Remove the 'Edit Activity' card title if present
+				const editPartnerTitle = form.querySelector('h2, .edit-partner-title, .modal-card-header-information');
+				if (editPartnerTitle && editPartnerTitle.textContent.trim().toLowerCase().includes('edit partner')) {
+					editPartnerTitle.remove();
+				}
+				// Prefill fields
+				const fieldMap = {
+					partner_name: partnerName || '',
+					partner_address: partnerAddress || ''
+				};
+				Object.keys(fieldMap).forEach(key => {
+					const input = form.querySelector(`[name="${key}"]`);
+					if (input) input.value = fieldMap[key];
+				});
+
+				// Save/cancel logic
+				form.onsubmit = async function(e) {
+					e.preventDefault();
+					const updated = {};
+					Object.keys(fieldMap).forEach(key => {
+						const input = form.querySelector(`[name="${key}"]`);
+						updated[key] = input ? input.value : '';
+					});
+
+					let errors = validateData('seeds-official-TEST', updated);
+					const errorDiv = form.querySelector('#error_messages');
+					if (errorDiv) errorDiv.innerHTML = '';
+					console.log(updated['partner_name']);
+					if (updated['partner_name'] == '' || updated['partner_address'] == '') {			
+						alert('Partner Name and Partner Address cannot be blank.');
+						return; 
+					}
+					await partnerQuery.incrementalPatch(updated);
+					document.getElementById('partnerModal').style.display = 'none';
+				};
+				// Cancel/Back logic
+				const cancelBtn = form.querySelector('#cancel-btn');
+				if (cancelBtn) {
+					cancelBtn.onclick = function(e) {
+						e.preventDefault();
+						showModal(partner);
+					};
+				}
+				modalContent.appendChild(form);
+			})
+			.catch(() => {
+				modalContent.innerHTML = '<div style="color:#b91c1c;">Error loading form.</div>';
+			});
+}
+
 	// --- CLOSE BUTTON (top right) ---
 	const closeDiv = document.createElement('button');
 	closeDiv.className = 'close-btn';
@@ -258,7 +379,7 @@ export function showModal(partner) {
 	modalHeader.appendChild(closeDiv);
 
 	// Show the partner modal
-		modal.style.display = 'flex';
+	modal.style.display = 'flex';
 	modal.classList.add('open');
 }
 
@@ -488,7 +609,7 @@ function showActivityDetailModal(activity, partnerName, coords) {
 	officeSection.appendChild(officeCard);
 	modalContent.appendChild(officeSection);
 
-	// --- EDIT BUTTON ---
+	// --- EDIT ACTIVITY BUTTON ---
 	const editBtn = document.createElement('button');
 	editBtn.className = 'modal-edit-btn';
 	editBtn.textContent = 'Edit Activity';
