@@ -556,6 +556,10 @@ function showActivityDetailModal(activity, partnerName, coords) {
         <span class="modal-label">Contact person</span>
         <span class="modal-value">${activity.partner_contact_name || '—'}</span>
       </div>
+			<div class="modal-card-row">
+        <span class="modal-label">Contact number</span>
+        <span class="modal-value">${activity.partner_contact_number || '—'} </span>
+      </div>
       <div class="modal-card-row">
         <span class="modal-label">Email address</span>
         <span class="modal-value">${activity.partner_email || '—'}</span>
@@ -573,6 +577,10 @@ function showActivityDetailModal(activity, partnerName, coords) {
       <div class="modal-card-row">
         <span class="modal-label">Partnership date</span>
         <span class="modal-value">${toDateString(activity.activity_date) || '—'} </span>
+      </div>
+			<div class="modal-card-row">
+        <span class="modal-label">Additional partnership</span>
+        <span class="modal-value">${activity.additional_partnership || '—'}</span>
       </div>
     `;
 	generalSection.appendChild(contactCard);
