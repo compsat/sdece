@@ -9,11 +9,23 @@
     <link rel="stylesheet" href="../css/form.css">
     <link rel="stylesheet" href="../css/main.css">
 
-    
+    <script type="importmap">
+    {
+      "imports": {
+        "firebase/": "https://www.gstatic.com/firebasejs/12.15.0/",
+        "firebase/app": "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js"
+      }
+    }
+    </script>
+
     <script type="module">
-        const api = window.parent.api;
         document.getElementById("submit_form").addEventListener("click", async function(event) {
             event.preventDefault();
+            
+            // Get API lazily - only when submit is clicked
+            const api = await window.parent.getApi();
 
             if (typeof validateRequiredFields === 'function' && !validateRequiredFields()) return;
 
@@ -91,7 +103,7 @@
             };
 
             try {
-                if (api?.hasDatabase?.()) {
+                if (!api?.hasDatabase?.()) {
                     alert("Local database is not ready yet. Please wait a moment and try again.");
                     return;
                 }
@@ -113,7 +125,7 @@
     </script>
 
     <script type="module">
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
         import { AUTH } from "/js/auth.js";
 
         const loginURL = "/html/login.html";

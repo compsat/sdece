@@ -3,10 +3,15 @@
 import {
   getDocs,
   GeoPoint,
+  Timestamp,
   doc,
   updateDoc,
   deleteField,
-} from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+  setDoc,
+  query,
+  where,
+  collection,
+} from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
 import {
   getCollection,
   setCollection,
@@ -16,7 +21,15 @@ import {
   addEntry,
   getCoordinates,
   getDocIdByPartnerName,
-} from '/js/firestore_UNIV.js';
+  DB
+} from "../../js/firestore_UNIV.js";
+
+import * as ReplicationModule from 'https://esm.sh/rxdb@17.3.0/plugins/replication';
+
+const replicateRxCollection = ReplicationModule.replicateRxCollection 
+                          || ReplicationModule.default?.replicateRxCollection;
+
+import { interval } from 'https://esm.sh/rxjs@7.8.1';
 
 var collection_value = 'buklod-official'
 
@@ -242,7 +255,7 @@ export function populateEditForm(partner, editFormModal) {
 
   // Check if the iframe is already loaded, if so, run immediately. 
   // Otherwise, wait for it to load.
-  if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+  if (iframe?.contentDocument && iframe.contentDocument.readyState === 'complete') {
     populateLogic();
   } else {
     iframe.onload = populateLogic;
@@ -441,3 +454,158 @@ export async function submitAddForm(){
   };
 }
 // ------------------------------------------
+
+export function startFirestoreSync(db, uid) {
+  console.log("Syncing local database with firestore...")
+  const firestore = DB;
+  // --- 1. SYNC BUKLOD (Households) TO TEST COLLECTION ---
+  db.buklodSyncState = replicateRxCollection({ 
+    collection: db.buklod,
+    replicationIdentifier: 'buklod-test-sync-v10',
+    live: true, 
+    retryTime: 5 * 1000, 
+    
+    pull: {
+      async handler(lastPulledDocument) {
+        let q;
+        if (lastPulledDocument?.updatedAt) {
+          // INCREMENTAL PULL: Uses automatic single-field index on 'updatedAt'
+          const lastPulledTime = Timestamp.fromMillis(lastPulledDocument.updatedAt);
+          q = query(
+            collection(firestore, "buklod-official"),
+            where('updatedAt', '>', lastPulledTime)
+          );
+        } else {
+          // FIRST SYNC: Grabs everything (No index required, catches legacy data)
+          q = query(collection(firestore, "buklod-official"));
+        }
+        const snapshot = await getDocs(q);
+        
+        const documents = snapshot.docs.map(d => {
+          const data = d.data();
+          
+          // Convert Firestore GeoPoint to local {_lat, _lng}
+          let localCoordinates = null;
+          if (data.location_coordinates instanceof GeoPoint) {
+            localCoordinates = {
+              _lat: data.location_coordinates.latitude,
+              _lng: data.location_coordinates.longitude
+            };
+          } else if (data.location_coordinates?._lat != null) {
+            localCoordinates = data.location_coordinates;
+          }
+
+          return {
+            id: d.id,
+            ...data,
+            location_coordinates: localCoordinates, 
+            _deleted: data._deleted ?? false,
+            // Ensure every doc has an updatedAt for the checkpoint
+            updatedAt: data.updatedAt?.toMillis ? data.updatedAt.toMillis() : 0
+          };
+        });
+
+        return { documents, checkpoint: documents.length > 0 ? documents[documents.length - 1] : lastPulledDocument };
+      },
+      stream$: interval(10000) 
+    },
+
+    push: {
+      async handler(rows) {
+        const pushedDocs = [];
+        for (const row of rows) {
+          const docData = row.newDocumentState;
+          
+          const { id, _meta, location_coordinates, ...rest } = docData; 
+
+          const cleanRest = JSON.parse(JSON.stringify(rest));
+
+          let geoPoint = null;
+          if (location_coordinates?._lat != null && location_coordinates?._lng != null) {
+            geoPoint = new GeoPoint(location_coordinates._lat, location_coordinates._lng);
+          }
+
+          const ref = doc(firestore, "buklod-official", id);
+          
+          await setDoc(ref, {
+            ...cleanRest,
+            location_coordinates: geoPoint, 
+            _deleted: docData._deleted,
+            userId: uid, 
+            updatedAt: Timestamp.fromMillis(docData.updatedAt)
+          }, { merge: true });
+          
+          pushedDocs.push(docData);
+        }
+        return pushedDocs;
+      }
+    }
+  });
+
+  db.evacSyncState = replicateRxCollection({
+    collection: db.evacCenters,
+    replicationIdentifier: 'evac-test-sync-v3',
+    live: true, 
+    retryTime: 5 * 1000, 
+    
+    pull: {
+      async handler(lastPulledDocument) {
+         let q;
+        if (lastPulledDocument?.updatedAt) {
+          const lastPulledTime = Timestamp.fromMillis(lastPulledDocument.updatedAt);
+          q = query(
+            collection(firestore, 'buklod-evac-centers'),
+            where('updatedAt', '>', lastPulledTime)
+          );
+        } else {
+          q = query(collection(firestore, 'buklod-evac-centers'));
+        }
+        const snapshot = await getDocs(q);
+        
+        const documents = snapshot.docs.map(d => {
+          const data = d.data();
+          return {
+            id: d.id,
+            ...data,
+            updatedAt: data.updatedAt?.toMillis ? data.updatedAt.toMillis() : Date.now()
+          };
+        });
+
+        return { documents, checkpoint: documents.length > 0 ? documents[documents.length - 1] : lastPulledDocument };
+      },
+      stream$: interval(10000) 
+    },
+
+    push: {
+      async handler(rows) {
+        const pushedDocs = []; 
+        for (const row of rows) {
+          const docData = row.newDocumentState;
+          const { id, _meta, ...rest } = docData;
+          
+          // Deep clone to strip RxDB proxies
+          const cleanRest = JSON.parse(JSON.stringify(rest));
+
+          const ref = doc(firestore, 'buklod-evac-centers', id); 
+          await setDoc(ref, {
+            ...cleanRest, // Use cleanRest
+            _deleted: docData._deleted,
+            userId: uid, 
+            updatedAt: Timestamp.fromMillis(docData.updatedAt)
+          }, { merge: true });
+          
+          pushedDocs.push(docData); 
+        }
+        return pushedDocs;
+      }
+    }
+  });
+
+  db.buklodSyncState.error$.subscribe(err => {
+    console.error("Buklod Sync Error:", err);
+  });
+
+  db.evacSyncState.error$.subscribe(err => {
+    console.error("Evac Centers Sync Error:", err);
+  });
+}
