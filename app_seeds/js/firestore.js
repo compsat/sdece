@@ -351,6 +351,8 @@ export function showModal(partner) {
 					}
 					await partnerQuery.incrementalPatch(updated);
 					document.getElementById('partnerModal').style.display = 'none';
+					partner = (await getPartners())[updated.partner_name];
+					showModal(partner)
 				};
 				// Cancel/Back logic
 				const cancelBtn = form.querySelector('#cancel-btn');
