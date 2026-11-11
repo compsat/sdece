@@ -1,10 +1,8 @@
 // CODE LOGIC FOR IMPORTING OF FUNCTIONS
 // ------------------------------------------
 import { populateEditForm } from './firestore.js';
-import { initDb, startFirestoreSync, deleteDoc } from '../../js/dexie.js'; 
+import { deleteDoc, hasDatabase } from '../../js/dexie_UNIV.js'; 
 import { 
-  setDatabase, 
-  getDatabase,
   parseData,
   importData,
   removeDatabase, 
@@ -15,11 +13,11 @@ import {
   getEvacCentersCollection,
   getEvacCenters,
   setAsOffline,
-  hasDatabase,
+  initDatabase
 } from '../js/dexie.js'; 
 import { addListeners, clearMarkers, map } from '../../js/index_UNIV.js';
 
-import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js';
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js';
 import { AUTH } from '../../js/auth.js';
 
 const partnersArray = () => { return getHouseholds() }; // Map of partner ID to partner data
@@ -46,16 +44,16 @@ onAuthStateChanged(AUTH, async (user) => {
 });
 
 async function main(uid) {
+  console.log("Calling main...")
   if (dbExists()) return;
 
-  setDatabase(await initDb(uid)); 
+  console.log('Initializing database...')
+  await initDatabase(uid); 
 
-  startFirestoreSync(getDatabase(), uid);
-
-  createSubscriptions(window);
+  createSubscriptions();
 
   map.setView([14.674043754743689, 121.11081361770631], 18);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map);
 
@@ -64,16 +62,37 @@ async function main(uid) {
 }
 // ------------------------------------------
 
-
-// OPENING API TO MODALS (e.g. addevac.html, editloc.html, etc.)
-// ------------------------------------------
-
-window.api = {
-  hasDatabase,
-  getEvacCentersCollection,
-  getHouseholdCollection
+let apiPromise = null;
+/**
+ * Gets or initializes the API object for database and iframe communication.
+ * 
+ * Lazily initializes the database on first call and exposes API methods to the window object.
+ * Subsequent calls return the cached promise.
+ * 
+ * @returns {Promise<Object>} A promise that resolves to an API object containing:
+ *   - {@link hasDatabase}
+ *   - {@link getHouseholdCollection}
+ *   - {@link getEvacCentersCollection}
+ * 
+ * @example
+ * const api = await getApi();
+ * if (api.hasDatabase()) {
+ *   const households = await api.getHouseholdCollection().find().exec();
+ *   const centers = await api.getEvacCentersCollection().find().exec();
+ * }
+ */
+export async function getApi() {
+  if (!apiPromise) {
+    let api = {
+      hasDatabase,
+      getEvacCentersCollection,
+      getHouseholdCollection
+    }
+    apiPromise = api;
+  }
+  return apiPromise;
 }
-
+window.getApi = getApi;
 
 // CODE LOGIC FOR SET-UP
 // ------------------------------------------
@@ -337,7 +356,7 @@ async function onPinClick(doc) {
       case 'number_sick': ul.textContent = doc.number_sick || 0; break;
       case 'number_pregnant': ul.textContent = doc.number_pregnant || 0; break;
       case 'sickness_present': ul.textContent = doc.sickness_present || 'None'; break;
-      case 'risk-section': ul.innerHTML = generateRiskSection(doc); break;
+      case 'risk-section': ul.innerHTML = generateRiskSection(doc); break; 
       default: ul.textContent = doc[key] || '';
     }
   });
@@ -375,7 +394,7 @@ function onMapClick(e) {
     <button class="addButton" data-target="household" data-lat="${lat}" data-lng="${lng}">Add Household</button>
     <button class="addButton" data-target="evac" data-lat="${lat}" data-lng="${lng}">Add Evacuation Center</button>
   `;
-  L.popup({ className: 'add-household-popup-compact' })
+  window.L.popup({ className: 'add-household-popup-compact' })
     .setLatLng(e.latlng)
     .setContent(popupContent)
     .openOn(map);
@@ -426,7 +445,7 @@ document.getElementById('download-report').addEventListener('click', async () =>
         return 3;
     };
 
-    const workbook = XLSX.utils.book_new();
+    const workbook = window.XLSX.utils.book_new();
     const riskTypes = ['earthquake_risk', 'fire_risk', 'flood_risk', 'landslide_risk', 'storm_risk'];
     const riskLabels = { earthquake_risk: 'Earthquake', fire_risk: 'Fire', flood_risk: 'Flood', landslide_risk: 'Landslide', storm_risk: 'Storm' };
 
@@ -439,7 +458,7 @@ document.getElementById('download-report').addEventListener('click', async () =>
         sortedHouseholds.forEach(h => {
             sheetData.push([h.household_name || '', h.household_address || '', h.contact_number || '', h.number_residents || 0, h.residency_status || '', h[riskType] || '', h[riskType + '_description'] || '', h.household_material || '', h.important_notes || '']);
         });
-        XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(sheetData), riskLabels[riskType]);
+        window.XLSX.utils.book_append_sheet(workbook, window.XLSX.utils.aoa_to_sheet(sheetData), riskLabels[riskType]);
     }
 
     // Residency Demographics Sheet
@@ -462,7 +481,7 @@ document.getElementById('download-report').addEventListener('click', async () =>
             h.after_disaster_actions || '', h.knowledge_readiness || '', h.exit_points || '',
         ]);
     });
-    XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(residencyData), 'Residency Demographics');
+    window.XLSX.utils.book_append_sheet(workbook, window.XLSX.utils.aoa_to_sheet(residencyData), 'Residency Demographics');
 
     // Master Sheet
     const masterHeaders = [
@@ -498,9 +517,9 @@ document.getElementById('download-report').addEventListener('click', async () =>
             h.household_material || '', h.important_notes || '', h.notes || ''
         ]);
     });
-    XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(masterData), 'Master Sheet');
+    window.XLSX.utils.book_append_sheet(workbook, window.XLSX.utils.aoa_to_sheet(masterData), 'Master Sheet');
 
-    XLSX.writeFile(workbook, 'Buklod_Tao_Household_Report.xlsx');
+    window.XLSX.writeFile(workbook, 'Buklod_Tao_Household_Report.xlsx');
 });
 // ------------------------------------------
 
@@ -535,8 +554,8 @@ function attachMarkers(partners) {
     if (!coord) return;
 
     const riskLevel = partner[`${riskType}_risk`] || 'LOW RISK';
-    const icon = L.icon({ iconUrl: getRiskIcon(riskLevel), iconSize: [39, 39], popupAnchor: [0.5, -15] });
-    const marker = L.marker([coord._lat, coord._lng], { icon }); 
+    const icon = window.L.icon({ iconUrl: getRiskIcon(riskLevel), iconSize: [39, 39], popupAnchor: [0.5, -15] });
+    const marker = window.L.marker([coord._lat, coord._lng], { icon }); 
 
     onPinClick(partner).then(popupContent => marker.bindPopup(popupContent));
     partner.marker = marker;
@@ -599,8 +618,8 @@ export function updateRiskIcons() {
     if (!coord) return;
 
     const riskLevel = partner[`${riskType}_risk`];
-    const icon = L.icon({ iconUrl: getRiskIcon(riskLevel || 'LOW RISK'), iconSize: [39, 39], popupAnchor: [0.5, -15] });
-    const marker = L.marker([coord._lat, coord._lng], { icon });
+    const icon = window.L.icon({ iconUrl: getRiskIcon(riskLevel || 'LOW RISK'), iconSize: [39, 39], popupAnchor: [0.5, -15] });
+    const marker = window.L.marker([coord._lat, coord._lng], { icon });
 
     onPinClick(partner).then(popupContent => marker.bindPopup(popupContent, { className: 'household-popup' }));
 
@@ -655,8 +674,8 @@ export function addEvacCenters() {
       center.marker = null;
       return;
     }
-    const marker_icon = L.icon({ iconUrl: "/app_buklod-tao/hardcode/evac_center_v2.svg", iconSize: [39,39], popupAnchor: [0.5, -15] });
-    const marker = L.marker([center.latitude, center.longitude], { icon: marker_icon });
+    const marker_icon = window.L.icon({ iconUrl: "/app_buklod-tao/hardcode/evac_center_v2.svg", iconSize: [39,39], popupAnchor: [0.5, -15] });
+    const marker = window.L.marker([center.latitude, center.longitude], { icon: marker_icon });
     
     const popupHtml = `
       <div class="evac-marker-header">${center.type}</div>
